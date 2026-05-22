@@ -1,0 +1,6 @@
+**/docs/
+**/benchmarks/
+**/*_test.go
+**/e2eTests/
+**/seeds/
+**/.git

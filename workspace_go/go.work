@@ -1,0 +1,18 @@
+go 1.25.3
+
+use (
+	// MapexOS business-specific packages
+	./packages/contracts
+	./packages/e2eTests
+	./packages/permissions
+
+	// Services
+	./services/events
+	./services/assets
+	./services/http_gateway
+	./services/mapexIam
+	./services/router
+	./services/triggers
+	./services/workflow
+	./services/mapexVault
+)
