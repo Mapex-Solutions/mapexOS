@@ -1,0 +1,36 @@
+{
+  "header": {
+    "title": "Painel",
+    "subtitlePrefix": "Visão geral da plataforma para",
+    "notAvailable": "N/D"
+  },
+  "sections": {
+    "quickActions": "Ações Rápidas",
+    "platformInfo": "Informações da Plataforma"
+  },
+  "platformInfo": {
+    "organization": "Organização",
+    "type": "Tipo",
+    "totalOrganizations": "Total de Organizações",
+    "notAvailable": "N/D"
+  },
+  "primaryKpis": {
+    "assets": "Ativos",
+    "users": "Usuários",
+    "triggers": "Triggers",
+    "wfDefinitions": "Definições de WF"
+  },
+  "secondaryKpis": {
+    "assetTemplates": "Templates de Ativo",
+    "groups": "Grupos",
+    "routeGroups": "Grupos de Rota",
+    "wfInstances": "Instâncias de WF"
+  },
+  "quickActions": {
+    "newAsset": "Novo Ativo",
+    "newUser": "Novo Usuário",
+    "newTemplate": "Novo Template",
+    "newRouteGroup": "Novo Grupo de Rota",
+    "viewLogs": "Ver Logs"
+  }
+}

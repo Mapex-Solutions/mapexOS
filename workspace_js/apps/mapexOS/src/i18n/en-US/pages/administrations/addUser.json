@@ -1,0 +1,181 @@
+{
+  "title": "add user",
+  "titleEdit": "edit user",
+  "description": "create a new user account",
+  "descriptionEdit": "update user account details",
+  "backButton": "back to users",
+  "steps": {
+    "personal": "personal information",
+    "security": "security settings",
+    "access": "access configuration",
+    "review": "review"
+  },
+  "stepDescriptions": {
+    "personal": "basic user information and contact details",
+    "security": "authentication method and password configuration",
+    "access": "organization, roles and access scope",
+    "review": "review and confirm user details"
+  },
+  "formDescriptions": {
+    "personal": "enter the user's personal and contact information",
+    "security": "configure authentication method and security settings",
+    "access": "configure user's organization membership and roles",
+    "review": "review and confirm user details before saving"
+  },
+  "fields": {
+    "firstName": "first name",
+    "lastName": "last name",
+    "email": "email address",
+    "phone": "phone number",
+    "jobTitle": "job title",
+    "enabled": "enabled",
+    "authProvider": "authentication method",
+    "password": "password",
+    "confirmPassword": "confirm password",
+    "changePasswordNextLogin": "require password change on next login",
+    "externalId": "external ID",
+    "organization": "organization",
+    "roles": "roles",
+    "group": "group",
+    "groups": "groups",
+    "scope": "access scope",
+    "accessType": "access type",
+    "selectGroup": "select group",
+    "directMemberships": "direct memberships"
+  },
+  "labels": {
+    "optional": "optional",
+    "recommended": "recommended",
+    "newGroup": "new group",
+    "local": "local",
+    "recursive": "recursive"
+  },
+  "placeholders": {
+    "selectOrganization": "click to select organization...",
+    "selectOrganizationFirst": "select organization first",
+    "selectRoles": "click to select roles...",
+    "selectGroup": "click to select group (optional)...",
+    "noGroupsSelected": "no groups selected",
+    "noMembershipsSelected": "no direct memberships configured"
+  },
+  "hints": {
+    "phoneFormat": "phone number in E.164 format (e.g., +1234567890)",
+    "enabled": "disabled users cannot log in to the system",
+    "passwordRequirements": "minimum 8 characters",
+    "changePasswordNextLogin": "user will be required to set a new password after first login",
+    "externalId": "the unique identifier from the external identity provider",
+    "organization": "the organization where the user will have access",
+    "roles": "the roles that define the user's permissions",
+    "group": "optionally assign user to a group for easier management",
+    "scopeLocal": "user can only access the selected organization",
+    "scopeRecursive": "user can access the organization and all its sub-organizations",
+    "groupSelection": "user will inherit organization, roles, and scope from the selected group",
+    "groupInheritance": "the user will inherit all access permissions from the group. when the group is updated, all members are automatically updated.",
+    "directWarning": "direct assignment is harder to manage at scale. consider using groups for most users. only use direct assignment for special cases.",
+    "orgFromContext": "organization from current context",
+    "multipleGroups": "user will inherit roles from all selected groups",
+    "multipleMemberships": "each membership grants roles with its own scope"
+  },
+  "sections": {
+    "personalInfo": "personal information",
+    "security": "security settings",
+    "access": "access configuration",
+    "review": "review",
+    "progressSteps": "progress steps"
+  },
+  "actions": {
+    "remove": "remove",
+    "addGroup": "add group",
+    "addMembership": "add membership",
+    "cancel": "cancel",
+    "add": "add",
+    "clearAll": "clear all"
+  },
+  "dialogs": {
+    "addMembership": {
+      "title": "add direct membership"
+    }
+  },
+  "buttons": {
+    "back": "back",
+    "next": "next",
+    "edit": "edit",
+    "createUser": "create user",
+    "updateUser": "update user"
+  },
+  "messages": {
+    "allFieldsRequired": "all fields marked with * are required",
+    "currentStep": "current step:",
+    "created": "user created successfully!",
+    "updated": "user updated successfully!",
+    "createFailed": "failed to create user",
+    "updateFailed": "failed to update user",
+    "loadFailed": "failed to load user data",
+    "emailExists": "a user with this email already exists",
+    "forbidden": "you do not have permission to perform this action",
+    "completeAllSteps": "complete all steps to create a new user",
+    "loading": "loading user data...",
+    "ssoInfo": "when using SSO authentication, the user's password is managed by the identity provider. The external ID is used to link this account to the provider.",
+    "notApplicable": "N/A",
+    "reviewCreateSummary": "review the information above before creating the user. click 'create user' to save.",
+    "reviewEditSummary": "review the changes above before updating the user. click 'update user' to save.",
+    "noAccessConfigured": "no access configured",
+    "noOrgContext": "no organization selected. please select an organization from the sidebar first."
+  },
+  "status": {
+    "enabled": "enabled",
+    "disabled": "disabled",
+    "yes": "yes",
+    "no": "no"
+  },
+  "tour": {
+    "overview": {
+      "title": "Creation Steps",
+      "description": "This form is divided into 4 steps. Each step collects different information about the user."
+    },
+    "step1": {
+      "title": "Personal Information",
+      "description": "Fill in the user's name, email, phone, and job title. Required fields are marked with *."
+    },
+    "step2": {
+      "title": "Security Settings",
+      "description": "Choose the authentication method and configure password settings."
+    },
+    "step3": {
+      "title": "Access Configuration",
+      "description": "Assign the user to a group or configure direct access with roles and scope."
+    },
+    "step4": {
+      "title": "Review & Confirm",
+      "description": "Review all the information before saving. You can go back to edit any step."
+    }
+  },
+  "validation": {
+    "firstNameRequired": "first name is required",
+    "firstNameMinLength": "first name must be at least 2 characters",
+    "firstNameMaxLength": "first name must be at most 100 characters",
+    "lastNameRequired": "last name is required",
+    "lastNameMinLength": "last name must be at least 2 characters",
+    "lastNameMaxLength": "last name must be at most 100 characters",
+    "emailRequired": "email is required",
+    "emailInvalid": "please enter a valid email address",
+    "emailMaxLength": "email must be at most 254 characters",
+    "jobTitleMaxLength": "job title must be at most 120 characters",
+    "passwordRequired": "password is required",
+    "passwordMinLength": "password must be at least 8 characters",
+    "passwordMaxLength": "password must be at most 72 characters",
+    "passwordMismatch": "passwords do not match",
+    "organizationRequired": "organization is required",
+    "rolesRequired": "at least one role is required"
+  },
+  "errors": {
+    "apiNotInitialized": "Users API is not available",
+    "onboardingApiNotInitialized": "Onboarding API is not available",
+    "idMissing": "User ID is missing"
+  },
+  "reviewLabels": {
+    "groupMode": "Group Mode",
+    "newGroupName": "New Group Name",
+    "description": "Description"
+  }
+}

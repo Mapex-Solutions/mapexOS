@@ -1,0 +1,222 @@
+{
+  "title": "Configurações do Sistema",
+  "description": "Gerencie as configurações da sua organização e listas de configuração.",
+  "info": {
+    "title": "Configurações do Sistema",
+    "description": "As Configurações do Sistema permitem que você configure parâmetros globais que afetam como o MapexOS opera. Gerencie políticas de persistência, regras de retenção de dados e configurações em todo o sistema para otimizar o desempenho e atender aos requisitos de conformidade.",
+    "items": {
+      "policies": {
+        "title": "Políticas de Persistência",
+        "text": "Defina por quanto tempo diferentes tipos de dados são retidos no banco de dados do sistema"
+      },
+      "retention": {
+        "title": "Regras de Retenção de Dados",
+        "text": "Configure períodos de retenção para eventos, telemetria, logs de auditoria e notificações"
+      },
+      "systemWide": {
+        "title": "Configuração em Todo o Sistema",
+        "text": "As configurações se aplicam a todas as organizações e usuários dentro da sua instância MapexOS"
+      },
+      "performance": {
+        "title": "Otimização de Desempenho",
+        "text": "Equilibre a retenção de dados com o desempenho do sistema e capacidade de armazenamento"
+      },
+      "backup": {
+        "title": "Configurações de Backup",
+        "text": "Garanta a conformidade com políticas de governança de dados e requisitos regulatórios"
+      }
+    },
+    "docsLabel": "Ver Documentação Completa"
+  },
+  "tabs": {
+    "general": "Geral",
+    "lists": "Listas",
+    "persistence": "Persistência"
+  },
+  "general": {
+    "title": "Informações da organização",
+    "sections": {
+      "hierarchy": "Informações de Hierarquia",
+      "basicInfo": "Informações Básicas",
+      "address": "Informações de Endereço",
+      "accessPolicy": "Política de Acesso",
+      "system": "Informações do Sistema"
+    },
+    "fields": {
+      "parentOrganization": "Organização Pai",
+      "rootOrganization": "Organização Raiz",
+      "type": "Tipo",
+      "childOrganizations": "Organizações Filhas",
+      "code": "Código",
+      "path": "Caminho",
+      "depth": "Profundidade",
+      "status": "Status",
+      "enabled": "Ativo",
+      "disabled": "Desativado",
+      "organizationName": "Nome da Organização",
+      "email": "E-mail",
+      "description": "Descrição",
+      "phone": "Telefone",
+      "street": "Rua",
+      "address": "Endereço",
+      "city": "Cidade",
+      "state": "Estado",
+      "country": "País",
+      "zipCode": "CEP",
+      "authProvider": "Provedor de Autenticação",
+      "rolePolicy": "Política de Funções",
+      "defaultScope": "Escopo Padrão",
+      "created": "Criado",
+      "lastUpdated": "Última Atualização"
+    },
+    "accessPolicyModal": {
+      "title": "Informações da Política de Acesso",
+      "rolePolicyTitle": "Política de Funções",
+      "rolePolicyDescription": "A Política de Funções define como as funções e permissões de usuário são herdadas das organizações pai na hierarquia.",
+      "rolePolicyMerge": "Mesclar",
+      "rolePolicyMergeDescription": "As funções de usuário das organizações pai são mescladas com as funções atribuídas diretamente a esta organização. Os usuários terão acesso às funções pai e locais, fornecendo permissões cumulativas em toda a hierarquia.",
+      "rolePolicyStrict": "Estrito",
+      "rolePolicyStrictDescription": "Apenas as funções explicitamente atribuídas a esta organização são aplicadas. As funções da organização pai são ignoradas, fornecendo isolamento estrito de permissões neste nível.",
+      "defaultScopeTitle": "Escopo Padrão",
+      "defaultScopeDescription": "O Escopo Padrão determina o escopo de visibilidade padrão para dados e operações dentro da hierarquia da organização.",
+      "defaultScopeRecursive": "Recursivo",
+      "defaultScopeRecursiveDescription": "Operações e consultas se aplicam recursivamente a esta organização e todas as suas organizações filhas. Os usuários verão dados de toda a sub-hierarquia abaixo desta organização.",
+      "defaultScopeLocal": "Local",
+      "defaultScopeLocalDescription": "Operações e consultas se aplicam apenas a esta organização. Os dados da organização filha são excluídos por padrão, fornecendo escopo isolado neste nível.",
+      "closeButton": "Fechar"
+    },
+    "disableModal": {
+      "title": "Desativar Organização",
+      "message": "Tem certeza de que deseja desativar esta organização? Todos os usuários pertencentes a esta organização não poderão mais fazer login.",
+      "confirmButton": "Sim, Desativar",
+      "cancelButton": "Cancelar"
+    },
+    "validation": {
+      "nameRequired": "Nome da organização é obrigatório",
+      "emailRequired": "E-mail é obrigatório"
+    },
+    "messages": {
+      "savedSuccessfully": "Dados da organização salvos com sucesso",
+      "loading": "Carregando dados da organização...",
+      "infoTooltip": "Informações sobre Política de Acesso"
+    },
+    "buttons": {
+      "saveChanges": "Salvar Alterações"
+    }
+  },
+  "lists": {
+    "title": "Listas de configuração",
+    "addButton": "Adicionar novo",
+    "columns": {
+      "key": "Chave",
+      "value": "Valor",
+      "description": "Descrição"
+    },
+    "dialog": {
+      "addTitle": "Adicionar novo item de lista",
+      "editTitle": "Editar item de lista",
+      "keyLabel": "Chave",
+      "valueLabel": "Valor",
+      "descriptionLabel": "Descrição",
+      "validation": {
+        "keyRequired": "Chave é obrigatória",
+        "valueRequired": "Valor é obrigatório"
+      }
+    },
+    "messages": {
+      "addedSuccessfully": "Item de lista adicionado com sucesso",
+      "updatedSuccessfully": "Item de lista atualizado com sucesso",
+      "deletedSuccessfully": "Item de lista excluído com sucesso",
+      "confirmDelete": "Tem certeza que deseja excluir o item de lista \"{value}\"?"
+    }
+  },
+  "persistence": {
+    "title": "Políticas de retenção de dados",
+    "description": "Configure por quanto tempo os dados são armazenados antes da exclusão automática.",
+    "resetButton": "Restaurar padrões",
+    "eventTypes": {
+      "eventsRaw": "Eventos Brutos",
+      "eventsJsExecutor": "Eventos JS Executor",
+      "eventsRouter": "Eventos Roteador",
+      "events": "Eventos",
+      "eventsWorkflow": "Execuções de Workflow",
+      "eventsAudit": "Eventos de Auditoria",
+      "eventsNotifications": "Eventos de Notificação"
+    },
+    "eventDescriptions": {
+      "eventsRaw": {
+        "title": "Eventos Brutos",
+        "description": "Armazena eventos não processados conforme chegam de dispositivos e fontes externas. São eventos temporários usados para processamento inicial e roteamento."
+      },
+      "eventsJsExecutor": {
+        "title": "Eventos JS Executor",
+        "description": "Armazena eventos gerados durante a execução de código JavaScript. Inclui logs, erros e resultados de execução de scripts personalizados."
+      },
+      "eventsRouter": {
+        "title": "Eventos Roteador",
+        "description": "Armazena informações de roteamento e decisões tomadas pelo roteador de eventos. Rastreia como os eventos foram distribuídos pelo sistema."
+      },
+      "events": {
+        "title": "Eventos",
+        "description": "Armazenamento principal de eventos processados e enriquecidos. Este é o lakehouse primário para análise histórica de eventos e relatórios."
+      },
+      "eventsWorkflow": {
+        "title": "Execuções de Workflow",
+        "description": "Armazena histórico de execuções de workflows incluindo status, duração, saídas de nós e detalhes de erros. Usado para depuração e análise."
+      },
+      "eventsAudit": {
+        "title": "Eventos de Auditoria",
+        "description": "Armazena eventos de trilha de auditoria para conformidade e monitoramento de segurança. Necessário para conformidade regulatória. Retenção mínima: 1 ano, recomendado: 7 anos."
+      },
+      "eventsNotifications": {
+        "title": "Eventos de Notificação",
+        "description": "Armazena eventos de entrega de notificações incluindo emails, SMS, notificações push e webhooks. Rastreia status de entrega e falhas."
+      }
+    },
+    "groups": {
+      "pipelineEvents": "Eventos de Pipeline",
+      "pipelineDescription": "Retenção de curto prazo para estágios do pipeline de processamento de eventos",
+      "storageCompliance": "Armazenamento & Conformidade",
+      "storageDescription": "Retenção de longo prazo para armazenamento, notificações e auditoria"
+    },
+    "columns": {
+      "eventType": "Tipo de Evento",
+      "retentionDays": "Retenção (Dias)",
+      "limits": "Limites"
+    },
+    "form": {
+      "daysLabel": "Dias",
+      "daysHint": "Mín: {min} - Máx: {max}",
+      "defaultLabel": "Padrão: {days} dias"
+    },
+    "validation": {
+      "required": "Dias de retenção é obrigatório",
+      "minValue": "Valor mínimo é {min} dias",
+      "maxValue": "Valor máximo é {max} dias",
+      "integer": "Valor deve ser um número inteiro"
+    },
+    "messages": {
+      "savedSuccessfully": "Políticas de retenção salvas com sucesso",
+      "resetSuccessfully": "Políticas de retenção restauradas para padrão",
+      "confirmReset": "Tem certeza que deseja restaurar todas as políticas de retenção para os valores padrão?",
+      "complianceWarning": "Requisito de conformidade: mínimo 1 ano (365 dias) para eventos de auditoria",
+      "lakeHouseWarning": "Período de retenção baixo. Considere usar a funcionalidade LakeHouse para exportar esses eventos para um sistema de Object Storage como S3 / MinIO."
+    },
+    "buttons": {
+      "close": "Fechar"
+    },
+    "tooltips": {
+      "moreInfo": "Clique para mais informações"
+    }
+  },
+  "errors": {
+    "apiNotInitialized": "API de organizações não está disponível",
+    "noOrganization": "Nenhuma organização selecionada"
+  },
+  "notifications": {
+    "savedSuccessfully": "Dados da organização salvos com sucesso"
+  },
+  "overview": {
+    "organizationOverview": "Visão Geral da Organização"
+  }
+}

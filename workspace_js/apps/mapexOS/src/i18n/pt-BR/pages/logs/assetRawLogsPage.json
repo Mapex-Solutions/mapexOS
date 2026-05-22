@@ -1,0 +1,80 @@
+{
+  "pageHeader": {
+    "title": "logs de eventos brutos",
+    "description": "visualize todos os eventos brutos recebidos de seus gateways e fontes de dados."
+  },
+  "listTitle": "lista de eventos brutos",
+  "itemLabel": "evento",
+  "itemLabelPlural": "eventos",
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar por UUID...",
+    "advancedFilters": "filtros avancados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar todos",
+    "allStatus": "todos",
+    "dateRange": "intervalo de datas",
+    "startDate": "data inicial",
+    "endDate": "data final",
+    "source": "origem",
+    "status": "status",
+    "uuid": "UUID",
+    "uuidPlaceholder": "digite o UUID para filtrar...",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizacoes filhas",
+    "options": {
+      "yes": "sim",
+      "no": "nao",
+      "success": "sucesso",
+      "failed": "falhou"
+    },
+    "includeChildrenOptions": {
+      "yes": "sim",
+      "no": "nao"
+    }
+  },
+  "columns": {
+    "dataSource": "fonte de dados",
+    "uuid": "UUID",
+    "status": "status",
+    "source": "origem",
+    "timestamp": "data/hora",
+    "retention": "retencao"
+  },
+  "sourceOptions": {
+    "httpGateway": "Gateway HTTP",
+    "mqttGateway": "Gateway MQTT",
+    "lorawanGateway": "Gateway LoRaWAN (Proxima Versao)"
+  },
+  "statusOptions": {
+    "success": "sucesso",
+    "failed": "falhou"
+  },
+  "statusBadge": {
+    "success": "SUCESSO",
+    "failed": "FALHOU"
+  },
+  "drawer": {
+    "title": "detalhes do evento bruto"
+  },
+  "empty": {
+    "title": "nenhum evento encontrado",
+    "description": "nao ha eventos brutos correspondentes aos seus filtros atuais ou nenhum evento foi recebido ainda."
+  },
+  "pagination": {
+    "newer": "mais recentes",
+    "older": "mais antigos"
+  },
+  "messages": {
+    "loadFailed": "falha ao carregar eventos brutos"
+  },
+  "defaults": {
+    "unknown": "desconhecido",
+    "retentionDays": "{days} dias",
+    "notAvailable": "N/D"
+  },
+  "actions": {
+    "trackEvent": "rastrear este evento",
+    "viewJson": "ver JSON"
+  }
+}

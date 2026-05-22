@@ -1,0 +1,42 @@
+{
+  "typeOptions": {
+    "event": "evento",
+    "state": "estado",
+    "variable": "variável",
+    "literal": "literal"
+  },
+  "labels": {
+    "eventField": "campo de evento",
+    "stateName": "nome do estado"
+  },
+  "placeholders": {
+    "selectOrTypeState": "selecione ou digite o nome do estado"
+  },
+  "empty": {
+    "noStates": "nenhuma variável definida",
+    "goToLocalState": "vá para a aba variáveis para adicionar variáveis"
+  },
+  "tooltips": {
+    "clear": "limpar",
+    "templatesSelected": "{count} template(s) selecionado(s)",
+    "options": "opções"
+  },
+  "menu": {
+    "selectField": {
+      "title": "selecionar campo",
+      "description": "navegar campos de {count} template(s)"
+    },
+    "searchTemplates": {
+      "title": "buscar templates",
+      "description": "adicionar templates para buscar campos"
+    },
+    "manualMode": {
+      "title": "modo manual",
+      "description": "digitar caminho do campo de evento manualmente"
+    },
+    "dynamicMode": {
+      "title": "modo dinâmico",
+      "description": "navegar campos dos templates"
+    }
+  }
+}

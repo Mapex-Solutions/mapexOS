@@ -1,0 +1,82 @@
+{
+  "title": "auditoria de acesso",
+  "description": "visualize e audite todas as permissões de acesso de usuários e grupos",
+  "listTitle": "memberships",
+  "itemLabel": "membership",
+  "itemLabelPlural": "memberships",
+  "info": {
+    "title": "visão geral da auditoria de acesso",
+    "description": "a página de Auditoria de Acesso fornece uma visão completa de todas as memberships na sua organização. Use esta página para revisar e auditar permissões de acesso de usuários e grupos.",
+    "items": {
+      "memberships": {
+        "title": "memberships",
+        "text": "visualize todas as concessões de acesso vinculando usuários ou grupos a organizações com funções específicas"
+      },
+      "users": {
+        "title": "acesso de usuários",
+        "text": "filtre por usuário para ver todas as organizações e funções atribuídas a um usuário específico"
+      },
+      "groups": {
+        "title": "acesso de grupos",
+        "text": "filtre por grupo para ver todas as organizações e funções atribuídas a um grupo específico"
+      },
+      "scope": {
+        "title": "escopo de acesso",
+        "text": "entenda o escopo: 'local' aplica-se apenas à org, 'recursivo' inclui todas as organizações filhas"
+      }
+    },
+    "docsLabel": "ver documentação"
+  },
+  "filters": {
+    "assigneeType": "tipo de atribuído",
+    "assigneeId": "ID do atribuído",
+    "roleId": "função",
+    "scope": "escopo",
+    "status": "status",
+    "includeChildren": "incluir filhos",
+    "label": "filtros",
+    "searchPlaceholder": "buscar memberships...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "allStatus": "todos",
+    "filterByAssignee": "filtrar por nome do atribuído...",
+    "options": {
+      "all": "todos",
+      "user": "usuário",
+      "group": "grupo",
+      "local": "local",
+      "recursive": "recursivo",
+      "enabled": "ativo",
+      "disabled": "inativo",
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "menuColumns": {
+    "organization": "organização",
+    "roles": "funções",
+    "scope": "escopo"
+  },
+  "columns": {
+    "assignee": "atribuído",
+    "organization": "organização",
+    "roles": "funções",
+    "scope": "escopo"
+  },
+  "empty": {
+    "title": "nenhuma membership encontrada",
+    "description": "não há memberships correspondentes aos seus filtros. Tente ajustar os filtros ou verifique se as memberships foram criadas."
+  },
+  "scope": {
+    "local": "local",
+    "recursive": "recursivo"
+  },
+  "assigneeType": {
+    "user": "usuário",
+    "group": "grupo"
+  },
+  "errors": {
+    "assigneeIdMissing": "ID do responsável ausente"
+  }
+}

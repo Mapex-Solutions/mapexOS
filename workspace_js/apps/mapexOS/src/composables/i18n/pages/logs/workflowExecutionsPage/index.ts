@@ -1,0 +1,1 @@
+export { useWorkflowExecutionsPageTranslations } from './useWorkflowExecutionsPageTranslations';

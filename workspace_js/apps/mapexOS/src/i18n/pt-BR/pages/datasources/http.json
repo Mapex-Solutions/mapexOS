@@ -1,0 +1,424 @@
+{
+	"pageHeader": {
+		"title": "Fontes de Dados HTTP",
+		"description": "Gerencie fontes de dados HTTP: adicionar, editar e filtrar fontes",
+		"button": "Adicionar Fonte de Dados",
+		"info": {
+			"title": "O que é uma Fonte de Dados HTTP?",
+			"description": "Uma Fonte de Dados HTTP permite comunicação bidirecional entre seus dispositivos IoT e o MapexOS usando protocolos HTTP/HTTPS. Ela oferece uma maneira flexível de receber dados de telemetria dos dispositivos ou enviar comandos para eles.",
+			"items": {
+				"pull": {
+					"title": "Modo Pull",
+					"text": "O MapexOS busca dados periodicamente dos seus dispositivos fazendo requisições HTTP aos endpoints deles"
+				},
+				"push": {
+					"title": "Modo Push",
+					"text": "Seus dispositivos enviam dados diretamente aos endpoints do MapexOS sempre que eventos ocorrem"
+				},
+				"authentication": {
+					"title": "Autenticação",
+					"text": "Suporta múltiplos métodos de autenticação: Chave de API, JWT, OAuth2, Lista de IPs, ou Nenhuma"
+				},
+				"assetBinding": {
+					"title": "Vinculação de Ativo",
+					"text": "Vincule dados a ativos específicos usando ID de Ativo Fixo ou mapeamento dinâmico de campo UUID"
+				}
+			},
+			"docsLabel": "Ver Documentação Completa"
+		}
+	},
+	"filters": {
+		"label": "filtros",
+		"searchPlaceholder": "pesquisar fontes de dados...",
+		"allStatus": "todos",
+		"advancedFilters": "filtros avançados",
+		"pendingFilters": "filtros pendentes - clique para aplicar",
+		"clearAll": "limpar tudo",
+		"name": "buscar por nome",
+		"mode": "modo",
+		"modeOptions": {
+			"all": "todos",
+			"pull": "Pull",
+			"push": "Push"
+		},
+		"status": "status",
+		"statusOptions": {
+			"all": "todos",
+			"active": "ativo",
+			"inactive": "inativo"
+		},
+		"includeChildren": "incluir filhos",
+		"includeChildrenOptions": {
+			"yes": "sim",
+			"no": "não"
+		},
+		"authType": "tipo de autenticação",
+		"authTypeOptions": {
+			"all": "todos",
+			"none": "Nenhuma",
+			"apiKey": "Chave de API",
+			"ipWhitelist": "Lista de IPs",
+			"jwt": "JWT",
+			"oauth2": "OAuth 2.0"
+		},
+		"assetBindType": "vinculação de ativo",
+		"assetBindTypeOptions": {
+			"all": "todos",
+			"fixed": "Ativo Fixo",
+			"dynamic": "Dinâmico"
+		}
+	},
+	"columns": {
+		"name": "Nome",
+		"organization": "Organização",
+		"assetBind": "Vinculação de Ativo",
+		"auth": "Autenticação",
+		"mode": "Modo",
+		"status": "Status"
+	},
+	"headerMenu": {
+		"itemLabel": "Fonte de Dados",
+		"itemLabelPlural": "Fontes de Dados"
+	},
+	"list": {
+		"title": "Lista de Fontes de Dados"
+	},
+	"empty": {
+		"title": "Nenhuma fonte de dados encontrada",
+		"description": "Parece que não há fontes de dados que correspondam aos seus critérios de busca atuais ou você ainda não tem nenhuma fonte de dados."
+	},
+	"deleteDialog": {
+		"title": "Confirmar Exclusão",
+		"message": "Tem certeza de que deseja excluir a fonte de dados \"{name}\"?"
+	},
+	"notifications": {
+		"deleteSuccess": "Fonte de dados excluída com sucesso",
+		"deleteFailed": "Falha ao excluir fonte de dados",
+		"loadFailed": "Falha ao carregar fontes de dados",
+		"endpointCopied": "URL do endpoint copiada para a área de transferência"
+	},
+	"errors": {
+		"apiNotInitialized": "API do HTTP Gateway não está disponível",
+		"noUuidPaths": "Nenhum caminho UUID configurado para testar",
+		"invalidPayloadOrPath": "Payload JSON ou formato de caminho inválido"
+	},
+	"actions": {
+		"copyEndpoint": "Copiar Endpoint"
+	},
+	"drawer": {
+		"title": "Detalhes da Fonte de Dados",
+		"close": "Fechar",
+		"edit": "Editar",
+		"loading": "Carregando detalhes da fonte de dados...",
+		"error": "Falha ao carregar detalhes da fonte de dados",
+		"sections": {
+			"basicInfo": "Informações Básicas",
+			"configuration": "Configuração",
+			"authentication": "Autenticação",
+			"assetBinding": "Vinculação de Ativo",
+			"timestamps": "Registros de Data"
+		},
+		"fields": {
+			"name": "Nome",
+			"organization": "Organização",
+			"description": "Descrição",
+			"status": "Status",
+			"mode": "Modo",
+			"protocol": "Protocolo",
+			"authType": "Tipo de Autenticação",
+			"assetBindType": "Tipo de Vinculação de Ativo",
+			"fixedAssetId": "ID do Ativo Fixo",
+			"uuidField": "Caminho do Campo UUID",
+			"created": "Criado Em",
+			"updated": "Atualizado Em"
+		},
+		"empty": {
+			"description": "Nenhuma descrição fornecida"
+		},
+		"status": {
+			"active": "Ativo",
+			"inactive": "Inativo"
+		},
+		"modes": {
+			"pull": "Pull",
+			"push": "Push"
+		},
+		"authTypes": {
+			"none": "Nenhuma",
+			"apiKey": "Chave de API",
+			"ipWhitelist": "Lista de IPs",
+			"jwt": "JWT",
+			"oauth2": "OAuth 2.0"
+		}
+	},
+	"createEdit": {
+		"page": {
+			"title": "Adicionar Fonte de Dados HTTP",
+			"titleEdit": "Editar Fonte de Dados HTTP",
+			"description": "Configure uma nova fonte de dados HTTP para sua plataforma IoT",
+			"descriptionEdit": "Atualize a configuração da sua fonte de dados HTTP",
+			"backButton": "Voltar para Fontes de Dados",
+			"loading": "Carregando Fonte de Dados HTTP..."
+		},
+		"stepper": {
+			"title": "Configuração de Fonte de Dados HTTP",
+			"subtitle": "Siga os passos para configurar sua fonte de dados",
+			"infoText": "* Campos obrigatórios",
+			"currentStepLabel": "Passo Atual"
+		},
+		"steps": {
+			"basicInfo": {
+				"title": "Informações Básicas",
+				"description": "Nome, descrição e status da fonte de dados"
+			},
+			"workingHours": {
+				"title": "Horário de Funcionamento e Limite de Taxa",
+				"description": "Configure horário de funcionamento e limite de taxa"
+			},
+			"authentication": {
+				"title": "Autenticação",
+				"description": "Configure a autenticação"
+			},
+			"assetBinding": {
+				"title": "Vinculação de Ativo",
+				"description": "Configure a vinculação de ativo"
+			},
+			"review": {
+				"title": "Revisão",
+				"description": "Revise e confirme as configurações da fonte de dados"
+			},
+			"progress": {
+				"completeAllSteps": "Complete todas as etapas para criar uma nova fonte de dados"
+			},
+			"protocolConfig": {
+				"gatewayBannerTitle": "HTTP Gateway:",
+				"gatewayBannerBody": "Esta fonte de dados utiliza protocolo HTTP/HTTPS exclusivamente. Apenas o modo Push está disponível, no qual os dispositivos enviam dados para o endpoint do MapexOS."
+			}
+		},
+		"navigation": {
+			"back": "Voltar",
+			"next": "Próximo",
+			"create": "Criar Fonte de Dados",
+			"update": "Atualizar Fonte de Dados"
+		},
+		"notifications": {
+			"createSuccess": "Fonte de Dados HTTP criada com sucesso!",
+			"updateSuccess": "Fonte de Dados HTTP atualizada com sucesso!",
+			"createFailed": "Falha ao criar Fonte de Dados HTTP",
+			"updateFailed": "Falha ao atualizar Fonte de Dados HTTP",
+			"loadFailed": "Falha ao carregar dados da Fonte de Dados HTTP",
+			"copiedToClipboard": "Copiado para a área de transferência!",
+			"copyFailed": "Falha ao copiar para a área de transferência"
+		},
+		"basicInfo": {
+			"name": "Nome",
+			"nameRequired": "Nome é obrigatório",
+			"description": "Descrição",
+			"status": "Status",
+			"statusOptions": {
+				"enabled": "Habilitado",
+				"disabled": "Desabilitado"
+			},
+			"debugMode": "Modo Debug",
+			"debugModeTooltip": "Habilite o modo debug para registrar requisições recebidas para diagnóstico"
+		},
+		"workingHours": {
+			"title": "Horário de Funcionamento",
+			"enableWorkingHours": "Habilitar Horário de Funcionamento",
+			"daysOfWeek": {
+				"monday": "Segunda-feira",
+				"tuesday": "Terça-feira",
+				"wednesday": "Quarta-feira",
+				"thursday": "Quinta-feira",
+				"friday": "Sexta-feira",
+				"saturday": "Sábado",
+				"sunday": "Domingo"
+			},
+			"timeIntervals": "Intervalos de Tempo",
+			"startTime": "Hora de Início",
+			"endTime": "Hora de Término",
+			"startTimeRequired": "Hora de início é obrigatória",
+			"endTimeRequired": "Hora de término é obrigatória",
+			"invalidTimeFormat": "Formato de hora inválido (HH:MM)",
+			"removeInterval": "Remover intervalo",
+			"addInterval": "Adicionar Intervalo",
+			"timezone": "Fuso Horário",
+			"timezonePlaceholder": "ex.: America/Sao_Paulo",
+			"timezoneRequired": "Fuso horário é obrigatório"
+		},
+		"rateLimit": {
+			"title": "Limite de Taxa",
+			"enableRateLimit": "Habilitar Limite de Taxa",
+			"limitType": "Tipo de Limite",
+			"limitTypeRequired": "Tipo de limite é obrigatório",
+			"value": "Valor",
+			"valueRequired": "Valor é obrigatório",
+			"burstCapacity": "Capacidade de Pico",
+			"actionOnExceed": "Ação ao Exceder",
+			"actionRequired": "Ação é obrigatória"
+		},
+		"authentication": {
+			"title": "Tipo de Autenticação",
+			"authTypeLabel": "Tipo de Autenticação",
+			"authTypeRequired": "Tipo de autenticação é obrigatório",
+			"apiKey": {
+				"banner": "Os clientes devem enviar uma Chave de API válida no cabeçalho da requisição.",
+				"headerName": "Nome do Cabeçalho",
+				"headerNamePlaceholder": "ex., X-API-Key",
+				"headerNameHint": "Nome do cabeçalho HTTP que conterá a Chave de API",
+				"headerNameRequired": "Nome do cabeçalho é obrigatório",
+				"value": "Valor da Chave de API",
+				"valuePlaceholder": "Digite ou gere uma Chave de API",
+				"valueHint": "Chave secreta que os clientes devem fornecer",
+				"valueRequired": "Chave de API é obrigatória",
+				"copyTooltip": "Copiar Chave de API",
+				"generateTooltip": "Gerar Chave de API (GUID)"
+			},
+			"jwt": {
+				"banner": "Chave compartilhada usando algoritmo HS256.",
+				"headerName": "Nome do Cabeçalho",
+				"headerNamePlaceholder": "ex., Authorization",
+				"headerNameHint": "Nome do cabeçalho HTTP que conterá o token JWT (padrão: Authorization)",
+				"headerNameRequired": "Nome do cabeçalho é obrigatório",
+				"secretKey": "Chave Secreta",
+				"secretKeyPlaceholder": "Digite ou gere uma chave secreta",
+				"secretKeyHint": "Chave secreta compartilhada para validação JWT HS256",
+				"secretKeyRequired": "Chave secreta é obrigatória",
+				"copyTooltip": "Copiar Chave Secreta",
+				"generateTooltip": "Gerar Chave Secreta"
+			},
+			"ipWhitelist": {
+				"banner": "Apenas requisições de endereços IP/faixas permitidos serão aceitas.",
+				"ipAddress": "Endereço IP",
+				"ipAddressPlaceholder": "ex., 192.168.1.100",
+				"ipAddressHint": "Digite um endereço IPv4 ou IPv6",
+				"ipAddressRequired": "Endereço IP é obrigatório",
+				"cidrMask": "Máscara CIDR",
+				"cidrMaskPlaceholder": "ex., 24",
+				"cidrMaskHint": "Máscara de sub-rede (0-32 para IPv4, 0-128 para IPv6)",
+				"cidrMaskRequired": "Máscara CIDR é obrigatória",
+				"addButton": "Adicionar IP à Lista",
+				"removeTooltip": "Remover",
+				"emptyMessage": "Nenhum endereço IP adicionado ainda. Adicione pelo menos um endereço IP à lista.",
+				"addedMessage": "Adicionado {ip} à lista",
+				"removedMessage": "Removido {ip} da lista",
+				"duplicateError": "Este IP/CIDR já está na lista",
+				"invalidIpv4Cidr": "Máscara CIDR IPv4 deve estar entre 0 e 32",
+				"invalidIpv6Cidr": "Máscara CIDR IPv6 deve estar entre 0 e 128",
+				"invalidIpFormat": "Formato de endereço IP inválido. Digite um endereço IPv4 ou IPv6 válido."
+			},
+			"oauth2": {
+				"banner": "Autenticação OAuth 2.0 / OpenID Connect com endpoint JWKS.",
+				"jwksUrl": "URL do JWKS",
+				"jwksUrlPlaceholder": "http://localhost:8081/keycloak/realms/development/protocol/openid-connect/certs",
+				"jwksUrlHint": "URL do endpoint JWKS OAuth2 para validação de token",
+				"jwksUrlRequired": "URL do JWKS é obrigatória",
+				"invalidUrl": "Deve ser uma URL válida"
+			},
+			"none": {
+				"banner": "Esta fonte de dados aceitará requisições de QUALQUER cliente sem validação. Use apenas para testes ou em redes confiáveis. NÃO é recomendado para ambientes de produção."
+			}
+		},
+		"assetBinding": {
+			"title": "Vinculação de Ativo",
+			"bindingMode": "Modo de Vinculação",
+			"bindingModeRequired": "Modo de vinculação é obrigatório",
+			"fixedAsset": {
+				"banner": "Todos os dados enviados para este endpoint serão vinculados ao ativo selecionado. Use quando você tem um endpoint dedicado para um único dispositivo.",
+				"selectAsset": "Selecionar Ativo"
+			},
+			"uuidField": {
+				"banner": "O UUID do dispositivo será extraído do payload para identificar a qual ativo os dados pertencem. Defina um ou mais caminhos JSON — pesquise um template para preencher automaticamente, ou insira manualmente.",
+				"uuidJsonPath": "Caminho JSON do UUID",
+				"uuidJsonPathPlaceholder": "device.uuid",
+				"uuidJsonPathHint": "Caminho para o UUID do dispositivo no payload (ex., device.uuid ou header.deviceId)",
+				"pathRequired": "Caminho é obrigatório",
+				"invalidPathFormat": "Formato de caminho inválido (use apenas letras, números, pontos, sublinhados)",
+				"selectFromTemplate": "Selecionar path de um template",
+				"noTemplatePath": "Este template não possui caminho UUID configurado",
+				"templateSearchPlaceholder": "Digite para buscar templates...",
+				"removePath": "Remover caminho",
+				"addPath": "Adicionar Caminho Alternativo"
+			}
+		},
+		"review": {
+			"subtitle": "Revise sua configuração antes de salvar. Você pode editar qualquer seção clicando no botão editar.",
+			"successMessage": "Pronto para salvar! Clique em \"Criar Fonte de Dados\" ou \"Atualizar Fonte de Dados\" para confirmar suas alterações.",
+			"sections": {
+				"basicInfo": "Informações Básicas",
+				"workingHours": "Horário de Funcionamento e Limite de Taxa",
+				"authentication": "Autenticação",
+				"assetBinding": "Vinculação de Ativo"
+			},
+			"fields": {
+				"name": "Nome",
+				"description": "Descrição",
+				"status": "Status",
+				"workingHoursEnabled": "Horário de Funcionamento",
+				"daysOfWeek": "Dias da Semana",
+				"timeInterval": "Intervalo de Tempo",
+				"timezone": "Fuso Horário",
+				"rateLimitEnabled": "Limite de Taxa",
+				"rateLimitType": "Tipo de Limite",
+				"rateLimitValue": "Máximo de Requisições",
+				"burstCapacity": "Capacidade de Pico",
+				"actionOnExceed": "Ao Exceder",
+				"authType": "Tipo de Auth",
+				"apiKeyHeader": "Nome do Cabeçalho",
+				"apiKeyValue": "Chave de API",
+				"jwtHeaderName": "Cabeçalho JWT",
+				"jwtSecret": "Segredo JWT",
+				"ipAddresses": "Endereços IP",
+				"jwksUrl": "URL do JWKS",
+				"bindingMode": "Modo de Vinculação",
+				"selectedAsset": "Ativo Selecionado",
+				"uuidPaths": "Caminhos UUID"
+			},
+			"values": {
+				"enabled": "Habilitado",
+				"disabled": "Desabilitado",
+				"notConfigured": "Não configurado",
+				"none": "Nenhum",
+				"noDescription": "Nenhuma descrição fornecida",
+				"fixedAsset": "Ativo Fixo",
+				"uuidField": "Campo UUID Dinâmico",
+				"perSecond": "por segundo",
+				"perMinute": "por minuto",
+				"perHour": "por hora",
+				"drop": "Descartar Requisição",
+				"queue": "Enfileirar Requisição"
+			},
+			"basicInfo": "Informações Básicas",
+			"name": "Nome",
+			"enabled": "Habilitado",
+			"yes": "Sim",
+			"no": "Não",
+			"description": "Descrição",
+			"notAvailable": "N/D",
+			"protocolMode": "Protocolo e Modo",
+			"mode": "Modo",
+			"protocol": "Protocolo",
+			"pushFixed": "Push (Fixo)",
+			"httpFixed": "HTTP (Fixo)",
+			"protocolBanner": "Fontes de Dados HTTP sempre usam protocolo HTTP no modo Push onde dispositivos enviam dados para o endpoint do MapexOS.",
+			"authentication": "Autenticação",
+			"authType": "Tipo de Autenticação",
+			"headerApiKey": "Cabeçalho da Chave de API",
+			"secretKey": "Chave Secreta (HS256)",
+			"notConfigured": "Não configurado",
+			"ipWhitelist": "Lista de IPs",
+			"noIpConfigured": "Nenhum endereço IP configurado",
+			"jwksUrl": "URL do JWKS",
+			"noAuthWarning": "Sem Autenticação - Este endpoint aceita requisições sem validação",
+			"assetBinding": "Vinculação de Ativo",
+			"bindingMode": "Modo de Vinculação",
+			"selectedAsset": "Ativo Selecionado",
+			"uuidPaths": "Caminhos UUID",
+			"noUuidPaths": "Nenhum caminho UUID configurado",
+			"assetTemplates": "Templates de Ativos",
+			"templatesSelected": "{count} template(s) selecionado(s)",
+			"noTemplatesSelected": "Nenhum template selecionado",
+			"payloadExample": "Exemplo de Payload"
+		}
+	}
+}

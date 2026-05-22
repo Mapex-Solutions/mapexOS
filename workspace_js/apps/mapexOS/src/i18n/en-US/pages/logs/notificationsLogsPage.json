@@ -1,0 +1,70 @@
+{
+  "pageHeader": {
+    "title": "Notifications Logs",
+    "description": "See all notification execution logs for your organization."
+  },
+  "listTitle": "Notifications Logs List",
+  "itemLabel": "notification log",
+  "itemLabelPlural": "notification logs",
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search by notification name...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "name": "notification name",
+    "status": "status",
+    "notificationType": "notification type",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include children organizations",
+    "options": {
+      "success": "success",
+      "failure": "failure",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "notificationTypeOptions": {
+    "slack": "Slack",
+    "teams": "Teams",
+    "email": "Email",
+    "push": "Push",
+    "telegram": "Telegram",
+    "webhook": "Webhook"
+  },
+  "columns": {
+    "notificationName": "Notification Name",
+    "notificationType": "Type",
+    "tenantId": "Tenant",
+    "status": "Status",
+    "created": "Created"
+  },
+  "menuColumns": {
+    "notificationType": "type",
+    "tenantId": "tenant",
+    "created": "created"
+  },
+  "statusBadge": {
+    "success": "SUCCESS",
+    "failure": "FAILURE"
+  },
+  "drawer": {
+    "title": "Notification Details"
+  },
+  "empty": {
+    "title": "No Notification Logs Found",
+    "description": "It seems there are no notification logs matching your current search criteria or you don't have any notification logs yet."
+  },
+  "pagination": {
+    "newer": "Newer",
+    "older": "Older"
+  },
+  "messages": {
+    "loadFailed": "Failed to load notification logs"
+  },
+  "defaults": {
+    "unknown": "Unknown",
+    "notAvailable": "N/A"
+  }
+}

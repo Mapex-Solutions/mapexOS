@@ -1,0 +1,49 @@
+{
+  "title": "Filtros Dinâmicos",
+  "closeTooltip": "Fechar filtros dinâmicos",
+  "sourceLabel": "Fonte dos Campos",
+  "sourceAsset": "Ativo",
+  "sourceAssetTemplate": "Template de Ativo",
+  "searchAsset": "Buscar ativo por nome...",
+  "searchAssetTemplate": "Buscar template por nome...",
+  "noResults": "Nenhum resultado encontrado",
+  "templateResolved": "Template",
+  "loadingFields": "Carregando campos dinâmicos...",
+  "noFields": "Nenhum campo dinâmico filtrável encontrado para este template.",
+  "noTemplateForAsset": "O ativo selecionado não possui template associado. Filtros dinâmicos requerem um template com campos dinâmicos.",
+  "resolvingTemplate": "Resolvendo template...",
+  "dynamicFieldsTitle": "Campos Dinâmicos",
+  "filtersSection": "Filtros",
+  "filtersCount": "{active} de {total}",
+  "addFilter": "Adicionar filtro",
+  "searchFields": "Buscar campos...",
+  "emptyTitle": "Nenhum filtro adicionado",
+  "emptyDescription": "Escolha os campos para filtrar",
+  "allFieldsAdded": "Todos os campos foram adicionados",
+  "fieldTypeHeaders": {
+    "number": "Números",
+    "string": "Texto",
+    "boolean": "Booleano",
+    "date": "Datas"
+  },
+  "operators": {
+    "equals": "Igual",
+    "notEquals": "Diferente",
+    "greaterThan": "Maior que",
+    "greaterThanEquals": "Maior ou Igual",
+    "lessThan": "Menor que",
+    "lessThanEquals": "Menor ou Igual",
+    "range": "Intervalo",
+    "startsWith": "Começa com",
+    "rangeFrom": "De",
+    "rangeTo": "Até"
+  },
+  "booleanTrue": "Verdadeiro",
+  "booleanFalse": "Falso",
+  "buttons": {
+    "reset": "Resetar",
+    "resetTooltip": "Limpar todos os filtros dinâmicos",
+    "apply": "Aplicar",
+    "applyTooltip": "Aplicar filtros dinâmicos"
+  }
+}

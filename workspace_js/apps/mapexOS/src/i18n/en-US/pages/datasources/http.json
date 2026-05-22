@@ -1,0 +1,424 @@
+{
+	"pageHeader": {
+		"title": "HTTP Data Sources",
+		"description": "Manage HTTP data sources: add, edit and filter sources",
+		"button": "Add Data Source",
+		"info": {
+			"title": "What is an HTTP Data Source?",
+			"description": "An HTTP Data Source enables bidirectional communication between your IoT devices and MapexOS using HTTP/HTTPS protocols. It provides a flexible way to receive telemetry data from devices or send commands to them.",
+			"items": {
+				"pull": {
+					"title": "Pull Mode",
+					"text": "MapexOS periodically fetches data from your devices by making HTTP requests to their endpoints"
+				},
+				"push": {
+					"title": "Push Mode",
+					"text": "Your devices send data directly to MapexOS endpoints whenever events occur"
+				},
+				"authentication": {
+					"title": "Authentication",
+					"text": "Supports multiple auth methods: API Key, JWT, OAuth2, IP Whitelist, or None"
+				},
+				"assetBinding": {
+					"title": "Asset Binding",
+					"text": "Link data to specific assets using Fixed Asset ID or Dynamic UUID field mapping"
+				}
+			},
+			"docsLabel": "View Complete Documentation"
+		}
+	},
+	"filters": {
+		"label": "filters",
+		"searchPlaceholder": "search data sources...",
+		"allStatus": "all",
+		"advancedFilters": "advanced filters",
+		"pendingFilters": "pending filters - click to apply",
+		"clearAll": "clear all",
+		"name": "search by name",
+		"mode": "mode",
+		"modeOptions": {
+			"all": "all",
+			"pull": "Pull",
+			"push": "Push"
+		},
+		"status": "status",
+		"statusOptions": {
+			"all": "all",
+			"active": "active",
+			"inactive": "inactive"
+		},
+		"includeChildren": "include children",
+		"includeChildrenOptions": {
+			"yes": "yes",
+			"no": "no"
+		},
+		"authType": "authentication type",
+		"authTypeOptions": {
+			"all": "all",
+			"none": "None",
+			"apiKey": "API Key",
+			"ipWhitelist": "IP Whitelist",
+			"jwt": "JWT",
+			"oauth2": "OAuth 2.0"
+		},
+		"assetBindType": "asset binding",
+		"assetBindTypeOptions": {
+			"all": "all",
+			"fixed": "Fixed Asset",
+			"dynamic": "Dynamic"
+		}
+	},
+	"columns": {
+		"name": "Name",
+		"organization": "Organization",
+		"assetBind": "Asset Bind",
+		"auth": "Authentication",
+		"mode": "Mode",
+		"status": "Status"
+	},
+	"headerMenu": {
+		"itemLabel": "Data Source",
+		"itemLabelPlural": "Data Sources"
+	},
+	"list": {
+		"title": "Data Sources List"
+	},
+	"empty": {
+		"title": "No data sources found",
+		"description": "It seems there are no data sources matching your current search criteria or you don't have any data sources yet."
+	},
+	"deleteDialog": {
+		"title": "Confirm Deletion",
+		"message": "Are you sure you want to delete the data source \"{name}\"?"
+	},
+	"notifications": {
+		"deleteSuccess": "Data source deleted successfully",
+		"deleteFailed": "Failed to delete data source",
+		"loadFailed": "Failed to load data sources",
+		"endpointCopied": "Endpoint URL copied to clipboard"
+	},
+	"errors": {
+		"apiNotInitialized": "HTTP Gateway API is not available",
+		"noUuidPaths": "No UUID paths configured to test",
+		"invalidPayloadOrPath": "Invalid JSON payload or path format"
+	},
+	"actions": {
+		"copyEndpoint": "Copy Endpoint"
+	},
+	"drawer": {
+		"title": "Data Source Details",
+		"close": "Close",
+		"edit": "Edit",
+		"loading": "Loading data source details...",
+		"error": "Failed to load data source details",
+		"sections": {
+			"basicInfo": "Basic Information",
+			"configuration": "Configuration",
+			"authentication": "Authentication",
+			"assetBinding": "Asset Binding",
+			"timestamps": "Timestamps"
+		},
+		"fields": {
+			"name": "Name",
+			"organization": "Organization",
+			"description": "Description",
+			"status": "Status",
+			"mode": "Mode",
+			"protocol": "Protocol",
+			"authType": "Authentication Type",
+			"assetBindType": "Asset Binding Type",
+			"fixedAssetId": "Fixed Asset ID",
+			"uuidField": "UUID Field Path",
+			"created": "Created At",
+			"updated": "Updated At"
+		},
+		"empty": {
+			"description": "No description provided"
+		},
+		"status": {
+			"active": "Active",
+			"inactive": "Inactive"
+		},
+		"modes": {
+			"pull": "Pull",
+			"push": "Push"
+		},
+		"authTypes": {
+			"none": "None",
+			"apiKey": "API Key",
+			"ipWhitelist": "IP Whitelist",
+			"jwt": "JWT",
+			"oauth2": "OAuth 2.0"
+		}
+	},
+	"createEdit": {
+		"page": {
+			"title": "Add HTTP Data Source",
+			"titleEdit": "Edit HTTP Data Source",
+			"description": "Configure a new HTTP data source for your IoT platform",
+			"descriptionEdit": "Update the configuration of your HTTP data source",
+			"backButton": "Back to Data Sources",
+			"loading": "Loading HTTP Data Source..."
+		},
+		"stepper": {
+			"title": "HTTP Data Source Setup",
+			"subtitle": "Follow the steps to configure your data source",
+			"infoText": "* Required fields",
+			"currentStepLabel": "Current Step"
+		},
+		"steps": {
+			"basicInfo": {
+				"title": "Basic Information",
+				"description": "Name, description and status of the data source"
+			},
+			"workingHours": {
+				"title": "Working Hours & Rate Limit",
+				"description": "Configure working hours and rate limit"
+			},
+			"authentication": {
+				"title": "Authentication",
+				"description": "Configure authentication"
+			},
+			"assetBinding": {
+				"title": "Asset Binding",
+				"description": "Configure asset binding"
+			},
+			"review": {
+				"title": "Review",
+				"description": "Review and confirm data source settings"
+			},
+			"progress": {
+				"completeAllSteps": "Complete all steps to create a new data source"
+			},
+			"protocolConfig": {
+				"gatewayBannerTitle": "HTTP Gateway:",
+				"gatewayBannerBody": "This data source uses HTTP/HTTPS protocol exclusively. Only Push mode is available where devices send data to the MapexOS endpoint."
+			}
+		},
+		"navigation": {
+			"back": "Back",
+			"next": "Next",
+			"create": "Create Data Source",
+			"update": "Update Data Source"
+		},
+		"notifications": {
+			"createSuccess": "HTTP Data Source created successfully!",
+			"updateSuccess": "HTTP Data Source updated successfully!",
+			"createFailed": "Failed to create HTTP Data Source",
+			"updateFailed": "Failed to update HTTP Data Source",
+			"loadFailed": "Failed to load HTTP Data Source data",
+			"copiedToClipboard": "Copied to clipboard!",
+			"copyFailed": "Failed to copy to clipboard"
+		},
+		"basicInfo": {
+			"name": "Name",
+			"nameRequired": "Name is required",
+			"description": "Description",
+			"status": "Status",
+			"statusOptions": {
+				"enabled": "Enabled",
+				"disabled": "Disabled"
+			},
+			"debugMode": "Debug Mode",
+			"debugModeTooltip": "Enable debug mode to log incoming requests for troubleshooting"
+		},
+		"workingHours": {
+			"title": "Working Hours",
+			"enableWorkingHours": "Enable Working Hours",
+			"daysOfWeek": {
+				"monday": "Monday",
+				"tuesday": "Tuesday",
+				"wednesday": "Wednesday",
+				"thursday": "Thursday",
+				"friday": "Friday",
+				"saturday": "Saturday",
+				"sunday": "Sunday"
+			},
+			"timeIntervals": "Time Intervals",
+			"startTime": "Start Time",
+			"endTime": "End Time",
+			"startTimeRequired": "Start time is required",
+			"endTimeRequired": "End time is required",
+			"invalidTimeFormat": "Invalid time format (HH:MM)",
+			"removeInterval": "Remove interval",
+			"addInterval": "Add Interval",
+			"timezone": "Timezone",
+			"timezonePlaceholder": "e.g.: America/Sao_Paulo",
+			"timezoneRequired": "Time zone is required"
+		},
+		"rateLimit": {
+			"title": "Rate Limit",
+			"enableRateLimit": "Enable Rate Limit",
+			"limitType": "Limit Type",
+			"limitTypeRequired": "Limit type is required",
+			"value": "Value",
+			"valueRequired": "Value is required",
+			"burstCapacity": "Burst Capacity",
+			"actionOnExceed": "Action on Exceed",
+			"actionRequired": "Action is required"
+		},
+		"authentication": {
+			"title": "Authentication Type",
+			"authTypeLabel": "Authentication Type",
+			"authTypeRequired": "Authentication type is required",
+			"apiKey": {
+				"banner": "Clients must send a valid API Key in the request header.",
+				"headerName": "Header Name",
+				"headerNamePlaceholder": "e.g., X-API-Key",
+				"headerNameHint": "HTTP header name that will contain the API Key",
+				"headerNameRequired": "Header name is required",
+				"value": "API Key Value",
+				"valuePlaceholder": "Enter or generate API Key",
+				"valueHint": "Secret key that clients must provide",
+				"valueRequired": "API Key is required",
+				"copyTooltip": "Copy API Key",
+				"generateTooltip": "Generate API Key (GUID)"
+			},
+			"jwt": {
+				"banner": "Shared key using HS256 algorithm.",
+				"headerName": "Header Name",
+				"headerNamePlaceholder": "e.g., Authorization",
+				"headerNameHint": "HTTP header name that will contain the JWT token (default: Authorization)",
+				"headerNameRequired": "Header name is required",
+				"secretKey": "Secret Key",
+				"secretKeyPlaceholder": "Enter or generate secret key",
+				"secretKeyHint": "Shared secret key for HS256 JWT validation",
+				"secretKeyRequired": "Secret key is required",
+				"copyTooltip": "Copy Secret Key",
+				"generateTooltip": "Generate Secret Key"
+			},
+			"ipWhitelist": {
+				"banner": "Only requests from allowed IP addresses/ranges will be accepted.",
+				"ipAddress": "IP Address",
+				"ipAddressPlaceholder": "e.g., 192.168.1.100",
+				"ipAddressHint": "Enter IPv4 or IPv6 address",
+				"ipAddressRequired": "IP address is required",
+				"cidrMask": "CIDR Mask",
+				"cidrMaskPlaceholder": "e.g., 24",
+				"cidrMaskHint": "Subnet mask (0-32 for IPv4, 0-128 for IPv6)",
+				"cidrMaskRequired": "CIDR mask is required",
+				"addButton": "Add IP to Whitelist",
+				"removeTooltip": "Remove",
+				"emptyMessage": "No IP addresses added yet. Add at least one IP address to the whitelist.",
+				"addedMessage": "Added {ip} to whitelist",
+				"removedMessage": "Removed {ip} from whitelist",
+				"duplicateError": "This IP/CIDR is already in the whitelist",
+				"invalidIpv4Cidr": "IPv4 CIDR mask must be between 0 and 32",
+				"invalidIpv6Cidr": "IPv6 CIDR mask must be between 0 and 128",
+				"invalidIpFormat": "Invalid IP address format. Please enter a valid IPv4 or IPv6 address."
+			},
+			"oauth2": {
+				"banner": "OAuth 2.0 / OpenID Connect authentication with JWKS endpoint.",
+				"jwksUrl": "JWKS URL",
+				"jwksUrlPlaceholder": "http://localhost:8081/keycloak/realms/development/protocol/openid-connect/certs",
+				"jwksUrlHint": "OAuth2 JWKS endpoint URL for token validation",
+				"jwksUrlRequired": "JWKS URL is required",
+				"invalidUrl": "Must be a valid URL"
+			},
+			"none": {
+				"banner": "This data source will accept requests from ANY client without validation. Use only for testing or in trusted networks. This is NOT recommended for production environments."
+			}
+		},
+		"assetBinding": {
+			"title": "Asset Binding",
+			"bindingMode": "Binding Mode",
+			"bindingModeRequired": "Binding mode is required",
+			"fixedAsset": {
+				"banner": "All data sent to this endpoint will be linked to the selected asset. Use this when you have a dedicated endpoint for a single device.",
+				"selectAsset": "Select Asset"
+			},
+			"uuidField": {
+				"banner": "The device UUID will be extracted from the payload to identify which asset the data belongs to. Define one or more JSON paths — type a template name to auto-fill the path, or enter it manually.",
+				"uuidJsonPath": "UUID JSON Path",
+				"uuidJsonPathPlaceholder": "device.uuid",
+				"uuidJsonPathHint": "Path to device UUID in payload (e.g., device.uuid or header.deviceId)",
+				"pathRequired": "Path is required",
+				"invalidPathFormat": "Invalid path format (use only letters, numbers, dots, underscores)",
+				"selectFromTemplate": "Select path from template",
+				"noTemplatePath": "This template has no UUID path configured",
+				"templateSearchPlaceholder": "Type to search templates...",
+				"removePath": "Remove path",
+				"addPath": "Add Alternative Path"
+			}
+		},
+		"review": {
+			"subtitle": "Review your configuration before saving. You can edit any section by clicking the edit button.",
+			"successMessage": "Ready to save! Click \"Create Data Source\" or \"Update Data Source\" to confirm your changes.",
+			"sections": {
+				"basicInfo": "Basic Information",
+				"workingHours": "Working Hours & Rate Limit",
+				"authentication": "Authentication",
+				"assetBinding": "Asset Binding"
+			},
+			"fields": {
+				"name": "Name",
+				"description": "Description",
+				"status": "Status",
+				"workingHoursEnabled": "Working Hours",
+				"daysOfWeek": "Days of Week",
+				"timeInterval": "Time Interval",
+				"timezone": "Timezone",
+				"rateLimitEnabled": "Rate Limit",
+				"rateLimitType": "Limit Type",
+				"rateLimitValue": "Max Requests",
+				"burstCapacity": "Burst Capacity",
+				"actionOnExceed": "On Exceed",
+				"authType": "Auth Type",
+				"apiKeyHeader": "Header Name",
+				"apiKeyValue": "API Key",
+				"jwtHeaderName": "JWT Header",
+				"jwtSecret": "JWT Secret",
+				"ipAddresses": "IP Addresses",
+				"jwksUrl": "JWKS URL",
+				"bindingMode": "Binding Mode",
+				"selectedAsset": "Selected Asset",
+				"uuidPaths": "UUID Paths"
+			},
+			"values": {
+				"enabled": "Enabled",
+				"disabled": "Disabled",
+				"notConfigured": "Not configured",
+				"none": "None",
+				"noDescription": "No description provided",
+				"fixedAsset": "Fixed Asset",
+				"uuidField": "Dynamic UUID Field",
+				"perSecond": "per second",
+				"perMinute": "per minute",
+				"perHour": "per hour",
+				"drop": "Drop Request",
+				"queue": "Queue Request"
+			},
+			"basicInfo": "Basic Information",
+			"name": "Name",
+			"enabled": "Enabled",
+			"yes": "Yes",
+			"no": "No",
+			"description": "Description",
+			"notAvailable": "N/A",
+			"protocolMode": "Protocol & Mode",
+			"mode": "Mode",
+			"protocol": "Protocol",
+			"pushFixed": "Push (Fixed)",
+			"httpFixed": "HTTP (Fixed)",
+			"protocolBanner": "HTTP Data Sources always use HTTP protocol in Push mode where devices send data to the MapexOS endpoint.",
+			"authentication": "Authentication",
+			"authType": "Auth Type",
+			"headerApiKey": "Header API Key",
+			"secretKey": "Secret Key (HS256)",
+			"notConfigured": "Not configured",
+			"ipWhitelist": "IP Whitelist",
+			"noIpConfigured": "No IP addresses configured",
+			"jwksUrl": "JWKS URL",
+			"noAuthWarning": "No Authentication - This endpoint accepts requests without validation",
+			"assetBinding": "Asset Binding",
+			"bindingMode": "Binding Mode",
+			"selectedAsset": "Selected Asset",
+			"uuidPaths": "UUID Paths",
+			"noUuidPaths": "No UUID paths configured",
+			"assetTemplates": "Asset Templates",
+			"templatesSelected": "{count} template(s) selected",
+			"noTemplatesSelected": "No templates selected",
+			"payloadExample": "Payload Example"
+		}
+	}
+}

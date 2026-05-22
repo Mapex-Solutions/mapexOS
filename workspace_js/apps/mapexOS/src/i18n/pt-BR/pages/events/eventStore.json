@@ -1,0 +1,87 @@
+{
+  "pageHeader": {
+    "title": "Armazenamento de Eventos",
+    "description": "Pesquise e navegue pelos eventos armazenados dos seus ativos"
+  },
+  "listHeader": {
+    "title": "Eventos",
+    "itemLabel": "evento",
+    "itemLabelPlural": "eventos"
+  },
+  "filters": {
+    "label": "Filtros",
+    "searchPlaceholder": "Buscar por ID de referência...",
+    "allStatus": "Todos",
+    "advancedFilters": "Filtros Avançados",
+    "dynamicFilters": "Filtros Dinâmicos",
+    "pendingFilters": "Filtros pendentes - clique para aplicar",
+    "clearAll": "Limpar tudo",
+    "includeChildrenOrgs": "Incluir organizações filhas",
+    "startDate": "Data Inicial",
+    "endDate": "Data Final",
+    "threadId": "ID da Thread",
+    "assetId": "ID do Ativo",
+    "assetTemplateId": "ID do Template de Ativo",
+    "asset": "Ativo",
+    "assetTemplate": "Template de Ativo",
+    "assetPlaceholder": "Buscar ativo por nome...",
+    "assetTemplatePlaceholder": "Buscar template por nome...",
+    "eventType": "Tipo de Evento",
+    "source": "Origem",
+    "options": {
+      "yes": "Sim",
+      "no": "Não"
+    }
+  },
+  "columns": {
+    "assetName": "Ativo",
+    "templateName": "Modelo",
+    "threadId": "ID de Referência",
+    "source": "Origem",
+    "created": "Criado"
+  },
+  "empty": {
+    "title": "Nenhum evento encontrado",
+    "description": "Tente ajustar seus filtros ou volte mais tarde para novos eventos."
+  },
+  "drawer": {
+    "title": "Detalhes do Evento"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Próximo"
+  },
+  "notifications": {
+    "loadFailed": "Falha ao carregar eventos"
+  },
+  "tour": {
+    "header": {
+      "title": "Armazenamento de Eventos",
+      "description": "Esta página mostra todos os eventos processados dos seus ativos. Os eventos são armazenados com campos dinâmicos que você pode filtrar e explorar."
+    },
+    "searchInput": {
+      "title": "Busca Rápida",
+      "description": "Digite o ID de um Ativo para filtrar eventos rapidamente. Pressione Enter para aplicar."
+    },
+    "advancedFiltersBtn": {
+      "title": "Filtros Avançados",
+      "description": "Abra os filtros avançados para filtrar por intervalo de data, ID de thread, origem e mais."
+    },
+    "advancedFiltersOpen": {
+      "title": "Painel de Filtros Avançados",
+      "description": "Aqui você pode definir intervalos de tempo, incluir organizações filhas e filtrar por identificadores específicos. Clique em Aplicar quando terminar."
+    },
+    "dynamicFiltersBtn": {
+      "title": "Filtros Dinâmicos",
+      "description": "Abra os filtros dinâmicos para filtrar eventos pelos campos específicos definidos no Template de Ativo (campos EVA)."
+    },
+    "dynamicFiltersOpen": {
+      "title": "Painel de Filtros Dinâmicos",
+      "description": "Selecione um Ativo ou Regra de Negócio, e o sistema carregará os campos do template. Você pode então filtrar eventos por valores específicos dos campos usando operadores como igual, maior que, intervalo e mais."
+    },
+    "results": {
+      "title": "Resultados dos Eventos",
+      "description": "Os eventos são exibidos aqui com paginação baseada em cursor. Clique em qualquer evento para ver seu payload completo no painel de detalhes."
+    }
+  }
+}

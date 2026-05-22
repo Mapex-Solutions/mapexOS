@@ -1,0 +1,1 @@
+export { default as LakeHousePathConfig } from './LakeHousePathConfig.vue';

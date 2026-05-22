@@ -1,0 +1,171 @@
+{
+  "pageHeader": {
+    "title": "lists",
+    "description": "manage system lists such as asset types, asset groups, priorities, statuses, and severities.",
+    "button": "add list item",
+    "info": {
+      "title": "What are System Lists?",
+      "description": "System Lists are categorized collections of predefined values used throughout MapexOS. They provide consistency and standardization for asset classification, prioritization, and status tracking.",
+      "items": {
+        "types": {
+          "title": "List Categories",
+          "text": "Asset Types, Asset Groups, Priorities, Statuses, and Severities - each serving specific classification needs"
+        },
+        "hierarchy": {
+          "title": "Hierarchical Structure",
+          "text": "Support parent-child relationships for complex categorization (e.g., Manufacturer → Device Type)"
+        },
+        "systemLists": {
+          "title": "System Lists",
+          "text": "Pre-built lists provided by MapexOS, visible to all organizations but read-only"
+        },
+        "customLists": {
+          "title": "Custom Lists",
+          "text": "Create organization-specific list items tailored to your operational requirements"
+        },
+        "templates": {
+          "title": "Shared Templates",
+          "text": "Share list items across organizations as templates for standardization"
+        }
+      },
+      "docsLabel": "View Complete Documentation"
+    }
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search list items...",
+    "allSource": "all",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "name": "search by name",
+    "category": "category",
+    "type": "list type",
+    "isSystem": "source",
+    "isTemplate": "scope",
+    "includeChildren": "include child organizations",
+    "categoryOptions": {
+      "all": "all",
+      "iot": "IoT"
+    },
+    "typeOptions": {
+      "all": "all",
+      "categories": "categories",
+      "manufacturers": "manufacturers",
+      "models": "models"
+    },
+    "isSystemOptions": {
+      "all": "all",
+      "system": "system",
+      "custom": "custom"
+    },
+    "isTemplateOptions": {
+      "all": "all",
+      "shared": "shared",
+      "local": "local"
+    },
+    "includeChildrenOptions": {
+      "all": "all",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "listHeader": {
+    "title": "list items",
+    "itemLabel": "item",
+    "itemLabelPlural": "items"
+  },
+  "columns": {
+    "name": "name",
+    "value": "value",
+    "category": "category",
+    "type": "type",
+    "source": "source",
+    "scope": "scope",
+    "organization": "organization"
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "menuColumns": {
+    "organization": "organization",
+    "category": "category",
+    "type": "type",
+    "source": "source",
+    "scope": "scope"
+  },
+  "categories": {
+    "iot": "IoT"
+  },
+  "listTypes": {
+    "manufacturers": "manufacturer",
+    "assets": "asset",
+    "asset_category": "category",
+    "asset_manufacturer": "manufacturer",
+    "asset_model": "model"
+  },
+  "empty": {
+    "title": "no list items found",
+    "description": "it seems there are no list items matching your current search criteria or you don't have any list items yet."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirm deletion",
+      "message": "are you sure you want to delete the list item \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleted": "list item deleted successfully",
+    "deleteError": "error deleting list item",
+    "loadFailed": "failed to load list items",
+    "systemListEdit": "system list items cannot be edited",
+    "systemListDelete": "system list items cannot be deleted",
+    "sharedListEdit": "shared list items from other organizations cannot be edited",
+    "sharedListDelete": "shared list items from other organizations cannot be deleted"
+  },
+  "errors": {
+    "apiNotInitialized": "Lists API is not available",
+    "idMissing": "List ID is missing"
+  },
+  "actions": {
+    "edit": "edit",
+    "view": "view",
+    "delete": "delete"
+  },
+  "drawer": {
+    "title": "list details",
+    "close": "close",
+    "loading": "loading list details...",
+    "error": "error loading list details",
+    "sections": {
+      "basicInfo": "basic information",
+      "ids": "identifiers",
+      "metadata": "metadata",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "value": "value",
+      "category": "category",
+      "type": "list type",
+      "isSystem": "is system",
+      "isTemplate": "is template",
+      "id": "id",
+      "parentType": "parent type",
+      "parentName": "parent name",
+      "orgId": "organization id",
+      "created": "created",
+      "updated": "updated"
+    },
+    "values": {
+      "yes": "yes",
+      "no": "no"
+    },
+    "empty": {
+      "parentType": "no parent type",
+      "parentName": "no parent",
+      "orgId": "no organization"
+    }
+  }
+}

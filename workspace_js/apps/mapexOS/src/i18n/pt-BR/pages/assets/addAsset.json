@@ -1,0 +1,256 @@
+{
+  "page": {
+    "title": "adicionar ativo",
+    "titleEdit": "editar ativo",
+    "description": "registrar um novo ativo IoT com template predefinido",
+    "button": "voltar para ativos"
+  },
+  "stepper": {
+    "title": "etapas de progresso",
+    "subtitle": "complete todas as etapas para criar um novo ativo",
+    "requiredInfo": "todos os campos marcados com * são obrigatórios",
+    "currentStep": "etapa atual"
+  },
+  "steps": {
+    "step1": {
+      "label": "identificação",
+      "description": "nome, ID e descrição do ativo",
+      "title": "identificação",
+      "subtitle": "adicione informações básicas do ativo",
+      "fields": {
+        "name": {
+          "label": "nome",
+          "placeholder": "ex.: sensor-temp-001",
+          "hint": "identificador único do ativo",
+          "required": "nome é obrigatório"
+        },
+        "assetId": {
+          "label": "ID do ativo",
+          "placeholder": "ex.: A1234567",
+          "hint": "ID de identificação do ativo",
+          "required": "ID do ativo é obrigatório"
+        },
+        "status": {
+          "label": "status",
+          "placeholder": "selecione o status",
+          "hint": "ativar ou desativar este ativo",
+          "required": "status é obrigatório"
+        },
+        "description": {
+          "label": "descrição",
+          "placeholder": "digite uma descrição para este ativo",
+          "hint": "descrição opcional do ativo"
+        }
+      }
+    },
+    "step2": {
+      "label": "template de ativo",
+      "description": "selecione o template predefinido",
+      "title": "template de ativo",
+      "subtitle": "selecione o template que define as especificações de hardware e processamento de payload",
+      "fields": {
+        "assetTemplateId": {
+          "label": "template de ativo",
+          "placeholder": "selecione um template",
+          "hint": "template que define fabricante, modelo e handler",
+          "required": "template de ativo é obrigatório"
+        }
+      },
+      "banner": {
+        "title": "o que é template de ativo?",
+        "description": "templates de ativo definem as especificações de hardware (fabricante, modelo, versão) e o handler de payload que será usado para processar dados deste ativo."
+      },
+      "preview": {
+        "title": "visualização do template",
+        "manufacturer": "fabricante",
+        "model": "modelo",
+        "version": "versão",
+        "status": "status",
+        "noTemplateSelected": "nenhum template selecionado"
+      }
+    },
+    "step3": {
+      "label": "grupos de roteamento",
+      "description": "configuração de roteamento",
+      "title": "grupos de roteamento",
+      "subtitle": "selecione um ou mais grupos de roteamento para definir como os dados do ativo serão roteados",
+      "banner": {
+        "title": "o que são grupos de roteamento?",
+        "description": "grupos de roteamento definem como os dados de telemetria deste ativo serão roteados para diferentes destinos como regras de negócio, lakehouses ou canais de notificação."
+      },
+      "labels": {
+        "systemTemplate": "Template do Sistema",
+        "sharedTemplate": "Template Compartilhado"
+      }
+    },
+    "step4": {
+      "label": "conectividade",
+      "description": "protocolo e localização",
+      "title": "conectividade",
+      "subtitle": "configure o protocolo de comunicação e localização do ativo",
+      "certificate": {
+        "activeTitle": "Certificado ativo",
+        "revokedTitle": "Certificados revogados",
+        "revokedEmpty": "Nenhum certificado revogado para este ativo."
+      },
+      "fields": {
+        "protocol": {
+          "label": "protocolo",
+          "placeholder": "selecione um protocolo",
+          "hint": "selecione o protocolo de comunicação para este ativo",
+          "required": "protocolo é obrigatório"
+        },
+        "mqttUsername": {
+          "label": "usuário",
+          "placeholder": "ex.: device_user",
+          "hint": "usuário MQTT para autenticação",
+          "hintDerived": "UUID do ativo — programe o dispositivo com este valor exato",
+          "required": "usuário é obrigatório",
+          "minLength": "usuário deve ter pelo menos 3 caracteres"
+        },
+        "mqttPassword": {
+          "label": "senha",
+          "placeholder": "ex.: uma senha forte (mínimo 8 caracteres)",
+          "placeholderEdit": "deixe em branco para manter a senha atual",
+          "hint": "a senha do dispositivo é hasheada com bcrypt no servidor e validada pelo broker em cada CONNECT",
+          "hintEdit": "deixe em branco para manter a senha atual. Digite um novo valor para trocar.",
+          "required": "senha é obrigatória",
+          "minLength": "senha deve ter no mínimo 8 caracteres"
+        },
+        "authType": {
+          "label": "modo de autenticação",
+          "hint": "o broker aplica este modo no CONNECT — trocar de modo revoga a credencial do tipo anterior",
+          "required": "modo de autenticação é obrigatório",
+          "optionPassword": "usuário / senha",
+          "optionCert": "certificado (mTLS)",
+          "certBannerTitle": "o certificado é gerado após salvar o asset",
+          "certBannerBody": "assim que você clicar em 'Salvar', um diálogo abre com o cert + chave privada em um zip. A chave é exibida UMA VEZ e nunca é guardada — mantenha o arquivo em local seguro. Se perder, revogue e reemita pelo drawer de detalhes do asset."
+        },
+        "certTTL": {
+          "value": {
+            "label": "validade",
+            "hint": "por quanto tempo cada certificado emitido permanece válido",
+            "required": "validade deve ser ao menos 1",
+            "maxDays": "validade não pode exceder 10 anos (3650 dias)"
+          },
+          "unit": {
+            "label": "unidade",
+            "hint": "unidade de tempo aplicada ao valor da validade",
+            "required": "unidade é obrigatória"
+          },
+          "units": {
+            "day": "dia(s)",
+            "week": "semana(s)",
+            "month": "mês(es)",
+            "year": "ano(s)"
+          }
+        },
+        "mqttClientId": {
+          "label": "ID do cliente",
+          "placeholder": "ex.: asset-sensor-001",
+          "hint": "identificador único do cliente MQTT",
+          "hintDerived": "gerenciado pela plataforma — derivado do UUID do asset",
+          "required": "ID do cliente é obrigatório",
+          "minLength": "ID do cliente deve ter pelo menos 3 caracteres"
+        },
+        "latitude": {
+          "label": "latitude",
+          "placeholder": "ex.: -23.55052",
+          "hint": "coordenada de latitude"
+        },
+        "longitude": {
+          "label": "longitude",
+          "placeholder": "ex.: -46.633308",
+          "hint": "coordenada de longitude"
+        },
+        "debugEnabled": {
+          "label": "modo debug",
+          "hint": "quando ativado, eventos de telemetria serao registrados para depuracao"
+        }
+      },
+      "protocolOptions": {
+        "http": "HTTP",
+        "mqtt": "MQTT",
+        "lorawan": "LoRaWAN (em breve)"
+      },
+      "banner": {
+        "info": "selecione o protocolo de comunicacao para seu dispositivo. HTTP e MQTT estao disponiveis.",
+        "httpInfo": "para dispositivos HTTP, crie uma Fonte de Dados para receber dados deste ativo.",
+        "mqttInfo": "configure as credenciais MQTT para conexao segura do dispositivo ao broker."
+      },
+      "certDialog": {
+        "title": "gerar certificado MQTT",
+        "warning": "a chave privada e exibida apenas uma vez. Faca o download do zip e armazene em local seguro - a plataforma nao guarda a chave. Se ela for perdida, sera necessario revogar este certificado e emitir um novo.",
+        "replaceWarning": "este ativo ja possui um certificado ativo. Gerar um novo revoga o certificado existente imediatamente.",
+        "generateButton": "gerar e baixar",
+        "skipButton": "pular por agora"
+      }
+    },
+    "step5": {
+      "label": "monitoramento de saúde",
+      "description": "configurar monitoramento de saúde do ativo",
+      "title": "monitoramento de saúde",
+      "subtitle": "habilite o monitoramento para detectar quando o ativo ficar offline"
+    },
+    "step6": {
+      "label": "revisão",
+      "description": "revise todas as informações antes de salvar",
+      "title": "revisão",
+      "subtitle": "revise toda a configuração antes de criar o ativo",
+      "successMessage": "pronto para salvar! clique em 'Salvar' para confirmar suas alterações.",
+      "sections": {
+        "identification": "identificação",
+        "assetTemplate": "template de ativo",
+        "routeGroups": "grupos de roteamento",
+        "connectivity": "conectividade",
+        "healthMonitoring": "monitoramento de saúde"
+      },
+      "fields": {
+        "name": "nome",
+        "assetId": "ID do ativo",
+        "status": "status",
+        "description": "descrição",
+        "assetTemplate": "template selecionado",
+        "manufacturer": "fabricante",
+        "model": "modelo",
+        "version": "versão",
+        "routeGroups": "grupos de roteamento",
+        "protocol": "protocolo",
+        "mqttUsername": "usuário MQTT",
+        "mqttClientId": "ID do cliente MQTT",
+        "latitude": "latitude",
+        "longitude": "longitude",
+        "healthMonitoringEnabled": "monitoramento de saúde",
+        "threshold": "limite de inatividade",
+        "requiredMisses": "falhas necessárias",
+        "offlineRouteGroups": "quando offline",
+        "onlineRouteGroups": "quando voltar online"
+      }
+    }
+  },
+  "statusOptions": {
+    "active": "ativo",
+    "inactive": "inativo"
+  },
+  "navigation": {
+    "previous": "anterior",
+    "next": "próximo",
+    "save": "criar ativo",
+    "update": "atualizar ativo"
+  },
+  "notifications": {
+    "loading": "carregando ativo...",
+    "loadFailed": "falha ao carregar dados do ativo",
+    "created": "ativo criado com sucesso!",
+    "creationFailed": "falha ao criar ativo",
+    "updated": "ativo atualizado com sucesso!",
+    "updateFailed": "falha ao atualizar ativo",
+    "validationFailed": "erro de validação. verifique os dados e tente novamente.",
+    "networkError": "erro de rede. verifique sua conexão e tente novamente.",
+    "alreadyExists": "já existe um ativo com este nome.",
+    "fillRequiredFields": "por favor preencha todos os campos obrigatórios",
+    "loadingTemplates": "carregando templates de ativos...",
+    "certIssueFailed": "falha ao emitir certificado. tente novamente pela lista de ativos.",
+    "assetCreatedWithoutCert": "ativo criado sem certificado. gere um pela lista de ativos quando estiver pronto."
+  }
+}

@@ -1,0 +1,435 @@
+{
+  "pageHeader": {
+    "title": "grupos de roteamento",
+    "description": "gerencie configurações de roteamento de eventos e regras condicionais de roteamento.",
+    "button": "adicionar grupo de roteamento",
+    "info": {
+      "title": "O que é um Grupo de Roteamento?",
+      "description": "Um Grupo de Roteamento define como os eventos recebidos são roteados para diferentes destinos de processamento com base em regras condicionais. Você pode rotear eventos para Regras de Negócio, LakeHouses, Notificações ou simplesmente salvá-los.",
+      "items": {
+        "conditionalRouting": {
+          "title": "Roteamento Condicional",
+          "text": "Defina regras de correspondência para rotear eventos com base em valores de campos, usando operadores como igual, maior que, em array, etc."
+        },
+        "multipleDestinations": {
+          "title": "Múltiplos Destinos",
+          "text": "Roteie eventos para Regras de Negócio para processamento, LakeHouses para armazenamento ou canais de Notificação para alertas"
+        },
+        "versionControl": {
+          "title": "Controle de Versão",
+          "text": "Rastreie alterações na configuração de roteamento com versionamento semântico"
+        },
+        "enableDisable": {
+          "title": "Ativar/Desativar",
+          "text": "Ative ou desative rapidamente grupos de roteamento sem excluí-los"
+        },
+        "andOrLogic": {
+          "title": "Lógica E/OU",
+          "text": "Combine múltiplas regras usando políticas 'all' (E) ou 'any' (OU) para correspondência flexível"
+        }
+      },
+      "docsLabel": "Ver Documentação Completa"
+    }
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "pesquisar grupos de roteamento...",
+    "allStatus": "todos",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "name": "buscar por nome",
+    "enabled": "status",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "isTemplate": "origem do modelo",
+    "enabledOptions": {
+      "all": "todos",
+      "active": "apenas ativos",
+      "inactive": "apenas inativos"
+    },
+    "includeChildrenOptions": {
+      "yes": "sim",
+      "no": "não"
+    },
+    "options": {
+      "yes": "sim",
+      "no": "não",
+      "active": "ativo",
+      "inactive": "inativo",
+      "templates": "compartilhado",
+      "local": "local"
+    }
+  },
+  "listHeader": {
+    "title": "lista de grupos de roteamento",
+    "itemLabel": "grupo de roteamento",
+    "itemLabelPlural": "grupos de roteamento"
+  },
+  "columns": {
+    "name": "nome",
+    "organization": "organização",
+    "routers": "roteadores",
+    "templateSource": "origem do template",
+    "status": "status"
+  },
+  "menuColumns": {
+    "organization": "organização"
+  },
+  "empty": {
+    "title": "nenhum grupo de roteamento encontrado",
+    "description": "parece que não há grupos de roteamento correspondentes aos seus critérios de busca ou você ainda não possui nenhum grupo de roteamento."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirmar exclusão",
+      "message": "tem certeza de que deseja excluir o grupo de roteamento \"{name}\"? Esta ação não pode ser desfeita."
+    }
+  },
+  "notifications": {
+    "created": "grupo de roteamento criado com sucesso",
+    "updated": "grupo de roteamento atualizado com sucesso",
+    "deleted": "grupo de roteamento excluído com sucesso",
+    "deleteError": "erro ao excluir grupo de roteamento",
+    "creationFailed": "erro ao criar grupo de roteamento",
+    "updateFailed": "erro ao atualizar grupo de roteamento",
+    "loadFailed": "falha ao carregar dados do grupo de roteamento",
+    "alreadyExists": "já existe um grupo de roteamento com este nome",
+    "validationFailed": "validação falhou, por favor verifique seus dados",
+    "networkError": "erro de rede, por favor tente novamente",
+    "sharedEdit": "grupos de roteamento compartilhados de outras organizações não podem ser editados",
+    "sharedDelete": "grupos de roteamento compartilhados de outras organizações não podem ser excluídos"
+  },
+  "errors": {
+    "apiNotInitialized": "API de roteamento não está disponível",
+    "idMissing": "ID do grupo de roteamento ausente"
+  },
+  "actions": {
+    "edit": "editar",
+    "view": "visualizar",
+    "delete": "excluir"
+  },
+  "status": {
+    "active": "ativo",
+    "inactive": "inativo"
+  },
+  "drawer": {
+    "title": "detalhes do grupo de roteamento",
+    "close": "fechar",
+    "edit": "editar",
+    "duplicate": "duplicar",
+    "loading": "carregando detalhes do grupo de roteamento...",
+    "error": "falha ao carregar detalhes do grupo de roteamento",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "routers": "configuração de roteadores",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "nome",
+      "enabled": "ativo",
+      "description": "descrição",
+      "created": "criado em",
+      "updated": "atualizado em"
+    },
+    "empty": {
+      "description": "nenhuma descrição fornecida",
+      "routers": "nenhum roteador configurado"
+    }
+  },
+  "createEdit": {
+    "page": {
+      "title": "Criar Grupo de Roteamento",
+      "titleEdit": "Editar Grupo de Roteamento",
+      "description": "Criar um novo grupo de roteamento com regras de roteamento",
+      "descriptionEdit": "Editar configuração do grupo de roteamento",
+      "backButton": "Voltar para Grupos de Roteamento",
+      "loading": "Carregando grupo de roteamento..."
+    },
+    "stepper": {
+      "title": "Configurar Grupo de Roteamento",
+      "subtitle": "Complete todas as etapas para configurar seu grupo de roteamento",
+      "requiredInfo": "* Campos obrigatórios",
+      "currentStep": "Etapa Atual"
+    },
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Próximo",
+      "save": "Salvar",
+      "update": "Atualizar",
+      "cancel": "Cancelar"
+    },
+    "steps": [
+      {
+        "title": "Informações Básicas",
+        "icon": "mdi-information",
+        "description": "Defina nome e status do grupo de roteamento"
+      },
+      {
+        "title": "Configuração de Roteadores",
+        "icon": "mdi-routes",
+        "description": "Configure destinos de roteamento e regras"
+      },
+      {
+        "title": "Revisão",
+        "icon": "mdi-check-circle",
+        "description": "Revise toda a configuração antes de salvar"
+      }
+    ],
+    "basicInfoStep": {
+      "title": "Informações Básicas",
+      "subtitle": "Configure os detalhes básicos do seu grupo de roteamento",
+      "fields": {
+        "name": {
+          "label": "Nome",
+          "placeholder": "Digite o nome do grupo de roteamento",
+          "hint": "Um nome descritivo para esta configuração de roteamento",
+          "required": "Nome é obrigatório"
+        },
+        "description": {
+          "label": "Descrição",
+          "placeholder": "Digite uma descrição (opcional)",
+          "hint": "Descreva o propósito deste grupo de roteamento"
+        },
+        "enabled": {
+          "label": "Status",
+          "hint": "Ativar ou desativar este grupo de roteamento",
+          "active": "Ativo",
+          "inactive": "Inativo"
+        },
+        "isTemplate": {
+          "label": "Template Compartilhado",
+          "hint": "Marcar como template compartilhado para uso por organizações filhas"
+        }
+      }
+    },
+    "routersStep": {
+      "title": "Configuração de Roteadores",
+      "subtitle": "Adicione roteadores e defina regras condicionais de roteamento",
+      "addRouter": "Adicionar Roteador",
+      "removeRouter": "Remover Roteador",
+      "noRouters": "Nenhum roteador configurado ainda. Clique em 'Adicionar Roteador' para começar.",
+      "noRoutersWarning": "Pelo menos um roteador é obrigatório",
+      "noRoutersHint": "Clique no botão 'Adicionar Roteador' abaixo para configurar seu primeiro destino de roteamento",
+      "infoBanner": {
+        "title": "Pelo menos um roteador é obrigatório",
+        "message": "Configure destinos de roteamento para definir para onde os eventos serão enviados"
+      },
+      "conditionalRouting": {
+        "label": "Roteamento Condicional",
+        "hint": "Adicione regras de correspondência para controlar quando este roteador é usado"
+      },
+      "routerCard": {
+        "title": "Roteador {index}",
+        "kind": {
+          "label": "Tipo de Roteador",
+          "placeholder": "Selecione o tipo de roteador",
+          "required": "Tipo de roteador é obrigatório",
+          "options": {
+            "lake_house": "LakeHouse",
+            "notification": "Notificação",
+            "save_event": "Salvar Evento",
+            "workflow": "Workflow"
+          }
+        },
+        "conditionalRouting": {
+          "label": "Roteamento Condicional",
+          "hint": "Defina regras para rotear eventos condicionalmente",
+          "enable": "Ativar roteamento condicional",
+          "disable": "Desativar roteamento condicional",
+          "policy": {
+            "label": "Política de Correspondência",
+            "options": {
+              "all": "Todos (E) - todas as regras devem corresponder",
+              "any": "Qualquer (OU) - pelo menos uma regra deve corresponder"
+            }
+          },
+          "addRule": "Adicionar Regra",
+          "removeRule": "Remover Regra",
+          "noRules": "Nenhuma regra definida ainda",
+          "rule": {
+            "field": {
+              "label": "Caminho do Campo",
+              "placeholder": "ex: payload.temperature",
+              "hint": "Caminho JSON para o campo a ser avaliado"
+            },
+            "operator": {
+              "label": "Operador",
+              "placeholder": "Selecione o operador",
+              "options": {
+                "eq": "Igual (=)",
+                "neq": "Diferente (!=)",
+                "gt": "Maior Que (>)",
+                "gte": "Maior ou Igual (>=)",
+                "lt": "Menor Que (<)",
+                "lte": "Menor ou Igual (<=)",
+                "in": "Em Array",
+                "nin": "Não Em Array"
+              }
+            },
+            "value": {
+              "label": "Valor",
+              "placeholder": "Digite o valor",
+              "hint": "Valor para comparar",
+              "arrayHint": "Digite valores separados por vírgula para operadores de array"
+            }
+          }
+        },
+        "lakeHouse": {
+          "label": "LakeHouse",
+          "placeholder": "Selecione um lakehouse",
+          "required": "Data lake é obrigatório quando o tipo é lake_house"
+        },
+        "notification": {
+          "label": "Notificação",
+          "placeholder": "Selecione um canal de notificação",
+          "required": "Notificação é obrigatória quando o tipo é notification"
+        },
+        "workflow": {
+          "mode": "Modo de Entrega",
+          "modeHint": "Como os eventos são entregues ao serviço de workflow",
+          "modeOptions": {
+            "newInstance": "Nova Instância",
+            "signal": "Signal",
+            "signalOrStart": "Signal ou Iniciar"
+          },
+          "modeDescriptions": {
+            "newInstance": "Cria uma nova instância de workflow para cada evento",
+            "signal": "Entrega um signal para uma instância em execução",
+            "signalOrStart": "Tenta signal primeiro, cria nova instância se não encontrar"
+          },
+          "workflowId": "ID da Definição",
+          "workflowIdHint": "MongoDB _id do template do workflow",
+          "workflowUUID": "UUID da Instância",
+          "workflowUUIDHint": "Identificador único da instância (opcional para nova instância, obrigatório para signal)",
+          "signalName": "Nome do Signal",
+          "signalNameHint": "ex: telegram.message, payment.confirmed",
+          "metadata": "Metadados (JSON)",
+          "metadataHint": "Dados adicionais enviados junto com o evento"
+        }
+      }
+    },
+    "reviewStep": {
+      "title": "Revisar Configuração",
+      "subtitle": "Revise sua configuração antes de salvar. Você pode editar qualquer seção clicando no botão editar.",
+      "successMessage": "Pronto para salvar! Clique em \"Salvar\" ou \"Atualizar\" para confirmar suas alterações.",
+      "sections": {
+        "basicInfo": "Informações Básicas",
+        "routers": "Roteadores ({count})"
+      },
+      "fields": {
+        "name": "Nome",
+        "description": "Descrição",
+        "status": "Status",
+        "templateSource": "Origem do Template",
+        "routerType": "Tipo",
+        "conditionalRouting": "Roteamento Condicional",
+        "matchPolicy": "Política de Correspondência",
+        "matchRules": "Regras de Correspondência",
+        "lakeHouse": "LakeHouse",
+        "notification": "Notificação",
+        "workflow": "Workflow"
+      },
+      "values": {
+        "enabled": "Ativo",
+        "disabled": "Inativo",
+        "shared": "Compartilhado",
+        "local": "Local",
+        "none": "Nenhum",
+        "notConfigured": "Não configurado"
+      }
+    }
+  },
+  "routerKinds": {
+    "trigger": {
+      "label": "Trigger",
+      "description": "Rotear para Serviço de Triggers"
+    },
+    "lake_house": {
+      "label": "LakeHouse",
+      "description": "Rotear para LakeHouse"
+    },
+    "notification": {
+      "label": "Notificação",
+      "description": "Rotear para Serviço de Notificação"
+    },
+    "save_event": {
+      "label": "Salvar Evento",
+      "description": "Salvar Evento (sem roteamento)"
+    },
+    "workflow": {
+      "label": "Workflow",
+      "description": "Rotear eventos para o Serviço de Workflow"
+    }
+  },
+  "matchPolicies": {
+    "all": {
+      "label": "Todos (E)",
+      "description": "Todas as regras devem corresponder (lógica E)"
+    },
+    "any": {
+      "label": "Qualquer (OU)",
+      "description": "Pelo menos uma regra deve corresponder (lógica OU)"
+    }
+  },
+  "matchOperators": {
+    "eq": "Igual",
+    "neq": "Diferente",
+    "gt": "Maior Que",
+    "gte": "Maior ou Igual",
+    "lt": "Menor Que",
+    "lte": "Menor ou Igual",
+    "in": "Em",
+    "nin": "Não Em"
+  },
+  "tour": {
+    "welcome": {
+      "title": "Bem-vindo aos Grupos de Rota",
+      "description": "Grupos de Rota definem como eventos recebidos são roteados para diferentes destinos de processamento. Você pode rotear eventos para Business Rules, LakeHouses, Notificações, ou simplesmente salvá-los para uso posterior."
+    },
+    "stepperOverview": {
+      "title": "Configuração em Três Passos",
+      "description": "Configure seu grupo de rota em três passos simples: Informações Básicas, Configuração de Routers e Revisão. O stepper mostra seu progresso e permite navegação entre os passos."
+    },
+    "step1Overview": {
+      "title": "Passo 1: Informações Básicas",
+      "description": "Comece definindo os detalhes básicos do seu grupo de rota incluindo nome e status."
+    },
+    "fieldName": {
+      "title": "Nome do Grupo de Rota",
+      "description": "Dê ao seu grupo de rota um nome descritivo que ajude a identificar seu propósito. Este é um campo obrigatório."
+    },
+    "fieldStatus": {
+      "title": "Controle de Status",
+      "description": "Ative ou desative o grupo de rota. Grupos de rota desativados não processarão nenhum evento recebido."
+    },
+    "step2Overview": {
+      "title": "Passo 2: Configuração de Routers",
+      "description": "Adicione routers para definir para onde os eventos serão enviados. Cada router pode ter regras condicionais para filtrar quais eventos ele recebe."
+    },
+    "addRouter": {
+      "title": "Adicionar Routers",
+      "description": "Clique neste botão para adicionar destinos de roteamento. Você pode adicionar múltiplos routers para enviar eventos para diferentes destinos simultaneamente."
+    },
+    "routerCard": {
+      "title": "Configuração do Router",
+      "description": "Cada card de router representa um destino de roteamento. Configure o tipo de router e opcionalmente adicione regras de roteamento condicional."
+    },
+    "routerKind": {
+      "title": "Tipo de Router",
+      "description": "Selecione para onde os eventos devem ser roteados: Business Rule (para lógica de processamento), LakeHouse (para armazenamento), Notification (para alertas), ou Save Event (apenas persistir)."
+    },
+    "conditionalRouting": {
+      "title": "Roteamento Condicional",
+      "description": "Ative o roteamento condicional para adicionar regras de correspondência. Apenas eventos que satisfaçam as condições serão enviados para este router. Use lógica E/OU para combinar múltiplas regras."
+    },
+    "step3Overview": {
+      "title": "Passo 3: Revisão",
+      "description": "Revise toda sua configuração antes de salvar. Você pode clicar no botão editar em qualquer seção para fazer alterações."
+    },
+    "saveButton": {
+      "title": "Salvar Configuração",
+      "description": "Clique em Salvar para criar seu grupo de rota. No modo de edição, este botão mostrará 'Atualizar' para salvar suas alterações."
+    }
+  }
+}

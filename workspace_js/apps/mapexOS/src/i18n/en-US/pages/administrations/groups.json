@@ -1,0 +1,324 @@
+{
+  "title": "groups",
+  "description": "manage user groups for your organization",
+  "addButton": "add group",
+  "listTitle": "groups list",
+  "itemLabel": "group",
+  "itemLabelPlural": "groups",
+  "info": {
+    "title": "What is a Group?",
+    "description": "A Group is a routing configuration that organizes and manages data flows in MapexOS. Groups allow you to route telemetry data from assets to multiple destinations with flexible control and configuration options.",
+    "items": {
+      "routing": {
+        "title": "Data Routing Organization",
+        "text": "Define how telemetry data flows from assets to various destinations and systems"
+      },
+      "destinations": {
+        "title": "Multiple Destination Support",
+        "text": "Send data to multiple endpoints simultaneously with independent configuration"
+      },
+      "association": {
+        "title": "Asset Association",
+        "text": "Link assets to routing groups to control their data flow and destinations"
+      },
+      "control": {
+        "title": "Enable/Disable Control",
+        "text": "Quickly enable or disable routing groups without deleting configurations"
+      },
+      "configuration": {
+        "title": "Flexible Configuration",
+        "text": "Customize routing rules, transformations, and destination parameters per group"
+      }
+    },
+    "docsLabel": "View Complete Documentation"
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search groups...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "name": "group name",
+    "status": "status",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include children organizations",
+    "member": "member",
+    "filterByMember": "filter by member",
+    "memberPlaceholder": "click to select user...",
+    "searchMemberPlaceholder": "search member...",
+    "isTemplate": "template source",
+    "options": {
+      "all": "all",
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "yes": "yes",
+      "no": "no",
+      "templates": "shared",
+      "local": "local"
+    }
+  },
+  "columns": {
+    "name": "name",
+    "organization": "organization",
+    "members": "members",
+    "templateSource": "template source",
+    "created": "created"
+  },
+  "menuColumns": {
+    "organization": "organization",
+    "description": "description",
+    "members": "members",
+    "created": "created"
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "empty": {
+    "title": "no groups found",
+    "description": "it seems there are no groups matching your current search criteria or you don't have any groups yet."
+  },
+  "messages": {
+    "deletedSuccessfully": "group deleted successfully",
+    "confirmDelete": "are you sure you want to delete the group \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirm deletion"
+  },
+  "notifications": {
+    "sharedEdit": "shared groups from other organizations cannot be edited",
+    "sharedDelete": "shared groups from other organizations cannot be deleted"
+  },
+  "errors": {
+    "apiNotInitialized": "Groups API is not available",
+    "idMissing": "Group ID is missing"
+  },
+  "drawer": {
+    "title": "group details",
+    "close": "close",
+    "edit": "edit",
+    "loading": "loading group details...",
+    "error": "failed to load group details",
+    "sections": {
+      "basicInfo": "basic information",
+      "roles": "roles",
+      "members": "members",
+      "organization": "organization",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "description": "description",
+      "enabled": "status",
+      "isTemplate": "template",
+      "organization": "organization",
+      "pathKey": "path key",
+      "membersCount": "members count",
+      "created": "created",
+      "updated": "updated"
+    },
+    "empty": {
+      "description": "no description provided",
+      "roles": "no roles assigned",
+      "members": "no members assigned"
+    },
+    "status": {
+      "enabled": "enabled",
+      "disabled": "disabled"
+    },
+    "template": {
+      "yes": "shared",
+      "no": "local"
+    }
+  },
+  "createEdit": {
+    "titleEdit": "edit group",
+    "titleCreate": "create group",
+    "descriptionCreate": "create a new group with specific members",
+    "backButton": "back to groups",
+    "steps": {
+      "basicInfo": "basic information",
+      "roles": "roles",
+      "members": "members",
+      "review": "review"
+    },
+    "stepDescriptions": {
+      "basicInfo": "set the group name, description, and settings",
+      "roles": "select the roles for this group",
+      "members": "select the members for this group",
+      "review": "review your configuration before saving"
+    },
+    "sections": {
+      "basicInfo": "basic information",
+      "roles": "group roles",
+      "members": "members",
+      "progressSteps": "progress"
+    },
+    "formDescriptions": {
+      "basicInfo": "enter the basic details for this group",
+      "roles": "select the roles that members of this group will inherit",
+      "members": "select the users that will be members of this group",
+      "name": "unique group identifier",
+      "description": "optional group description",
+      "enabled": "enable or disable this group"
+    },
+    "fields": {
+      "name": "group name",
+      "description": "description",
+      "status": "status",
+      "enabled": "enabled"
+    },
+    "statusOptions": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "validation": {
+      "nameRequired": "group name is required",
+      "nameMinLength": "group name must be at least 3 characters",
+      "nameMaxLength": "group name must not exceed 150 characters",
+      "descriptionMaxLength": "description must not exceed 500 characters"
+    },
+    "labels": {
+      "selectAll": "select all",
+      "deselectAll": "clear all",
+      "membersSelected": "members selected",
+      "memberSelected": "member selected",
+      "member": "member",
+      "members": "members",
+      "searchMembers": "search members...",
+      "noMembersFound": "no members found",
+      "loadingMembers": "loading members...",
+      "noMembersMatch": "no members match your search",
+      "noMembersAvailable": "no members available",
+      "membersOptional": "members are optional",
+      "addMembers": "add members",
+      "addMoreMembers": "add more members",
+      "noMembersInGroup": "no members in this group",
+      "noMembersSelectedYet": "no members selected yet",
+      "clickAddMembers": "click \"add members\" to select users",
+      "removeMember": "remove member",
+      "undoRemoval": "undo removal",
+      "badgeNew": "new",
+      "badgeRemoving": "removing",
+      "rolesSelected": "roles selected",
+      "roleSelected": "role selected",
+      "role": "role",
+      "roles": "roles",
+      "addRoles": "add roles",
+      "removeRole": "remove role",
+      "noRolesSelected": "no roles selected yet",
+      "clickAddRoles": "click \"add roles\" to select roles for this group",
+      "rolesRequired": "at least one role is required"
+    },
+    "buttons": {
+      "back": "back",
+      "next": "next",
+      "createGroup": "create group",
+      "updateGroup": "update group"
+    },
+    "messages": {
+      "loadingGroup": "loading group...",
+      "completeAllSteps": "complete all steps to create the group",
+      "allFieldsRequired": "fields marked with * are required",
+      "currentStep": "current step"
+    },
+    "reviewStep": {
+      "subtitle": "review your group configuration before saving",
+      "successMessage": "ready to create! click 'create group' to save",
+      "successMessageEdit": "ready to update! click 'update group' to save changes",
+      "sections": {
+        "basicInfo": "basic information",
+        "roles": "roles",
+        "members": "members"
+      },
+      "fields": {
+        "name": "name",
+        "description": "description",
+        "enabled": "enabled",
+        "status": "status",
+        "isTemplate": "shared template",
+        "totalRoles": "total roles",
+        "totalMembers": "total members"
+      },
+      "values": {
+        "notProvided": "not provided",
+        "yes": "yes",
+        "no": "no",
+        "noMembers": "no members selected",
+        "enabled": "enabled",
+        "disabled": "disabled"
+      }
+    },
+    "notifications": {
+      "created": "group created successfully",
+      "updated": "group updated successfully",
+      "createFailed": "failed to create group",
+      "updateFailed": "failed to update group",
+      "loadFailed": "failed to load group",
+      "alreadyExists": "a group with this name already exists",
+      "forbidden": "you do not have permission to perform this action"
+    }
+  },
+  "detail": {
+    "title": "group details",
+    "description": "view and manage group information",
+    "loading": "loading group details...",
+    "loadError": "failed to load group details",
+    "backButton": "back to access audit",
+    "editButton": "edit",
+    "tabs": {
+      "info": "information",
+      "roles": "roles",
+      "members": "members"
+    },
+    "info": {
+      "basicInfo": {
+        "title": "basic information"
+      },
+      "dates": {
+        "title": "dates"
+      },
+      "fields": {
+        "name": "name",
+        "description": "description",
+        "status": "status",
+        "membersCount": "members",
+        "organization": "organization",
+        "created": "created",
+        "updated": "updated"
+      },
+      "status": {
+        "enabled": "enabled",
+        "disabled": "disabled"
+      },
+      "noData": "no group data available"
+    },
+    "roles": {
+      "title": "group roles",
+      "loadError": "failed to load roles",
+      "columns": {
+        "name": "name",
+        "type": "type",
+        "scope": "scope"
+      },
+      "empty": {
+        "title": "no roles",
+        "description": "this group has no roles assigned"
+      }
+    },
+    "members": {
+      "title": "group members",
+      "loadError": "failed to load members",
+      "columns": {
+        "name": "name",
+        "email": "email",
+        "addedAt": "added at"
+      },
+      "empty": {
+        "title": "no members",
+        "description": "this group has no members yet"
+      }
+    }
+  }
+}

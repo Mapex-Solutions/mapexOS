@@ -1,0 +1,42 @@
+{
+  "typeOptions": {
+    "event": "event",
+    "state": "state",
+    "variable": "variable",
+    "literal": "literal"
+  },
+  "labels": {
+    "eventField": "event field",
+    "stateName": "state name"
+  },
+  "placeholders": {
+    "selectOrTypeState": "select or type state name"
+  },
+  "empty": {
+    "noStates": "no variables defined",
+    "goToLocalState": "go to variables tab to add rule variables"
+  },
+  "tooltips": {
+    "clear": "clear",
+    "templatesSelected": "{count} template(s) selected",
+    "options": "options"
+  },
+  "menu": {
+    "selectField": {
+      "title": "select field",
+      "description": "browse fields from {count} template(s)"
+    },
+    "searchTemplates": {
+      "title": "search templates",
+      "description": "add templates to search fields"
+    },
+    "manualMode": {
+      "title": "manual mode",
+      "description": "type event field path manually"
+    },
+    "dynamicMode": {
+      "title": "dynamic mode",
+      "description": "browse fields from templates"
+    }
+  }
+}

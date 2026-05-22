@@ -1,0 +1,13 @@
+{
+  "title": "Filtros Avançados",
+  "closeTooltip": "Fechar filtros",
+  "buttons": {
+    "reset": "Limpar",
+    "resetTooltip": "Limpar todos os filtros",
+    "apply": "Aplicar Filtros",
+    "applyTooltip": "Aplicar filtros selecionados"
+  },
+  "autocomplete": {
+    "noOption": "Digite pelo menos 2 caracteres para pesquisar..."
+  }
+}

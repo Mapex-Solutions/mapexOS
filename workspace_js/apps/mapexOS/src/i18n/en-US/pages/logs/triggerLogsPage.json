@@ -1,0 +1,87 @@
+{
+  "pageHeader": {
+    "title": "Trigger Logs",
+    "description": "See all trigger execution logs for your organization."
+  },
+  "listTitle": "Trigger Logs List",
+  "itemLabel": "trigger log",
+  "itemLabelPlural": "trigger logs",
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search by trigger name...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "dateRange": "date range",
+    "startDate": "start date",
+    "endDate": "end date",
+    "status": "status",
+    "source": "source",
+    "triggerType": "trigger type",
+    "category": "category",
+    "triggerId": "trigger ID",
+    "triggerIdPlaceholder": "enter trigger ID to filter...",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "options": {
+      "all": "all",
+      "yes": "yes",
+      "no": "no",
+      "success": "success",
+      "failure": "failure"
+    }
+  },
+  "statusOptions": {
+    "success": "Success",
+    "failure": "Failure"
+  },
+  "sourceOptions": {
+    "router": "Router"
+  },
+  "triggerTypeOptions": {
+    "http": "HTTP",
+    "mqtt": "MQTT",
+    "rabbitmq": "RabbitMQ",
+    "nats": "NATS",
+    "websocket": "WebSocket",
+    "email": "Email",
+    "teams": "Teams",
+    "slack": "Slack"
+  },
+  "categoryOptions": {
+    "technical": "Technical",
+    "communication": "Communication"
+  },
+  "columns": {
+    "triggerName": "Trigger Name",
+    "triggerType": "Type",
+    "category": "Category",
+    "source": "Source",
+    "status": "Status",
+    "duration": "Duration",
+    "timestamp": "Timestamp"
+  },
+  "statusBadge": {
+    "success": "SUCCESS",
+    "failure": "FAILURE"
+  },
+  "drawer": {
+    "title": "Trigger Details"
+  },
+  "empty": {
+    "title": "No Trigger Logs Found",
+    "description": "It seems there are no trigger logs matching your current search criteria or you don't have any trigger logs yet."
+  },
+  "pagination": {
+    "newer": "Newer",
+    "older": "Older"
+  },
+  "messages": {
+    "loadFailed": "Failed to load trigger logs"
+  },
+  "defaults": {
+    "unknown": "Unknown",
+    "notAvailable": "N/A"
+  }
+}

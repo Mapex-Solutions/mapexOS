@@ -1,0 +1,87 @@
+{
+  "pageHeader": {
+    "title": "Logs de Triggers",
+    "description": "Veja todos os logs de execução de triggers da sua organização."
+  },
+  "listTitle": "Lista de Logs de Triggers",
+  "itemLabel": "log de trigger",
+  "itemLabelPlural": "logs de triggers",
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar por nome do trigger...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar todos",
+    "allStatus": "todos",
+    "dateRange": "período",
+    "startDate": "data inicial",
+    "endDate": "data final",
+    "status": "status",
+    "source": "origem",
+    "triggerType": "tipo de trigger",
+    "category": "categoria",
+    "triggerId": "ID do trigger",
+    "triggerIdPlaceholder": "digite o ID do trigger para filtrar...",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "options": {
+      "all": "todos",
+      "yes": "sim",
+      "no": "não",
+      "success": "sucesso",
+      "failure": "falha"
+    }
+  },
+  "statusOptions": {
+    "success": "Sucesso",
+    "failure": "Falha"
+  },
+  "sourceOptions": {
+    "router": "Router"
+  },
+  "triggerTypeOptions": {
+    "http": "HTTP",
+    "mqtt": "MQTT",
+    "rabbitmq": "RabbitMQ",
+    "nats": "NATS",
+    "websocket": "WebSocket",
+    "email": "Email",
+    "teams": "Teams",
+    "slack": "Slack"
+  },
+  "categoryOptions": {
+    "technical": "Técnico",
+    "communication": "Comunicação"
+  },
+  "columns": {
+    "triggerName": "Nome do Trigger",
+    "triggerType": "Tipo",
+    "category": "Categoria",
+    "source": "Origem",
+    "status": "Status",
+    "duration": "Duração",
+    "timestamp": "Data/Hora"
+  },
+  "statusBadge": {
+    "success": "SUCESSO",
+    "failure": "FALHA"
+  },
+  "drawer": {
+    "title": "Detalhes do Trigger"
+  },
+  "empty": {
+    "title": "Nenhum Log de Trigger Encontrado",
+    "description": "Parece que não há logs de triggers correspondentes aos seus critérios de pesquisa ou você ainda não possui logs de triggers."
+  },
+  "pagination": {
+    "newer": "Mais Recentes",
+    "older": "Mais Antigos"
+  },
+  "messages": {
+    "loadFailed": "Falha ao carregar logs de triggers"
+  },
+  "defaults": {
+    "unknown": "Desconhecido",
+    "notAvailable": "N/D"
+  }
+}

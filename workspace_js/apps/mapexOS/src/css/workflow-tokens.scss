@@ -1,0 +1,59 @@
+// ─── WORKFLOW TOKENS: LIGHT MODE ──────────────────────────────
+// Workflow-specific CSS custom properties (--mapex-wf-*)
+// These extend the global --mapex-* tokens for workflow editor usage.
+
+body.body--light {
+  // Edges
+  --mapex-wf-edge-color: var(--mapex-primary);
+  --mapex-wf-edge-hover: #2d5548;
+  --mapex-wf-edge-glow: rgba(var(--mapex-primary-rgb), 0.3);
+
+  // Handles
+  --mapex-wf-handle-border: var(--mapex-surface-bg);
+
+  // Node borders
+  --mapex-wf-node-border: rgba(0, 0, 0, 0.12);
+  --mapex-wf-node-border-hover: rgba(0, 0, 0, 0.2);
+  --mapex-wf-node-border-selected: rgba(0, 0, 0, 0.3);
+
+  // Selection & overlays
+  --mapex-wf-selection-ring: 0 0 0 2px rgba(255, 255, 255, 0.3);
+  --mapex-wf-overlay-dark: rgba(0, 0, 0, 0.3);
+  --mapex-wf-text-on-accent: #ffffff;
+
+  // Primary tint scale — translucent primary-based backgrounds
+  // Opacities optimized for light backgrounds
+  --mapex-wf-tint-1: rgba(var(--mapex-primary-rgb), 0.03);
+  --mapex-wf-tint-2: rgba(var(--mapex-primary-rgb), 0.06);
+  --mapex-wf-tint-3: rgba(var(--mapex-primary-rgb), 0.10);
+  --mapex-wf-tint-border: rgba(var(--mapex-primary-rgb), 0.15);
+}
+
+// ─── WORKFLOW TOKENS: DARK MODE ───────────────────────────────
+
+body.body--dark {
+  // Edges
+  --mapex-wf-edge-color: var(--mapex-primary);
+  --mapex-wf-edge-hover: #5BC08D;
+  --mapex-wf-edge-glow: rgba(var(--mapex-primary-rgb), 0.4);
+
+  // Handles
+  --mapex-wf-handle-border: var(--mapex-surface-bg);
+
+  // Node borders
+  --mapex-wf-node-border: rgba(255, 255, 255, 0.15);
+  --mapex-wf-node-border-hover: rgba(255, 255, 255, 0.3);
+  --mapex-wf-node-border-selected: rgba(255, 255, 255, 0.4);
+
+  // Selection & overlays
+  --mapex-wf-selection-ring: 0 0 0 2px rgba(255, 255, 255, 0.4);
+  --mapex-wf-overlay-dark: rgba(0, 0, 0, 0.5);
+  --mapex-wf-text-on-accent: #ffffff;
+
+  // Primary tint scale — translucent primary-based backgrounds
+  // Opacities bumped for visibility on dark backgrounds
+  --mapex-wf-tint-1: rgba(var(--mapex-primary-rgb), 0.06);
+  --mapex-wf-tint-2: rgba(var(--mapex-primary-rgb), 0.12);
+  --mapex-wf-tint-3: rgba(var(--mapex-primary-rgb), 0.18);
+  --mapex-wf-tint-border: rgba(var(--mapex-primary-rgb), 0.25);
+}

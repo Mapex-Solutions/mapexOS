@@ -1,0 +1,18 @@
+{
+  "notFound": {
+    "code": "404",
+    "title": "página não encontrada",
+    "description": "a página que você está procurando não existe ou foi movida.",
+    "goBack": "voltar"
+  },
+  "forbidden": {
+    "code": "403",
+    "title": "acesso negado",
+    "description": "você não tem permissão para acessar esta página. Entre em contato com o administrador se acredita que isso é um erro.",
+    "goBack": "voltar",
+    "dashboard": "painel"
+  },
+  "aria": {
+    "logoAlt": "logotipo mapex"
+  }
+}

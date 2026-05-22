@@ -1,0 +1,17 @@
+{
+  "listFilter": {
+    "title": "Filtros",
+    "apply": "Aplicar filtros",
+    "clear": "Limpar filtros",
+    "hint": "Clique no ícone de filtro para expandir os filtros e aplicá-los.",
+    "includeChildren": "incluir organizações filhas",
+    "includeChildrenTooltip": "quando ativado, os resultados incluirão dados de todas as organizações filhas na hierarquia",
+    "active": "ativo",
+    "close": "Fechar",
+    "dateRange": {
+      "from": "De",
+      "to": "Até",
+      "selectRange": "Selecionar intervalo de datas"
+    }
+  }
+}

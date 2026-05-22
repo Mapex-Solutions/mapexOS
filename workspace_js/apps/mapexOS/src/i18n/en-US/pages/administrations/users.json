@@ -1,0 +1,287 @@
+{
+  "title": "users",
+  "description": "manage your user database",
+  "addButton": "add user",
+  "listTitle": "users list",
+  "itemLabel": "user",
+  "itemLabelPlural": "users",
+  "info": {
+    "title": "What is a User?",
+    "description": "A User represents an individual who can access and interact with MapexOS. Users are authenticated, assigned roles, and granted permissions to perform specific actions within the system based on their organizational scope.",
+    "items": {
+      "authentication": {
+        "title": "Authentication & Authorization",
+        "text": "Secure login with support for internal credentials and external identity providers"
+      },
+      "rolePermissions": {
+        "title": "Role-Based Permissions",
+        "text": "Users inherit permissions from assigned roles, controlling what they can view and modify"
+      },
+      "multiOrg": {
+        "title": "Multi-Organization Access",
+        "text": "Users can access multiple customer organizations with different permission levels"
+      },
+      "profile": {
+        "title": "Profile Management",
+        "text": "Manage user information including name, email, job title, and contact details"
+      },
+      "activity": {
+        "title": "Activity Tracking",
+        "text": "Track user actions, login history, and audit trails for compliance and security"
+      }
+    },
+    "docsLabel": "View Complete Documentation"
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search users...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "email": "email",
+    "firstName": "first name",
+    "lastName": "last name",
+    "status": "status",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include children organizations",
+    "filterByEmail": "filter by email",
+    "filterByFirstName": "filter by first name",
+    "filterByLastName": "filter by last name",
+    "options": {
+      "all": "all",
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "columns": {
+    "name": "name",
+    "organization": "organization",
+    "email": "email",
+    "jobTitle": "job title",
+    "groups": "groups"
+  },
+  "menuColumns": {
+    "organization": "organization",
+    "email": "email",
+    "jobTitle": "job title",
+    "groups": "groups"
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "empty": {
+    "title": "no users found",
+    "description": "it seems there are no users matching your current search criteria or you don't have any users yet."
+  },
+  "messages": {
+    "deletedSuccessfully": "user deleted successfully",
+    "confirmDelete": "are you sure you want to delete the user \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirm deletion"
+  },
+  "errors": {
+    "apiNotInitialized": "Users API is not available",
+    "idMissing": "User ID is missing"
+  },
+  "tour": {
+    "tourButton": {
+      "title": "Start a Guided Tour",
+      "description": "Click this button anytime to start an interactive walkthrough of this page. The tour will guide you through all the features and functionalities available."
+    },
+    "header": {
+      "title": "Users Overview",
+      "description": "This is the Users page. Here you can manage all users in your organization."
+    },
+    "filters": {
+      "title": "Filters & Search",
+      "description": "Use the search bar and status filter to quickly find specific users."
+    },
+    "advancedFiltersBtn": {
+      "title": "Advanced Filters",
+      "description": "Click this button to open the advanced filters panel with additional search criteria."
+    },
+    "advancedFiltersOpen": {
+      "title": "Advanced Filters Panel",
+      "description": "Here you can configure detailed search criteria like email, name, organization scope, and more. Apply or reset filters as needed."
+    },
+    "results": {
+      "title": "Users List",
+      "description": "Users appear as rows. Click to view details, or double-click to edit."
+    },
+    "rowActions": {
+      "title": "Row Actions",
+      "description": "Each row has an action menu (⋮) with options to Edit, View Details, or Delete. Single-click opens the details drawer, double-click opens the edit form."
+    },
+    "addNew": {
+      "title": "Create a User",
+      "description": "Ready to create a user? Click Next for a guided creation walkthrough!"
+    }
+  },
+  "drawer": {
+    "title": "user details",
+    "close": "close",
+    "edit": "edit user",
+    "loading": "loading user data...",
+    "error": "failed to load user details",
+    "sections": {
+      "basicInfo": "basic information",
+      "contact": "contact & job",
+      "authentication": "authentication",
+      "timestamps": "timestamps",
+      "groups": "groups",
+      "orgAccess": "organization access"
+    },
+    "columns": {
+      "organization": "organization",
+      "scope": "scope",
+      "roles": "roles"
+    },
+    "accessStats": {
+      "viaGroups": "via groups",
+      "direct": "direct"
+    },
+    "viaGroups": {
+      "label": "via groups",
+      "seeMore": "see more",
+      "allGroups": "all groups"
+    },
+    "directAccess": {
+      "allRoles": "all roles"
+    },
+    "fields": {
+      "name": "name",
+      "email": "email",
+      "status": "status",
+      "avatar": "avatar",
+      "phone": "phone",
+      "jobTitle": "job title",
+      "authProvider": "authentication provider",
+      "changePasswordNextLogin": "change password on next login",
+      "externalId": "external ID",
+      "created": "created at",
+      "updated": "last updated"
+    },
+    "authProviders": {
+      "internal": "internal",
+      "google": "google",
+      "github": "github",
+      "microsoft": "microsoft",
+      "keycloak": "keycloak"
+    },
+    "empty": {
+      "phone": "no phone number",
+      "jobTitle": "no job title",
+      "externalId": "no external ID",
+      "avatar": "no avatar"
+    }
+  },
+  "detail": {
+    "title": "user details",
+    "description": "view user profile, access, and group memberships",
+    "backButton": "back to access audit",
+    "editButton": "edit",
+    "loading": "loading user...",
+    "loadError": "failed to load user",
+    "tabs": {
+      "profile": "profile",
+      "access": "access",
+      "groups": "groups"
+    },
+    "profile": {
+      "loading": "loading profile...",
+      "error": "failed to load profile",
+      "sections": {
+        "basicInfo": "basic information",
+        "contact": "contact & job",
+        "authentication": "authentication",
+        "timestamps": "timestamps"
+      },
+      "fields": {
+        "name": "name",
+        "email": "email",
+        "phone": "phone",
+        "jobTitle": "job title",
+        "organization": "organization",
+        "status": "status",
+        "authProvider": "authentication provider",
+        "changePasswordNextLogin": "change password on next login",
+        "externalId": "external ID",
+        "created": "created at",
+        "updated": "last updated"
+      },
+      "status": {
+        "active": "active",
+        "inactive": "inactive"
+      },
+      "values": {
+        "yes": "yes",
+        "no": "no"
+      },
+      "authProviders": {
+        "internal": "internal",
+        "google": "google",
+        "github": "github",
+        "microsoft": "microsoft",
+        "keycloak": "keycloak"
+      }
+    },
+    "access": {
+      "title": "organization access",
+      "loading": "loading access...",
+      "error": "failed to load access",
+      "count": "memberships",
+      "empty": {
+        "title": "no memberships",
+        "description": "this user has no memberships in any organization"
+      },
+      "apiNotAvailable": {
+        "title": "feature in development",
+        "description": "the user access management feature is currently being developed. check back soon!"
+      },
+      "columns": {
+        "organization": "organization",
+        "roles": "roles",
+        "scope": "scope",
+        "via": "via"
+      },
+      "fields": {
+        "scope": "scope",
+        "permissions": "permissions",
+        "organization": "organization",
+        "roles": "roles",
+        "via": "via"
+      },
+      "type": {
+        "system": "system",
+        "custom": "custom"
+      }
+    },
+    "groups": {
+      "loading": "loading groups...",
+      "error": "failed to load groups",
+      "count": "groups found",
+      "noDescription": "no description",
+      "empty": {
+        "title": "no groups",
+        "description": "this user is not a member of any groups"
+      },
+      "type": {
+        "system": "system",
+        "custom": "custom"
+      },
+      "status": {
+        "enabled": "enabled",
+        "disabled": "disabled"
+      },
+      "template": {
+        "yes": "shared",
+        "no": "local"
+      }
+    }
+  }
+}

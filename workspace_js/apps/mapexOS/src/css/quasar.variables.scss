@@ -1,0 +1,21 @@
+// Quasar SCSS (& Sass) Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+//
+// IMPORTANT: Only SCSS compile-time variables ($var) belong here.
+// CSS custom properties (--var) are defined in app.scss to ensure
+// they are emitted to the final CSS output.
+
+// ─── SCSS PALETTE (compile-time) ─────────────────────────────
+$primary: #3b6d5e;
+$secondary: #26A69A;
+$accent: #9C27B0;
+
+$dark: #222E3A;
+$dark-page: #1B2530;
+
+$positive: #21BA45;
+$negative: #C10015;
+$info: #31CCEC;
+$warning: #F2C037;

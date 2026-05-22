@@ -1,0 +1,42 @@
+{
+  "title": "notificações",
+  "description": "gerencie seus canais",
+  "listTitle": "lista de notificações",
+  "button": {
+    "add": "adicionar notificação"
+  },
+  "columns": {
+    "name": "nome",
+    "type": "tipo",
+    "channels": "canais",
+    "created": "criado",
+    "status": "status"
+  },
+  "menuLabels": {
+    "singular": "notificação",
+    "plural": "notificações"
+  },
+  "filters": {
+    "search": "pesquisar",
+    "tenant": "tenant",
+    "type": "tipo"
+  },
+  "empty": {
+    "title": "nenhuma notificação encontrada",
+    "description": "parece que não há notificações correspondentes aos seus critérios de pesquisa atuais ou você ainda não tem nenhuma notificação."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirmar exclusão",
+      "message": "tem certeza de que deseja excluir a notificação \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleteSuccess": "notificação excluída com sucesso"
+  },
+  "channelCount": {
+    "singular": "canal",
+    "plural": "canais",
+    "none": "nenhum canal"
+  }
+}

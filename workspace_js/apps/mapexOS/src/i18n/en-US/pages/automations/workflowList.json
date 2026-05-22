@@ -1,0 +1,128 @@
+{
+  "pageHeader": {
+    "title": "workflows",
+    "description": "visual workflow automation with DAG canvas"
+  },
+  "buttons": {
+    "newWorkflow": "new workflow",
+    "createWorkflow": "create workflow"
+  },
+  "page": {
+    "listTitle": "workflows list",
+    "itemLabel": "workflow",
+    "itemLabelPlural": "workflows",
+    "addButton": "new workflow",
+    "info": {
+      "title": "What is a Workflow?",
+      "description": "A Workflow is a visual automation that defines a series of steps (nodes) connected by edges in a DAG canvas. Workflows can be triggered by events, timers, or other workflows.",
+      "items": {
+        "visual": { "title": "Visual Canvas", "text": "Design automations visually with a drag-and-drop DAG canvas" },
+        "plugins": { "title": "Plugin System", "text": "Extensible node types including code, conditions, loops, and sub-workflows" },
+        "triggers": { "title": "Multi-Trigger", "text": "Trigger workflows via HTTP, NATS, MQTT, email, Slack, Teams, and more" },
+        "variables": { "title": "Variables", "text": "Persist data across execution steps with workflow variables" }
+      },
+      "docsLabel": "view complete documentation"
+    }
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search workflows...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters — click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "workflowName": "workflow name",
+    "status": "status",
+    "isTemplate": "template",
+    "version": "version",
+    "versionPlaceholder": "e.g. 1, 2, 3",
+    "health": "health",
+    "nodesCount": "nodes count",
+    "nodesCountPlaceholder": "minimum nodes",
+    "pluginType": "plugin type",
+    "pluginTypePlaceholder": "e.g. telegram, slack",
+    "options": {
+      "all": "all",
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "yes": "yes",
+      "no": "no",
+      "valid": "valid",
+      "pluginMissing": "plugins missing",
+      "invalid": "invalid"
+    }
+  },
+  "columns": {
+    "name": "name",
+    "description": "description",
+    "status": "status",
+    "definitionStatus": "health",
+    "version": "version",
+    "nodesCount": "nodes",
+    "pluginsCount": "plugins"
+  },
+  "definitionStatus": {
+    "valid": "valid",
+    "pluginMissing": "plugins missing",
+    "invalid": "invalid"
+  },
+  "menuColumns": {
+    "version": "version",
+    "nodesCount": "nodes count",
+    "pluginsCount": "plugins count"
+  },
+  "status": {
+    "enabled": "enabled",
+    "disabled": "disabled"
+  },
+  "empty": {
+    "title": "no workflows found",
+    "description": "there are no workflows matching your current search criteria."
+  },
+  "emptyState": {
+    "title": "no workflows yet",
+    "description": "create your first visual workflow to automate complex processes"
+  },
+  "badges": {
+    "active": "active",
+    "disabled": "disabled"
+  },
+  "messages": {
+    "deletedSuccessfully": "workflow deleted successfully",
+    "confirmDelete": "are you sure you want to delete the workflow \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirm deletion"
+  },
+  "drawer": {
+    "title": "workflow details",
+    "close": "close",
+    "edit": "edit workflow",
+    "loading": "loading workflow details...",
+    "error": "failed to load workflow details",
+    "sections": {
+      "basicInfo": "basic information",
+      "configuration": "configuration",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "description": "description",
+      "status": "status",
+      "version": "definition version",
+      "nodesCount": "nodes",
+      "edgesCount": "edges",
+      "timezone": "timezone",
+      "isTemplate": "template",
+      "created": "created",
+      "updated": "updated"
+    },
+    "values": {
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "yes": "yes",
+      "no": "no",
+      "noDescription": "no description provided"
+    }
+  }
+}

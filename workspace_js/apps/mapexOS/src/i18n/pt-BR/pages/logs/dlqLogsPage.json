@@ -1,0 +1,101 @@
+{
+  "pageHeader": {
+    "title": "Fila de Mensagens Mortas",
+    "description": "Visualize mensagens que falharam em todos os serviços e não puderam ser processadas após retentativas."
+  },
+  "listTitle": "Entradas DLQ",
+  "itemLabel": "entrada DLQ",
+  "itemLabelPlural": "entradas DLQ",
+  "sidebar": {
+    "searchPlaceholder": "Buscar por serviço...",
+    "searchErrorPlaceholder": "Buscar por erro...",
+    "allFailures": "Todas as Falhas",
+    "byService": "Por Serviço",
+    "noServiceTypes": "Nenhum tipo de serviço encontrado",
+    "infoBanner": "Entradas DLQ são mensagens que falharam em todas as retentativas e precisam de investigação manual."
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar por nome do serviço...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar todos",
+    "allStatus": "todos",
+    "dateRange": "período",
+    "startDate": "data inicial",
+    "endDate": "data final",
+    "serviceName": "nome do serviço",
+    "serviceType": "tipo de serviço",
+    "eventType": "tipo de evento",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "options": {
+      "all": "todos",
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "columns": {
+    "serviceName": "Serviço",
+    "serviceType": "Tipo",
+    "eventType": "Tipo de Evento",
+    "errorCount": "Erros",
+    "consumerName": "Consumidor",
+    "totalDeliveries": "Entregas",
+    "timestamp": "Data/Hora"
+  },
+  "detail": {
+    "backToList": "Voltar para lista",
+    "copyContent": "Copiar conteúdo",
+    "unknownError": "Erro desconhecido",
+    "errors": "Erros",
+    "deliveries": "Entregas",
+    "duration": "Duração",
+    "retention": "Retenção",
+    "searchHint": "Ctrl+F para buscar",
+    "tabs": {
+      "payload": "Payload",
+      "headers": "Headers",
+      "error": "Erro"
+    },
+    "fallback": {
+      "empty": "(vazio)",
+      "noHeaders": "(sem headers)",
+      "noErrorMessage": "(sem mensagem de erro)"
+    }
+  },
+  "list": {
+    "errorsTooltip": "{count} erros",
+    "unknownError": "Erro desconhecido"
+  },
+  "datePresets": {
+    "today": "Hoje",
+    "all": "Todos"
+  },
+  "time": {
+    "justNow": "agora",
+    "minutesAgo": "{count}m atrás",
+    "hoursAgo": "{count}h atrás",
+    "daysAgo": "{count}d atrás"
+  },
+  "empty": {
+    "title": "Nenhuma Entrada DLQ Encontrada",
+    "description": "Não há entradas na fila de mensagens mortas correspondentes aos seus critérios."
+  },
+  "pagination": {
+    "newer": "Mais Recentes",
+    "older": "Mais Antigos"
+  },
+  "actions": {
+    "refresh": "Atualizar"
+  },
+  "messages": {
+    "loadFailed": "Falha ao carregar entradas DLQ",
+    "copied": "Copiado para a área de transferência",
+    "copyFailed": "Falha ao copiar"
+  },
+  "defaults": {
+    "unknown": "Desconhecido",
+    "notAvailable": "N/D"
+  }
+}

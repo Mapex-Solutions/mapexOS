@@ -1,0 +1,286 @@
+{
+  "title": "ativos",
+  "description": "gerencie seus ativos IoT e gateways",
+  "addButton": "adicionar ativo",
+  "info": {
+    "title": "O que é um Ativo?",
+    "description": "Um Ativo representa um dispositivo IoT físico ou virtual em sua infraestrutura. Ativos podem ser sensores, gateways, máquinas ou qualquer dispositivo conectado que envia ou recebe dados através do MapexOS.",
+    "items": {
+      "templates": {
+        "title": "Baseado em Templates",
+        "text": "Ativos são criados a partir de templates que definem sua estrutura, processamento de dados e regras de validação"
+      },
+      "protocols": {
+        "title": "Multi-Protocolo",
+        "text": "Suporte para múltiplos protocolos de comunicação incluindo MQTT, HTTP e LoRaWAN"
+      },
+      "organization": {
+        "title": "Multi-Inquilino",
+        "text": "Ativos pertencem a organizações com suporte a estrutura hierárquica para configurações empresariais complexas"
+      },
+      "realtime": {
+        "title": "Dados em Tempo Real",
+        "text": "Ativos enviam dados de telemetria em tempo real e podem receber comandos instantaneamente"
+      },
+      "location": {
+        "title": "Geo-Localização",
+        "text": "Ativos podem ter coordenadas geográficas para monitoramento e análise baseados em localização"
+      }
+    },
+    "docsLabel": "Ver Documentação Completa"
+  },
+  "listTitle": "lista de ativos",
+  "itemLabel": "ativo",
+  "itemLabelPlural": "ativos",
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar ativos...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "allStatus": "todos",
+    "assetName": "nome do ativo",
+    "assetUUID": "UUID do ativo",
+    "deviceUUID": "UUID do dispositivo",
+    "status": "status",
+    "category": "categoria",
+    "manufacturer": "fabricante",
+    "model": "modelo",
+    "protocol": "protocolo",
+    "createdDate": "data de criação",
+    "includeChildren": "incluir organizações filhas",
+    "filterByUUID": "filtrar por UUID",
+    "filterByCategory": "filtrar por categoria",
+    "filterByManufacturer": "filtrar por fabricante",
+    "filterByModel": "filtrar por modelo",
+    "options": {
+      "all": "todos",
+      "active": "ativo",
+      "inactive": "inativo",
+      "enabled": "habilitado",
+      "disabled": "desabilitado",
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "columns": {
+    "name": "nome",
+    "assetUUID": "UUID do ativo",
+    "uuid": "UUID",
+    "type": "tipo",
+    "protocol": "protocolo",
+    "category": "categoria",
+    "manufacturer": "fabricante",
+    "routers": "roteadores",
+    "debug": "debug",
+    "organization": "organização"
+  },
+  "menuColumns": {
+    "uuid": "UUID",
+    "type": "tipo",
+    "protocol": "protocolo",
+    "category": "categoria",
+    "manufacturerModel": "fabricante/modelo",
+    "debug": "debug",
+    "organization": "organização"
+  },
+  "statusBadge": {
+    "online": "online",
+    "offline": "offline",
+    "unknown": "—",
+    "lastSeenPrefix": "visto por último",
+    "lastSeenNever": "nunca"
+  },
+  "warnings": {
+    "noCertSecondary": "sem certificado",
+    "noCertTooltip": "Ativo MQTT sem certificado ativo. Abra o ativo e gere um em Autenticação."
+  },
+  "status": {
+    "active": "ativo",
+    "inactive": "inativo"
+  },
+  "empty": {
+    "title": "nenhum ativo encontrado",
+    "description": "parece que não há ativos correspondentes aos seus critérios de pesquisa atuais ou você ainda não possui nenhum ativo."
+  },
+  "messages": {
+    "deletedSuccessfully": "ativo excluído com sucesso",
+    "confirmDelete": "tem certeza de que deseja excluir o ativo \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirmar exclusão"
+  },
+  "errors": {
+    "apiNotInitialized": "API de ativos não está disponível",
+    "idMissing": "ID de ativo ausente",
+    "noOrganization": "Nenhuma organização selecionada"
+  },
+  "drawer": {
+    "title": "detalhes do ativo",
+    "close": "fechar",
+    "edit": "editar ativo",
+    "duplicate": "duplicar ativo",
+    "loading": "carregando detalhes do ativo...",
+    "error": "falha ao carregar detalhes do ativo",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "configuration": "configuração",
+      "protocol": "protocolo",
+      "auth": "autenticação",
+      "location": "localização",
+      "routing": "roteamento",
+      "healthMonitoring": "monitoramento de saúde",
+      "organization": "organização",
+      "timestamps": "registro temporal"
+    },
+    "fields": {
+      "name": "nome",
+      "uuid": "UUID",
+      "status": "status",
+      "description": "descrição",
+      "template": "template",
+      "category": "categoria",
+      "manufacturer": "fabricante",
+      "model": "modelo",
+      "version": "versão",
+      "protocolType": "tipo de protocolo",
+      "clientId": "ID do cliente",
+      "username": "usuário",
+      "tokenExpiresAt": "token expira em",
+      "latitude": "latitude",
+      "longitude": "longitude",
+      "routeGroups": "grupos de rota",
+      "healthStatus": "status de saúde",
+      "lastSeen": "visto pela última vez",
+      "threshold": "limite de inatividade",
+      "requiredMisses": "falhas necessárias",
+      "organization": "organização",
+      "pathKey": "caminho",
+      "customer": "cliente",
+      "created": "criado em",
+      "updated": "atualizado em"
+    },
+    "empty": {
+      "description": "nenhuma descrição fornecida",
+      "location": "localização não definida",
+      "routeGroups": "nenhum grupo de rota atribuído"
+    },
+    "regenerateMqttToken": {
+      "button": "regenerar token MQTT",
+      "confirmTitle": "regenerar token MQTT?",
+      "confirmBody": "isto invalida o token atual do dispositivo. O dispositivo perderá conectividade até ser reprovisionado com a nova credencial.",
+      "success": "nova credencial MQTT gerada. Copie e reprovisione o dispositivo.",
+      "failed": "falha ao regenerar token MQTT"
+    },
+    "auth": {
+      "password": {
+        "label": "senha",
+        "set": "configurada",
+        "notSet": "não configurada",
+        "hint": "use Editar ativo para definir, rotacionar ou remover a senha."
+      },
+      "certificate": {
+        "label": "certificado",
+        "active": "ativo",
+        "noActive": "sem certificado ativo",
+        "expiresIn": "expira em {days} dias",
+        "expired": "expirado",
+        "fields": {
+          "serial": "serial",
+          "fingerprint": "fingerprint",
+          "subjectCN": "subject CN",
+          "issued": "emitido",
+          "expires": "expira"
+        },
+        "actions": {
+          "generate": "gerar certificado",
+          "revoke": "revogar",
+          "regenerate": "gerar novo"
+        },
+        "revokeConfirmTitle": "revogar certificado?",
+        "revokeConfirmBody": "o dispositivo perderá acesso MQTT até que um novo certificado seja emitido.",
+        "revokeSuccess": "certificado revogado.",
+        "revokeFailed": "falha ao revogar certificado.",
+        "issueSuccess": "certificado emitido. Download iniciado.",
+        "issueFailed": "falha ao emitir certificado.",
+        "dialog": {
+          "title": "gerar certificado MQTT",
+          "warning": "a chave privada é exibida apenas uma vez. Faça download do zip e guarde em local seguro - a plataforma não armazena a chave. Se perder, será necessário revogar este certificado e emitir um novo.",
+          "replaceWarning": "este ativo já possui um certificado ativo. Gerar um novo revoga o certificado existente imediatamente.",
+          "generateButton": "gerar e baixar",
+          "skipButton": "cancelar"
+        }
+      },
+      "revoked": {
+        "title": "certificados revogados",
+        "retentionNotice": "retidos por 30 dias para auditoria. Registros mais antigos são arquivados.",
+        "empty": "nenhum certificado revogado para este ativo.",
+        "columns": {
+          "serial": "serial",
+          "reason": "motivo",
+          "revokedAt": "revogado em"
+        }
+      }
+    }
+  },
+  "healthMonitoring": {
+    "title": "monitoramento de saúde",
+    "enabled": "habilitado",
+    "disabled": "desabilitado",
+    "mqttAlwaysOn": "MQTT — sempre monitorado",
+    "mqttBanner": {
+      "title": "A presença MQTT é a fonte da verdade",
+      "body": "Para assets com protocolo MQTT, o status online/offline vem direto do broker (CONNECT / DISCONNECT). O monitoramento de saúde fica sempre habilitado — você só escolhe quais grupos de roteamento disparam em cada transição."
+    },
+    "sections": {
+      "heartbeatSource": "fonte de heartbeat",
+      "heartbeatSourceDescription": "Como a plataforma sabe que o device está vivo.",
+      "detectionThresholds": "limites de detecção",
+      "detectionThresholdsDescription": "Quando a ausência de heartbeats é tratada como offline.",
+      "transitionRouting": "roteamento de transições",
+      "transitionRoutingDescription": "Grupos de roteamento disparados quando o ativo fica offline ou volta online."
+    },
+    "threshold": "limite de inatividade",
+    "thresholdUnit": "minutos",
+    "thresholdHint": "mínimo 10 minutos",
+    "requiredMisses": "falhas necessárias",
+    "requiredMissesHint": "verificações consecutivas antes de alertar",
+    "monitorOnlyHint": "Deixe ambas as listas vazias para apenas monitorar o status — nenhuma ação será disparada no router. Mudanças de status continuam atualizando o badge e o histórico de conectividade.",
+    "heartbeatMode": {
+      "label": "fonte de heartbeat",
+      "optionImplicit": "implícito (do evento de dados)",
+      "optionExplicit": "explícito (o device envia heartbeat dedicado)",
+      "implicitTitle": "Automático via eventos de dados",
+      "implicitHint": "Os heartbeats são derivados automaticamente de cada evento enviado pelo device. Sem integração adicional.",
+      "explicitTitle": "Envie heartbeats a partir do device",
+      "explicitHint": "O canal correto depende do protocolo do asset — veja os cards abaixo.",
+      "mqttCardTitle": "MQTT (automático)",
+      "httpCardTitle": "POST no endpoint",
+      "mqttPresenceHint": "A liveness é automática via conexão MQTT do device — a plataforma detecta connect e disconnect pelo próprio broker. Nada a configurar no device além de manter a sessão MQTT aberta.",
+      "explicitHttpEndpoint": "Endpoint HTTP: POST /api/v1/heartbeat?ds=<dataSourceId> com body { \"assetUUID\": \"...\" } (mesma autenticação de /api/v1/events)",
+      "explicitHttpExample": "Exemplo: curl -X POST 'http://localhost:8080/api/v1/heartbeat?ds=68f5bbce1aef22967c3ebb30' -H 'x-api-key: <sua-key>' -H 'Content-Type: application/json' -d '{\"assetUUID\":\"sensor-temp-001\"}'",
+      "copyAria": "copiar para área de transferência",
+      "copySuccess": "Copiado para a área de transferência",
+      "copyFail": "Falha ao copiar para a área de transferência"
+    },
+    "offlineRouteGroups": "quando offline",
+    "offlineRouteGroupsHint": "grupos de roteamento acionados quando o ativo parar de responder",
+    "offlineRouteGroupsEmpty": "nenhum grupo de roteamento configurado para eventos offline",
+    "onlineRouteGroups": "quando voltar online",
+    "onlineRouteGroupsHint": "grupos de roteamento acionados quando o ativo se recuperar",
+    "onlineRouteGroupsEmpty": "nenhum grupo de roteamento configurado para eventos online",
+    "addRouteGroup": "adicionar grupo de roteamento",
+    "status": "saúde",
+    "lastSeen": "visto pela última vez",
+    "online": "online",
+    "offline": "offline",
+    "unknown": "desconhecido",
+    "neverSeen": "nunca visto",
+    "filter": {
+      "all": "todos",
+      "online": "online",
+      "offline": "offline",
+      "unknown": "desconhecido"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "title": "selecionar gatilho",
+  "searchPlaceholder": "buscar gatilhos...",
+  "infoBanner": "clique em um gatilho para selecioná-lo.",
+  "emptyText": "nenhum gatilho disponível",
+  "itemSingular": "gatilho",
+  "itemPlural": "gatilhos",
+  "allFilter": "todos",
+  "category": "categoria",
+  "fetchError": "falha ao buscar gatilhos"
+}

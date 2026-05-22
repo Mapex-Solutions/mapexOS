@@ -1,0 +1,78 @@
+{
+  "pageHeader": {
+    "title": "Audit Logs",
+    "description": "View and analyze all audit logs for your organization. Track user actions, system changes, and resource modifications."
+  },
+  "listTitle": "Audit Logs List",
+  "itemLabel": "log",
+  "itemLabelPlural": "logs",
+  "filters": {
+    "label": "Filters",
+    "searchPlaceholder": "Search by actor or resource...",
+    "advancedFilters": "Advanced Filters",
+    "pendingFilters": "Pending filters - click to apply",
+    "clearAll": "Clear all",
+    "allStatus": "All",
+    "status": "Status",
+    "actor": "Actor",
+    "action": "Action",
+    "resourceType": "Resource Type",
+    "includeChildren": "Child Organizations",
+    "includeChildrenOrgs": "Include child organizations",
+    "dateRange": "Date Range",
+    "options": {
+      "success": "Success",
+      "failure": "Failure",
+      "yes": "Yes",
+      "no": "No"
+    }
+  },
+  "columns": {
+    "actor": "Actor",
+    "action": "Action",
+    "resource": "Resource",
+    "status": "Status",
+    "timestamp": "Timestamp"
+  },
+  "menuColumns": {
+    "action": "Action",
+    "resource": "Resource",
+    "timestamp": "Timestamp"
+  },
+  "statusOptions": {
+    "success": "Success",
+    "failure": "Failure"
+  },
+  "actionOptions": {
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "resourceTypeOptions": {
+    "userLog": "User Log",
+    "dataSource": "Data Source",
+    "assets": "Assets",
+    "payloadHandler": "Payload Handler",
+    "triggers": "Triggers",
+    "users": "Users",
+    "customers": "Customers"
+  },
+  "drawer": {
+    "title": "Audit Log Details"
+  },
+  "empty": {
+    "title": "No Audit Logs Found",
+    "description": "It seems there are no audit logs matching your current search criteria or you don't have any audit logs yet."
+  },
+  "pagination": {
+    "newer": "Newer",
+    "older": "Older"
+  },
+  "messages": {
+    "loadFailed": "Failed to load audit logs. Please try again."
+  },
+  "defaults": {
+    "unknown": "Unknown",
+    "notAvailable": "N/A"
+  }
+}

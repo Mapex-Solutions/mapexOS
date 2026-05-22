@@ -1,0 +1,136 @@
+{
+  "title": "customers",
+  "description": "manage your customer database",
+  "addButton": "add customer",
+  "listTitle": "customers list",
+  "itemLabel": "customer",
+  "itemLabelPlural": "customers",
+  "info": {
+    "title": "What is a Customer?",
+    "description": "A Customer is a second-level organization that belongs to a vendor. Customers can have multiple sites, buildings, floors, and zones, creating a hierarchical structure for asset and user management.",
+    "items": {
+      "multiSite": {
+        "title": "Multi-Site Management",
+        "text": "Organize multiple physical locations under a single customer entity"
+      },
+      "hierarchy": {
+        "title": "Hierarchical Structure",
+        "text": "Customer → Site → Building → Floor → Zone hierarchy for organized data flow"
+      },
+      "configuration": {
+        "title": "Independent Configuration",
+        "text": "Each customer can have its own settings, retention policies, and access controls"
+      },
+      "assetOwnership": {
+        "title": "Asset Ownership",
+        "text": "Assets are associated with customers and their sub-organizations for clear ownership"
+      },
+      "userAccess": {
+        "title": "User Access Control",
+        "text": "Role-based permissions scoped to customer organizations and their children"
+      }
+    },
+    "docsLabel": "View Complete Documentation"
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search organizations...",
+    "allStatus": "all",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "organizationName": "organization name",
+    "status": "status",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "type": "type",
+    "options": {
+      "all": "all",
+      "yes": "yes",
+      "no": "no",
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "customer": "customer",
+      "site": "site",
+      "building": "building",
+      "floor": "floor",
+      "zone": "zone"
+    }
+  },
+  "columns": {
+    "name": "name",
+    "organization": "customer name",
+    "address": "address",
+    "state": "state",
+    "created": "created"
+  },
+  "menuColumns": {
+    "organization": "organization",
+    "address": "address",
+    "created": "created"
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "empty": {
+    "title": "no customers found",
+    "description": "it seems there are no customers matching your current search criteria or you don't have any customers yet."
+  },
+  "messages": {
+    "deletedSuccessfully": "customer deleted successfully",
+    "confirmDelete": "are you sure you want to delete the customer \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirm deletion"
+  },
+  "errors": {
+    "apiNotInitialized": "Organizations API is not available",
+    "idMissing": "Customer ID is missing"
+  },
+  "drawer": {
+    "title": "customer details",
+    "close": "close",
+    "edit": "edit",
+    "loading": "loading customer details...",
+    "error": "failed to load customer details",
+    "sections": {
+      "basicInfo": "basic information",
+      "hierarchy": "hierarchy",
+      "address": "address",
+      "contact": "contact information",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "type": "type",
+      "status": "status",
+      "logo": "logo",
+      "parentOrganization": "parent organization",
+      "customerOf": "customer of",
+      "code": "code",
+      "pathKey": "path key",
+      "depth": "depth",
+      "childCount": "child organizations",
+      "street": "street",
+      "city": "city",
+      "state": "state",
+      "country": "country",
+      "zipCode": "zip code",
+      "phone": "phone",
+      "created": "created",
+      "updated": "updated"
+    },
+    "empty": {
+      "address": "no address provided",
+      "phone": "no phone provided"
+    },
+    "type": {
+      "customer": "customer",
+      "site": "site",
+      "building": "building",
+      "floor": "floor",
+      "zone": "zone"
+    }
+  }
+}

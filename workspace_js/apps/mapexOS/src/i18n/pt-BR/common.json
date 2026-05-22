@@ -1,0 +1,76 @@
+{
+  "actions": {
+    "add": "Adicionar",
+    "addNew": "Adicionar novo",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "save": "Salvar",
+    "saveChanges": "Salvar alterações",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "clear": "Limpar",
+    "apply": "Aplicar",
+    "view": "Visualizar",
+    "viewDetails": "Ver detalhes",
+    "export": "Exportar",
+    "import": "Importar",
+    "refresh": "Atualizar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "finish": "Concluir"
+  },
+  "messages": {
+    "success": "Ação realizada com sucesso",
+    "error": "A ação falhou",
+    "loading": "Carregando...",
+    "noData": "Nenhum dado disponível",
+    "confirmDelete": "Tem certeza que deseja excluir {item}?",
+    "deletedSuccessfully": "{item} excluído com sucesso",
+    "savedSuccessfully": "{item} salvo com sucesso",
+    "updatedSuccessfully": "{item} atualizado com sucesso",
+    "createdSuccessfully": "{item} criado com sucesso"
+  },
+  "labels": {
+    "name": "Nome",
+    "description": "Descrição",
+    "status": "Status",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "created": "Criado",
+    "updated": "Atualizado",
+    "createdAt": "Criado em",
+    "updatedAt": "Atualizado em",
+    "actions": "Ações",
+    "yes": "Sim",
+    "no": "Não",
+    "all": "Todos",
+    "none": "Nenhum",
+    "other": "Outro"
+  },
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "pending": "Pendente",
+    "completed": "Concluído",
+    "cancelled": "Cancelado",
+    "failed": "Falhou"
+  },
+  "pagination": {
+    "itemsPerPage": "Itens por página",
+    "of": "de",
+    "showing": "Mostrando",
+    "to": "a",
+    "items": "{count} itens | {count} item | {count} itens"
+  },
+  "validation": {
+    "required": "{field} é obrigatório",
+    "invalidEmail": "Endereço de e-mail inválido",
+    "invalidPhone": "Número de telefone inválido",
+    "minLength": "{field} deve ter pelo menos {min} caracteres",
+    "maxLength": "{field} não deve exceder {max} caracteres"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "title": "clientes",
+  "description": "gerencie sua base de clientes",
+  "addButton": "adicionar cliente",
+  "listTitle": "lista de clientes",
+  "itemLabel": "cliente",
+  "itemLabelPlural": "clientes",
+  "info": {
+    "title": "O que é um Cliente?",
+    "description": "Um Cliente é uma organização de segundo nível que pertence a um fornecedor. Os clientes podem ter vários locais, edifícios, andares e zonas, criando uma estrutura hierárquica para gerenciamento de ativos e usuários.",
+    "items": {
+      "multiSite": {
+        "title": "Gerenciamento Multi-Site",
+        "text": "Organize múltiplas localizações físicas sob uma única entidade de cliente"
+      },
+      "hierarchy": {
+        "title": "Estrutura Hierárquica",
+        "text": "Hierarquia Cliente → Local → Edifício → Andar → Zona para fluxo de dados organizado"
+      },
+      "configuration": {
+        "title": "Configuração Independente",
+        "text": "Cada cliente pode ter suas próprias configurações, políticas de retenção e controles de acesso"
+      },
+      "assetOwnership": {
+        "title": "Propriedade de Ativos",
+        "text": "Os ativos são associados aos clientes e suas sub-organizações para propriedade clara"
+      },
+      "userAccess": {
+        "title": "Controle de Acesso de Usuários",
+        "text": "Permissões baseadas em função com escopo para organizações de clientes e seus filhos"
+      }
+    },
+    "docsLabel": "Ver Documentação Completa"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar organizações...",
+    "allStatus": "todos",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "organizationName": "nome da organização",
+    "status": "status",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "type": "tipo",
+    "options": {
+      "all": "todos",
+      "yes": "sim",
+      "no": "não",
+      "enabled": "habilitado",
+      "disabled": "desabilitado",
+      "customer": "cliente",
+      "site": "local",
+      "building": "edifício",
+      "floor": "andar",
+      "zone": "zona"
+    }
+  },
+  "columns": {
+    "name": "nome",
+    "organization": "nome do cliente",
+    "address": "endereço",
+    "state": "estado",
+    "created": "criado"
+  },
+  "menuColumns": {
+    "organization": "organização",
+    "address": "endereço",
+    "created": "criado"
+  },
+  "status": {
+    "active": "ativo",
+    "inactive": "inativo"
+  },
+  "empty": {
+    "title": "nenhum cliente encontrado",
+    "description": "parece que não há clientes correspondentes aos seus critérios de pesquisa atuais ou você ainda não possui nenhum cliente."
+  },
+  "messages": {
+    "deletedSuccessfully": "cliente excluído com sucesso",
+    "confirmDelete": "tem certeza de que deseja excluir o cliente \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirmar exclusão"
+  },
+  "errors": {
+    "apiNotInitialized": "API de organizações não está disponível",
+    "idMissing": "ID do cliente ausente"
+  },
+  "drawer": {
+    "title": "detalhes do cliente",
+    "close": "fechar",
+    "edit": "editar",
+    "loading": "carregando detalhes do cliente...",
+    "error": "falha ao carregar detalhes do cliente",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "hierarchy": "hierarquia",
+      "address": "endereço",
+      "contact": "informações de contato",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "nome",
+      "type": "tipo",
+      "status": "status",
+      "logo": "logo",
+      "parentOrganization": "organização pai",
+      "customerOf": "cliente de",
+      "code": "código",
+      "pathKey": "caminho",
+      "depth": "profundidade",
+      "childCount": "organizações filhas",
+      "street": "rua",
+      "city": "cidade",
+      "state": "estado",
+      "country": "país",
+      "zipCode": "CEP",
+      "phone": "telefone",
+      "created": "criado",
+      "updated": "atualizado"
+    },
+    "empty": {
+      "address": "nenhum endereço fornecido",
+      "phone": "nenhum telefone fornecido"
+    },
+    "type": {
+      "customer": "cliente",
+      "site": "local",
+      "building": "edifício",
+      "floor": "andar",
+      "zone": "zona"
+    }
+  }
+}

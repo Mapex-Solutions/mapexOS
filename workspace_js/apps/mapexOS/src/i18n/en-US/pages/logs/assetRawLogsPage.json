@@ -1,0 +1,80 @@
+{
+  "pageHeader": {
+    "title": "raw events logs",
+    "description": "view all raw events received from your gateways and data sources."
+  },
+  "listTitle": "raw events list",
+  "itemLabel": "event",
+  "itemLabelPlural": "events",
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search by UUID...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "dateRange": "date range",
+    "startDate": "start date",
+    "endDate": "end date",
+    "source": "source",
+    "status": "status",
+    "uuid": "UUID",
+    "uuidPlaceholder": "enter UUID to filter...",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "options": {
+      "yes": "yes",
+      "no": "no",
+      "success": "success",
+      "failed": "failed"
+    },
+    "includeChildrenOptions": {
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "columns": {
+    "dataSource": "data source",
+    "uuid": "UUID",
+    "status": "status",
+    "source": "source",
+    "timestamp": "timestamp",
+    "retention": "retention"
+  },
+  "sourceOptions": {
+    "httpGateway": "HTTP Gateway",
+    "mqttGateway": "MQTT Gateway",
+    "lorawanGateway": "LoRaWAN Gateway (Next Version)"
+  },
+  "statusOptions": {
+    "success": "success",
+    "failed": "failed"
+  },
+  "statusBadge": {
+    "success": "SUCCESS",
+    "failed": "FAILED"
+  },
+  "drawer": {
+    "title": "raw event details"
+  },
+  "empty": {
+    "title": "no events found",
+    "description": "there are no raw events matching your current filters or no events have been received yet."
+  },
+  "pagination": {
+    "newer": "newer",
+    "older": "older"
+  },
+  "messages": {
+    "loadFailed": "failed to load raw events"
+  },
+  "defaults": {
+    "unknown": "unknown",
+    "retentionDays": "{days} days",
+    "notAvailable": "N/A"
+  },
+  "actions": {
+    "trackEvent": "track this event",
+    "viewJson": "view JSON"
+  }
+}

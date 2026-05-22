@@ -1,0 +1,14 @@
+{
+  "http": {
+    "400": "Bad request. Please check the data sent.",
+    "401": "Unauthorized. Please login again.",
+    "403": "Access denied. You don't have permission for this action.",
+    "404": "Resource not found.",
+    "409": "Conflict. The resource already exists.",
+    "422": "Validation error. Please check the data and try again.",
+    "500": "Internal server error. Please try again later.",
+    "503": "Service temporarily unavailable. Please try again in a few moments.",
+    "network": "Network error. Please check your connection and try again.",
+    "unknown": "An unexpected error occurred. Please try again."
+  }
+}

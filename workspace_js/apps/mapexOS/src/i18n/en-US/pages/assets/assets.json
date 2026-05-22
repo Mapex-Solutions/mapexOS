@@ -1,0 +1,286 @@
+{
+  "title": "assets",
+  "description": "manage your IoT assets and gateways",
+  "addButton": "add asset",
+  "info": {
+    "title": "What is an Asset?",
+    "description": "An Asset represents a physical or virtual IoT device in your infrastructure. Assets can be sensors, gateways, machines, or any connected device that sends or receives data through MapexOS.",
+    "items": {
+      "templates": {
+        "title": "Template-Based",
+        "text": "Assets are created from templates that define their structure, data processing, and validation rules"
+      },
+      "protocols": {
+        "title": "Multi-Protocol",
+        "text": "Support for multiple communication protocols including MQTT, HTTP, and LoRaWAN"
+      },
+      "organization": {
+        "title": "Multi-Tenant",
+        "text": "Assets belong to organizations with hierarchical structure support for complex enterprise setups"
+      },
+      "realtime": {
+        "title": "Real-Time Data",
+        "text": "Assets send telemetry data in real-time and can receive commands instantly"
+      },
+      "location": {
+        "title": "Geo-Location",
+        "text": "Assets can have geographical coordinates for location-based monitoring and analysis"
+      }
+    },
+    "docsLabel": "View Complete Documentation"
+  },
+  "listTitle": "assets list",
+  "itemLabel": "asset",
+  "itemLabelPlural": "assets",
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search assets...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "assetName": "asset name",
+    "assetUUID": "asset UUID",
+    "deviceUUID": "device UUID",
+    "status": "status",
+    "category": "category",
+    "manufacturer": "manufacturer",
+    "model": "model",
+    "protocol": "protocol",
+    "createdDate": "created date",
+    "includeChildren": "include child organizations",
+    "filterByUUID": "filter by UUID",
+    "filterByCategory": "filter by category",
+    "filterByManufacturer": "filter by manufacturer",
+    "filterByModel": "filter by model",
+    "options": {
+      "all": "all",
+      "active": "active",
+      "inactive": "inactive",
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "columns": {
+    "name": "name",
+    "assetUUID": "asset UUID",
+    "uuid": "UUID",
+    "type": "type",
+    "protocol": "protocol",
+    "category": "category",
+    "manufacturer": "manufacturer",
+    "routers": "routers",
+    "debug": "debug",
+    "organization": "organization"
+  },
+  "menuColumns": {
+    "uuid": "UUID",
+    "type": "type",
+    "protocol": "protocol",
+    "category": "category",
+    "manufacturerModel": "manufacturer/model",
+    "debug": "debug",
+    "organization": "organization"
+  },
+  "statusBadge": {
+    "online": "online",
+    "offline": "offline",
+    "unknown": "—",
+    "lastSeenPrefix": "last seen",
+    "lastSeenNever": "never"
+  },
+  "warnings": {
+    "noCertSecondary": "no certificate",
+    "noCertTooltip": "MQTT asset has no active certificate. Open the asset and generate one in Authentication."
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "empty": {
+    "title": "no assets found",
+    "description": "it seems there are no assets matching your current search criteria or you don't have any assets yet."
+  },
+  "messages": {
+    "deletedSuccessfully": "asset deleted successfully",
+    "confirmDelete": "are you sure you want to delete the asset \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirm deletion"
+  },
+  "errors": {
+    "apiNotInitialized": "Assets API is not available",
+    "idMissing": "Asset ID is missing",
+    "noOrganization": "No organization selected"
+  },
+  "drawer": {
+    "title": "asset details",
+    "close": "close",
+    "edit": "edit asset",
+    "duplicate": "duplicate asset",
+    "loading": "loading asset details...",
+    "error": "failed to load asset details",
+    "sections": {
+      "basicInfo": "basic information",
+      "configuration": "configuration",
+      "protocol": "protocol",
+      "auth": "authentication",
+      "location": "location",
+      "routing": "routing",
+      "healthMonitoring": "health monitoring",
+      "organization": "organization",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "uuid": "UUID",
+      "status": "status",
+      "description": "description",
+      "template": "template",
+      "category": "category",
+      "manufacturer": "manufacturer",
+      "model": "model",
+      "version": "version",
+      "protocolType": "protocol type",
+      "clientId": "client ID",
+      "username": "username",
+      "tokenExpiresAt": "token expires",
+      "latitude": "latitude",
+      "longitude": "longitude",
+      "routeGroups": "route groups",
+      "healthStatus": "health status",
+      "lastSeen": "last seen",
+      "threshold": "inactivity threshold",
+      "requiredMisses": "required misses",
+      "organization": "organization",
+      "pathKey": "path",
+      "customer": "customer",
+      "created": "created",
+      "updated": "updated"
+    },
+    "empty": {
+      "description": "no description provided",
+      "location": "location not set",
+      "routeGroups": "no route groups assigned"
+    },
+    "regenerateMqttToken": {
+      "button": "regenerate MQTT token",
+      "confirmTitle": "regenerate MQTT token?",
+      "confirmBody": "this invalidates the current device token. The device will lose connectivity until you re-provision it with the new credential.",
+      "success": "new MQTT credential generated. Copy and re-provision the device.",
+      "failed": "failed to regenerate MQTT token"
+    },
+    "auth": {
+      "password": {
+        "label": "password",
+        "set": "configured",
+        "notSet": "not configured",
+        "hint": "use Edit asset to set, rotate, or remove the password."
+      },
+      "certificate": {
+        "label": "certificate",
+        "active": "active",
+        "noActive": "no active certificate",
+        "expiresIn": "expires in {days} days",
+        "expired": "expired",
+        "fields": {
+          "serial": "serial",
+          "fingerprint": "fingerprint",
+          "subjectCN": "subject CN",
+          "issued": "issued",
+          "expires": "expires"
+        },
+        "actions": {
+          "generate": "generate certificate",
+          "revoke": "revoke",
+          "regenerate": "generate new"
+        },
+        "revokeConfirmTitle": "revoke certificate?",
+        "revokeConfirmBody": "the device will lose MQTT access until a new certificate is issued.",
+        "revokeSuccess": "certificate revoked.",
+        "revokeFailed": "failed to revoke certificate.",
+        "issueSuccess": "certificate issued. Download started.",
+        "issueFailed": "failed to issue certificate.",
+        "dialog": {
+          "title": "generate MQTT certificate",
+          "warning": "the private key is shown only once. Download the zip and store it securely - the platform never persists it. If lost, you must revoke this certificate and issue a new one.",
+          "replaceWarning": "this asset already has an active certificate. Generating a new one revokes the existing certificate immediately.",
+          "generateButton": "generate and download",
+          "skipButton": "cancel"
+        }
+      },
+      "revoked": {
+        "title": "revoked certificates",
+        "retentionNotice": "retained 30 days for audit. Older records are archived.",
+        "empty": "no revoked certificates for this asset.",
+        "columns": {
+          "serial": "serial",
+          "reason": "reason",
+          "revokedAt": "revoked at"
+        }
+      }
+    }
+  },
+  "healthMonitoring": {
+    "title": "health monitoring",
+    "enabled": "enabled",
+    "disabled": "disabled",
+    "mqttAlwaysOn": "MQTT — always monitored",
+    "mqttBanner": {
+      "title": "MQTT presence is the source of truth",
+      "body": "For MQTT-protocol assets, online/offline status comes directly from the broker (CONNECT / DISCONNECT). Health monitoring is always enabled — you only choose which route groups fire on each transition."
+    },
+    "sections": {
+      "heartbeatSource": "heartbeat source",
+      "heartbeatSourceDescription": "How the platform learns the device is alive.",
+      "detectionThresholds": "detection thresholds",
+      "detectionThresholdsDescription": "When the absence of heartbeats is treated as offline.",
+      "transitionRouting": "transition routing",
+      "transitionRoutingDescription": "Route groups fired when the asset goes offline or comes back online."
+    },
+    "threshold": "inactivity threshold",
+    "thresholdUnit": "minutes",
+    "thresholdHint": "minimum 10 minutes",
+    "requiredMisses": "required misses",
+    "requiredMissesHint": "consecutive checks before alerting",
+    "monitorOnlyHint": "Leave both lists empty to monitor status only — no router action will be triggered. Status changes still update the badge and the connectivity history.",
+    "heartbeatMode": {
+      "label": "heartbeat source",
+      "optionImplicit": "implicit (from data events)",
+      "optionExplicit": "explicit (device sends dedicated heartbeat)",
+      "implicitTitle": "Auto from data events",
+      "implicitHint": "Heartbeats are derived automatically from each data event the device sends. No extra integration needed.",
+      "explicitTitle": "Send heartbeats from your device",
+      "explicitHint": "The right channel depends on the asset's protocol — see the cards below.",
+      "mqttCardTitle": "MQTT (automatic)",
+      "httpCardTitle": "POST to endpoint",
+      "mqttPresenceHint": "Liveness is automatic via the device's MQTT connection — the platform detects connect and disconnect through the broker. Nothing to configure on the device beyond keeping the MQTT session open.",
+      "explicitHttpEndpoint": "HTTP endpoint: POST /api/v1/heartbeat?ds=<dataSourceId> with body { \"assetUUID\": \"...\" } (same auth as /api/v1/events)",
+      "explicitHttpExample": "Example: curl -X POST 'http://localhost:8080/api/v1/heartbeat?ds=68f5bbce1aef22967c3ebb30' -H 'x-api-key: <your-key>' -H 'Content-Type: application/json' -d '{\"assetUUID\":\"sensor-temp-001\"}'",
+      "copyAria": "copy to clipboard",
+      "copySuccess": "Copied to clipboard",
+      "copyFail": "Failed to copy to clipboard"
+    },
+    "offlineRouteGroups": "when offline",
+    "offlineRouteGroupsHint": "route groups triggered when the asset stops responding",
+    "offlineRouteGroupsEmpty": "no route groups configured for offline events",
+    "onlineRouteGroups": "when back online",
+    "onlineRouteGroupsHint": "route groups triggered when the asset recovers",
+    "onlineRouteGroupsEmpty": "no route groups configured for online events",
+    "addRouteGroup": "add route group",
+    "status": "health",
+    "lastSeen": "last seen",
+    "online": "online",
+    "offline": "offline",
+    "unknown": "unknown",
+    "neverSeen": "never seen",
+    "filter": {
+      "all": "all",
+      "online": "online",
+      "offline": "offline",
+      "unknown": "unknown"
+    }
+  }
+}

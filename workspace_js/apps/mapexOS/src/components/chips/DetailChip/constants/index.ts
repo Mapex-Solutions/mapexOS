@@ -1,0 +1,6 @@
+export {
+  DETAIL_CHIP_COLORS,
+  DETAIL_CHIP_TEXT_COLORS,
+  DETAIL_CHIP_SIZES,
+  DETAIL_CHIP_DEFAULTS,
+} from './detailChip.constant';

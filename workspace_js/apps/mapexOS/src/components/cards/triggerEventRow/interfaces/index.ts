@@ -1,0 +1,2 @@
+
+export * from './triggerEventRow.interface';

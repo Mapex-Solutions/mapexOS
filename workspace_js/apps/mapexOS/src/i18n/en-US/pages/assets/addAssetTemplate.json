@@ -1,0 +1,436 @@
+{
+  "page": {
+    "title": "Create Asset Template",
+    "titleEdit": "Edit Asset Template",
+    "description": "Create a new asset template with data processing scripts",
+    "button": "Back to Templates"
+  },
+  "stepper": {
+    "title": "Configure Asset Template",
+    "subtitle": "Complete all steps to create a new template",
+    "requiredInfo": "All fields marked with * are required",
+    "currentStep": "Current step"
+  },
+  "steps": {
+    "step1": {
+      "label": "Basic Information",
+      "description": "Add template name, manufacturer, and device details",
+      "title": "Basic Information",
+      "subtitle": "Add template name, manufacturer, and device details",
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter template name",
+          "hint": "A descriptive name for this asset template",
+          "required": "Name is required"
+        },
+        "status": {
+          "label": "Status",
+          "placeholder": "Select status",
+          "hint": "Enable or disable this template",
+          "required": "Status is required"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter a description for this template",
+          "hint": "Optional description of what this template is for"
+        },
+        "manufacture": {
+          "label": "Manufacturer",
+          "placeholder": "Enter manufacturer name",
+          "hint": "Device manufacturer name",
+          "required": "Manufacturer is required"
+        },
+        "model": {
+          "label": "Model",
+          "placeholder": "Enter device model",
+          "hint": "Device model number or name",
+          "required": "Model is required"
+        },
+        "version": {
+          "label": "Version",
+          "placeholder": "Enter version",
+          "hint": "Template or firmware version"
+        },
+        "isTemplate": {
+          "label": "Shared Template",
+          "hint": "Mark as shared template for use by child organizations"
+        }
+      }
+    },
+    "step2": {
+      "label": "Asset ID Path",
+      "description": "Define the path to identify your assets",
+      "title": "Asset ID Path",
+      "subtitle": "Define the path to identify your assets",
+      "banner": {
+        "title": "What is Asset ID Path?",
+        "description": "The Asset ID Path is a dot-notation path that points to the unique identifier in your incoming payload. This identifier is used to uniquely identify and track your assets.",
+        "examplesTitle": "Examples:",
+        "examples": [
+          "payload.deviceId",
+          "payload.sensorUUID",
+          "payload.device.id"
+        ]
+      },
+      "fields": {
+        "assetIdPath": {
+          "label": "Asset ID Path",
+          "placeholder": "e.g., payload.deviceId",
+          "hint": "Use dot notation to specify the path to your asset's unique identifier",
+          "required": "Asset ID Path is required",
+          "invalidFormat": "Must contain at least one dot (.)"
+        }
+      }
+    },
+    "step3": {
+      "label": "Preprocessor Script",
+      "description": "Prepare and normalize incoming data (optional)",
+      "title": "Preprocessor Script",
+      "subtitle": "Prepare and normalize incoming data before validation. This step is optional but useful for data transformation.",
+      "guidelines": {
+        "title": "Script Guidelines",
+        "availableVariables": "Available Variables:",
+        "payloadVar": "payload - The incoming data object",
+        "consoleLog": "console.log() - For debugging output",
+        "expectedReturn": "Expected Return:",
+        "expectedReturnValue": "Modified payload object",
+        "example": "Example:"
+      },
+      "exampleCode": {
+        "comment1": "Preprocessor Script (Optional)",
+        "comment2": "Prepare and normalize incoming data before validation",
+        "comment3": "Available: payload object",
+        "comment4": "Return: modified payload",
+        "comment5": "Example: Add timestamp if missing",
+        "comment6": "Example: Normalize field names"
+      }
+    },
+    "step4": {
+      "label": "Validation Script",
+      "description": "Validate data integrity and format (optional)",
+      "title": "Validation Script",
+      "subtitle": "Validate data integrity and format. Return true if valid, false or throw an Error if invalid.",
+      "guidelines": {
+        "title": "Script Guidelines",
+        "availableVariables": "Available Variables:",
+        "payloadVar": "payload - The preprocessed data object",
+        "expectedReturn": "Expected Return:",
+        "expectedReturnValue": "Boolean (true if valid) or throw Error",
+        "example": "Example:"
+      },
+      "exampleCode": {
+        "comment1": "Validation Script (Required)",
+        "comment2": "Validate data integrity and format",
+        "comment3": "Available: payload object",
+        "comment4": "Return: true if valid, false or throw Error if invalid",
+        "comment5": "Check required fields",
+        "comment6": "Validate data ranges",
+        "comment7": "Validate format",
+        "rangeError": "Temperature out of valid range (-50 to 100)"
+      }
+    },
+    "step5": {
+      "label": "Conversion Script",
+      "description": "Convert data to standard format (required)",
+      "title": "Conversion Script",
+      "subtitle": "Convert validated data to MapexOS standard format. This ensures consistency across the platform.",
+      "banner": {
+        "important": "Important: Your script must return a StandardizedPayload. Check the Script Guidelines below for the required format."
+      },
+      "guidelines": {
+        "title": "Script Guidelines",
+        "availableVariables": "Available Variables:",
+        "payloadVar": "payload - The validated data object",
+        "expectedReturn": "Expected Return:",
+        "expectedReturnValue": "const result = StandardizedPayload",
+        "standardizedPayloadFormat": "StandardizedPayload Format (REQUIRED)",
+        "standardizedPayloadDescription": "Your conversion script MUST return an object with the following structure:",
+        "requiredFields": "Required Fields:",
+        "optionalFields": "Optional Fields:",
+        "eventType": "eventType - Type of event (string)",
+        "eventId": "eventId - Unique event identifier (string)",
+        "data": "data - Actual data payload (object)",
+        "created": "created - ISO 8601 timestamp (string)",
+        "metadata": "metadata - Additional metadata (object)",
+        "example": "Example:"
+      },
+      "exampleCode": {
+        "comment1": "Conversion Script (Required)",
+        "comment2": "Convert data to MapexOS standard format",
+        "comment3": "Available: payload object",
+        "comment4": "Return: standardized payload",
+        "comment5": "Add more fields as needed"
+      }
+    },
+    "step6": {
+      "label": "Test Payload",
+      "description": "Provide sample data for testing (required)",
+      "title": "Test Payload",
+      "subtitle": "Provide sample data for testing your scripts",
+      "fields": {
+        "testInput": {
+          "label": "Test Input (JSON)"
+        }
+      },
+      "buttons": {
+        "loadExample": "LOAD EXAMPLE"
+      },
+      "banner": {
+        "info": "This payload will be used to test all your scripts (preprocessor, validation, conversion, and test script)."
+      },
+      "guidelines": {
+        "title": "Test Guidelines",
+        "availableVariables": "Available variables:",
+        "payloadVar": "<code>payload</code> - The fully processed data object",
+        "expectedReturn": "Expected return: Boolean (true if test passes) or throw Error",
+        "example": "Example:"
+      },
+      "exampleCode": {
+        "comment1": "Test Script (Optional)",
+        "comment2": "Additional test logic for your payload",
+        "comment3": "Available: payload object (after all processing)",
+        "comment4": "Return: true if test passes, false or throw Error if fails",
+        "comment5": "Example: Check final data structure",
+        "comment6": "Example: Validate processed data"
+      }
+    },
+    "step7": {
+      "label": "Testing & Review",
+      "description": "Test your scripts and verify all details",
+      "title": "Testing",
+      "subtitle": "Test your scripts with the provided payload",
+      "banner": {
+        "testRequired": "Tests must pass successfully before proceeding to Review. Run the tests below to validate your configuration.",
+        "standardizedPayloadInfo": "Your conversion script must return a StandardizedPayload.",
+        "viewFormat": "View format"
+      },
+      "testSection": {
+        "title": "Test Your Scripts",
+        "usingPayloadFrom": "Using Test Payload from Step 6",
+        "usingPayloadFromInline": "Using test payload from Step 6",
+        "editLink": "Edit",
+        "detailsLabel": "Details:",
+        "modifyPayloadHint": "To modify the test payload, go back to Step 6",
+        "statusLabel": "Status:",
+        "payloadLabel": "Payload:",
+        "newPayloadLabel": "New Payload:",
+        "errorDetailsLabel": "Error Details:",
+        "testInput": {
+          "label": "Test Input",
+          "placeholder": "Enter JSON test data"
+        },
+        "testResults": {
+          "label": "Test Results",
+          "emptyState": "Click \"Run Test\" to test your scripts",
+          "statusLabel": "Status:",
+          "errorDetailsLabel": "Error Details:"
+        },
+        "buttons": {
+          "runTest": "Run Test",
+          "clear": "Clear",
+          "clearResults": "Clear Results"
+        },
+        "status": {
+          "notExecuted": "Click \"Run Test\" to see results",
+          "allPassed": "All Tests Passed",
+          "testFailed": "Test Failed",
+          "running": "Running test...",
+          "invalidJson": "Invalid JSON in test input"
+        },
+        "steps": {
+          "preprocessor": "Preprocessor",
+          "validation": "Validation",
+          "conversion": "Conversion",
+          "testScript": "Test Script",
+          "error": "Error",
+          "skipped": "Skipped (optional)"
+        },
+        "results": {
+          "finalOutput": "Final Output:",
+          "standardizedPayload": "Payload:",
+          "consoleOutput": "Console Output:",
+          "validationFailed": "Validation returned false"
+        }
+      },
+      "reviewSection": {
+        "title": "Review Configuration",
+        "description": "Review all configuration before saving your Asset Template.",
+        "basicInfo": "Basic Information",
+        "scriptSummary": "Script Summary",
+        "fields": {
+          "name": "Name",
+          "status": "Status",
+          "manufacturer": "Manufacturer",
+          "model": "Model",
+          "category": "Category",
+          "version": "Version",
+          "description": "Description",
+          "assetIdPath": "Asset ID Path",
+          "preprocessorScript": "Preprocessor Script",
+          "validationScript": "Validation Script",
+          "conversionScript": "Conversion Script",
+          "testScript": "Test Script",
+          "configured": "Configured",
+          "notConfigured": "Not configured"
+        }
+      }
+    },
+    "step8": {
+      "label": "Dynamic Fields",
+      "description": "Configure custom fields for event queries",
+      "title": "Dynamic Fields Mapping",
+      "subtitle": "Configure custom fields that can be used to search and filter events from this asset template.",
+      "banner": {
+        "title": "Custom Searchable Fields",
+        "description": "Fields added here will be indexed and available for filtering and searching events. Map payload fields to custom names and types for easy querying."
+      },
+      "noFieldsWarning": {
+        "title": "No Available Fields",
+        "description": "Run tests in Step 7 first to extract available fields from your payload."
+      },
+      "addField": {
+        "title": "Add New Field Mapping",
+        "fieldName": {
+          "label": "Field Name",
+          "placeholder": "e.g., temperature"
+        },
+        "fieldType": {
+          "label": "Type"
+        },
+        "valuePath": {
+          "label": "Value Path",
+          "placeholder": "Select path",
+          "noOptions": "No fields available"
+        },
+        "latitudePath": {
+          "label": "Latitude Path",
+          "placeholder": "Select lat path"
+        },
+        "longitudePath": {
+          "label": "Longitude Path",
+          "placeholder": "Select lng path"
+        },
+        "addButton": "Add"
+      },
+      "mappedFields": {
+        "title": "Mapped Fields",
+        "removeTooltip": "Remove this field"
+      },
+      "emptyState": {
+        "title": "No fields mapped yet",
+        "description": "Add field mappings above to enable custom filtering and searching for events."
+      }
+    },
+    "step9": {
+      "label": "Review",
+      "description": "Review all configuration before saving",
+      "title": "Review Configuration",
+      "subtitle": "Review all configuration before saving your Asset Template.",
+      "completeBanner": "Configuration complete! Review before saving.",
+      "availableFields": {
+        "title": "Available Fields",
+        "rerunTooltip": "Re-run tests"
+      },
+      "noFieldsWarning": "No fields detected. Run tests in Step 7 to extract fields.",
+      "goToTesting": "Go to Testing",
+      "dynamicFields": {
+        "title": "Dynamic Fields",
+        "editTooltip": "Edit dynamic fields",
+        "empty": "No dynamic fields configured"
+      },
+      "reviewSection": {
+        "basicInfo": "Basic Information",
+        "scriptSummary": "Script Summary",
+        "fields": {
+          "name": "Name",
+          "status": "Status",
+          "manufacturer": "Manufacturer",
+          "model": "Model",
+          "category": "Category",
+          "version": "Version",
+          "description": "Description",
+          "assetIdPath": "Asset ID Path",
+          "preprocessorScript": "Preprocessor Script",
+          "validationScript": "Validation Script",
+          "conversionScript": "Conversion Script",
+          "testScript": "Test Script",
+          "configured": "Configured",
+          "notConfigured": "Not configured"
+        }
+      }
+    }
+  },
+  "statusOptions": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "navigation": {
+    "back": "Back",
+    "previous": "Previous",
+    "next": "Next",
+    "review": "Review",
+    "save": "Create Asset Template",
+    "update": "Update Asset Template"
+  },
+  "tour": {
+    "pageOverview": {
+      "title": "Asset Template Wizard",
+      "description": "This wizard guides you through creating an Asset Template. An Asset Template defines how MapexOS processes data from your devices (IoT, ERP, Webhooks, APIs, etc.)."
+    },
+    "stepper": {
+      "title": "Navigation Steps",
+      "description": "Use the stepper to navigate between steps. Each step configures a specific part of your template. In edit mode, you can click any step to jump directly to it."
+    },
+    "assetIdPath": {
+      "title": "Asset ID Path (Required)",
+      "description": "Every event payload must have a unique identifier (UUID). Here you specify the path to that field using dot notation (e.g., payload.deviceId). This ID uniquely identifies each asset in the system."
+    },
+    "preprocessorScript": {
+      "title": "Preprocessor Script (Optional)",
+      "description": "Use this step to transform or normalize the incoming payload before validation. Useful for adding timestamps, renaming fields, or restructuring data. Skip if your payload is already in the expected format."
+    },
+    "validationScript": {
+      "title": "Validation Script (Optional)",
+      "description": "Validate that all required fields are present and data is in the correct format. MapexOS provides a validation library you can use. See documentation: https://mapexos.io/docs/1.0.0/en/core-platform/assets-and-templates.html#validation-helpers-mapex-validator"
+    },
+    "conversionScript": {
+      "title": "Conversion Script (Required)",
+      "description": "This is REQUIRED. Your script must convert the payload to MapexOS StandardizedPayload format. This ensures all data follows a consistent structure across the platform."
+    },
+    "testPayload": {
+      "title": "Test Payload (Required)",
+      "description": "Provide a sample payload that your asset will send. This payload is used to test all your scripts (preprocessor, validation, conversion) and ensure they work correctly."
+    },
+    "testing": {
+      "title": "Testing",
+      "description": "Run tests to verify all scripts follow ECMAScript standards and execute without errors. Tests must pass before you can proceed to the next step."
+    },
+    "dynamicFields": {
+      "title": "Dynamic Fields (Optional)",
+      "description": "Since MapexOS is generic, you can select fields from your payload to use for searching and filtering events. These fields become queryable in the Event Store."
+    },
+    "review": {
+      "title": "Review",
+      "description": "Review all your configuration before saving. You can go back to any step to make changes if needed."
+    }
+  },
+  "notifications": {
+    "created": "Asset template created successfully!",
+    "updated": "Asset template updated successfully!",
+    "loading": "Loading asset template...",
+    "loadFailed": "Failed to load asset template. Redirecting to list...",
+    "updateFailed": "Failed to update Asset Template",
+    "validationError": "Please fill in all required fields.",
+    "testSuccess": "Test executed successfully!",
+    "testFailed": "Test failed with errors",
+    "invalidScript": "Invalid script syntax",
+    "conversionScriptRequired": "Conversion Script is required. Please add a conversion script before proceeding.",
+    "testsMustPass": "Tests must pass successfully before proceeding to Review. Please run and pass all tests.",
+    "creating": "Creating Asset Template...",
+    "creationFailed": "Failed to create Asset Template",
+    "validationFailed": "Validation error. Please check the data and try again.",
+    "alreadyExists": "An Asset Template with this name already exists.",
+    "networkError": "Network error. Please check your connection and try again."
+  }
+}

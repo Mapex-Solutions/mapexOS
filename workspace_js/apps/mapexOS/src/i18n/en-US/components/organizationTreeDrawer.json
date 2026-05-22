@@ -1,0 +1,43 @@
+{
+  "title": "organization tree",
+  "close": "close",
+  "legendTooltip": "view legend",
+  "filters": {
+    "searchLabel": "search organizations",
+    "searchPlaceholder": "type to search...",
+    "typeLabel": "filter by type",
+    "enabledAll": "all organizations",
+    "enabledActive": "active only",
+    "enabledInactive": "inactive only"
+  },
+  "types": {
+    "vendor": "vendor",
+    "customer": "customer",
+    "site": "site",
+    "building": "building",
+    "floor": "floor",
+    "zone": "zone"
+  },
+  "legend": {
+    "title": "organization tree legend",
+    "description": "understand the organization hierarchy and how to navigate",
+    "typesTitle": "organization types",
+    "vendorDesc": "top-level organization (root)",
+    "customerDesc": "client organization under a vendor",
+    "siteDesc": "physical location of a customer",
+    "buildingDesc": "building within a site",
+    "floorDesc": "floor level within a building",
+    "zoneDesc": "specific area within a floor",
+    "actionsTitle": "how to interact",
+    "singleClick": "single click",
+    "singleClickDesc": "expand or collapse node children",
+    "doubleClick": "double click",
+    "doubleClickDesc": "navigate to organization details page",
+    "statusTitle": "status indicators",
+    "inactiveDesc": "indicates an inactive organization",
+    "close": "close"
+  },
+  "empty": "no organizations found",
+  "loading": "loading organizations...",
+  "inactive": "inactive"
+}

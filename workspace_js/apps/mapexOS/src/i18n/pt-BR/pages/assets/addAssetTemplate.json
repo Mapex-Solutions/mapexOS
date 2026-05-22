@@ -1,0 +1,436 @@
+{
+  "page": {
+    "title": "Criar Template de Ativo",
+    "titleEdit": "Editar Template de Ativo",
+    "description": "Crie um novo template de ativo com scripts de processamento de dados",
+    "button": "Voltar para Templates"
+  },
+  "stepper": {
+    "title": "Configurar Template de Ativo",
+    "subtitle": "Complete todas as etapas para criar um novo template",
+    "requiredInfo": "Todos os campos marcados com * são obrigatórios",
+    "currentStep": "Etapa atual"
+  },
+  "steps": {
+    "step1": {
+      "label": "Informações Básicas",
+      "description": "Adicione nome do template, fabricante e detalhes do dispositivo",
+      "title": "Informações Básicas",
+      "subtitle": "Adicione nome do template, fabricante e detalhes do dispositivo",
+      "fields": {
+        "name": {
+          "label": "Nome",
+          "placeholder": "Digite o nome do template",
+          "hint": "Um nome descritivo para este template de ativo",
+          "required": "Nome é obrigatório"
+        },
+        "status": {
+          "label": "Status",
+          "placeholder": "Selecione o status",
+          "hint": "Habilitar ou desabilitar este template",
+          "required": "Status é obrigatório"
+        },
+        "description": {
+          "label": "Descrição",
+          "placeholder": "Digite uma descrição para este template",
+          "hint": "Descrição opcional do propósito deste template"
+        },
+        "manufacture": {
+          "label": "Fabricante",
+          "placeholder": "Digite o nome do fabricante",
+          "hint": "Nome do fabricante do dispositivo",
+          "required": "Fabricante é obrigatório"
+        },
+        "model": {
+          "label": "Modelo",
+          "placeholder": "Digite o modelo do dispositivo",
+          "hint": "Número ou nome do modelo do dispositivo",
+          "required": "Modelo é obrigatório"
+        },
+        "version": {
+          "label": "Versão",
+          "placeholder": "Digite a versão",
+          "hint": "Versão do template ou firmware"
+        },
+        "isTemplate": {
+          "label": "Template Compartilhado",
+          "hint": "Marcar como template compartilhado para uso por organizações filhas"
+        }
+      }
+    },
+    "step2": {
+      "label": "Caminho do ID do Ativo",
+      "description": "Defina o caminho para identificar seus ativos",
+      "title": "Caminho do ID do Ativo",
+      "subtitle": "Defina o caminho para identificar seus ativos",
+      "banner": {
+        "title": "O que é Caminho do ID do Ativo?",
+        "description": "O Caminho do ID do Ativo é um caminho em notação de ponto que aponta para o identificador único no payload recebido. Este identificador é usado para identificar e rastrear exclusivamente seus ativos.",
+        "examplesTitle": "Exemplos:",
+        "examples": [
+          "payload.deviceId",
+          "payload.sensorUUID",
+          "payload.device.id"
+        ]
+      },
+      "fields": {
+        "assetIdPath": {
+          "label": "Caminho do ID do Ativo",
+          "placeholder": "ex.: payload.deviceId",
+          "hint": "Use notação de ponto para especificar o caminho para o identificador único do seu ativo",
+          "required": "Caminho do ID do Ativo é obrigatório",
+          "invalidFormat": "Deve conter pelo menos um ponto (.)"
+        }
+      }
+    },
+    "step3": {
+      "label": "Script Pré-processador",
+      "description": "Prepare e normalize dados recebidos (opcional)",
+      "title": "Script Pré-processador",
+      "subtitle": "Prepare e normalize dados recebidos antes da validação. Esta etapa é opcional, mas útil para transformação de dados.",
+      "guidelines": {
+        "title": "Diretrizes do Script",
+        "availableVariables": "Variáveis Disponíveis:",
+        "payloadVar": "payload - O objeto de dados recebido",
+        "consoleLog": "console.log() - Para saída de depuração",
+        "expectedReturn": "Retorno Esperado:",
+        "expectedReturnValue": "Objeto payload modificado",
+        "example": "Exemplo:"
+      },
+      "exampleCode": {
+        "comment1": "Script Pré-processador (Opcional)",
+        "comment2": "Prepare e normalize dados recebidos antes da validação",
+        "comment3": "Disponível: objeto payload",
+        "comment4": "Retorno: payload modificado",
+        "comment5": "Exemplo: Adicionar timestamp se ausente",
+        "comment6": "Exemplo: Normalizar nomes de campos"
+      }
+    },
+    "step4": {
+      "label": "Script de Validação",
+      "description": "Valide integridade e formato dos dados (opcional)",
+      "title": "Script de Validação",
+      "subtitle": "Valide a integridade e formato dos dados. Retorne true se válido, false ou lance um Error se inválido.",
+      "guidelines": {
+        "title": "Diretrizes do Script",
+        "availableVariables": "Variáveis Disponíveis:",
+        "payloadVar": "payload - O objeto de dados pré-processado",
+        "expectedReturn": "Retorno Esperado:",
+        "expectedReturnValue": "Boolean (true se válido) ou lance Error",
+        "example": "Exemplo:"
+      },
+      "exampleCode": {
+        "comment1": "Script de Validação (Obrigatório)",
+        "comment2": "Valide integridade e formato dos dados",
+        "comment3": "Disponível: objeto payload",
+        "comment4": "Retorno: true se válido, false ou lance Error se inválido",
+        "comment5": "Verificar campos obrigatórios",
+        "comment6": "Validar intervalos de dados",
+        "comment7": "Validar formato",
+        "rangeError": "Temperatura fora do intervalo válido (-50 a 100)"
+      }
+    },
+    "step5": {
+      "label": "Script de Conversão",
+      "description": "Converta dados para formato padrão (obrigatório)",
+      "title": "Script de Conversão",
+      "subtitle": "Converta dados validados para o formato padrão do MapexOS. Isso garante consistência em toda a plataforma.",
+      "banner": {
+        "important": "Importante: Seu script deve retornar um StandardizedPayload. Verifique as Diretrizes do Script abaixo para o formato necessário."
+      },
+      "guidelines": {
+        "title": "Diretrizes do Script",
+        "availableVariables": "Variáveis Disponíveis:",
+        "payloadVar": "payload - O objeto de dados validado",
+        "expectedReturn": "Retorno Esperado:",
+        "expectedReturnValue": "const result = StandardizedPayload",
+        "standardizedPayloadFormat": "Formato StandardizedPayload (OBRIGATÓRIO)",
+        "standardizedPayloadDescription": "Seu script de conversão DEVE retornar um objeto com a seguinte estrutura:",
+        "requiredFields": "Campos Obrigatórios:",
+        "optionalFields": "Campos Opcionais:",
+        "eventType": "eventType - Tipo de evento (string)",
+        "eventId": "eventId - Identificador único do evento (string)",
+        "data": "data - Payload de dados real (object)",
+        "created": "created - Timestamp ISO 8601 (string)",
+        "metadata": "metadata - Metadados adicionais (object)",
+        "example": "Exemplo:"
+      },
+      "exampleCode": {
+        "comment1": "Script de Conversão (Obrigatório)",
+        "comment2": "Converta dados para formato padrão do MapexOS",
+        "comment3": "Disponível: objeto payload",
+        "comment4": "Retorno: payload padronizado",
+        "comment5": "Adicione mais campos conforme necessário"
+      }
+    },
+    "step6": {
+      "label": "Payload de Teste",
+      "description": "Forneça dados de exemplo para teste (obrigatório)",
+      "title": "Payload de Teste",
+      "subtitle": "Forneça dados de exemplo para testar seus scripts",
+      "fields": {
+        "testInput": {
+          "label": "Entrada de Teste (JSON)"
+        }
+      },
+      "buttons": {
+        "loadExample": "CARREGAR EXEMPLO"
+      },
+      "banner": {
+        "info": "Este payload será usado para testar todos os seus scripts (pré-processador, validação, conversão e script de teste)."
+      },
+      "guidelines": {
+        "title": "Diretrizes de Teste",
+        "availableVariables": "Variáveis disponíveis:",
+        "payloadVar": "<code>payload</code> - O objeto de dados totalmente processado",
+        "expectedReturn": "Retorno esperado: Boolean (true se o teste passar) ou lance Error",
+        "example": "Exemplo:"
+      },
+      "exampleCode": {
+        "comment1": "Script de Teste (Opcional)",
+        "comment2": "Lógica de teste adicional para seu payload",
+        "comment3": "Disponível: objeto payload (após todo processamento)",
+        "comment4": "Retorno: true se o teste passar, false ou lance Error se falhar",
+        "comment5": "Exemplo: Verificar estrutura de dados final",
+        "comment6": "Exemplo: Validar dados processados"
+      }
+    },
+    "step7": {
+      "label": "Teste e Revisão",
+      "description": "Teste seus scripts e verifique todos os detalhes",
+      "title": "Teste",
+      "subtitle": "Teste seus scripts com o payload fornecido",
+      "banner": {
+        "testRequired": "Os testes devem passar com sucesso antes de prosseguir para Revisão. Execute os testes abaixo para validar sua configuração.",
+        "standardizedPayloadInfo": "Seu script de conversão deve retornar um StandardizedPayload.",
+        "viewFormat": "Ver formato"
+      },
+      "testSection": {
+        "title": "Teste Seus Scripts",
+        "usingPayloadFrom": "Usando Payload de Teste da Etapa 6",
+        "usingPayloadFromInline": "Usando payload de teste da Etapa 6",
+        "editLink": "Editar",
+        "detailsLabel": "Detalhes:",
+        "modifyPayloadHint": "Para modificar o payload de teste, volte para a Etapa 6",
+        "statusLabel": "Status:",
+        "payloadLabel": "Payload:",
+        "newPayloadLabel": "Novo Payload:",
+        "errorDetailsLabel": "Detalhes do Erro:",
+        "testInput": {
+          "label": "Entrada de Teste",
+          "placeholder": "Digite dados de teste em JSON"
+        },
+        "testResults": {
+          "label": "Resultados do Teste",
+          "emptyState": "Clique em \"Executar Teste\" para testar seus scripts",
+          "statusLabel": "Status:",
+          "errorDetailsLabel": "Detalhes do Erro:"
+        },
+        "buttons": {
+          "runTest": "Executar Teste",
+          "clear": "Limpar",
+          "clearResults": "Limpar Resultados"
+        },
+        "status": {
+          "notExecuted": "Clique em \"Executar Teste\" para ver os resultados",
+          "allPassed": "Todos os Testes Passaram",
+          "testFailed": "Teste Falhou",
+          "running": "Executando teste...",
+          "invalidJson": "JSON inválido na entrada de teste"
+        },
+        "steps": {
+          "preprocessor": "Pré-processador",
+          "validation": "Validação",
+          "conversion": "Conversão",
+          "testScript": "Script de Teste",
+          "error": "Erro",
+          "skipped": "Ignorado (opcional)"
+        },
+        "results": {
+          "finalOutput": "Saída Final:",
+          "standardizedPayload": "Payload:",
+          "consoleOutput": "Saída do Console:",
+          "validationFailed": "Validação retornou falso"
+        }
+      },
+      "reviewSection": {
+        "title": "Revisar Configuração",
+        "description": "Revise toda a configuração antes de salvar seu Template de Ativo.",
+        "basicInfo": "Informações Básicas",
+        "scriptSummary": "Resumo dos Scripts",
+        "fields": {
+          "name": "Nome",
+          "status": "Status",
+          "manufacturer": "Fabricante",
+          "model": "Modelo",
+          "category": "Categoria",
+          "version": "Versão",
+          "description": "Descrição",
+          "assetIdPath": "Caminho do ID do Ativo",
+          "preprocessorScript": "Script Pré-processador",
+          "validationScript": "Script de Validação",
+          "conversionScript": "Script de Conversão",
+          "testScript": "Script de Teste",
+          "configured": "Configurado",
+          "notConfigured": "Não configurado"
+        }
+      }
+    },
+    "step8": {
+      "label": "Campos Dinâmicos",
+      "description": "Configure campos customizados para busca de eventos",
+      "title": "Mapeamento de Campos Dinâmicos",
+      "subtitle": "Configure campos customizados que podem ser usados para buscar e filtrar eventos deste template de ativo.",
+      "banner": {
+        "title": "Campos Pesquisáveis Customizados",
+        "description": "Campos adicionados aqui serão indexados e estarão disponíveis para filtrar e buscar eventos. Mapeie campos do payload para nomes e tipos customizados para facilitar consultas."
+      },
+      "noFieldsWarning": {
+        "title": "Nenhum Campo Disponível",
+        "description": "Execute os testes na Etapa 7 primeiro para extrair campos disponíveis do seu payload."
+      },
+      "addField": {
+        "title": "Adicionar Novo Mapeamento de Campo",
+        "fieldName": {
+          "label": "Nome do Campo",
+          "placeholder": "ex.: temperatura"
+        },
+        "fieldType": {
+          "label": "Tipo"
+        },
+        "valuePath": {
+          "label": "Caminho do Valor",
+          "placeholder": "Selecione o caminho",
+          "noOptions": "Nenhum campo disponível"
+        },
+        "latitudePath": {
+          "label": "Caminho da Latitude",
+          "placeholder": "Selecione caminho lat"
+        },
+        "longitudePath": {
+          "label": "Caminho da Longitude",
+          "placeholder": "Selecione caminho lng"
+        },
+        "addButton": "Adicionar"
+      },
+      "mappedFields": {
+        "title": "Campos Mapeados",
+        "removeTooltip": "Remover este campo"
+      },
+      "emptyState": {
+        "title": "Nenhum campo mapeado ainda",
+        "description": "Adicione mapeamentos de campos acima para habilitar filtragem e busca customizada de eventos."
+      }
+    },
+    "step9": {
+      "label": "Revisão",
+      "description": "Revise toda a configuração antes de salvar",
+      "title": "Revisar Configuração",
+      "subtitle": "Revise toda a configuração antes de salvar seu Template de Ativo.",
+      "completeBanner": "Configuração completa! Revise antes de salvar.",
+      "availableFields": {
+        "title": "Campos Disponíveis",
+        "rerunTooltip": "Re-executar testes"
+      },
+      "noFieldsWarning": "Nenhum campo detectado. Execute os testes na Etapa 7 para extrair campos.",
+      "goToTesting": "Ir para Testes",
+      "dynamicFields": {
+        "title": "Campos Dinâmicos",
+        "editTooltip": "Editar campos dinâmicos",
+        "empty": "Nenhum campo dinâmico configurado"
+      },
+      "reviewSection": {
+        "basicInfo": "Informações Básicas",
+        "scriptSummary": "Resumo dos Scripts",
+        "fields": {
+          "name": "Nome",
+          "status": "Status",
+          "manufacturer": "Fabricante",
+          "model": "Modelo",
+          "category": "Categoria",
+          "version": "Versão",
+          "description": "Descrição",
+          "assetIdPath": "Caminho do ID do Ativo",
+          "preprocessorScript": "Script Pré-processador",
+          "validationScript": "Script de Validação",
+          "conversionScript": "Script de Conversão",
+          "testScript": "Script de Teste",
+          "configured": "Configurado",
+          "notConfigured": "Não configurado"
+        }
+      }
+    }
+  },
+  "statusOptions": {
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "navigation": {
+    "back": "Voltar",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "review": "Revisar",
+    "save": "Criar Template de Ativo",
+    "update": "Atualizar Template de Ativo"
+  },
+  "tour": {
+    "pageOverview": {
+      "title": "Assistente de Template de Ativo",
+      "description": "Este assistente guia você na criação de um Template de Ativo. Um Template de Ativo define como o MapexOS processa dados dos seus dispositivos (IoT, ERP, Webhooks, APIs, etc.)."
+    },
+    "stepper": {
+      "title": "Etapas de Navegação",
+      "description": "Use o stepper para navegar entre as etapas. Cada etapa configura uma parte específica do seu template. No modo de edição, você pode clicar em qualquer etapa para ir diretamente a ela."
+    },
+    "assetIdPath": {
+      "title": "Caminho do ID do Ativo (Obrigatório)",
+      "description": "Todo payload de evento deve ter um identificador único (UUID). Aqui você especifica o caminho para esse campo usando notação de ponto (ex: payload.deviceId). Este ID identifica cada ativo de forma única no sistema."
+    },
+    "preprocessorScript": {
+      "title": "Script Pré-processador (Opcional)",
+      "description": "Use esta etapa para transformar ou normalizar o payload de entrada antes da validação. Útil para adicionar timestamps, renomear campos ou reestruturar dados. Pule se seu payload já está no formato esperado."
+    },
+    "validationScript": {
+      "title": "Script de Validação (Opcional)",
+      "description": "Valide se todos os campos obrigatórios estão presentes e os dados estão no formato correto. O MapexOS fornece uma biblioteca de validação que você pode usar. Veja a documentação: https://mapexos.io/docs/1.0.0/en/core-platform/assets-and-templates.html#validation-helpers-mapex-validator"
+    },
+    "conversionScript": {
+      "title": "Script de Conversão (Obrigatório)",
+      "description": "Este é OBRIGATÓRIO. Seu script deve converter o payload para o formato StandardizedPayload do MapexOS. Isso garante que todos os dados sigam uma estrutura consistente em toda a plataforma."
+    },
+    "testPayload": {
+      "title": "Payload de Teste (Obrigatório)",
+      "description": "Forneça um payload de exemplo que seu ativo enviará. Este payload é usado para testar todos os seus scripts (pré-processador, validação, conversão) e garantir que funcionem corretamente."
+    },
+    "testing": {
+      "title": "Testes",
+      "description": "Execute testes para verificar se todos os scripts seguem os padrões ECMAScript e executam sem erros. Os testes devem passar antes de prosseguir para a próxima etapa."
+    },
+    "dynamicFields": {
+      "title": "Campos Dinâmicos (Opcional)",
+      "description": "Como o MapexOS é genérico, você pode selecionar campos do seu payload para usar na busca e filtragem de eventos. Esses campos se tornam consultáveis no Event Store."
+    },
+    "review": {
+      "title": "Revisão",
+      "description": "Revise toda sua configuração antes de salvar. Você pode voltar a qualquer etapa para fazer alterações se necessário."
+    }
+  },
+  "notifications": {
+    "created": "Template de ativo criado com sucesso!",
+    "updated": "Template de ativo atualizado com sucesso!",
+    "loading": "Carregando template de ativo...",
+    "loadFailed": "Falha ao carregar template de ativo. Redirecionando para lista...",
+    "updateFailed": "Falha ao atualizar Template de Ativo",
+    "validationError": "Por favor, preencha todos os campos obrigatórios.",
+    "testSuccess": "Teste executado com sucesso!",
+    "testFailed": "Teste falhou com erros",
+    "invalidScript": "Sintaxe de script inválida",
+    "conversionScriptRequired": "Script de Conversão é obrigatório. Por favor, adicione um script de conversão antes de prosseguir.",
+    "testsMustPass": "Os testes devem passar com sucesso antes de prosseguir para Revisão. Por favor, execute e passe em todos os testes.",
+    "creating": "Criando Template de Ativo...",
+    "creationFailed": "Falha ao criar Template de Ativo",
+    "validationFailed": "Erro de validação. Verifique os dados e tente novamente.",
+    "alreadyExists": "Já existe um Template de Ativo com este nome.",
+    "networkError": "Erro de rede. Verifique sua conexão e tente novamente."
+  }
+}

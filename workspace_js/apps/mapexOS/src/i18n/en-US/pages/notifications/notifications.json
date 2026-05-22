@@ -1,0 +1,42 @@
+{
+  "title": "notifications",
+  "description": "manage your channels",
+  "listTitle": "notifications list",
+  "button": {
+    "add": "add notification"
+  },
+  "columns": {
+    "name": "name",
+    "type": "type",
+    "channels": "channels",
+    "created": "created",
+    "status": "status"
+  },
+  "menuLabels": {
+    "singular": "notification",
+    "plural": "notifications"
+  },
+  "filters": {
+    "search": "search",
+    "tenant": "tenant",
+    "type": "type"
+  },
+  "empty": {
+    "title": "no notifications found",
+    "description": "it seems there are no notifications matching your current search criteria or you don't have any notifications yet."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirm deletion",
+      "message": "are you sure you want to delete the notification \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleteSuccess": "notification deleted successfully"
+  },
+  "channelCount": {
+    "singular": "channel",
+    "plural": "channels",
+    "none": "no channels"
+  }
+}

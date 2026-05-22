@@ -1,0 +1,43 @@
+{
+  "welcome": {
+    "title": "welcome to MapexOS",
+    "tagline": "event-driven automation",
+    "subtitle": "connect devices, ingest events and automate actions in one open, modular platform."
+  },
+  "features": {
+    "monitoring": "multi-protocol ingestion: MQTT/MQTTS, HTTP/HTTPS, LoRaWAN, CoAP",
+    "analytics": "built-in rule engine: create alerts, workflows and integrations in minutes",
+    "security": "real-time monitoring & analytics for operations at scale"
+  },
+  "form": {
+    "title": "welcome back! please login to your account.",
+    "email": {
+      "label": "email",
+      "placeholder": "enter your email"
+    },
+    "password": {
+      "label": "password",
+      "placeholder": "enter your password"
+    },
+    "rememberMe": "remember me",
+    "forgotPassword": "forgot password?",
+    "signIn": "sign in"
+  },
+  "validation": {
+    "emailRequired": "email is required",
+    "emailInvalid": "enter a valid email",
+    "passwordRequired": "password is required"
+  },
+  "errors": {
+    "title": "authentication error",
+    "default": "failed to sign in. please verify your credentials and try again."
+  },
+  "languages": {
+    "english": "english",
+    "portuguese": "portuguese"
+  },
+  "aria": {
+    "closeError": "close error message",
+    "languageSelector": "select language"
+  }
+}

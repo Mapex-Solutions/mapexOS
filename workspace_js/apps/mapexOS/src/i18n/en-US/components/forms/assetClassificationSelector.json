@@ -1,0 +1,36 @@
+{
+  "title": "asset classification",
+  "guided": {
+    "category": {
+      "label": "select category",
+      "placeholder": "choose a category...",
+      "hint": "select the asset category first",
+      "required": "category is required"
+    },
+    "manufacturer": {
+      "label": "select manufacturer",
+      "placeholder": "choose a manufacturer...",
+      "hint": "select after choosing category",
+      "disabled": "select category first",
+      "required": "manufacturer is required"
+    },
+    "model": {
+      "label": "select model",
+      "placeholder": "choose a model...",
+      "hint": "select after choosing manufacturer",
+      "disabled": "select manufacturer first",
+      "required": "model is required"
+    },
+    "version": {
+      "label": "version",
+      "placeholder": "enter version (e.g., v1.0, 2024)...",
+      "hint": "optional version identifier",
+      "required": "version is required"
+    },
+    "loading": "loading...",
+    "noOptions": "no options available"
+  },
+  "errors": {
+    "loadFailed": "failed to load options"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "literal": {
+    "placeholder": "Enter a value or use template placeholders (see info icon)...",
+    "infoTitle": "Template Syntax",
+    "infoDescription": "Use double-brace placeholders to interpolate runtime values into this field.",
+    "namespaces": {
+      "event": {
+        "hint": "Event payload from the workflow trigger"
+      },
+      "state": {
+        "hint": "Workflow state variables"
+      },
+      "input": {
+        "hint": "Workflow external inputs"
+      },
+      "output": {
+        "hint": "Output of a previous node"
+      }
+    },
+    "missingPathNote": "Missing paths render as empty strings.",
+    "escapeNote": "Escape syntax for literal opening-brace characters is not supported in this version.",
+    "autocompleteHintPrefix": "Insert",
+    "outputCatalog": {
+      "title": "Which nodes populate output?",
+      "producingHeader": "Node types that emit data",
+      "emptyHeader": "Node types that emit nothing",
+      "footerNote": "For code / plugin / subworkflow / wait_* nodes, the exact field names depend on the script, plugin manifest, or sub-workflow's End-node payload.",
+      "shapes": {
+        "loop": "{'{'} item, index {'}'}",
+        "code": "whatever the JS script returns",
+        "subworkflow": "the sub-workflow End-node payload",
+        "plugin": "the plugin action HTTP response or callback payload",
+        "wait_signal": "the signal payload",
+        "wait_for": "the resolved condition payload",
+        "trigger_event": "the downstream triggered output (if any)"
+      }
+    }
+  }
+}

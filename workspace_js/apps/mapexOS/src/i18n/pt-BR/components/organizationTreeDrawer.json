@@ -1,0 +1,43 @@
+{
+  "title": "árvore de organizações",
+  "close": "fechar",
+  "legendTooltip": "ver legenda",
+  "filters": {
+    "searchLabel": "buscar organizações",
+    "searchPlaceholder": "digite para buscar...",
+    "typeLabel": "filtrar por tipo",
+    "enabledAll": "todas as organizações",
+    "enabledActive": "apenas ativas",
+    "enabledInactive": "apenas inativas"
+  },
+  "types": {
+    "vendor": "fornecedor",
+    "customer": "cliente",
+    "site": "site",
+    "building": "prédio",
+    "floor": "andar",
+    "zone": "zona"
+  },
+  "legend": {
+    "title": "legenda da árvore de organizações",
+    "description": "entenda a hierarquia organizacional e como navegar",
+    "typesTitle": "tipos de organização",
+    "vendorDesc": "organização de nível superior (raiz)",
+    "customerDesc": "organização cliente sob um fornecedor",
+    "siteDesc": "localização física de um cliente",
+    "buildingDesc": "prédio dentro de um site",
+    "floorDesc": "andar dentro de um prédio",
+    "zoneDesc": "área específica dentro de um andar",
+    "actionsTitle": "como interagir",
+    "singleClick": "clique único",
+    "singleClickDesc": "expandir ou recolher filhos do nó",
+    "doubleClick": "clique duplo",
+    "doubleClickDesc": "navegar para página de detalhes da organização",
+    "statusTitle": "indicadores de status",
+    "inactiveDesc": "indica uma organização inativa",
+    "close": "fechar"
+  },
+  "empty": "nenhuma organização encontrada",
+  "loading": "carregando organizações...",
+  "inactive": "inativo"
+}

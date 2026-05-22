@@ -1,0 +1,67 @@
+{
+  "title": {
+    "singular": "Select Route Group",
+    "plural": "Select Route Groups"
+  },
+  "selectedCount": "selected",
+  "search": {
+    "label": "Search",
+    "placeholder": "Search route groups by name..."
+  },
+  "filters": {
+    "title": "Filters",
+    "templateType": "Template Type",
+    "templateSource": "Template Source",
+    "search": {
+      "label": "Search",
+      "placeholder": "Search route groups by name..."
+    },
+    "templateTypeOptions": {
+      "all": "All",
+      "system": "System",
+      "custom": "Custom"
+    },
+    "templateSourceOptions": {
+      "all": "All",
+      "shared": "Shared",
+      "local": "Local"
+    }
+  },
+  "resultsTitle": "Results",
+  "results": {
+    "found": "Found {count} route group(s)"
+  },
+  "chips": {
+    "system": "System",
+    "shared": "Shared",
+    "routers": "routers"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "badge": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "totalLoaded": "total",
+  "routers": "routers",
+  "noDescription": "No description provided",
+  "loading": "Loading...",
+  "loading.more": "Loading more route groups...",
+  "empty": "No route groups found",
+  "emptyState": {
+    "title": "No route groups found",
+    "subtitle": "Try adjusting your filters"
+  },
+  "selected": {
+    "label": "Selected Route Groups"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "confirm": "Confirm Selection"
+  },
+  "errors": {
+    "loadFailed": "Failed to load route groups"
+  }
+}

@@ -1,0 +1,1 @@
+export { default as LakeHouseBaseInfo } from './LakeHouseBaseInfo.vue';

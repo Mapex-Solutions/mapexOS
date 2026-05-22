@@ -1,0 +1,71 @@
+{
+  "pageHeader": {
+    "title": "asset connectivity logs",
+    "description": "timeline of offline and online transitions recorded for every asset with health monitoring enabled."
+  },
+  "listTitle": "connectivity transitions list",
+  "itemLabel": "transition",
+  "itemLabelPlural": "transitions",
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search by asset UUID...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "dateRange": "date range",
+    "startDate": "start date",
+    "endDate": "end date",
+    "eventType": "status",
+    "assetUUID": "asset UUID",
+    "assetUUIDPlaceholder": "enter asset UUID to filter...",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "options": {
+      "yes": "yes",
+      "no": "no",
+      "offline": "offline",
+      "online": "online"
+    }
+  },
+  "columns": {
+    "asset": "asset",
+    "assetUUID": "asset UUID",
+    "eventType": "status",
+    "lastSeenAt": "last seen at",
+    "missCount": "missed heartbeats",
+    "thresholdMinutes": "threshold (min)",
+    "timestamp": "timestamp"
+  },
+  "eventTypeOptions": {
+    "offline": "offline",
+    "online": "online"
+  },
+  "statusBadge": {
+    "offline": "OFFLINE",
+    "online": "ONLINE"
+  },
+  "drawer": {
+    "title": "connectivity event details"
+  },
+  "empty": {
+    "title": "no connectivity events",
+    "description": "no offline or online transitions match your current filters."
+  },
+  "pagination": {
+    "newer": "newer",
+    "older": "older"
+  },
+  "messages": {
+    "loadFailed": "failed to load connectivity history"
+  },
+  "defaults": {
+    "unknown": "unknown",
+    "notAvailable": "N/A"
+  },
+  "actions": {
+    "trackEvent": "track this event",
+    "viewJson": "view JSON",
+    "viewAsset": "view asset"
+  }
+}

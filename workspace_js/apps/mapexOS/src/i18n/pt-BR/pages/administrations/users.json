@@ -1,0 +1,287 @@
+{
+  "title": "usuários",
+  "description": "gerencie sua base de usuários",
+  "addButton": "adicionar usuário",
+  "listTitle": "lista de usuários",
+  "itemLabel": "usuário",
+  "itemLabelPlural": "usuários",
+  "info": {
+    "title": "O que é um Usuário?",
+    "description": "Um Usuário representa um indivíduo que pode acessar e interagir com o MapexOS. Os usuários são autenticados, recebem funções e permissões para realizar ações específicas dentro do sistema com base em seu escopo organizacional.",
+    "items": {
+      "authentication": {
+        "title": "Autenticação e Autorização",
+        "text": "Login seguro com suporte para credenciais internas e provedores de identidade externos"
+      },
+      "rolePermissions": {
+        "title": "Permissões Baseadas em Função",
+        "text": "Os usuários herdam permissões de funções atribuídas, controlando o que podem visualizar e modificar"
+      },
+      "multiOrg": {
+        "title": "Acesso Multi-Organização",
+        "text": "Os usuários podem acessar múltiplas organizações de clientes com níveis de permissão diferentes"
+      },
+      "profile": {
+        "title": "Gerenciamento de Perfil",
+        "text": "Gerencie informações do usuário incluindo nome, e-mail, cargo e detalhes de contato"
+      },
+      "activity": {
+        "title": "Rastreamento de Atividades",
+        "text": "Rastreie ações do usuário, histórico de login e trilhas de auditoria para conformidade e segurança"
+      }
+    },
+    "docsLabel": "Ver Documentação Completa"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar usuários...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "allStatus": "todos",
+    "email": "email",
+    "firstName": "primeiro nome",
+    "lastName": "sobrenome",
+    "status": "status",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "filterByEmail": "filtrar por email",
+    "filterByFirstName": "filtrar por primeiro nome",
+    "filterByLastName": "filtrar por sobrenome",
+    "options": {
+      "all": "todos",
+      "enabled": "habilitado",
+      "disabled": "desabilitado",
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "columns": {
+    "name": "nome",
+    "organization": "organização",
+    "email": "email",
+    "jobTitle": "cargo",
+    "groups": "grupos"
+  },
+  "menuColumns": {
+    "organization": "organização",
+    "email": "email",
+    "jobTitle": "cargo",
+    "groups": "grupos"
+  },
+  "status": {
+    "active": "ativo",
+    "inactive": "inativo"
+  },
+  "empty": {
+    "title": "nenhum usuário encontrado",
+    "description": "parece que não há usuários correspondentes aos seus critérios de pesquisa atuais ou você ainda não possui nenhum usuário."
+  },
+  "messages": {
+    "deletedSuccessfully": "usuário excluído com sucesso",
+    "confirmDelete": "tem certeza de que deseja excluir o usuário \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirmar exclusão"
+  },
+  "errors": {
+    "apiNotInitialized": "API de usuários não está disponível",
+    "idMissing": "ID do usuário ausente"
+  },
+  "tour": {
+    "tourButton": {
+      "title": "Iniciar Tour Guiado",
+      "description": "Clique neste botão a qualquer momento para iniciar um passo a passo interativo desta página. O tour irá guiá-lo por todas as funcionalidades disponíveis."
+    },
+    "header": {
+      "title": "Visão Geral de Usuários",
+      "description": "Esta é a página de Usuários. Aqui você pode gerenciar todos os usuários da sua organização."
+    },
+    "filters": {
+      "title": "Filtros e Busca",
+      "description": "Use a barra de busca e o filtro de status para encontrar usuários rapidamente."
+    },
+    "advancedFiltersBtn": {
+      "title": "Filtros Avançados",
+      "description": "Clique neste botão para abrir o painel de filtros avançados com critérios de busca adicionais."
+    },
+    "advancedFiltersOpen": {
+      "title": "Painel de Filtros Avançados",
+      "description": "Aqui você pode configurar critérios detalhados de busca como email, nome, escopo da organização e mais. Aplique ou redefina os filtros conforme necessário."
+    },
+    "results": {
+      "title": "Lista de Usuários",
+      "description": "Os usuários aparecem como linhas. Clique para ver detalhes ou clique duas vezes para editar."
+    },
+    "rowActions": {
+      "title": "Ações da Linha",
+      "description": "Cada linha tem um menu de ações (⋮) com opções para Editar, Ver Detalhes ou Excluir. Um clique abre o drawer de detalhes, dois cliques abre o formulário de edição."
+    },
+    "addNew": {
+      "title": "Criar um Usuário",
+      "description": "Pronto para criar um usuário? Clique em Próximo para um passo a passo guiado!"
+    }
+  },
+  "drawer": {
+    "title": "detalhes do usuário",
+    "close": "fechar",
+    "edit": "editar usuário",
+    "loading": "carregando dados do usuário...",
+    "error": "falha ao carregar detalhes do usuário",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "contact": "contato & cargo",
+      "authentication": "autenticação",
+      "timestamps": "datas",
+      "groups": "grupos",
+      "orgAccess": "acesso às organizações"
+    },
+    "columns": {
+      "organization": "organização",
+      "scope": "escopo",
+      "roles": "papéis"
+    },
+    "accessStats": {
+      "viaGroups": "via grupos",
+      "direct": "direto"
+    },
+    "viaGroups": {
+      "label": "via grupos",
+      "seeMore": "ver mais",
+      "allGroups": "todos os grupos"
+    },
+    "directAccess": {
+      "allRoles": "todas as funções"
+    },
+    "fields": {
+      "name": "nome",
+      "email": "email",
+      "status": "status",
+      "avatar": "avatar",
+      "phone": "telefone",
+      "jobTitle": "cargo",
+      "authProvider": "provedor de autenticação",
+      "changePasswordNextLogin": "alterar senha no próximo login",
+      "externalId": "ID externo",
+      "created": "criado em",
+      "updated": "última atualização"
+    },
+    "authProviders": {
+      "internal": "interno",
+      "google": "google",
+      "github": "github",
+      "microsoft": "microsoft",
+      "keycloak": "keycloak"
+    },
+    "empty": {
+      "phone": "sem telefone",
+      "jobTitle": "sem cargo",
+      "externalId": "sem ID externo",
+      "avatar": "sem avatar"
+    }
+  },
+  "detail": {
+    "title": "detalhes do usuário",
+    "description": "visualize perfil, acessos e grupos do usuário",
+    "backButton": "voltar para auditoria",
+    "editButton": "editar",
+    "loading": "carregando usuário...",
+    "loadError": "falha ao carregar usuário",
+    "tabs": {
+      "profile": "perfil",
+      "access": "acessos",
+      "groups": "grupos"
+    },
+    "profile": {
+      "loading": "carregando perfil...",
+      "error": "falha ao carregar perfil",
+      "sections": {
+        "basicInfo": "informações básicas",
+        "contact": "contato & cargo",
+        "authentication": "autenticação",
+        "timestamps": "datas"
+      },
+      "fields": {
+        "name": "nome",
+        "email": "email",
+        "phone": "telefone",
+        "jobTitle": "cargo",
+        "organization": "organização",
+        "status": "status",
+        "authProvider": "provedor de autenticação",
+        "changePasswordNextLogin": "alterar senha no próximo login",
+        "externalId": "ID externo",
+        "created": "criado em",
+        "updated": "última atualização"
+      },
+      "status": {
+        "active": "ativo",
+        "inactive": "inativo"
+      },
+      "values": {
+        "yes": "sim",
+        "no": "não"
+      },
+      "authProviders": {
+        "internal": "interno",
+        "google": "google",
+        "github": "github",
+        "microsoft": "microsoft",
+        "keycloak": "keycloak"
+      }
+    },
+    "access": {
+      "title": "acesso às organizações",
+      "loading": "carregando acessos...",
+      "error": "falha ao carregar acessos",
+      "count": "membros",
+      "empty": {
+        "title": "nenhum acesso",
+        "description": "este usuário não possui acessos em nenhuma organização"
+      },
+      "apiNotAvailable": {
+        "title": "funcionalidade em desenvolvimento",
+        "description": "o gerenciamento de acessos do usuário está em desenvolvimento. volte em breve!"
+      },
+      "columns": {
+        "organization": "organização",
+        "roles": "funções",
+        "scope": "escopo",
+        "via": "via"
+      },
+      "fields": {
+        "scope": "escopo",
+        "permissions": "permissões",
+        "organization": "organização",
+        "roles": "funções",
+        "via": "via"
+      },
+      "type": {
+        "system": "sistema",
+        "custom": "customizado"
+      }
+    },
+    "groups": {
+      "loading": "carregando grupos...",
+      "error": "falha ao carregar grupos",
+      "count": "grupos encontrados",
+      "noDescription": "sem descrição",
+      "empty": {
+        "title": "nenhum grupo",
+        "description": "este usuário não é membro de nenhum grupo"
+      },
+      "type": {
+        "system": "sistema",
+        "custom": "customizado"
+      },
+      "status": {
+        "enabled": "habilitado",
+        "disabled": "desabilitado"
+      },
+      "template": {
+        "yes": "compartilhado",
+        "no": "local"
+      }
+    }
+  }
+}

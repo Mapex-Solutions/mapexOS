@@ -1,0 +1,12 @@
+{
+  "title": "select workflow",
+  "searchPlaceholder": "search workflows...",
+  "infoBanner": "select a child workflow to execute as a subworkflow.",
+  "emptyText": "no workflows available",
+  "itemSingular": "workflow",
+  "itemPlural": "workflows",
+  "allFilter": "all",
+  "enabled": "enabled",
+  "disabled": "disabled",
+  "status": "status"
+}

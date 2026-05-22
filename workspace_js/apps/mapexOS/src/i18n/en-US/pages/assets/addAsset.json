@@ -1,0 +1,256 @@
+{
+  "page": {
+    "title": "add asset",
+    "titleEdit": "edit asset",
+    "description": "register a new IoT asset with predefined template",
+    "button": "back to assets"
+  },
+  "stepper": {
+    "title": "progress steps",
+    "subtitle": "complete all steps to create a new asset",
+    "requiredInfo": "all fields marked with * are required",
+    "currentStep": "current step"
+  },
+  "steps": {
+    "step1": {
+      "label": "identification",
+      "description": "asset name, ID and description",
+      "title": "identification",
+      "subtitle": "add basic information about the asset",
+      "fields": {
+        "name": {
+          "label": "name",
+          "placeholder": "e.g.: sensor-temp-001",
+          "hint": "unique asset identifier",
+          "required": "name is required"
+        },
+        "assetId": {
+          "label": "asset ID",
+          "placeholder": "e.g.: A1234567",
+          "hint": "asset identification ID",
+          "required": "asset ID is required"
+        },
+        "status": {
+          "label": "status",
+          "placeholder": "select status",
+          "hint": "enable or disable this asset",
+          "required": "status is required"
+        },
+        "description": {
+          "label": "description",
+          "placeholder": "enter a description for this asset",
+          "hint": "optional asset description"
+        }
+      }
+    },
+    "step2": {
+      "label": "asset template",
+      "description": "select the predefined template",
+      "title": "asset template",
+      "subtitle": "select the template that defines hardware specifications and payload handling",
+      "fields": {
+        "assetTemplateId": {
+          "label": "asset template",
+          "placeholder": "select a template",
+          "hint": "template that defines manufacturer, model and handler",
+          "required": "asset template is required"
+        }
+      },
+      "banner": {
+        "title": "what is asset template?",
+        "description": "asset templates define hardware specifications (manufacturer, model, version) and the payload handler that will be used to process data from this asset."
+      },
+      "preview": {
+        "title": "template preview",
+        "manufacturer": "manufacturer",
+        "model": "model",
+        "version": "version",
+        "status": "status",
+        "noTemplateSelected": "no template selected"
+      }
+    },
+    "step3": {
+      "label": "route groups",
+      "description": "routing configuration",
+      "title": "route groups",
+      "subtitle": "select one or more route groups to define how asset data will be routed",
+      "banner": {
+        "title": "what are route groups?",
+        "description": "route groups define how telemetry data from this asset will be routed to different destinations like business rules, lakehouses, or notification channels."
+      },
+      "labels": {
+        "systemTemplate": "System Template",
+        "sharedTemplate": "Shared Template"
+      }
+    },
+    "step4": {
+      "label": "connectivity",
+      "description": "protocol and location",
+      "title": "connectivity",
+      "subtitle": "configure communication protocol and asset location",
+      "certificate": {
+        "activeTitle": "Active certificate",
+        "revokedTitle": "Revoked certificates",
+        "revokedEmpty": "No revoked certificates for this asset."
+      },
+      "fields": {
+        "protocol": {
+          "label": "protocol",
+          "placeholder": "select a protocol",
+          "hint": "select the communication protocol for this asset",
+          "required": "protocol is required"
+        },
+        "mqttUsername": {
+          "label": "username",
+          "placeholder": "e.g.: device_user",
+          "hint": "MQTT username for authentication",
+          "hintDerived": "asset UUID — program the device with this exact value",
+          "required": "username is required",
+          "minLength": "username must be at least 3 characters"
+        },
+        "mqttPassword": {
+          "label": "password",
+          "placeholder": "e.g.: a strong passphrase (min 8 chars)",
+          "placeholderEdit": "leave blank to keep the current password",
+          "hint": "the device password is bcrypt-hashed server-side and validated by the broker on every CONNECT",
+          "hintEdit": "leave blank to keep the existing password. Type a new value to rotate it.",
+          "required": "password is required",
+          "minLength": "password must be at least 8 characters"
+        },
+        "authType": {
+          "label": "authentication mode",
+          "hint": "the broker enforces this mode at CONNECT — switching modes revokes the unused credential",
+          "required": "authentication mode is required",
+          "optionPassword": "user / password",
+          "optionCert": "certificate (mTLS)",
+          "certBannerTitle": "the certificate is generated after the asset is saved",
+          "certBannerBody": "as soon as you click 'Save', a download dialog opens with cert + private key as a zip. The key is shown ONCE and never stored — keep the file safe. If lost, revoke and re-issue from the asset details drawer."
+        },
+        "certTTL": {
+          "value": {
+            "label": "validity",
+            "hint": "how long each issued certificate stays valid",
+            "required": "validity must be at least 1",
+            "maxDays": "validity cannot exceed 10 years (3650 days)"
+          },
+          "unit": {
+            "label": "unit",
+            "hint": "time unit applied to the validity value",
+            "required": "unit is required"
+          },
+          "units": {
+            "day": "day(s)",
+            "week": "week(s)",
+            "month": "month(s)",
+            "year": "year(s)"
+          }
+        },
+        "mqttClientId": {
+          "label": "client ID",
+          "placeholder": "e.g.: asset-sensor-001",
+          "hint": "unique MQTT client identifier",
+          "hintDerived": "managed by the platform — derived from the asset UUID",
+          "required": "client ID is required",
+          "minLength": "client ID must be at least 3 characters"
+        },
+        "latitude": {
+          "label": "latitude",
+          "placeholder": "e.g.: -23.55052",
+          "hint": "latitude coordinate"
+        },
+        "longitude": {
+          "label": "longitude",
+          "placeholder": "e.g.: -46.633308",
+          "hint": "longitude coordinate"
+        },
+        "debugEnabled": {
+          "label": "debug mode",
+          "hint": "when enabled, telemetry events will be logged for debugging purposes"
+        }
+      },
+      "protocolOptions": {
+        "http": "HTTP",
+        "mqtt": "MQTT",
+        "lorawan": "LoRaWAN (coming soon)"
+      },
+      "banner": {
+        "info": "select the communication protocol for your device. HTTP and MQTT are available.",
+        "httpInfo": "for HTTP devices, create a Data Source to receive data from this asset.",
+        "mqttInfo": "configure MQTT credentials for secure device connection to the broker."
+      },
+      "certDialog": {
+        "title": "generate MQTT certificate",
+        "warning": "the private key is shown only once. Download the zip and store it securely — the platform never persists it. If you lose it, you will need to revoke this certificate and issue a new one.",
+        "replaceWarning": "this asset already has an active certificate. Generating a new one revokes the existing certificate immediately.",
+        "generateButton": "generate and download",
+        "skipButton": "skip for now"
+      }
+    },
+    "step5": {
+      "label": "health monitoring",
+      "description": "configure asset health monitoring",
+      "title": "health monitoring",
+      "subtitle": "enable monitoring to detect when the asset goes offline"
+    },
+    "step6": {
+      "label": "review",
+      "description": "review all information before saving",
+      "title": "review",
+      "subtitle": "review all configuration before creating the asset",
+      "successMessage": "ready to save! click 'Save' to confirm your changes.",
+      "sections": {
+        "identification": "identification",
+        "assetTemplate": "asset template",
+        "routeGroups": "route groups",
+        "connectivity": "connectivity",
+        "healthMonitoring": "health monitoring"
+      },
+      "fields": {
+        "name": "name",
+        "assetId": "asset ID",
+        "status": "status",
+        "description": "description",
+        "assetTemplate": "selected template",
+        "manufacturer": "manufacturer",
+        "model": "model",
+        "version": "version",
+        "routeGroups": "route groups",
+        "protocol": "protocol",
+        "mqttUsername": "MQTT username",
+        "mqttClientId": "MQTT client ID",
+        "latitude": "latitude",
+        "longitude": "longitude",
+        "healthMonitoringEnabled": "health monitoring",
+        "threshold": "inactivity threshold",
+        "requiredMisses": "required misses",
+        "offlineRouteGroups": "when offline",
+        "onlineRouteGroups": "when back online"
+      }
+    }
+  },
+  "statusOptions": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "navigation": {
+    "previous": "previous",
+    "next": "next",
+    "save": "create asset",
+    "update": "update asset"
+  },
+  "notifications": {
+    "loading": "loading asset...",
+    "loadFailed": "failed to load asset data",
+    "created": "asset created successfully!",
+    "creationFailed": "failed to create asset",
+    "updated": "asset updated successfully!",
+    "updateFailed": "failed to update asset",
+    "validationFailed": "validation error. check the data and try again.",
+    "networkError": "network error. check your connection and try again.",
+    "alreadyExists": "an asset with this name already exists.",
+    "fillRequiredFields": "please fill in all required fields",
+    "loadingTemplates": "loading asset templates...",
+    "certIssueFailed": "failed to issue certificate. Please try again from the assets list.",
+    "assetCreatedWithoutCert": "asset created without a certificate. Generate one from the assets list when ready."
+  }
+}

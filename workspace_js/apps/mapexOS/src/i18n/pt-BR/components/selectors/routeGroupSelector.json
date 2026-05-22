@@ -1,0 +1,67 @@
+{
+  "title": {
+    "singular": "Selecionar Grupo de Roteamento",
+    "plural": "Selecionar Grupos de Roteamento"
+  },
+  "selectedCount": "selecionado(s)",
+  "search": {
+    "label": "Buscar",
+    "placeholder": "Buscar grupos de roteamento por nome..."
+  },
+  "filters": {
+    "title": "Filtros",
+    "templateType": "Tipo de Template",
+    "templateSource": "Fonte do Template",
+    "search": {
+      "label": "Buscar",
+      "placeholder": "Buscar grupos de roteamento por nome..."
+    },
+    "templateTypeOptions": {
+      "all": "Todos",
+      "system": "Sistema",
+      "custom": "Personalizado"
+    },
+    "templateSourceOptions": {
+      "all": "Todos",
+      "shared": "Compartilhado",
+      "local": "Local"
+    }
+  },
+  "resultsTitle": "Resultados",
+  "results": {
+    "found": "Encontrados {count} grupo(s) de roteamento"
+  },
+  "chips": {
+    "system": "Sistema",
+    "shared": "Compartilhado",
+    "routers": "roteadores"
+  },
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "badge": {
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "totalLoaded": "total",
+  "routers": "roteadores",
+  "noDescription": "Nenhuma descrição fornecida",
+  "loading": "Carregando...",
+  "loading.more": "Carregando mais grupos de roteamento...",
+  "empty": "Nenhum grupo de roteamento encontrado",
+  "emptyState": {
+    "title": "Nenhum grupo de roteamento encontrado",
+    "subtitle": "Tente ajustar seus filtros"
+  },
+  "selected": {
+    "label": "Grupos de Roteamento Selecionados"
+  },
+  "actions": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar Seleção"
+  },
+  "errors": {
+    "loadFailed": "Falha ao carregar grupos de roteamento"
+  }
+}

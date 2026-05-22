@@ -1,0 +1,36 @@
+{
+  "header": {
+    "title": "Dashboard",
+    "subtitlePrefix": "Platform overview for",
+    "notAvailable": "N/A"
+  },
+  "sections": {
+    "quickActions": "Quick Actions",
+    "platformInfo": "Platform Info"
+  },
+  "platformInfo": {
+    "organization": "Organization",
+    "type": "Type",
+    "totalOrganizations": "Total Organizations",
+    "notAvailable": "N/A"
+  },
+  "primaryKpis": {
+    "assets": "Assets",
+    "users": "Users",
+    "triggers": "Triggers",
+    "wfDefinitions": "WF Definitions"
+  },
+  "secondaryKpis": {
+    "assetTemplates": "Asset Templates",
+    "groups": "Groups",
+    "routeGroups": "Route Groups",
+    "wfInstances": "WF Instances"
+  },
+  "quickActions": {
+    "newAsset": "New Asset",
+    "newUser": "New User",
+    "newTemplate": "New Template",
+    "newRouteGroup": "New Route Group",
+    "viewLogs": "View Logs"
+  }
+}

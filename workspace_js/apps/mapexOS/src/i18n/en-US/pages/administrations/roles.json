@@ -1,0 +1,239 @@
+{
+  "title": "roles",
+  "titleEdit": "edit role",
+  "titleCreate": "create role",
+  "description": "manage roles and permissions for your organization",
+  "descriptionCreate": "create a new role with specific permissions",
+  "backButton": "back to roles",
+  "addButton": "add role",
+  "listTitle": "roles list",
+  "itemLabel": "role",
+  "itemLabelPlural": "roles",
+  "info": {
+    "title": "What is a Role?",
+    "description": "A Role defines a set of permissions that control what users can do in MapexOS. Roles implement role-based access control (RBAC) to secure your system and manage user capabilities across different resources and organizations.",
+    "items": {
+      "permissions": {
+        "title": "Permission Management",
+        "text": "Define granular permissions for resources like assets, users, data sources, and routing"
+      },
+      "systemCustom": {
+        "title": "System vs Custom Roles",
+        "text": "Use built-in system roles or create custom roles tailored to your organization's needs"
+      },
+      "accessControl": {
+        "title": "Multi-Resource Access Control",
+        "text": "Control access across multiple resource types with a single role assignment"
+      },
+      "userAssignment": {
+        "title": "User Assignment",
+        "text": "Assign roles to users to grant them specific permissions and capabilities"
+      },
+      "granular": {
+        "title": "Granular Permissions",
+        "text": "Fine-grained control with create, read, update, delete, and execute permissions"
+      }
+    },
+    "docsLabel": "View Complete Documentation"
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search roles...",
+    "allStatus": "all",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "name": "role name",
+    "isSystem": "type",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "scope": "scope",
+    "permission": "permission",
+    "filterByPermission": "filter by permission",
+    "isTemplate": "template source",
+    "options": {
+      "all": "all",
+      "yes": "yes",
+      "no": "no",
+      "system": "system",
+      "custom": "custom",
+      "global": "global",
+      "local": "local",
+      "templates": "shared"
+    }
+  },
+  "columns": {
+    "name": "name",
+    "organization": "organization",
+    "permissions": "permissions",
+    "scope": "scope",
+    "type": "type",
+    "templateSource": "template source",
+    "created": "created"
+  },
+  "menuColumns": {
+    "organization": "organization",
+    "description": "description",
+    "permissions": "permissions",
+    "scope": "scope",
+    "created": "created"
+  },
+  "scope": {
+    "global": "global",
+    "local": "local"
+  },
+  "type": {
+    "system": "system",
+    "custom": "custom"
+  },
+  "empty": {
+    "title": "no roles found",
+    "description": "it seems there are no roles matching your current search criteria or you don't have any roles yet."
+  },
+  "messages": {
+    "deletedSuccessfully": "role deleted successfully",
+    "confirmDelete": "are you sure you want to delete the role \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirm deletion"
+  },
+  "notifications": {
+    "systemEdit": "system roles cannot be edited",
+    "systemDelete": "system roles cannot be deleted",
+    "sharedEdit": "shared roles from other organizations cannot be edited",
+    "sharedDelete": "shared roles from other organizations cannot be deleted"
+  },
+  "errors": {
+    "apiNotInitialized": "Roles API is not available",
+    "idMissing": "Role ID is missing",
+    "orgPathKeyMissing": "Organization path key is missing"
+  },
+  "drawer": {
+    "title": "role details",
+    "close": "close",
+    "edit": "edit",
+    "loading": "loading role details...",
+    "error": "failed to load role details",
+    "systemRoleWarning": "this is a system role and cannot be modified or deleted",
+    "systemRoleTooltip": "system roles cannot be edited",
+    "sections": {
+      "basicInfo": "basic information",
+      "permissions": "permissions",
+      "scope": "scope & organization",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "description": "description",
+      "type": "type",
+      "scope": "scope",
+      "organization": "organization",
+      "pathKey": "path key",
+      "permissionsCount": "permissions count",
+      "created": "created",
+      "updated": "updated"
+    },
+    "empty": {
+      "description": "no description provided",
+      "permissions": "no permissions assigned"
+    },
+    "system": {
+      "yes": "system",
+      "no": "custom"
+    }
+  },
+  "createEdit": {
+    "steps": {
+      "basicInfo": "basic information",
+      "permissions": "permissions",
+      "review": "review"
+    },
+    "stepDescriptions": {
+      "basicInfo": "set the role name, description, and scope",
+      "permissions": "select the permissions for this role",
+      "review": "review your configuration before saving"
+    },
+    "sections": {
+      "basicInfo": "basic information",
+      "permissions": "permissions",
+      "progressSteps": "progress"
+    },
+    "formDescriptions": {
+      "basicInfo": "enter the basic details for this role",
+      "permissions": "select the resources and actions this role can access",
+      "isTemplate": "template roles can be shared with child organizations"
+    },
+    "fields": {
+      "name": "role name",
+      "description": "description",
+      "scope": "scope",
+      "isTemplate": "share as template"
+    },
+    "scopeOptions": {
+      "global": "global",
+      "local": "local"
+    },
+    "validation": {
+      "nameRequired": "role name is required",
+      "nameMinLength": "role name must be at least 3 characters",
+      "nameMaxLength": "role name must not exceed 100 characters",
+      "descriptionMaxLength": "description must not exceed 500 characters",
+      "scopeRequired": "please select a scope",
+      "permissionsRequired": "please select at least one permission"
+    },
+    "labels": {
+      "selectAll": "select all",
+      "deselectAll": "clear all",
+      "actionsSelected": "actions selected",
+      "permissionSelected": "permission selected",
+      "permissionsSelected": "permissions selected",
+      "permission": "permission",
+      "permissions": "permissions"
+    },
+    "buttons": {
+      "back": "back",
+      "next": "next",
+      "createRole": "create role",
+      "updateRole": "update role"
+    },
+    "messages": {
+      "loadingRole": "loading role...",
+      "completeAllSteps": "complete all steps to create the role",
+      "allFieldsRequired": "fields marked with * are required",
+      "currentStep": "current step",
+      "systemRoleWarning": "this is a system role. some fields cannot be modified."
+    },
+    "reviewStep": {
+      "subtitle": "review your role configuration before saving",
+      "successMessage": "ready to create! click 'create role' to save",
+      "successMessageEdit": "ready to update! click 'update role' to save changes",
+      "sections": {
+        "basicInfo": "basic information",
+        "permissions": "permissions"
+      },
+      "fields": {
+        "name": "name",
+        "description": "description",
+        "scope": "scope",
+        "isTemplate": "shared template",
+        "totalPermissions": "total permissions",
+        "enabledResources": "enabled resources"
+      },
+      "values": {
+        "notProvided": "not provided",
+        "notSelected": "not selected",
+        "noPermissions": "no permissions selected"
+      }
+    },
+    "notifications": {
+      "created": "role created successfully",
+      "updated": "role updated successfully",
+      "createFailed": "failed to create role",
+      "updateFailed": "failed to update role",
+      "loadFailed": "failed to load role",
+      "noPermissions": "please select at least one permission",
+      "alreadyExists": "a role with this name already exists",
+      "forbidden": "you do not have permission to perform this action"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "pageHeader": {
+    "title": "Logs do Router",
+    "description": "Visualize e analise os logs de execução do router. Cada entrada mostra como os eventos foram roteados através dos RouteGroups para seus destinos."
+  },
+  "listTitle": "Eventos do Router",
+  "itemLabel": "evento",
+  "itemLabelPlural": "eventos",
+  "filters": {
+    "label": "Filtros",
+    "searchPlaceholder": "Buscar por UUID...",
+    "advancedFilters": "Filtros Avançados",
+    "pendingFilters": "Filtros pendentes - clique para aplicar",
+    "clearAll": "Limpar todos",
+    "allStatus": "Todos",
+    "dateRange": "Período",
+    "status": "Status",
+    "uuid": "UUID",
+    "assetId": "ID do Asset",
+    "assetIdPlaceholder": "Digite o ID do asset...",
+    "routerId": "ID do RouteGroup",
+    "routerIdPlaceholder": "Digite o ID do RouteGroup...",
+    "includeChildren": "Organizações Filhas",
+    "includeChildrenOrgs": "Incluir organizações filhas",
+    "options": {
+      "yes": "Sim",
+      "no": "Não"
+    }
+  },
+  "columns": {
+    "routeGroup": "RouteGroup",
+    "uuid": "UUID",
+    "status": "Status",
+    "totalRouters": "Total",
+    "matchedCount": "Correspondidos",
+    "publishedCount": "Publicados",
+    "timestamp": "Data/Hora"
+  },
+  "statusOptions": {
+    "success": "Sucesso",
+    "failed": "Falha"
+  },
+  "statusBadge": {
+    "success": "SUCESSO",
+    "failed": "FALHA"
+  },
+  "drawer": {
+    "title": "Detalhes do Evento Router",
+    "subtitleSuccess": "Roteamento bem-sucedido",
+    "subtitleFailed": "Roteamento falhou"
+  },
+  "empty": {
+    "title": "Sem Eventos do Router",
+    "description": "Nenhum evento do router encontrado para os filtros selecionados. Tente ajustar o período ou os filtros."
+  },
+  "pagination": {
+    "newer": "Mais Recentes",
+    "older": "Mais Antigos"
+  },
+  "messages": {
+    "loadFailed": "Falha ao carregar eventos do router. Por favor, tente novamente."
+  },
+  "defaults": {
+    "unknown": "Desconhecido",
+    "notAvailable": "N/D"
+  }
+}

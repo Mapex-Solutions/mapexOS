@@ -1,0 +1,30 @@
+{
+	"page": {
+		"title": "Retention policies",
+		"description": "Control how long event history is kept in ClickHouse."
+	},
+	"columns": {
+		"type": "Table",
+		"name": "Policy name",
+		"retentionDays": "TTL (days)",
+		"enabled": "Enabled"
+	},
+	"actions": {
+		"save": "Save",
+		"cancel": "Cancel"
+	},
+	"messages": {
+		"saveSuccess": "Retention policy updated",
+		"saveError": "Failed to update retention policy"
+	},
+	"validation": {
+		"ttlRange": "Must be between {min} and {max} days"
+	},
+	"specialTypes": {
+		"asset_status_history": "Asset Connectivity History"
+	},
+	"empty": {
+		"title": "No retention policies",
+		"description": "No retention policies are configured for this scope."
+	}
+}

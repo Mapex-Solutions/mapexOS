@@ -1,0 +1,42 @@
+{
+  "title": "channel",
+  "description": "add new channel of notification",
+  "backButton": "back to notifications",
+  "steps": {
+    "general": "general information",
+    "configuration": "specific configuration",
+    "review": "review"
+  },
+  "stepDescriptions": {
+    "general": "basic channel information",
+    "configuration": "configure channel settings",
+    "review": "review and confirm channel details"
+  },
+  "formDescriptions": {
+    "general": "enter the channel's basic information",
+    "configuration": "configure specific channel settings",
+    "review": "review and confirm channel details before creation"
+  },
+  "stepper": {
+    "title": "configure notification channel",
+    "subtitle": "complete all steps to create a new notification channel"
+  },
+  "fields": {
+    "type": "type",
+    "name": "name",
+    "description": "description",
+    "status": "status",
+    "created": "created"
+  },
+  "errors": {
+    "unsupportedType": "notification type not supported"
+  },
+  "review": {
+    "generalInformation": "general information",
+    "type": "type",
+    "name": "name",
+    "status": "status",
+    "description": "description",
+    "created": "created"
+  }
+}

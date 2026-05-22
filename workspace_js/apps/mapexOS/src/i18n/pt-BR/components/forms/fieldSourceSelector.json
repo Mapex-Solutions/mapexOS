@@ -1,0 +1,39 @@
+{
+  "literal": {
+    "placeholder": "Insira um valor ou use placeholders de template (veja o ícone de informação)...",
+    "infoTitle": "Sintaxe de Template",
+    "infoDescription": "Use placeholders de chaves duplas para interpolar valores em tempo de execução neste campo.",
+    "namespaces": {
+      "event": {
+        "hint": "Payload do evento que disparou o workflow"
+      },
+      "state": {
+        "hint": "Variáveis de estado do workflow"
+      },
+      "input": {
+        "hint": "Inputs externos do workflow"
+      },
+      "output": {
+        "hint": "Saída de um node anterior"
+      }
+    },
+    "missingPathNote": "Caminhos não encontrados são renderizados como string vazia.",
+    "escapeNote": "Sintaxe de escape para os caracteres literais de abertura de chave não é suportada nesta versão.",
+    "autocompleteHintPrefix": "Inserir",
+    "outputCatalog": {
+      "title": "Quais nodes populam output?",
+      "producingHeader": "Tipos de node que emitem dados",
+      "emptyHeader": "Tipos de node que não emitem nada",
+      "footerNote": "Para nodes code / plugin / subworkflow / wait_*, os nomes exatos dos campos dependem do script, do manifest do plugin ou do payload do End node do sub-workflow.",
+      "shapes": {
+        "loop": "{'{'} item, index {'}'}",
+        "code": "o que o script JS retornar",
+        "subworkflow": "payload do End node do sub-workflow",
+        "plugin": "resposta HTTP da action do plugin ou payload de callback",
+        "wait_signal": "payload do sinal",
+        "wait_for": "payload da condição resolvida",
+        "trigger_event": "saída do disparo downstream (se houver)"
+      }
+    }
+  }
+}

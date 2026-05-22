@@ -1,0 +1,49 @@
+{
+  "title": "Dynamic Filters",
+  "closeTooltip": "Close dynamic filters",
+  "sourceLabel": "Field Source",
+  "sourceAsset": "Asset",
+  "sourceAssetTemplate": "Asset Template",
+  "searchAsset": "Search asset by name...",
+  "searchAssetTemplate": "Search template by name...",
+  "noResults": "No results found",
+  "templateResolved": "Template",
+  "loadingFields": "Loading dynamic fields...",
+  "noFields": "No filterable dynamic fields found for this template.",
+  "noTemplateForAsset": "The selected asset has no template assigned. Dynamic filters require a template with dynamic fields.",
+  "resolvingTemplate": "Resolving template...",
+  "dynamicFieldsTitle": "Dynamic Fields",
+  "filtersSection": "Filters",
+  "filtersCount": "{active} of {total}",
+  "addFilter": "Add filter",
+  "searchFields": "Search fields...",
+  "emptyTitle": "No filters added yet",
+  "emptyDescription": "Choose fields to filter by",
+  "allFieldsAdded": "All fields have been added",
+  "fieldTypeHeaders": {
+    "number": "Numbers",
+    "string": "Text",
+    "boolean": "Boolean",
+    "date": "Dates"
+  },
+  "operators": {
+    "equals": "Equals",
+    "notEquals": "Not Equals",
+    "greaterThan": "Greater Than",
+    "greaterThanEquals": "Greater or Equal",
+    "lessThan": "Less Than",
+    "lessThanEquals": "Less or Equal",
+    "range": "Range",
+    "startsWith": "Starts With",
+    "rangeFrom": "From",
+    "rangeTo": "To"
+  },
+  "booleanTrue": "True",
+  "booleanFalse": "False",
+  "buttons": {
+    "reset": "Reset",
+    "resetTooltip": "Clear all dynamic filters",
+    "apply": "Apply",
+    "applyTooltip": "Apply dynamic filters"
+  }
+}

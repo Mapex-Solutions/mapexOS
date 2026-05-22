@@ -1,0 +1,99 @@
+{
+  "page": {
+    "title": "Criar Instância de Workflow",
+    "titleEdit": "Editar Instância de Workflow",
+    "description": "Configure uma instância de workflow com sua definição e inputs",
+    "button": "Voltar para instâncias"
+  },
+  "stepper": {
+    "title": "Configuração da Instância",
+    "subtitle": "Siga os passos para configurar sua instância de workflow",
+    "requiredInfo": "Campos marcados com * são obrigatórios",
+    "currentStep": "Passo atual"
+  },
+  "steps": {
+    "step1": {
+      "label": "Identificação",
+      "description": "Informações básicas da instância"
+    },
+    "step2": {
+      "label": "Definição",
+      "description": "Selecione a definição do workflow"
+    },
+    "step3": {
+      "label": "Inputs Externos",
+      "description": "Configure os inputs necessários"
+    },
+    "step4": {
+      "label": "Revisão",
+      "description": "Revise e confirme"
+    }
+  },
+  "fields": {
+    "name": "Nome da Instância",
+    "namePlaceholder": "Digite um nome para esta instância",
+    "description": "Descrição",
+    "descriptionPlaceholder": "Descreva o propósito desta instância",
+    "enabled": "Habilitado",
+    "enabledHint": "Habilitar ou desabilitar esta instância",
+    "isTemplate": "Compartilhar como Template",
+    "isTemplateHint": "Compartilhar esta instância com organizações filhas",
+    "uniqueExecution": "Execução Única",
+    "uniqueExecutionHint": "Usar um UUID fixo — apenas uma execução por vez",
+    "workflowUUID": "UUID do Workflow",
+    "workflowUUIDPlaceholder": "Informe um UUID fixo para esta instância",
+    "workflowUUIDHint": "Este UUID será reutilizado a cada execução. Apenas uma pode estar ativa por vez.",
+    "generateUUID": "Gerar",
+    "allStatus": "Todos",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "definition": "Definição do Workflow",
+    "definitionPlaceholder": "Clique para selecionar uma definição de workflow",
+    "definitionDrawerTitle": "Selecionar Definição de Workflow",
+    "definitionDrawerSearch": "Buscar definições...",
+    "noExternalInputs": "Esta definição não requer inputs externos",
+    "externalInputsTitle": "Inputs Externos",
+    "externalInputsDescription": "Preencha os inputs necessários para esta definição de workflow",
+    "requiredField": "Este campo é obrigatório",
+    "optionalField": "Opcional"
+  },
+  "review": {
+    "identification": "Identificação",
+    "definition": "Definição do Workflow",
+    "externalInputs": "Inputs Externos",
+    "name": "Nome",
+    "description": "Descrição",
+    "enabled": "Habilitado",
+    "isTemplate": "Compartilhado como Template",
+    "version": "Versão",
+    "status": "Status",
+    "noInputs": "Nenhum input externo configurado",
+    "yes": "Sim",
+    "no": "Não",
+    "health": "Saúde",
+    "nodes": "Nós",
+    "states": "Estados",
+    "inputs": "Inputs",
+    "plugins": "Plugins",
+    "coreOnly": "Apenas nós core — sem plugins externos",
+    "deselect": "Desselecionar",
+    "healthValid": "Válido",
+    "healthPluginMissing": "Ausente",
+    "healthInvalid": "Inválido"
+  },
+  "navigation": {
+    "previous": "Anterior",
+    "next": "Próximo",
+    "save": "Criar Instância",
+    "update": "Atualizar Instância",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Instância de workflow criada com sucesso",
+    "updated": "Instância de workflow atualizada com sucesso",
+    "loading": "Carregando instância...",
+    "loadFailed": "Falha ao carregar instância de workflow",
+    "creationFailed": "Falha ao criar instância de workflow",
+    "updateFailed": "Falha ao atualizar instância de workflow"
+  }
+}

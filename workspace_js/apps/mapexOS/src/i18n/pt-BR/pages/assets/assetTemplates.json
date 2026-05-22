@@ -1,0 +1,362 @@
+{
+  "pageHeader": {
+    "title": "modelo de ativo",
+    "description": "mantenha modelos de ativos e seus manipuladores de processamento associados.",
+    "button": "adicionar modelo de ativo",
+    "info": {
+      "title": "O que é um Modelo de Ativo?",
+      "description": "Um Modelo de Ativo define o blueprint para criar ativos, incluindo estrutura de dados, regras de processamento, lógica de validação e scripts de conversão. Modelos garantem consistência e permitem manipulação automatizada de dados entre tipos de dispositivos similares.",
+      "items": {
+        "reusability": {
+          "title": "Blueprint Reutilizável",
+          "text": "Crie um modelo e use-o para múltiplos ativos do mesmo tipo, garantindo consistência"
+        },
+        "processing": {
+          "title": "Processamento de Dados",
+          "text": "Defina scripts de processamento, validação e conversão para lidar com dados recebidos automaticamente"
+        },
+        "manufacturer": {
+          "title": "Especificação do Dispositivo",
+          "text": "Associe modelos com fabricante, modelo e versão para identificação precisa do dispositivo"
+        },
+        "systemTemplates": {
+          "title": "Modelos do Sistema",
+          "text": "Modelos pré-construídos fornecidos pelo MapexOS para tipos de dispositivos e protocolos comuns"
+        },
+        "customization": {
+          "title": "Modelos Personalizados",
+          "text": "Crie modelos personalizados adaptados aos seus requisitos específicos de dispositivo e formatos de dados"
+        }
+      },
+      "docsLabel": "Ver Documentação Completa"
+    }
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar templates...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "allStatus": "todos",
+    "name": "pesquisar por nome",
+    "category": "categoria",
+    "manufacturer": "fabricante",
+    "model": "modelo",
+    "status": "status",
+    "isSystem": "tipo de modelo",
+    "isTemplate": "origem do modelo",
+    "includeChildren": "incluir organizações filhas",
+    "filterByCategory": "filtrar por categoria",
+    "filterByManufacturer": "filtrar por fabricante",
+    "filterByModel": "filtrar por modelo",
+    "statusOptions": {
+      "all": "todos",
+      "active": "ativo",
+      "inactive": "inativo",
+      "enabled": "habilitado",
+      "disabled": "desabilitado"
+    },
+    "isSystemOptions": {
+      "all": "todos",
+      "system": "sistema",
+      "custom": "customizado"
+    },
+    "isTemplateOptions": {
+      "all": "todos",
+      "templates": "compartilhado",
+      "local": "local"
+    },
+    "includeChildrenOptions": {
+      "all": "todos",
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "listHeader": {
+    "title": "lista de modelos de ativos",
+    "itemLabel": "modelo de ativo",
+    "itemLabelPlural": "modelos de ativos"
+  },
+  "columns": {
+    "name": "nome",
+    "organization": "organização",
+    "manufacturer": "fabricante",
+    "model": "modelo",
+    "version": "versão",
+    "scripts": "scripts",
+    "customScripts": "scripts personalizados",
+    "templateType": "tipo de template",
+    "templateSource": "origem do template"
+  },
+  "menuColumns": {
+    "organization": "organização",
+    "manufacturerModel": "fabricante/modelo",
+    "version": "versão",
+    "templateType": "tipo de template",
+    "templateSource": "origem do template"
+  },
+  "scripts": {
+    "format": "{count}/3 scripts"
+  },
+  "empty": {
+    "title": "nenhum modelo de ativo encontrado",
+    "description": "parece que não há modelos de ativos correspondentes aos seus critérios de pesquisa atuais ou você ainda não tem nenhum modelo de ativo."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirmar exclusão",
+      "message": "tem certeza de que deseja excluir o modelo de ativo \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleted": "modelo de ativo excluído com sucesso",
+    "deleteError": "erro ao excluir modelo de ativo",
+    "systemTemplateEdit": "modelos do sistema não podem ser editados",
+    "systemTemplateDelete": "modelos do sistema não podem ser excluídos",
+    "sharedTemplateEdit": "modelos compartilhados de outras organizações não podem ser editados",
+    "sharedTemplateDelete": "modelos compartilhados de outras organizações não podem ser excluídos"
+  },
+  "errors": {
+    "apiNotInitialized": "API de ativos não está disponível",
+    "idMissing": "ID do modelo de ativo ausente"
+  },
+  "actions": {
+    "edit": "editar",
+    "view": "visualizar",
+    "delete": "excluir"
+  },
+  "status": {
+    "active": "ativo",
+    "inactive": "inativo"
+  },
+  "drawer": {
+    "title": "detalhes do modelo",
+    "close": "fechar",
+    "edit": "editar",
+    "duplicate": "duplicar",
+    "loading": "carregando detalhes do modelo...",
+    "error": "falha ao carregar detalhes do modelo",
+    "systemTemplateWarning": "este é um modelo do sistema e não pode ser modificado ou excluído",
+    "systemTemplateTooltip": "modelos do sistema não podem ser editados",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "configuration": "configuração",
+      "scripts": "scripts",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "nome",
+      "status": "status",
+      "description": "descrição",
+      "isSystem": "modelo do sistema",
+      "manufacturer": "fabricante",
+      "model": "modelo",
+      "version": "versão",
+      "assetIdPath": "caminho do id do ativo",
+      "scriptTest": "script de teste",
+      "scriptProcessor": "script de processamento",
+      "scriptValidator": "script de validação",
+      "scriptConversion": "script de conversão",
+      "scriptsSummary": "resumo dos scripts",
+      "created": "criado",
+      "updated": "atualizado"
+    },
+    "empty": {
+      "description": "nenhuma descrição fornecida"
+    },
+    "system": {
+      "yes": "sim",
+      "no": "não"
+    },
+    "scripts": {
+      "configured": "configurado",
+      "notConfigured": "não configurado"
+    },
+    "scriptViewer": {
+      "viewScript": "ver script",
+      "copyScript": "copiar script",
+      "close": "fechar",
+      "copySuccess": "script copiado para área de transferência",
+      "copyFail": "falha ao copiar script"
+    }
+  },
+  "addForm": {
+    "pageHeader": {
+      "title": "modelo de ativo",
+      "description": "crie um novo modelo de ativo com scripts de processamento de dados",
+      "backButton": "voltar para modelos"
+    },
+    "stepper": {
+      "title": "configurar modelo de ativo",
+      "subtitle": "complete todas as etapas para criar um novo modelo"
+    },
+    "steps": {
+      "basicInfo": {
+        "title": "informações básicas",
+        "description": "adicione nome do modelo, fabricante e detalhes do dispositivo"
+      },
+      "assetIdPath": {
+        "title": "caminho do id do ativo",
+        "description": "defina o caminho para identificar seus ativos"
+      },
+      "preprocessor": {
+        "title": "script de pré-processamento",
+        "description": "prepare e normalize dados recebidos (opcional)"
+      },
+      "validation": {
+        "title": "script de validação",
+        "description": "valide integridade e formato dos dados (obrigatório)"
+      },
+      "conversion": {
+        "title": "script de conversão",
+        "description": "converta dados para formato padrão (obrigatório)"
+      },
+      "testPayload": {
+        "title": "payload de teste",
+        "description": "defina payload de teste para validação"
+      },
+      "testing": {
+        "title": "testes",
+        "description": "execute e valide seus scripts"
+      },
+      "review": {
+        "title": "revisão",
+        "description": "revise toda configuração antes de salvar"
+      }
+    },
+    "step1": {
+      "fields": {
+        "name": {
+          "label": "nome",
+          "required": "nome é obrigatório"
+        },
+        "status": {
+          "label": "status",
+          "required": "status é obrigatório",
+          "options": {
+            "active": "ativo",
+            "inactive": "inativo"
+          }
+        },
+        "description": {
+          "label": "descrição"
+        },
+        "manufacturer": {
+          "label": "fabricante",
+          "required": "fabricante é obrigatório"
+        },
+        "model": {
+          "label": "modelo",
+          "required": "modelo é obrigatório"
+        },
+        "version": {
+          "label": "versão"
+        }
+      }
+    },
+    "step2": {
+      "banner": {
+        "title": "o que é caminho do id do ativo?",
+        "description": "o caminho do id do ativo é um caminho em notação de ponto que aponta para o identificador único no seu payload. este identificador é usado para identificar e rastrear seus ativos de forma única.",
+        "examples": "exemplos: payload.deviceId, payload.sensorUUID, payload.device.id"
+      },
+      "fields": {
+        "assetIdPath": {
+          "label": "caminho do id do ativo",
+          "hint": "use notação de ponto (ex: payload.deviceId)",
+          "required": "caminho do id do ativo é obrigatório",
+          "dotRequired": "deve conter pelo menos um ponto (.)"
+        }
+      }
+    },
+    "step3": {
+      "title": "script de pré-processamento (opcional)",
+      "description": "prepare e normalize dados recebidos antes da validação. esta etapa é opcional mas útil para transformação de dados.",
+      "guidelines": {
+        "title": "diretrizes do script",
+        "available": "variáveis disponíveis:",
+        "payload": "payload - o objeto de dados recebido",
+        "console": "console.log() - para saída de depuração",
+        "return": "retorno esperado: const result = payload_modificado"
+      }
+    },
+    "step4": {
+      "title": "script de validação (obrigatório)",
+      "description": "valide integridade e formato dos dados usando o validador $mv.",
+      "learnMore": "saiba mais sobre o validador $mv",
+      "guidelines": {
+        "title": "diretrizes do script",
+        "available": "variáveis disponíveis:",
+        "payload": "payload - o objeto de dados pré-processado",
+        "validator": "$mv - instância do validador mapex",
+        "return": "retorno esperado: const result = payload_validado"
+      }
+    },
+    "step5": {
+      "title": "script de conversão (obrigatório)",
+      "description": "converta dados validados para o formato standardizedpayload do MapexOS. isso garante consistência em toda a plataforma.",
+      "banner": {
+        "title": "formato standardizedpayload (obrigatório)",
+        "description": "seu script de conversão deve retornar um objeto com a seguinte estrutura:",
+        "eventType": "obrigatório - ex: 'sensor.reading', 'device.alert'",
+        "eventId": "obrigatório - identificador único para este evento",
+        "data": "obrigatório - o payload de dados real",
+        "metadata": "opcional - metadados adicionais",
+        "created": "obrigatório - timestamp iso 8601"
+      },
+      "guidelines": {
+        "title": "diretrizes do script",
+        "available": "variáveis disponíveis:",
+        "payload": "payload - o objeto de dados validado",
+        "return": "retorno esperado: objeto standardizedpayload com todos os campos obrigatórios",
+        "requiredFields": "campos obrigatórios:",
+        "eventType": "eventType - tipo do evento (string)",
+        "eventId": "eventId - identificador único do evento (string)",
+        "data": "data - payload de dados real (object)",
+        "created": "created - timestamp iso 8601 (string)",
+        "optionalFields": "campos opcionais:",
+        "metadata": "metadata - metadados adicionais (object)"
+      }
+    },
+    "step6": {
+      "title": "payload de teste",
+      "description": "defina um payload de teste que será usado para validar seus scripts na próxima etapa.",
+      "inputLabel": "entrada de teste (json)",
+      "loadExample": "carregar exemplo",
+      "loadExampleTooltip": "carregar payload de entrada de exemplo",
+      "banner": {
+        "description": "este payload será usado para testar todos os seus scripts (pré-processamento, validação, conversão e script de teste)."
+      }
+    },
+    "step7": {
+      "banner": {
+        "description": "seu script de conversão deve retornar um standardizedpayload.",
+        "viewDetails": "ver detalhes do formato"
+      },
+      "title": "executar testes de script",
+      "inputLabel": "usando payload de teste da etapa 6",
+      "modifyHint": "para modificar o payload de teste, volte para a etapa 6",
+      "runTest": "executar teste",
+      "clearResults": "limpar resultados",
+      "resultsLabel": "resultados do teste",
+      "noResults": "clique em 'executar teste' para testar seus scripts",
+      "status": {
+        "passed": "todos os testes passaram",
+        "failed": "teste falhou"
+      },
+      "output": {
+        "label": "saída final (standardizedpayload):",
+        "validFormat": "formato válido",
+        "invalidFormat": "formato inválido",
+        "invalidBanner": "a saída não corresponde ao formato standardizedpayload. campos obrigatórios: eventtype, eventid, data, created"
+      },
+      "console": {
+        "label": "saída do console:"
+      }
+    },
+    "step8": {
+      "title": "revisar configuração",
+      "description": "revise toda a configuração antes de salvar seu modelo de ativo."
+    }
+  }
+}

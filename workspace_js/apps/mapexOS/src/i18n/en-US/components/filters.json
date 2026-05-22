@@ -1,0 +1,17 @@
+{
+  "listFilter": {
+    "title": "Filters",
+    "apply": "Apply filters",
+    "clear": "Clear filters",
+    "hint": "Click on the filter icon to expand the filters and apply them.",
+    "includeChildren": "include child organizations",
+    "includeChildrenTooltip": "when enabled, results will include data from all child organizations in the hierarchy",
+    "active": "active",
+    "close": "Close",
+    "dateRange": {
+      "from": "From",
+      "to": "To",
+      "selectRange": "Select date range"
+    }
+  }
+}

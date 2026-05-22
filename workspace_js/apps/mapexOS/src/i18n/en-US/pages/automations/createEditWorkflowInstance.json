@@ -1,0 +1,99 @@
+{
+  "page": {
+    "title": "Create Workflow Instance",
+    "titleEdit": "Edit Workflow Instance",
+    "description": "Configure a workflow instance with its definition and inputs",
+    "button": "Back to instances"
+  },
+  "stepper": {
+    "title": "Instance Setup",
+    "subtitle": "Follow the steps to configure your workflow instance",
+    "requiredInfo": "Fields marked with * are required",
+    "currentStep": "Current step"
+  },
+  "steps": {
+    "step1": {
+      "label": "Identification",
+      "description": "Basic instance information"
+    },
+    "step2": {
+      "label": "Definition",
+      "description": "Select workflow definition"
+    },
+    "step3": {
+      "label": "External Inputs",
+      "description": "Configure required inputs"
+    },
+    "step4": {
+      "label": "Review",
+      "description": "Review and confirm"
+    }
+  },
+  "fields": {
+    "name": "Instance Name",
+    "namePlaceholder": "Enter a name for this instance",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe the purpose of this instance",
+    "enabled": "Enabled",
+    "enabledHint": "Enable or disable this instance",
+    "isTemplate": "Share as Template",
+    "isTemplateHint": "Share this instance with child organizations",
+    "uniqueExecution": "Unique Execution",
+    "uniqueExecutionHint": "Use a fixed UUID — only one execution at a time",
+    "workflowUUID": "Workflow UUID",
+    "workflowUUIDPlaceholder": "Enter a fixed UUID for this instance",
+    "workflowUUIDHint": "This UUID will be reused for every execution. Only one can be active at a time.",
+    "generateUUID": "Generate",
+    "allStatus": "All",
+    "active": "Active",
+    "inactive": "Inactive",
+    "definition": "Workflow Definition",
+    "definitionPlaceholder": "Click to select a workflow definition",
+    "definitionDrawerTitle": "Select Workflow Definition",
+    "definitionDrawerSearch": "Search definitions...",
+    "noExternalInputs": "This definition does not require any external inputs",
+    "externalInputsTitle": "External Inputs",
+    "externalInputsDescription": "Fill in the required inputs for this workflow definition",
+    "requiredField": "This field is required",
+    "optionalField": "Optional"
+  },
+  "review": {
+    "identification": "Identification",
+    "definition": "Workflow Definition",
+    "externalInputs": "External Inputs",
+    "name": "Name",
+    "description": "Description",
+    "enabled": "Enabled",
+    "isTemplate": "Shared as Template",
+    "version": "Version",
+    "status": "Status",
+    "noInputs": "No external inputs configured",
+    "yes": "Yes",
+    "no": "No",
+    "health": "Health",
+    "nodes": "Nodes",
+    "states": "States",
+    "inputs": "Inputs",
+    "plugins": "Plugins",
+    "coreOnly": "Core nodes only — no external plugins",
+    "deselect": "Deselect",
+    "healthValid": "Valid",
+    "healthPluginMissing": "Missing",
+    "healthInvalid": "Invalid"
+  },
+  "navigation": {
+    "previous": "Previous",
+    "next": "Next",
+    "save": "Create Instance",
+    "update": "Update Instance",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Workflow instance created successfully",
+    "updated": "Workflow instance updated successfully",
+    "loading": "Loading instance...",
+    "loadFailed": "Failed to load workflow instance",
+    "creationFailed": "Failed to create workflow instance",
+    "updateFailed": "Failed to update workflow instance"
+  }
+}

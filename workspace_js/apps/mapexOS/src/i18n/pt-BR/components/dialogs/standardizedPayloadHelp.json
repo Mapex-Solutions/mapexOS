@@ -1,0 +1,114 @@
+{
+  "header": {
+    "title": "Formato StandardizedPayload"
+  },
+  "overview": {
+    "title": "O que é StandardizedPayload?",
+    "description": "StandardizedPayload é o formato de saída obrigatório para todos os scripts de conversão de Asset Template. Ele garante que todos os dados fluindo pelo MapexOS sigam uma estrutura consistente e previsível, permitindo integração perfeita em toda a plataforma.",
+    "whyTitle": "Por que StandardizedPayload?",
+    "benefits": [
+      "Garante consistência entre todas as fontes de dados",
+      "Simplifica o processamento e roteamento de dados",
+      "Permite validação universal de dados",
+      "Facilita a interoperabilidade entre diferentes sistemas"
+    ]
+  },
+  "structure": {
+    "title": "Estrutura",
+    "copyTooltip": "Copiar estrutura para a área de transferência",
+    "comment1": "Obrigatório",
+    "comment2": "Obrigatório",
+    "comment3": "Obrigatório",
+    "comment4": "Opcional",
+    "comment5": "Obrigatório (ISO 8601)"
+  },
+  "fields": {
+    "title": "Descrição dos Campos",
+    "required": "OBRIGATÓRIO",
+    "optional": "OPCIONAL",
+    "eventType": {
+      "name": "eventType",
+      "type": "(string)",
+      "description": "Categoriza o tipo de evento sendo processado. Use uma convenção de nomenclatura hierárquica com pontos para maior clareza.",
+      "examplesTitle": "Exemplos:",
+      "examples": [
+        "\"sensor.reading\" - Leitura regular de dados do sensor",
+        "\"sensor.alert\" - Alerta do sensor",
+        "\"device.status\" - Atualização de status do dispositivo",
+        "\"gateway.connection\" - Evento de conexão do gateway"
+      ]
+    },
+    "eventId": {
+      "name": "eventId",
+      "type": "(string)",
+      "description": "Identificador único para este evento específico. Deve ser globalmente único para permitir rastreamento e deduplicação de eventos.",
+      "examplesTitle": "Exemplos:",
+      "examples": [
+        "\"SENSOR001-1705315800000\" - ID do dispositivo + timestamp",
+        "\"evt_abc123def456\" - ID gerado tipo UUID",
+        "\"reading-2024-01-15-103000\" - Formato legível com timestamp"
+      ]
+    },
+    "data": {
+      "name": "data",
+      "type": "(object)",
+      "description": "Os dados reais do payload. Deve ser um objeto não vazio contendo as leituras do sensor, informações do dispositivo ou quaisquer outros dados relevantes.",
+      "exampleTitle": "Exemplo:"
+    },
+    "metadata": {
+      "name": "metadata",
+      "type": "(object)",
+      "description": "Informações contextuais adicionais sobre o evento. Use isto para dados de nível de sistema, informações de processamento ou quaisquer metadados que não pertençam ao objeto de dados principal.",
+      "exampleTitle": "Exemplo:"
+    },
+    "created": {
+      "name": "created",
+      "type": "(string - ISO 8601)",
+      "description": "Timestamp de quando o evento foi criado ou quando os dados foram gerados. Deve estar no formato ISO 8601.",
+      "validFormatsTitle": "Formatos válidos:",
+      "formats": [
+        "\"2024-01-15T10:30:00.000Z\" - ISO 8601 completo com milissegundos (recomendado)",
+        "\"2024-01-15T10:30:00Z\" - Sem milissegundos",
+        "new Date().toISOString() - Use em JavaScript"
+      ]
+    }
+  },
+  "example": {
+    "title": "Exemplo Completo",
+    "description": "Exemplo de script de conversão que transforma dados brutos do sensor no formato StandardizedPayload:",
+    "copyTooltip": "Copiar exemplo completo para a área de transferência"
+  },
+  "mistakes": {
+    "title": "Erros Comuns",
+    "items": [
+      {
+        "label": "Campos obrigatórios ausentes",
+        "caption": "Certifique-se de que todos os campos obrigatórios (eventType, eventId, data, created) estejam presentes"
+      },
+      {
+        "label": "Objeto de dados vazio",
+        "caption": "O campo data deve conter pelo menos uma propriedade"
+      },
+      {
+        "label": "Formato de timestamp inválido",
+        "caption": "Use o formato ISO 8601: new Date().toISOString() ou \"2024-01-15T10:30:00.000Z\""
+      },
+      {
+        "label": "Tipo de dado incorreto",
+        "caption": "data e metadata devem ser objetos (não arrays ou primitivos)"
+      },
+      {
+        "label": "Não retornar o payload",
+        "caption": "Lembre-se de retornar o objeto standardPayload no final do seu script de conversão"
+      }
+    ]
+  },
+  "footer": {
+    "info": "Todos os scripts de conversão devem retornar um objeto StandardizedPayload",
+    "close": "Fechar"
+  },
+  "notifications": {
+    "copySuccess": "Código copiado para a área de transferência!",
+    "copyFail": "Falha ao copiar código"
+  }
+}

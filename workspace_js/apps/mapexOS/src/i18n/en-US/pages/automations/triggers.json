@@ -1,0 +1,101 @@
+{
+  "title": "triggers",
+  "description": "manage your global triggers to be used on rules or external triggers",
+  "listTitle": "triggers list",
+  "button": {
+    "add": "add trigger"
+  },
+  "columns": {
+    "name": "name",
+    "triggerType": "type",
+    "category": "category",
+    "status": "status"
+  },
+  "menuLabels": {
+    "singular": "trigger",
+    "plural": "triggers"
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search triggers...",
+    "allStatus": "all",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "name": "search by name",
+    "status": "status",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "category": "category",
+    "triggerType": "trigger type",
+    "options": {
+      "all": "all",
+      "yes": "yes",
+      "no": "no",
+      "active": "active",
+      "inactive": "inactive",
+      "technical": "technical",
+      "communication": "communication"
+    }
+  },
+  "addRulePage": {
+    "title": "configure triggers",
+    "description": "select and configure the triggers that will activate this rule",
+    "templateWarning": "please select at least one template in the general tab before configuring triggers",
+    "tabs": {
+      "individual": "individual triggers",
+      "groups": "trigger groups",
+      "external": "external triggers"
+    },
+    "individual": {
+      "title": "individual triggers",
+      "addTrigger": "add trigger",
+      "addTriggerTooltip": "select individual trigger template",
+      "empty": {
+        "title": "no individual triggers configured",
+        "description": "click \"add trigger\" to configure individual triggers for this rule"
+      }
+    },
+    "groups": {
+      "title": "trigger groups",
+      "addGroup": "add group",
+      "addGroupTooltip": "create new trigger group",
+      "addTriggerTooltip": "add trigger to group",
+      "deleteGroupTooltip": "delete group",
+      "groupNamePlaceholder": "group name",
+      "empty": {
+        "title": "no trigger groups configured",
+        "description": "click \"add group\" to create trigger groups for this rule",
+        "noTriggersInGroup": "no triggers in this group. click + to add triggers"
+      }
+    },
+    "external": {
+      "title": "external triggers",
+      "addTrigger": "add external trigger",
+      "addTriggerTooltip": "select external trigger template",
+      "empty": {
+        "title": "no external triggers configured",
+        "description": "click \"add external trigger\" to configure external integrations"
+      }
+    },
+    "triggerVariableField": {
+      "labels": {
+        "variable": "variable",
+        "from": "from"
+      }
+    }
+  },
+  "empty": {
+    "title": "no triggers found",
+    "description": "it seems there are no triggers matching your current search criteria or you don't have any triggers yet."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirm deletion",
+      "message": "are you sure you want to delete the trigger \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleteSuccess": "trigger deleted successfully"
+  }
+}

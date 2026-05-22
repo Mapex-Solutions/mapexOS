@@ -1,0 +1,38 @@
+export const UERS_LIST_STUB = [
+	{
+		id: 1,
+		name: 'John Doe',
+		email: 'john.doe@mapex.com',
+		company: 'Mapex Solutions',
+		avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+		role: ['administrador', 'mapex', 'chuchu'],
+		status: 'Active',
+	},
+	{
+		id: 2,
+		name: 'Jane Smith',
+		email: 'jane.smith@mapex.com',
+		company: 'Mapex Solutions',
+		avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
+		role: ['administrador'],
+		status: 'Active',
+	},
+	{
+		id: 3,
+		name: 'Robert Johnson',
+		email: 'robert.j@mapex.com',
+		company: 'Mapex Solutions',
+		avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
+		role: ['administrador', 'user', 'mapex', 'chuchu'],
+		status: 'Inactive',
+	},
+	{
+		id: 4,
+		name: 'Emily Davis',
+		email: 'emily.d@mapex.com',
+		company: 'Mapex Solutions',
+		avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
+		role: ['administrador', 'mapex', 'chuchu'],
+		status: 'Active',
+	},
+];

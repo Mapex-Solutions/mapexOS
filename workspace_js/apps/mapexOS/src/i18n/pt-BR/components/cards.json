@@ -1,0 +1,13 @@
+{
+  "dataRow": {
+    "actions": {
+      "edit": "Editar",
+      "view": "Ver detalhes",
+      "delete": "Excluir"
+    }
+  },
+  "listCardEmpty": {
+    "defaultTitle": "Nenhum item encontrado",
+    "defaultDescription": "Parece que não há itens correspondentes aos seus critérios de busca atuais, ou você ainda não possui nenhum item."
+  }
+}

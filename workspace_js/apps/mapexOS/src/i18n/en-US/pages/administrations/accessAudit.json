@@ -1,0 +1,82 @@
+{
+  "title": "access audit",
+  "description": "view and audit all access memberships across users and groups",
+  "listTitle": "memberships",
+  "itemLabel": "membership",
+  "itemLabelPlural": "memberships",
+  "info": {
+    "title": "access audit overview",
+    "description": "the Access Audit page provides a comprehensive view of all memberships in your organization. Use this page to review and audit user and group access permissions.",
+    "items": {
+      "memberships": {
+        "title": "memberships",
+        "text": "view all access grants linking users or groups to organizations with specific roles"
+      },
+      "users": {
+        "title": "user access",
+        "text": "filter by user to see all organizations and roles assigned to a specific user"
+      },
+      "groups": {
+        "title": "group access",
+        "text": "filter by group to see all organizations and roles assigned to a specific group"
+      },
+      "scope": {
+        "title": "access scope",
+        "text": "understand scope: 'local' applies to the org only, 'recursive' includes all child organizations"
+      }
+    },
+    "docsLabel": "view documentation"
+  },
+  "filters": {
+    "assigneeType": "assignee type",
+    "assigneeId": "assignee ID",
+    "roleId": "role",
+    "scope": "scope",
+    "status": "status",
+    "includeChildren": "include children",
+    "label": "filters",
+    "searchPlaceholder": "search memberships...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "filterByAssignee": "filter by assignee name...",
+    "options": {
+      "all": "all",
+      "user": "user",
+      "group": "group",
+      "local": "local",
+      "recursive": "recursive",
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "menuColumns": {
+    "organization": "organization",
+    "roles": "roles",
+    "scope": "scope"
+  },
+  "columns": {
+    "assignee": "assignee",
+    "organization": "organization",
+    "roles": "roles",
+    "scope": "scope"
+  },
+  "empty": {
+    "title": "no memberships found",
+    "description": "there are no memberships matching your filters. Try adjusting the filters or check if memberships have been created."
+  },
+  "scope": {
+    "local": "local",
+    "recursive": "recursive"
+  },
+  "assigneeType": {
+    "user": "user",
+    "group": "group"
+  },
+  "errors": {
+    "assigneeIdMissing": "Assignee ID is missing"
+  }
+}

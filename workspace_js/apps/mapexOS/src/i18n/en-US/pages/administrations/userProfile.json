@@ -1,0 +1,111 @@
+{
+  "title": "my profile",
+  "description": "manage your account settings and preferences",
+  "backButton": "back to dashboard",
+  "navigation": {
+    "personal": {
+      "label": "personal information",
+      "description": "update your personal details"
+    },
+    "password": {
+      "label": "password",
+      "description": "change your password"
+    },
+    "groupsAccess": {
+      "label": "groups & access",
+      "description": "view your groups and organization access"
+    },
+    "review": {
+      "label": "review & save",
+      "description": "review changes and save"
+    }
+  },
+  "sections": {
+    "personalInfo": "personal information",
+    "password": "change password",
+    "groupsAccess": "groups & access",
+    "profileSettings": "profile settings",
+    "review": "review & save"
+  },
+  "sectionDescriptions": {
+    "personalInfo": "update your personal details and contact information",
+    "password": "update your account password",
+    "groupsAccess": "view your groups and organization access",
+    "profileSettings": "configure your account preferences",
+    "review": "review all your changes before saving"
+  },
+  "stepper": {
+    "infoText": "select a section to configure your profile",
+    "currentSection": "current section"
+  },
+  "fields": {
+    "firstName": "first name",
+    "lastName": "last name",
+    "email": "email address",
+    "phone": "phone number",
+    "jobTitle": "job title",
+    "currentPassword": "current password",
+    "newPassword": "new password",
+    "confirmPassword": "confirm new password",
+    "required": "required"
+  },
+  "buttons": {
+    "saveChanges": "save changes",
+    "updatePassword": "update password",
+    "cancel": "cancel",
+    "save": "save"
+  },
+  "groupsAccess": {
+    "groupsTitle": "groups",
+    "groupsCount": "groups",
+    "membershipsTitle": "organization access",
+    "membershipsCount": "memberships",
+    "noGroups": "you are not a member of any group",
+    "noMemberships": "you have no organization memberships",
+    "noDescription": "no description",
+    "columns": {
+      "organization": "organization",
+      "roles": "roles",
+      "scope": "scope",
+      "via": "via"
+    }
+  },
+  "validation": {
+    "firstNameRequired": "first name is required",
+    "lastNameRequired": "last name is required",
+    "emailRequired": "email is required",
+    "emailInvalid": "please enter a valid email",
+    "currentPasswordRequired": "current password is required",
+    "newPasswordRequired": "new password is required",
+    "passwordMinLength": "password must be at least 8 characters",
+    "confirmPasswordRequired": "password confirmation is required",
+    "passwordsDoNotMatch": "passwords do not match"
+  },
+  "messages": {
+    "personalInfoUpdated": "personal information updated successfully!",
+    "passwordUpdated": "password updated successfully!",
+    "profileSaved": "profile saved successfully!",
+    "errorLoading": "failed to load profile data. Please try again."
+  },
+  "review": {
+    "title": "review your changes",
+    "subtitle": "please review your profile information before saving",
+    "sections": {
+      "personal": "personal information",
+      "password": "password",
+      "groupsAccess": "groups & access"
+    },
+    "fields": {
+      "firstName": "first name",
+      "lastName": "last name",
+      "email": "email",
+      "phone": "phone",
+      "jobTitle": "job title",
+      "passwordChanged": "password changed",
+      "yes": "yes",
+      "no": "no",
+      "groupsCount": "groups",
+      "membershipsCount": "memberships"
+    }
+  }
+}

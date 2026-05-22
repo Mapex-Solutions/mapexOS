@@ -1,0 +1,87 @@
+{
+  "pageHeader": {
+    "title": "Event Store",
+    "description": "Search and browse stored events from your assets"
+  },
+  "listHeader": {
+    "title": "Events",
+    "itemLabel": "event",
+    "itemLabelPlural": "events"
+  },
+  "filters": {
+    "label": "Filters",
+    "searchPlaceholder": "Search by reference ID...",
+    "allStatus": "All",
+    "advancedFilters": "Advanced Filters",
+    "dynamicFilters": "Dynamic Filters",
+    "pendingFilters": "Pending filters - click to apply",
+    "clearAll": "Clear all",
+    "includeChildrenOrgs": "Include child organizations",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "threadId": "Thread ID",
+    "assetId": "Asset ID",
+    "assetTemplateId": "Asset Template ID",
+    "asset": "Asset",
+    "assetTemplate": "Asset Template",
+    "assetPlaceholder": "Search asset by name...",
+    "assetTemplatePlaceholder": "Search template by name...",
+    "eventType": "Event Type",
+    "source": "Source",
+    "options": {
+      "yes": "Yes",
+      "no": "No"
+    }
+  },
+  "columns": {
+    "assetName": "Asset",
+    "templateName": "Template",
+    "threadId": "Reference ID",
+    "source": "Source",
+    "created": "Created"
+  },
+  "empty": {
+    "title": "No events found",
+    "description": "Try adjusting your filters or check back later for new events."
+  },
+  "drawer": {
+    "title": "Event Details"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "notifications": {
+    "loadFailed": "Failed to load events"
+  },
+  "tour": {
+    "header": {
+      "title": "Event Store",
+      "description": "This page shows all processed events from your assets. Events are stored with dynamic fields that you can filter and explore."
+    },
+    "searchInput": {
+      "title": "Quick Search",
+      "description": "Type an Asset ID to quickly filter events. Press Enter to apply."
+    },
+    "advancedFiltersBtn": {
+      "title": "Advanced Filters",
+      "description": "Open advanced filters to filter by date range, thread ID, source, and more."
+    },
+    "advancedFiltersOpen": {
+      "title": "Advanced Filters Drawer",
+      "description": "Here you can set time ranges, include child organizations, and filter by specific identifiers. Click Apply when done."
+    },
+    "dynamicFiltersBtn": {
+      "title": "Dynamic Filters",
+      "description": "Open dynamic filters to filter events by the specific fields defined in the Asset Template (EVA fields)."
+    },
+    "dynamicFiltersOpen": {
+      "title": "Dynamic Filters Drawer",
+      "description": "Select an Asset or Business Rule, and the system will load its template fields. You can then filter events by specific field values using operators like equals, greater than, range, and more."
+    },
+    "results": {
+      "title": "Event Results",
+      "description": "Events are displayed here with cursor-based pagination. Click on any event to view its full payload in the detail drawer."
+    }
+  }
+}

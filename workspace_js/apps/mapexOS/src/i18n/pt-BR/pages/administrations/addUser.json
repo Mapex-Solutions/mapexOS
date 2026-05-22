@@ -1,0 +1,181 @@
+{
+  "title": "adicionar usuário",
+  "titleEdit": "editar usuário",
+  "description": "criar uma nova conta de usuário",
+  "descriptionEdit": "atualizar detalhes da conta do usuário",
+  "backButton": "voltar para usuários",
+  "steps": {
+    "personal": "informações pessoais",
+    "security": "configurações de segurança",
+    "access": "configuração de acesso",
+    "review": "revisão"
+  },
+  "stepDescriptions": {
+    "personal": "informações básicas e de contato do usuário",
+    "security": "método de autenticação e configuração de senha",
+    "access": "organização, papéis e escopo de acesso",
+    "review": "revisar e confirmar detalhes do usuário"
+  },
+  "formDescriptions": {
+    "personal": "insira as informações pessoais e de contato do usuário",
+    "security": "configurar método de autenticação e configurações de segurança",
+    "access": "configurar organização e papéis do usuário",
+    "review": "revisar e confirmar detalhes do usuário antes de salvar"
+  },
+  "fields": {
+    "firstName": "primeiro nome",
+    "lastName": "sobrenome",
+    "email": "endereço de email",
+    "phone": "número de telefone",
+    "jobTitle": "cargo",
+    "enabled": "habilitado",
+    "authProvider": "método de autenticação",
+    "password": "senha",
+    "confirmPassword": "confirmar senha",
+    "changePasswordNextLogin": "exigir alteração de senha no próximo login",
+    "externalId": "ID externo",
+    "organization": "organização",
+    "roles": "papéis",
+    "group": "grupo",
+    "groups": "grupos",
+    "scope": "escopo de acesso",
+    "accessType": "tipo de acesso",
+    "selectGroup": "selecionar grupo",
+    "directMemberships": "membros diretos"
+  },
+  "labels": {
+    "optional": "opcional",
+    "recommended": "recomendado",
+    "newGroup": "novo grupo",
+    "local": "local",
+    "recursive": "recursivo"
+  },
+  "placeholders": {
+    "selectOrganization": "clique para selecionar organização...",
+    "selectOrganizationFirst": "selecione a organização primeiro",
+    "selectRoles": "clique para selecionar papéis...",
+    "selectGroup": "clique para selecionar grupo (opcional)...",
+    "noGroupsSelected": "nenhum grupo selecionado",
+    "noMembershipsSelected": "nenhuma associação direta configurada"
+  },
+  "hints": {
+    "phoneFormat": "número de telefone no formato E.164 (ex: +5511999999999)",
+    "enabled": "usuários desabilitados não podem fazer login no sistema",
+    "passwordRequirements": "mínimo de 8 caracteres",
+    "changePasswordNextLogin": "o usuário será obrigado a definir uma nova senha após o primeiro login",
+    "externalId": "o identificador único do provedor de identidade externo",
+    "organization": "a organização onde o usuário terá acesso",
+    "roles": "os papéis que definem as permissões do usuário",
+    "group": "opcionalmente atribua o usuário a um grupo para facilitar o gerenciamento",
+    "scopeLocal": "usuário só pode acessar a organização selecionada",
+    "scopeRecursive": "usuário pode acessar a organização e todas as suas sub-organizações",
+    "groupSelection": "o usuário herdará organização, papéis e escopo do grupo selecionado",
+    "groupInheritance": "o usuário herdará todas as permissões de acesso do grupo. quando o grupo for atualizado, todos os membros são atualizados automaticamente.",
+    "directWarning": "atribuição direta é mais difícil de gerenciar em escala. considere usar grupos para a maioria dos usuários. use atribuição direta apenas para casos especiais.",
+    "orgFromContext": "organização do contexto atual",
+    "multipleGroups": "usuário herdará papéis de todos os grupos selecionados",
+    "multipleMemberships": "cada associação concede papéis com seu próprio escopo"
+  },
+  "sections": {
+    "personalInfo": "informações pessoais",
+    "security": "configurações de segurança",
+    "access": "configuração de acesso",
+    "review": "revisão",
+    "progressSteps": "etapas de progresso"
+  },
+  "actions": {
+    "remove": "remover",
+    "addGroup": "adicionar grupo",
+    "addMembership": "adicionar associação",
+    "cancel": "cancelar",
+    "add": "adicionar",
+    "clearAll": "limpar todos"
+  },
+  "dialogs": {
+    "addMembership": {
+      "title": "adicionar associação direta"
+    }
+  },
+  "buttons": {
+    "back": "voltar",
+    "next": "próximo",
+    "edit": "editar",
+    "createUser": "criar usuário",
+    "updateUser": "atualizar usuário"
+  },
+  "messages": {
+    "allFieldsRequired": "todos os campos marcados com * são obrigatórios",
+    "currentStep": "etapa atual:",
+    "created": "usuário criado com sucesso!",
+    "updated": "usuário atualizado com sucesso!",
+    "createFailed": "falha ao criar usuário",
+    "updateFailed": "falha ao atualizar usuário",
+    "loadFailed": "falha ao carregar dados do usuário",
+    "emailExists": "já existe um usuário com este email",
+    "forbidden": "você não tem permissão para realizar esta ação",
+    "completeAllSteps": "complete todas as etapas para criar um novo usuário",
+    "loading": "carregando dados do usuário...",
+    "ssoInfo": "ao usar autenticação SSO, a senha do usuário é gerenciada pelo provedor de identidade. O ID externo é usado para vincular esta conta ao provedor.",
+    "notApplicable": "N/A",
+    "reviewCreateSummary": "revise as informações acima antes de criar o usuário. clique em 'criar usuário' para salvar.",
+    "reviewEditSummary": "revise as alterações acima antes de atualizar o usuário. clique em 'atualizar usuário' para salvar.",
+    "noAccessConfigured": "nenhum acesso configurado",
+    "noOrgContext": "nenhuma organização selecionada. selecione uma organização na barra lateral primeiro."
+  },
+  "status": {
+    "enabled": "habilitado",
+    "disabled": "desabilitado",
+    "yes": "sim",
+    "no": "não"
+  },
+  "tour": {
+    "overview": {
+      "title": "Etapas de Criação",
+      "description": "Este formulário é dividido em 4 etapas. Cada etapa coleta informações diferentes sobre o usuário."
+    },
+    "step1": {
+      "title": "Informações Pessoais",
+      "description": "Preencha o nome, email, telefone e cargo do usuário. Campos obrigatórios são marcados com *."
+    },
+    "step2": {
+      "title": "Configurações de Segurança",
+      "description": "Escolha o método de autenticação e configure as opções de senha."
+    },
+    "step3": {
+      "title": "Configuração de Acesso",
+      "description": "Atribua o usuário a um grupo ou configure acesso direto com papéis e escopo."
+    },
+    "step4": {
+      "title": "Revisar e Confirmar",
+      "description": "Revise todas as informações antes de salvar. Você pode voltar para editar qualquer etapa."
+    }
+  },
+  "validation": {
+    "firstNameRequired": "primeiro nome é obrigatório",
+    "firstNameMinLength": "primeiro nome deve ter pelo menos 2 caracteres",
+    "firstNameMaxLength": "primeiro nome deve ter no máximo 100 caracteres",
+    "lastNameRequired": "sobrenome é obrigatório",
+    "lastNameMinLength": "sobrenome deve ter pelo menos 2 caracteres",
+    "lastNameMaxLength": "sobrenome deve ter no máximo 100 caracteres",
+    "emailRequired": "email é obrigatório",
+    "emailInvalid": "por favor, insira um endereço de email válido",
+    "emailMaxLength": "email deve ter no máximo 254 caracteres",
+    "jobTitleMaxLength": "cargo deve ter no máximo 120 caracteres",
+    "passwordRequired": "senha é obrigatória",
+    "passwordMinLength": "senha deve ter pelo menos 8 caracteres",
+    "passwordMaxLength": "senha deve ter no máximo 72 caracteres",
+    "passwordMismatch": "as senhas não coincidem",
+    "organizationRequired": "organização é obrigatória",
+    "rolesRequired": "pelo menos um papel é obrigatório"
+  },
+  "errors": {
+    "apiNotInitialized": "API de usuários não está disponível",
+    "onboardingApiNotInitialized": "API de onboarding não está disponível",
+    "idMissing": "ID do usuário ausente"
+  },
+  "reviewLabels": {
+    "groupMode": "Modo de Grupo",
+    "newGroupName": "Nome do Novo Grupo",
+    "description": "Descrição"
+  }
+}

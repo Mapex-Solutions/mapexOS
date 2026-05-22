@@ -1,0 +1,97 @@
+{
+  "pageHeader": {
+    "title": "event tracer",
+    "description": "trace the complete journey of an event through the processing pipeline."
+  },
+  "search": {
+    "label": "Event Tracker ID",
+    "placeholder": "enter event tracker ID to trace...",
+    "button": "trace",
+    "hint": "enter the event tracker ID to see its complete journey through the pipeline"
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search by event tracker ID...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "eventTrackerId": "event tracker ID",
+    "dateRange": "date range",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include children organizations",
+    "options": {
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "phases": {
+    "ingestion": "ingestion",
+    "routing": "routing"
+  },
+  "stages": {
+    "raw": "raw event",
+    "jsExec": "JS executor",
+    "router": "router",
+    "directTrigger": "direct trigger",
+    "trigger": "trigger",
+    "saveEvent": "save event",
+    "lakeHouse": "lakehouse"
+  },
+  "stageStatus": {
+    "success": "success",
+    "failed": "failed",
+    "noData": "no data",
+    "notImplemented": "coming soon",
+    "matched": "matched",
+    "notMatched": "not matched"
+  },
+  "routing": {
+    "destinations": "destinations",
+    "routers": "routers",
+    "matched": "matched",
+    "published": "published",
+    "conditions": "conditions"
+  },
+  "timeline": {
+    "title": "event flow",
+    "executionTime": "execution time",
+    "timestamp": "timestamp",
+    "viewDetails": "view details",
+    "totalTime": "total time"
+  },
+  "drawer": {
+    "title": "stage details"
+  },
+  "empty": {
+    "title": "no results",
+    "description": "no events found for this event tracker ID. make sure the ID is correct and the event exists.",
+    "searchFirst": "enter an event tracker ID to trace",
+    "searchFirstDescription": "use the search box above to trace an event through the processing pipeline."
+  },
+  "messages": {
+    "loadFailed": "failed to trace event",
+    "invalidUuid": "please enter a valid event tracker ID",
+    "minLength": "event tracker ID must be at least 8 characters",
+    "loading": "loading trace data...",
+    "fetchingRaw": "fetching raw events...",
+    "fetchingJsExec": "fetching JS executor logs...",
+    "fetchingRouter": "fetching router logs...",
+    "fetchingTriggers": "fetching trigger logs..."
+  },
+  "summary": {
+    "title": "trace summary",
+    "stagesProcessed": "stages processed",
+    "totalExecutionTime": "total execution time",
+    "status": "status",
+    "allSuccess": "all stages successful",
+    "hasFailed": "some stages failed",
+    "totalTriggers": "total triggers"
+  },
+  "actions": {
+    "trackEvent": "track this event",
+    "viewJson": "view JSON",
+    "copyId": "copy ID",
+    "refresh": "refresh"
+  }
+}

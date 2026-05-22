@@ -1,0 +1,23 @@
+{
+  "pageHeader": {
+    "defaultDescription": "Gerencie seus {resource}",
+    "tourTooltip": "Iniciar tour guiado",
+    "infoTooltip": "Mais informações"
+  },
+  "listHeaderMenu": {
+    "itemsCount": "{count} {label}",
+    "itemsPerPage": "Itens por página",
+    "columns": "Colunas",
+    "showColumn": "Mostrar {column}",
+    "hideColumn": "Ocultar {column}",
+    "filtered": "(filtrado)",
+    "visibleColumns": "Colunas Visíveis",
+    "refresh": "Atualizar",
+    "lastUpdated": {
+      "now": "Atualizado agora",
+      "seconds": "Atualizado há {n}s",
+      "minutes": "Atualizado há {n}min",
+      "hours": "Atualizado há {n}h"
+    }
+  }
+}

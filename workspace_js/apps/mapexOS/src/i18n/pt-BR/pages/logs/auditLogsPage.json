@@ -1,0 +1,78 @@
+{
+  "pageHeader": {
+    "title": "Logs de Auditoria",
+    "description": "Visualize e analise todos os logs de auditoria da sua organização. Acompanhe ações de usuários, mudanças no sistema e modificações de recursos."
+  },
+  "listTitle": "Lista de Logs de Auditoria",
+  "itemLabel": "log",
+  "itemLabelPlural": "logs",
+  "filters": {
+    "label": "Filtros",
+    "searchPlaceholder": "Buscar por ator ou recurso...",
+    "advancedFilters": "Filtros Avançados",
+    "pendingFilters": "Filtros pendentes - clique para aplicar",
+    "clearAll": "Limpar tudo",
+    "allStatus": "Todos",
+    "status": "Status",
+    "actor": "Ator",
+    "action": "Ação",
+    "resourceType": "Tipo de Recurso",
+    "includeChildren": "Organizações Filhas",
+    "includeChildrenOrgs": "Incluir organizações filhas",
+    "dateRange": "Período",
+    "options": {
+      "success": "Sucesso",
+      "failure": "Falha",
+      "yes": "Sim",
+      "no": "Não"
+    }
+  },
+  "columns": {
+    "actor": "Ator",
+    "action": "Ação",
+    "resource": "Recurso",
+    "status": "Status",
+    "timestamp": "Timestamp"
+  },
+  "menuColumns": {
+    "action": "Ação",
+    "resource": "Recurso",
+    "timestamp": "Timestamp"
+  },
+  "statusOptions": {
+    "success": "Sucesso",
+    "failure": "Falha"
+  },
+  "actionOptions": {
+    "create": "Criar",
+    "edit": "Editar",
+    "delete": "Excluir"
+  },
+  "resourceTypeOptions": {
+    "userLog": "Log de Usuário",
+    "dataSource": "Fonte de Dados",
+    "assets": "Ativos",
+    "payloadHandler": "Manipulador de Payload",
+    "triggers": "Gatilhos",
+    "users": "Usuários",
+    "customers": "Clientes"
+  },
+  "drawer": {
+    "title": "Detalhes do Log de Auditoria"
+  },
+  "empty": {
+    "title": "Nenhum Log de Auditoria Encontrado",
+    "description": "Parece que não há logs de auditoria correspondentes aos seus critérios de busca atuais ou você ainda não possui logs de auditoria."
+  },
+  "pagination": {
+    "newer": "Mais recentes",
+    "older": "Mais antigos"
+  },
+  "messages": {
+    "loadFailed": "Falha ao carregar logs de auditoria. Por favor, tente novamente."
+  },
+  "defaults": {
+    "unknown": "Desconhecido",
+    "notAvailable": "N/D"
+  }
+}

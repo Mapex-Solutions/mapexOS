@@ -1,0 +1,114 @@
+{
+  "header": {
+    "title": "StandardizedPayload Format"
+  },
+  "overview": {
+    "title": "What is StandardizedPayload?",
+    "description": "StandardizedPayload is the required output format for all Asset Template conversion scripts. It ensures that all data flowing through MapexOS follows a consistent, predictable structure, enabling seamless integration across the platform.",
+    "whyTitle": "Why StandardizedPayload?",
+    "benefits": [
+      "Ensures consistency across all data sources",
+      "Simplifies data processing and routing",
+      "Enables universal data validation",
+      "Facilitates interoperability between different systems"
+    ]
+  },
+  "structure": {
+    "title": "Structure",
+    "copyTooltip": "Copy structure to clipboard",
+    "comment1": "Required",
+    "comment2": "Required",
+    "comment3": "Required",
+    "comment4": "Optional",
+    "comment5": "Required (ISO 8601)"
+  },
+  "fields": {
+    "title": "Field Descriptions",
+    "required": "REQUIRED",
+    "optional": "OPTIONAL",
+    "eventType": {
+      "name": "eventType",
+      "type": "(string)",
+      "description": "Categorizes the type of event being processed. Use a hierarchical naming convention with dots for clarity.",
+      "examplesTitle": "Examples:",
+      "examples": [
+        "\"sensor.reading\" - Regular sensor data reading",
+        "\"sensor.alert\" - Alert from sensor",
+        "\"device.status\" - Device status update",
+        "\"gateway.connection\" - Gateway connection event"
+      ]
+    },
+    "eventId": {
+      "name": "eventId",
+      "type": "(string)",
+      "description": "Unique identifier for this specific event. Should be globally unique to enable event tracking and deduplication.",
+      "examplesTitle": "Examples:",
+      "examples": [
+        "\"SENSOR001-1705315800000\" - Device ID + timestamp",
+        "\"evt_abc123def456\" - Generated UUID-like ID",
+        "\"reading-2024-01-15-103000\" - Human-readable with timestamp"
+      ]
+    },
+    "data": {
+      "name": "data",
+      "type": "(object)",
+      "description": "The actual payload data. Must be a non-empty object containing the sensor readings, device information, or any other relevant data.",
+      "exampleTitle": "Example:"
+    },
+    "metadata": {
+      "name": "metadata",
+      "type": "(object)",
+      "description": "Additional contextual information about the event. Use this for system-level data, processing information, or any metadata that doesn't belong in the main data object.",
+      "exampleTitle": "Example:"
+    },
+    "created": {
+      "name": "created",
+      "type": "(string - ISO 8601)",
+      "description": "Timestamp when the event was created or when the data was generated. Must be in ISO 8601 format.",
+      "validFormatsTitle": "Valid formats:",
+      "formats": [
+        "\"2024-01-15T10:30:00.000Z\" - Full ISO 8601 with milliseconds (recommended)",
+        "\"2024-01-15T10:30:00Z\" - Without milliseconds",
+        "new Date().toISOString() - Use in JavaScript"
+      ]
+    }
+  },
+  "example": {
+    "title": "Complete Example",
+    "description": "Example conversion script that transforms raw sensor data into StandardizedPayload format:",
+    "copyTooltip": "Copy complete example to clipboard"
+  },
+  "mistakes": {
+    "title": "Common Mistakes",
+    "items": [
+      {
+        "label": "Missing required fields",
+        "caption": "Ensure all required fields (eventType, eventId, data, created) are present"
+      },
+      {
+        "label": "Empty data object",
+        "caption": "The data field must contain at least one property"
+      },
+      {
+        "label": "Invalid timestamp format",
+        "caption": "Use ISO 8601 format: new Date().toISOString() or \"2024-01-15T10:30:00.000Z\""
+      },
+      {
+        "label": "Wrong data type",
+        "caption": "data and metadata must be objects (not arrays or primitives)"
+      },
+      {
+        "label": "Not returning the payload",
+        "caption": "Remember to return the standardPayload object at the end of your conversion script"
+      }
+    ]
+  },
+  "footer": {
+    "info": "All conversion scripts must return a StandardizedPayload object",
+    "close": "Close"
+  },
+  "notifications": {
+    "copySuccess": "Code copied to clipboard!",
+    "copyFail": "Failed to copy code"
+  }
+}

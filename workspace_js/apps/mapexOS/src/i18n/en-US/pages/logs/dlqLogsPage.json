@@ -1,0 +1,101 @@
+{
+  "pageHeader": {
+    "title": "Dead Letter Queue",
+    "description": "View failed messages from all services that could not be processed after retries."
+  },
+  "listTitle": "DLQ Entries",
+  "itemLabel": "DLQ entry",
+  "itemLabelPlural": "DLQ entries",
+  "sidebar": {
+    "searchPlaceholder": "Search by service...",
+    "searchErrorPlaceholder": "Search by error...",
+    "allFailures": "All Failures",
+    "byService": "By Service",
+    "noServiceTypes": "No service types found",
+    "infoBanner": "DLQ entries are messages that failed all retry attempts and need manual investigation."
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search by service name...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "dateRange": "date range",
+    "startDate": "start date",
+    "endDate": "end date",
+    "serviceName": "service name",
+    "serviceType": "service type",
+    "eventType": "event type",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "options": {
+      "all": "all",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "columns": {
+    "serviceName": "Service",
+    "serviceType": "Type",
+    "eventType": "Event Type",
+    "errorCount": "Errors",
+    "consumerName": "Consumer",
+    "totalDeliveries": "Deliveries",
+    "timestamp": "Timestamp"
+  },
+  "detail": {
+    "backToList": "Back to list",
+    "copyContent": "Copy content",
+    "unknownError": "Unknown error",
+    "errors": "Errors",
+    "deliveries": "Deliveries",
+    "duration": "Duration",
+    "retention": "Retention",
+    "searchHint": "Ctrl+F to search",
+    "tabs": {
+      "payload": "Payload",
+      "headers": "Headers",
+      "error": "Error"
+    },
+    "fallback": {
+      "empty": "(empty)",
+      "noHeaders": "(no headers)",
+      "noErrorMessage": "(no error message)"
+    }
+  },
+  "list": {
+    "errorsTooltip": "{count} errors",
+    "unknownError": "Unknown error"
+  },
+  "datePresets": {
+    "today": "Today",
+    "all": "All"
+  },
+  "time": {
+    "justNow": "just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago"
+  },
+  "empty": {
+    "title": "No DLQ Entries Found",
+    "description": "There are no dead letter queue entries matching your criteria."
+  },
+  "pagination": {
+    "newer": "Newer",
+    "older": "Older"
+  },
+  "actions": {
+    "refresh": "Refresh"
+  },
+  "messages": {
+    "loadFailed": "Failed to load DLQ entries",
+    "copied": "Copied to clipboard",
+    "copyFailed": "Copy failed"
+  },
+  "defaults": {
+    "unknown": "Unknown",
+    "notAvailable": "N/A"
+  }
+}

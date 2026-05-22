@@ -1,0 +1,30 @@
+{
+	"page": {
+		"title": "Políticas de retenção",
+		"description": "Controle por quanto tempo o histórico de eventos é mantido no ClickHouse."
+	},
+	"columns": {
+		"type": "Tabela",
+		"name": "Nome da política",
+		"retentionDays": "TTL (dias)",
+		"enabled": "Ativa"
+	},
+	"actions": {
+		"save": "Salvar",
+		"cancel": "Cancelar"
+	},
+	"messages": {
+		"saveSuccess": "Política de retenção atualizada",
+		"saveError": "Falha ao atualizar política de retenção"
+	},
+	"validation": {
+		"ttlRange": "Deve estar entre {min} e {max} dias"
+	},
+	"specialTypes": {
+		"asset_status_history": "Histórico de Conectividade de Ativos"
+	},
+	"empty": {
+		"title": "Sem políticas de retenção",
+		"description": "Nenhuma política de retenção configurada para este escopo."
+	}
+}

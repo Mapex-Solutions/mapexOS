@@ -1,0 +1,101 @@
+{
+  "title": "gatilhos",
+  "description": "gerencie seus gatilhos globais para serem usados em regras ou gatilhos externos",
+  "listTitle": "lista de gatilhos",
+  "button": {
+    "add": "adicionar gatilho"
+  },
+  "columns": {
+    "name": "nome",
+    "triggerType": "tipo",
+    "category": "categoria",
+    "status": "status"
+  },
+  "menuLabels": {
+    "singular": "gatilho",
+    "plural": "gatilhos"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "pesquisar gatilhos...",
+    "allStatus": "todos",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "name": "pesquisar por nome",
+    "status": "status",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "category": "categoria",
+    "triggerType": "tipo de gatilho",
+    "options": {
+      "all": "todos",
+      "yes": "sim",
+      "no": "não",
+      "active": "ativo",
+      "inactive": "inativo",
+      "technical": "técnico",
+      "communication": "comunicação"
+    }
+  },
+  "addRulePage": {
+    "title": "configurar gatilhos",
+    "description": "selecione e configure os gatilhos que ativarão esta regra",
+    "templateWarning": "por favor, selecione pelo menos um template na aba geral antes de configurar os gatilhos",
+    "tabs": {
+      "individual": "gatilhos individuais",
+      "groups": "grupos de gatilhos",
+      "external": "gatilhos externos"
+    },
+    "individual": {
+      "title": "gatilhos individuais",
+      "addTrigger": "adicionar gatilho",
+      "addTriggerTooltip": "selecionar template de gatilho individual",
+      "empty": {
+        "title": "nenhum gatilho individual configurado",
+        "description": "clique em \"adicionar gatilho\" para configurar gatilhos individuais para esta regra"
+      }
+    },
+    "groups": {
+      "title": "grupos de gatilhos",
+      "addGroup": "adicionar grupo",
+      "addGroupTooltip": "criar novo grupo de gatilhos",
+      "addTriggerTooltip": "adicionar gatilho ao grupo",
+      "deleteGroupTooltip": "excluir grupo",
+      "groupNamePlaceholder": "nome do grupo",
+      "empty": {
+        "title": "nenhum grupo de gatilhos configurado",
+        "description": "clique em \"adicionar grupo\" para criar grupos de gatilhos para esta regra",
+        "noTriggersInGroup": "nenhum gatilho neste grupo. clique em + para adicionar gatilhos"
+      }
+    },
+    "external": {
+      "title": "gatilhos externos",
+      "addTrigger": "adicionar gatilho externo",
+      "addTriggerTooltip": "selecionar template de gatilho externo",
+      "empty": {
+        "title": "nenhum gatilho externo configurado",
+        "description": "clique em \"adicionar gatilho externo\" para configurar integrações externas"
+      }
+    },
+    "triggerVariableField": {
+      "labels": {
+        "variable": "variável",
+        "from": "de"
+      }
+    }
+  },
+  "empty": {
+    "title": "nenhum gatilho encontrado",
+    "description": "parece que não há gatilhos correspondentes aos seus critérios de pesquisa atuais ou você ainda não tem nenhum gatilho."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirmar exclusão",
+      "message": "tem certeza de que deseja excluir o gatilho \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleteSuccess": "gatilho excluído com sucesso"
+  }
+}

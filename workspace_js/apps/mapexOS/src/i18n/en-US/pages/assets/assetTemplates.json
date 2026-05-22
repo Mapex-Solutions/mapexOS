@@ -1,0 +1,362 @@
+{
+  "pageHeader": {
+    "title": "asset template",
+    "description": "maintain asset templates and their associated processing handlers.",
+    "button": "add asset template",
+    "info": {
+      "title": "What is an Asset Template?",
+      "description": "An Asset Template defines the blueprint for creating assets, including data structure, processing rules, validation logic, and conversion scripts. Templates ensure consistency and enable automated data handling across similar device types.",
+      "items": {
+        "reusability": {
+          "title": "Reusable Blueprint",
+          "text": "Create one template and use it for multiple assets of the same type, ensuring consistency"
+        },
+        "processing": {
+          "title": "Data Processing",
+          "text": "Define processor, validator, and conversion scripts to handle incoming data automatically"
+        },
+        "manufacturer": {
+          "title": "Device Specification",
+          "text": "Associate templates with manufacturer, model, and version for precise device identification"
+        },
+        "systemTemplates": {
+          "title": "System Templates",
+          "text": "Pre-built templates provided by MapexOS for common device types and protocols"
+        },
+        "customization": {
+          "title": "Custom Templates",
+          "text": "Create custom templates tailored to your specific device requirements and data formats"
+        }
+      },
+      "docsLabel": "View Complete Documentation"
+    }
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search templates...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "name": "search by name",
+    "category": "category",
+    "manufacturer": "manufacturer",
+    "model": "model",
+    "status": "status",
+    "isSystem": "template type",
+    "isTemplate": "template source",
+    "includeChildren": "include child organizations",
+    "filterByCategory": "filter by category",
+    "filterByManufacturer": "filter by manufacturer",
+    "filterByModel": "filter by model",
+    "statusOptions": {
+      "all": "all",
+      "active": "active",
+      "inactive": "inactive",
+      "enabled": "enabled",
+      "disabled": "disabled"
+    },
+    "isSystemOptions": {
+      "all": "all",
+      "system": "system",
+      "custom": "custom"
+    },
+    "isTemplateOptions": {
+      "all": "all",
+      "templates": "shared",
+      "local": "local"
+    },
+    "includeChildrenOptions": {
+      "all": "all",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "listHeader": {
+    "title": "asset template list",
+    "itemLabel": "asset template",
+    "itemLabelPlural": "asset templates"
+  },
+  "columns": {
+    "name": "name",
+    "organization": "organization",
+    "manufacturer": "manufacturer",
+    "model": "model",
+    "version": "version",
+    "scripts": "scripts",
+    "customScripts": "custom scripts",
+    "templateType": "template type",
+    "templateSource": "template source"
+  },
+  "menuColumns": {
+    "organization": "organization",
+    "manufacturerModel": "manufacturer/model",
+    "version": "version",
+    "templateType": "template type",
+    "templateSource": "template source"
+  },
+  "scripts": {
+    "format": "{count}/3 scripts"
+  },
+  "empty": {
+    "title": "no assets template found",
+    "description": "it seems there are no assets template matching your current search criteria or you don't have any asset template yet."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirm deletion",
+      "message": "are you sure you want to delete the asset template \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleted": "asset template deleted successfully",
+    "deleteError": "error deleting asset template",
+    "systemTemplateEdit": "system templates cannot be edited",
+    "systemTemplateDelete": "system templates cannot be deleted",
+    "sharedTemplateEdit": "shared templates from other organizations cannot be edited",
+    "sharedTemplateDelete": "shared templates from other organizations cannot be deleted"
+  },
+  "errors": {
+    "apiNotInitialized": "Assets API is not available",
+    "idMissing": "Asset Template ID is missing"
+  },
+  "actions": {
+    "edit": "edit",
+    "view": "view",
+    "delete": "delete"
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "drawer": {
+    "title": "template details",
+    "close": "close",
+    "edit": "edit",
+    "duplicate": "duplicate",
+    "loading": "loading template details...",
+    "error": "failed to load template details",
+    "systemTemplateWarning": "this is a system template and cannot be modified or deleted",
+    "systemTemplateTooltip": "system templates cannot be edited",
+    "sections": {
+      "basicInfo": "basic information",
+      "configuration": "configuration",
+      "scripts": "scripts",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "status": "status",
+      "description": "description",
+      "isSystem": "system template",
+      "manufacturer": "manufacturer",
+      "model": "model",
+      "version": "version",
+      "assetIdPath": "asset id path",
+      "scriptTest": "test script",
+      "scriptProcessor": "processor script",
+      "scriptValidator": "validator script",
+      "scriptConversion": "conversion script",
+      "scriptsSummary": "scripts summary",
+      "created": "created",
+      "updated": "updated"
+    },
+    "empty": {
+      "description": "no description provided"
+    },
+    "system": {
+      "yes": "yes",
+      "no": "no"
+    },
+    "scripts": {
+      "configured": "configured",
+      "notConfigured": "not configured"
+    },
+    "scriptViewer": {
+      "viewScript": "view script",
+      "copyScript": "copy script",
+      "close": "close",
+      "copySuccess": "script copied to clipboard",
+      "copyFail": "failed to copy script"
+    }
+  },
+  "addForm": {
+    "pageHeader": {
+      "title": "asset template",
+      "description": "create a new asset template with data processing scripts",
+      "backButton": "back to templates"
+    },
+    "stepper": {
+      "title": "configure asset template",
+      "subtitle": "complete all steps to create a new template"
+    },
+    "steps": {
+      "basicInfo": {
+        "title": "basic information",
+        "description": "add template name, manufacturer, and device details"
+      },
+      "assetIdPath": {
+        "title": "asset id path",
+        "description": "define the path to identify your assets"
+      },
+      "preprocessor": {
+        "title": "preprocessor script",
+        "description": "prepare and normalize incoming data (optional)"
+      },
+      "validation": {
+        "title": "validation script",
+        "description": "validate data integrity and format (required)"
+      },
+      "conversion": {
+        "title": "conversion script",
+        "description": "convert data to standard format (required)"
+      },
+      "testPayload": {
+        "title": "test payload",
+        "description": "define test payload for validation"
+      },
+      "testing": {
+        "title": "testing",
+        "description": "execute and validate your scripts"
+      },
+      "review": {
+        "title": "review",
+        "description": "review all configuration before saving"
+      }
+    },
+    "step1": {
+      "fields": {
+        "name": {
+          "label": "name",
+          "required": "name is required"
+        },
+        "status": {
+          "label": "status",
+          "required": "status is required",
+          "options": {
+            "active": "active",
+            "inactive": "inactive"
+          }
+        },
+        "description": {
+          "label": "description"
+        },
+        "manufacturer": {
+          "label": "manufacturer",
+          "required": "manufacturer is required"
+        },
+        "model": {
+          "label": "model",
+          "required": "model is required"
+        },
+        "version": {
+          "label": "version"
+        }
+      }
+    },
+    "step2": {
+      "banner": {
+        "title": "what is asset id path?",
+        "description": "the asset id path is a dot-notation path that points to the unique identifier in your incoming payload. this identifier is used to uniquely identify and track your assets.",
+        "examples": "examples: payload.deviceId, payload.sensorUUID, payload.device.id"
+      },
+      "fields": {
+        "assetIdPath": {
+          "label": "asset id path",
+          "hint": "use dot notation (e.g., payload.deviceId)",
+          "required": "asset id path is required",
+          "dotRequired": "must contain at least one dot (.)"
+        }
+      }
+    },
+    "step3": {
+      "title": "preprocessor script (optional)",
+      "description": "prepare and normalize incoming data before validation. this step is optional but useful for data transformation.",
+      "guidelines": {
+        "title": "script guidelines",
+        "available": "available variables:",
+        "payload": "payload - the incoming data object",
+        "console": "console.log() - for debugging output",
+        "return": "expected return: const result = modified_payload"
+      }
+    },
+    "step4": {
+      "title": "validation script (required)",
+      "description": "validate data integrity and format using the $mv validator.",
+      "learnMore": "learn more about $mv validator",
+      "guidelines": {
+        "title": "script guidelines",
+        "available": "available variables:",
+        "payload": "payload - the preprocessed data object",
+        "validator": "$mv - mapex validator instance",
+        "return": "expected return: const result = validated_payload"
+      }
+    },
+    "step5": {
+      "title": "conversion script (required)",
+      "description": "convert validated data to MapexOS standardizedpayload format. this ensures consistency across the platform.",
+      "banner": {
+        "title": "standardizedpayload format (required)",
+        "description": "your conversion script must return an object with the following structure:",
+        "eventType": "required - e.g., 'sensor.reading', 'device.alert'",
+        "eventId": "required - unique identifier for this event",
+        "data": "required - the actual data payload",
+        "metadata": "optional - additional metadata",
+        "created": "required - iso 8601 timestamp"
+      },
+      "guidelines": {
+        "title": "script guidelines",
+        "available": "available variables:",
+        "payload": "payload - the validated data object",
+        "return": "expected return: standardizedpayload object with all required fields",
+        "requiredFields": "required fields:",
+        "eventType": "eventType - type of event (string)",
+        "eventId": "eventId - unique event identifier (string)",
+        "data": "data - actual data payload (object)",
+        "created": "created - iso 8601 timestamp (string)",
+        "optionalFields": "optional fields:",
+        "metadata": "metadata - additional metadata (object)"
+      }
+    },
+    "step6": {
+      "title": "test payload",
+      "description": "define a test payload that will be used to validate your scripts in the next step.",
+      "inputLabel": "test input (json)",
+      "loadExample": "load example",
+      "loadExampleTooltip": "load example input payload",
+      "banner": {
+        "description": "this payload will be used to test all your scripts (preprocessor, validation, conversion, and test script)."
+      }
+    },
+    "step7": {
+      "banner": {
+        "description": "your conversion script must return a standardizedpayload.",
+        "viewDetails": "view format details"
+      },
+      "title": "execute script tests",
+      "inputLabel": "using test payload from step 6",
+      "modifyHint": "to modify the test payload, go back to step 6",
+      "runTest": "run test",
+      "clearResults": "clear results",
+      "resultsLabel": "test results",
+      "noResults": "click 'run test' to test your scripts",
+      "status": {
+        "passed": "all tests passed",
+        "failed": "test failed"
+      },
+      "output": {
+        "label": "final output (standardizedpayload):",
+        "validFormat": "valid format",
+        "invalidFormat": "invalid format",
+        "invalidBanner": "the output does not match the standardizedpayload format. required fields: eventtype, eventid, data, created"
+      },
+      "console": {
+        "label": "console output:"
+      }
+    },
+    "step8": {
+      "title": "review configuration",
+      "description": "review all configuration before saving your asset template."
+    }
+  }
+}

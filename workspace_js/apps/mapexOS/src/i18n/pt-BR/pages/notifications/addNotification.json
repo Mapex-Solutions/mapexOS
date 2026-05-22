@@ -1,0 +1,42 @@
+{
+  "title": "canal",
+  "description": "adicionar novo canal de notificação",
+  "backButton": "voltar para notificações",
+  "steps": {
+    "general": "informações gerais",
+    "configuration": "configuração específica",
+    "review": "revisão"
+  },
+  "stepDescriptions": {
+    "general": "informações básicas do canal",
+    "configuration": "configurar configurações do canal",
+    "review": "revisar e confirmar detalhes do canal"
+  },
+  "formDescriptions": {
+    "general": "insira as informações básicas do canal",
+    "configuration": "configure as configurações específicas do canal",
+    "review": "revise e confirme os detalhes do canal antes da criação"
+  },
+  "stepper": {
+    "title": "configurar canal de notificação",
+    "subtitle": "complete todas as etapas para criar um novo canal de notificação"
+  },
+  "fields": {
+    "type": "tipo",
+    "name": "nome",
+    "description": "descrição",
+    "status": "status",
+    "created": "criado"
+  },
+  "errors": {
+    "unsupportedType": "tipo de notificação não suportado"
+  },
+  "review": {
+    "generalInformation": "informações gerais",
+    "type": "tipo",
+    "name": "nome",
+    "status": "status",
+    "description": "descrição",
+    "created": "criado"
+  }
+}

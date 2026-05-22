@@ -1,0 +1,63 @@
+{
+  "title": "lakehouse",
+  "description": "gerencie seu lakehouse",
+  "listTitle": "lista de lakehouses",
+  "button": {
+    "add": "adicionar lakehouse"
+  },
+  "columns": {
+    "name": "nome",
+    "bucket": "bucket",
+    "region": "região",
+    "maxSize": "tamanho máximo",
+    "frequency": "frequência",
+    "status": "status"
+  },
+  "menuLabels": {
+    "singular": "lakehouse",
+    "plural": "lakehouses"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "pesquisar lakehouses...",
+    "allStatus": "todos",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "name": "buscar por nome",
+    "type": "tipo",
+    "region": "região",
+    "status": "status",
+    "includeChildren": "organizações filhas",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "options": {
+      "all": "todos",
+      "yes": "sim",
+      "no": "não",
+      "active": "ativo",
+      "inactive": "inativo",
+      "awsS3": "AWS S3",
+      "azureBlob": "Azure Blob",
+      "gcpStorage": "GCP Storage",
+      "minio": "MinIO"
+    }
+  },
+  "empty": {
+    "title": "nenhum lakehouse encontrado",
+    "description": "parece que não há lakehouses correspondentes aos seus critérios de pesquisa atuais ou você ainda não tem nenhum lakehouse."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirmar exclusão",
+      "message": "tem certeza de que deseja excluir o lakehouse \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleteSuccess": "lakehouse excluído com sucesso"
+  },
+  "status": {
+    "active": "ativo",
+    "inactive": "inativo",
+    "notAvailable": "n/d"
+  }
+}

@@ -1,0 +1,70 @@
+// ─── WORKFLOW UTILITY CLASSES ─────────────────────────────────
+// Shared .mapex-wf-* classes for config panels and plugin components.
+// Replaces duplicated scoped CSS across 10+ config files.
+
+// Section label — UPPERCASE small label for config sections
+.mapex-wf-section-label {
+  font-size: var(--mapex-font-xs);
+  font-weight: var(--mapex-font-weight-bold);
+  letter-spacing: 0.5px;
+  color: var(--mapex-text-secondary);
+  margin-bottom: var(--mapex-spacing-sm);
+  text-transform: uppercase;
+}
+
+// Hint — small muted helper text below inputs
+.mapex-wf-hint {
+  font-size: var(--mapex-font-sm);
+  color: var(--mapex-text-muted);
+  margin-top: var(--mapex-spacing-sm);
+  line-height: var(--mapex-line-height-base);
+}
+
+// Info banner — tinted box with primary background
+.mapex-wf-info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mapex-spacing-md);
+  padding: var(--mapex-spacing-md) var(--mapex-spacing-lg);
+  border-radius: var(--mapex-radius-md);
+  background: var(--mapex-wf-tint-2);
+  border: 1px solid var(--mapex-wf-tint-border);
+  font-size: var(--mapex-font-sm);
+  color: var(--mapex-text-secondary);
+  line-height: var(--mapex-line-height-base);
+}
+
+// Color swatch — clickable color circle for palette selection
+.mapex-wf-color-swatch {
+  width: var(--mapex-spacing-2xl);
+  height: var(--mapex-spacing-2xl);
+  border-radius: var(--mapex-radius-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--mapex-transition-fast);
+
+  &--active {
+    border-color: var(--mapex-wf-text-on-accent);
+    box-shadow: var(--mapex-wf-selection-ring);
+  }
+}
+
+// Empty state — centered placeholder for empty lists
+.mapex-wf-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--mapex-spacing-2xl) var(--mapex-spacing-xl);
+  text-align: center;
+  color: var(--mapex-text-muted);
+}
+
+// Inline code tag — monospace snippet
+.mapex-wf-code {
+  font-family: 'Roboto Mono', monospace;
+  font-size: var(--mapex-font-xs);
+  background: var(--mapex-wf-tint-2);
+  padding: 1px var(--mapex-spacing-xs);
+  border-radius: var(--mapex-radius-xs);
+}

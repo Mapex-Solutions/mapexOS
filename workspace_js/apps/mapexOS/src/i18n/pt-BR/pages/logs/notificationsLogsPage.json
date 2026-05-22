@@ -1,0 +1,70 @@
+{
+  "pageHeader": {
+    "title": "Logs de Notificações",
+    "description": "Veja todos os logs de execução de notificações da sua organização."
+  },
+  "listTitle": "Lista de Logs de Notificações",
+  "itemLabel": "log de notificação",
+  "itemLabelPlural": "logs de notificações",
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar por nome da notificação...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "allStatus": "todos",
+    "name": "nome da notificação",
+    "status": "status",
+    "notificationType": "tipo de notificação",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "options": {
+      "success": "sucesso",
+      "failure": "falha",
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "notificationTypeOptions": {
+    "slack": "Slack",
+    "teams": "Teams",
+    "email": "Email",
+    "push": "Push",
+    "telegram": "Telegram",
+    "webhook": "Webhook"
+  },
+  "columns": {
+    "notificationName": "Nome da Notificação",
+    "notificationType": "Tipo",
+    "tenantId": "Tenant",
+    "status": "Status",
+    "created": "Criado"
+  },
+  "menuColumns": {
+    "notificationType": "tipo",
+    "tenantId": "tenant",
+    "created": "criado"
+  },
+  "statusBadge": {
+    "success": "SUCESSO",
+    "failure": "FALHA"
+  },
+  "drawer": {
+    "title": "Detalhes da Notificação"
+  },
+  "empty": {
+    "title": "Nenhum Log de Notificação Encontrado",
+    "description": "Parece que não há logs de notificação correspondendo aos seus critérios de busca ou você ainda não possui nenhum log de notificação."
+  },
+  "pagination": {
+    "newer": "Mais Recentes",
+    "older": "Mais Antigos"
+  },
+  "messages": {
+    "loadFailed": "Falha ao carregar logs de notificações"
+  },
+  "defaults": {
+    "unknown": "Desconhecido",
+    "notAvailable": "N/D"
+  }
+}

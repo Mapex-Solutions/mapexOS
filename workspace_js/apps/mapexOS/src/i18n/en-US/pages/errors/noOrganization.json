@@ -1,0 +1,9 @@
+{
+  "title": "no organization access",
+  "description": "you are not associated with any organization",
+  "message": "your account is not currently associated with any organization in the system. please contact your system administrator to request access.",
+  "actions": {
+    "logout": "logout",
+    "support": "contact support"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "pageHeader": {
+    "title": "Router Logs",
+    "description": "View and analyze router execution logs. Each entry shows how events were routed through RouteGroups to their destinations."
+  },
+  "listTitle": "Router Events",
+  "itemLabel": "event",
+  "itemLabelPlural": "events",
+  "filters": {
+    "label": "Filters",
+    "searchPlaceholder": "Search by UUID...",
+    "advancedFilters": "Advanced Filters",
+    "pendingFilters": "Pending filters - click to apply",
+    "clearAll": "Clear all",
+    "allStatus": "All",
+    "dateRange": "Date Range",
+    "status": "Status",
+    "uuid": "UUID",
+    "assetId": "Asset ID",
+    "assetIdPlaceholder": "Enter asset ID...",
+    "routerId": "RouteGroup ID",
+    "routerIdPlaceholder": "Enter RouteGroup ID...",
+    "includeChildren": "Child Organizations",
+    "includeChildrenOrgs": "Include child organizations",
+    "options": {
+      "yes": "Yes",
+      "no": "No"
+    }
+  },
+  "columns": {
+    "routeGroup": "RouteGroup",
+    "uuid": "UUID",
+    "status": "Status",
+    "totalRouters": "Total",
+    "matchedCount": "Matched",
+    "publishedCount": "Published",
+    "timestamp": "Timestamp"
+  },
+  "statusOptions": {
+    "success": "Success",
+    "failed": "Failed"
+  },
+  "statusBadge": {
+    "success": "SUCCESS",
+    "failed": "FAILED"
+  },
+  "drawer": {
+    "title": "Router Event Details",
+    "subtitleSuccess": "Routing successful",
+    "subtitleFailed": "Routing failed"
+  },
+  "empty": {
+    "title": "No Router Events",
+    "description": "No router events found for the selected filters. Try adjusting your date range or filters."
+  },
+  "pagination": {
+    "newer": "Newer",
+    "older": "Older"
+  },
+  "messages": {
+    "loadFailed": "Failed to load router events. Please try again."
+  },
+  "defaults": {
+    "unknown": "Unknown",
+    "notAvailable": "N/A"
+  }
+}

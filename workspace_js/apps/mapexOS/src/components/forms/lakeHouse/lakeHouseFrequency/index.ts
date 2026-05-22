@@ -1,0 +1,1 @@
+export { default as LakeHouseFrequency } from './LakeHouseFrequency.vue';

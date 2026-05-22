@@ -1,0 +1,125 @@
+{
+  "pageHeader": {
+    "title": "instâncias de workflow",
+    "description": "gerencie bindings de workflow — vincule templates de workflow com inputs preenchidos"
+  },
+  "page": {
+    "listTitle": "lista de instâncias",
+    "itemLabel": "instância",
+    "itemLabelPlural": "instâncias",
+    "addButton": "nova instância",
+    "info": {
+      "title": "O que é uma Instância de Workflow?",
+      "description": "Uma Instância de Workflow vincula um template de workflow a valores de input específicos. Quando acionada, o workflow executa com esses inputs pré-configurados.",
+      "items": {
+        "binding": { "title": "Binding de Template", "text": "Vincule um template de workflow com inputs externos preenchidos" },
+        "inputs": { "title": "Inputs Dinâmicos", "text": "Preencha inputs definidos pelo designer do workflow — strings, números, assets, etc." },
+        "trigger": { "title": "Pronto para Trigger", "text": "Uma vez criada, instâncias ficam prontas para serem acionadas por eventos, timers ou HTTP" },
+        "reuse": { "title": "Reutilizável", "text": "Crie múltiplas instâncias do mesmo workflow com valores de input diferentes" }
+      },
+      "docsLabel": "ver documentação completa"
+    }
+  },
+  "buttons": {
+    "newInstance": "nova instância",
+    "createInstance": "criar instância"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar instâncias...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes — clique para aplicar",
+    "clearAll": "limpar todos",
+    "allStatus": "todos",
+    "instanceName": "nome da instância",
+    "status": "status",
+    "workflow": "workflow",
+    "allWorkflows": "todos os workflows",
+    "uniqueExecution": "execução única",
+    "options": {
+      "all": "todos",
+      "enabled": "ativo",
+      "disabled": "desativado",
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "columns": {
+    "name": "nome",
+    "description": "descrição",
+    "definition": "definição",
+    "inputsCount": "inputs",
+    "unique": "único",
+    "uniqueYes": "único",
+    "uniqueNo": "N/A",
+    "uniqueNoTooltip": "UUID dinâmico — novo ID a cada execução"
+  },
+  "menuColumns": {
+    "definitionName": "definição",
+    "inputsCount": "quantidade de inputs",
+    "uniqueExecution": "execução única"
+  },
+  "status": {
+    "enabled": "ativo",
+    "disabled": "desativado"
+  },
+  "empty": {
+    "title": "nenhuma instância encontrada",
+    "description": "não há instâncias de workflow correspondentes aos seus critérios de busca atuais."
+  },
+  "emptyState": {
+    "title": "nenhuma instância ainda",
+    "description": "crie sua primeira instância de workflow para vincular um template com valores de input"
+  },
+  "badges": {
+    "active": "ativo",
+    "disabled": "desativado"
+  },
+  "messages": {
+    "deletedSuccessfully": "instância excluída com sucesso",
+    "confirmDelete": "tem certeza que deseja excluir a instância \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirmar exclusão"
+  },
+  "executeResult": {
+    "title": "Resultado da Execução",
+    "executing": "Executando workflow...",
+    "statusLabel": "Status",
+    "uuidLabel": "UUID",
+    "viewExecutionsButton": "Ver Execuções"
+  },
+  "drawer": {
+    "title": "detalhes da instância",
+    "close": "fechar",
+    "edit": "editar instância",
+    "loading": "carregando detalhes da instância...",
+    "error": "falha ao carregar detalhes da instância",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "workflow": "workflow vinculado",
+      "inputs": "inputs configurados",
+      "timestamps": "datas"
+    },
+    "fields": {
+      "name": "nome",
+      "description": "descrição",
+      "status": "status",
+      "unique": "execução única",
+      "instanceUUID": "UUID da instância",
+      "definition": "definição",
+      "version": "versão",
+      "inputsCount": "inputs",
+      "noInputs": "nenhum input externo configurado",
+      "created": "criado",
+      "updated": "atualizado"
+    },
+    "values": {
+      "enabled": "ativo",
+      "disabled": "desativado",
+      "unique": "único",
+      "notApplicable": "N/A",
+      "noDescription": "sem descrição fornecida"
+    }
+  }
+}

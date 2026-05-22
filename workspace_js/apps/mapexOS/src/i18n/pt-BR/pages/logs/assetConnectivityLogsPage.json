@@ -1,0 +1,71 @@
+{
+  "pageHeader": {
+    "title": "logs de conectividade de ativos",
+    "description": "linha do tempo das transições offline e online registradas para cada ativo com monitoramento de saúde habilitado."
+  },
+  "listTitle": "lista de transições de conectividade",
+  "itemLabel": "transição",
+  "itemLabelPlural": "transições",
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar por UUID do ativo...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar todos",
+    "allStatus": "todos",
+    "dateRange": "período",
+    "startDate": "data inicial",
+    "endDate": "data final",
+    "eventType": "status",
+    "assetUUID": "UUID do ativo",
+    "assetUUIDPlaceholder": "digite o UUID do ativo para filtrar...",
+    "includeChildren": "incluir filhas",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "options": {
+      "yes": "sim",
+      "no": "não",
+      "offline": "offline",
+      "online": "online"
+    }
+  },
+  "columns": {
+    "asset": "ativo",
+    "assetUUID": "UUID do ativo",
+    "eventType": "status",
+    "lastSeenAt": "visto por último em",
+    "missCount": "heartbeats perdidos",
+    "thresholdMinutes": "limite (min)",
+    "timestamp": "data/hora"
+  },
+  "eventTypeOptions": {
+    "offline": "offline",
+    "online": "online"
+  },
+  "statusBadge": {
+    "offline": "OFFLINE",
+    "online": "ONLINE"
+  },
+  "drawer": {
+    "title": "detalhes do evento de conectividade"
+  },
+  "empty": {
+    "title": "sem eventos de conectividade",
+    "description": "nenhuma transição offline ou online corresponde aos filtros atuais."
+  },
+  "pagination": {
+    "newer": "mais recentes",
+    "older": "mais antigos"
+  },
+  "messages": {
+    "loadFailed": "falha ao carregar o histórico de conectividade"
+  },
+  "defaults": {
+    "unknown": "desconhecido",
+    "notAvailable": "N/D"
+  },
+  "actions": {
+    "trackEvent": "rastrear este evento",
+    "viewJson": "ver JSON",
+    "viewAsset": "ver ativo"
+  }
+}

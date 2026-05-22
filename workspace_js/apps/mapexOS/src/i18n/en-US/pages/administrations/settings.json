@@ -1,0 +1,222 @@
+{
+  "title": "System Settings",
+  "description": "Manage your organization settings and configuration lists.",
+  "info": {
+    "title": "System Settings",
+    "description": "System Settings allow you to configure global parameters that affect how MapexOS operates. Manage persistence policies, data retention rules, and system-wide configurations to optimize performance and meet compliance requirements.",
+    "items": {
+      "policies": {
+        "title": "Persistence Policies",
+        "text": "Define how long different types of data are retained in the system database"
+      },
+      "retention": {
+        "title": "Data Retention Rules",
+        "text": "Configure retention periods for events, telemetry, audit logs, and notifications"
+      },
+      "systemWide": {
+        "title": "System-Wide Configuration",
+        "text": "Settings apply to all organizations and users within your MapexOS instance"
+      },
+      "performance": {
+        "title": "Performance Optimization",
+        "text": "Balance data retention with system performance and storage capacity"
+      },
+      "backup": {
+        "title": "Backup Settings",
+        "text": "Ensure compliance with data governance policies and regulatory requirements"
+      }
+    },
+    "docsLabel": "View Complete Documentation"
+  },
+  "tabs": {
+    "general": "General",
+    "lists": "Lists",
+    "persistence": "Persistence"
+  },
+  "general": {
+    "title": "Organization information",
+    "sections": {
+      "hierarchy": "Hierarchy Information",
+      "basicInfo": "Basic Information",
+      "address": "Address Information",
+      "accessPolicy": "Access Policy",
+      "system": "System Information"
+    },
+    "fields": {
+      "parentOrganization": "Parent Organization",
+      "rootOrganization": "Root Organization",
+      "type": "Type",
+      "childOrganizations": "Child Organizations",
+      "code": "Code",
+      "path": "Path",
+      "depth": "Depth",
+      "status": "Status",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "organizationName": "Organization Name",
+      "email": "Email",
+      "description": "Description",
+      "phone": "Phone",
+      "street": "Street",
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "country": "Country",
+      "zipCode": "Zip Code",
+      "authProvider": "Auth Provider",
+      "rolePolicy": "Role Policy",
+      "defaultScope": "Default Scope",
+      "created": "Created",
+      "lastUpdated": "Last Updated"
+    },
+    "accessPolicyModal": {
+      "title": "Access Policy Information",
+      "rolePolicyTitle": "Role Policy",
+      "rolePolicyDescription": "Role Policy defines how user roles and permissions are inherited from parent organizations in the hierarchy.",
+      "rolePolicyMerge": "Merge",
+      "rolePolicyMergeDescription": "User roles from parent organizations are merged with roles assigned directly to this organization. Users will have access to both parent and local roles, providing cumulative permissions across the hierarchy.",
+      "rolePolicyStrict": "Strict",
+      "rolePolicyStrictDescription": "Only roles explicitly assigned to this organization are applied. Parent organization roles are ignored, providing strict isolation of permissions at this level.",
+      "defaultScopeTitle": "Default Scope",
+      "defaultScopeDescription": "Default Scope determines the default visibility scope for data and operations within the organization hierarchy.",
+      "defaultScopeRecursive": "Recursive",
+      "defaultScopeRecursiveDescription": "Operations and queries apply recursively to this organization and all its child organizations. Users will see data from the entire sub-hierarchy below this organization.",
+      "defaultScopeLocal": "Local",
+      "defaultScopeLocalDescription": "Operations and queries apply only to this organization. Child organization data is excluded by default, providing isolated scope at this level.",
+      "closeButton": "Close"
+    },
+    "disableModal": {
+      "title": "Disable Organization",
+      "message": "Are you sure you want to disable this organization? All users belonging to this organization will no longer be able to log in.",
+      "confirmButton": "Yes, Disable",
+      "cancelButton": "Cancel"
+    },
+    "validation": {
+      "nameRequired": "Organization name is required",
+      "emailRequired": "Email is required"
+    },
+    "messages": {
+      "savedSuccessfully": "Organization data saved successfully",
+      "loading": "Loading organization data...",
+      "infoTooltip": "Information about Access Policy"
+    },
+    "buttons": {
+      "saveChanges": "Save Changes"
+    }
+  },
+  "lists": {
+    "title": "Configuration lists",
+    "addButton": "Add new",
+    "columns": {
+      "key": "Key",
+      "value": "Value",
+      "description": "Description"
+    },
+    "dialog": {
+      "addTitle": "Add new list item",
+      "editTitle": "Edit list item",
+      "keyLabel": "Key",
+      "valueLabel": "Value",
+      "descriptionLabel": "Description",
+      "validation": {
+        "keyRequired": "Key is required",
+        "valueRequired": "Value is required"
+      }
+    },
+    "messages": {
+      "addedSuccessfully": "List item added successfully",
+      "updatedSuccessfully": "List item updated successfully",
+      "deletedSuccessfully": "List item deleted successfully",
+      "confirmDelete": "Are you sure you want to delete the list item \"{value}\"?"
+    }
+  },
+  "persistence": {
+    "title": "Data retention policies",
+    "description": "Configure how long data is stored before automatic deletion.",
+    "resetButton": "Reset to defaults",
+    "eventTypes": {
+      "eventsRaw": "Raw Events",
+      "eventsJsExecutor": "JS Executor Events",
+      "eventsRouter": "Router Events",
+      "events": "Events",
+      "eventsWorkflow": "Workflow Executions",
+      "eventsAudit": "Audit Events",
+      "eventsNotifications": "Notification Events"
+    },
+    "eventDescriptions": {
+      "eventsRaw": {
+        "title": "Raw Events",
+        "description": "Stores unprocessed events as they arrive from devices and external sources. These are temporary events used for initial processing and routing."
+      },
+      "eventsJsExecutor": {
+        "title": "JS Executor Events",
+        "description": "Stores events generated during JavaScript code execution. Includes logs, errors, and execution results from custom scripts."
+      },
+      "eventsRouter": {
+        "title": "Router Events",
+        "description": "Stores routing information and decisions made by the event router. Tracks how events were distributed across the system."
+      },
+      "events": {
+        "title": "Events",
+        "description": "Main event storage for processed and enriched events. This is the primary lakehouse for historical event analysis and reporting."
+      },
+      "eventsWorkflow": {
+        "title": "Workflow Executions",
+        "description": "Stores workflow execution history including status, duration, node outputs, and error details. Used for debugging and analytics."
+      },
+      "eventsAudit": {
+        "title": "Audit Events",
+        "description": "Stores audit trail events for compliance and security monitoring. Required for regulatory compliance. Minimum retention: 1 year, recommended: 7 years."
+      },
+      "eventsNotifications": {
+        "title": "Notification Events",
+        "description": "Stores notification delivery events including emails, SMS, push notifications, and webhooks. Tracks delivery status and failures."
+      }
+    },
+    "groups": {
+      "pipelineEvents": "Pipeline Events",
+      "pipelineDescription": "Short-term retention for event processing pipeline stages",
+      "storageCompliance": "Storage & Compliance",
+      "storageDescription": "Long-term retention for storage, notifications and audit"
+    },
+    "columns": {
+      "eventType": "Event Type",
+      "retentionDays": "Retention (Days)",
+      "limits": "Limits"
+    },
+    "form": {
+      "daysLabel": "Days",
+      "daysHint": "Min: {min} - Max: {max}",
+      "defaultLabel": "Default: {days} days"
+    },
+    "validation": {
+      "required": "Retention days is required",
+      "minValue": "Minimum value is {min} days",
+      "maxValue": "Maximum value is {max} days",
+      "integer": "Value must be an integer"
+    },
+    "messages": {
+      "savedSuccessfully": "Retention policies saved successfully",
+      "resetSuccessfully": "Retention policies reset to defaults",
+      "confirmReset": "Are you sure you want to reset all retention policies to default values?",
+      "complianceWarning": "Compliance requirement: minimum 1 year (365 days) for audit events",
+      "lakeHouseWarning": "Low retention period. Consider using LakeHouse functionality to export these events to an Object Storage system like S3 / MinIO."
+    },
+    "buttons": {
+      "close": "Close"
+    },
+    "tooltips": {
+      "moreInfo": "Click for more information"
+    }
+  },
+  "errors": {
+    "apiNotInitialized": "Organizations API is not available",
+    "noOrganization": "No organization selected"
+  },
+  "notifications": {
+    "savedSuccessfully": "Organization data saved successfully"
+  },
+  "overview": {
+    "organizationOverview": "Organization Overview"
+  }
+}

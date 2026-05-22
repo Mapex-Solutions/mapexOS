@@ -1,0 +1,48 @@
+{
+  "search": {
+    "placeholder": "Buscar templates por nome..."
+  },
+  "filters": {
+    "manufacturer": "Fabricante",
+    "model": "Modelo",
+    "status": "Status",
+    "templateType": "Tipo de Template",
+    "templateSource": "Fonte do Template",
+    "statusOptions": {
+      "all": "Todos",
+      "active": "Ativos",
+      "inactive": "Inativos"
+    },
+    "templateTypeOptions": {
+      "all": "Todos",
+      "system": "Sistema",
+      "custom": "Personalizado"
+    },
+    "templateSourceOptions": {
+      "all": "Todos",
+      "shared": "Compartilhado",
+      "local": "Local"
+    }
+  },
+  "results": {
+    "found": "Encontrados {count} template(s)"
+  },
+  "badge": {
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "noDescription": "Sem descrição",
+  "loading": {
+    "more": "Carregando mais templates..."
+  },
+  "emptyState": {
+    "title": "Nenhum template encontrado",
+    "subtitle": "Tente ajustar seus filtros"
+  },
+  "selected": {
+    "label": "Template Selecionado"
+  },
+  "errors": {
+    "loadFailed": "Falha ao carregar templates"
+  }
+}

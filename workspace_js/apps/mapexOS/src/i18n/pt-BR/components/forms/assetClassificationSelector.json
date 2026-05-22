@@ -1,0 +1,36 @@
+{
+  "title": "classificação do ativo",
+  "guided": {
+    "category": {
+      "label": "selecione a categoria",
+      "placeholder": "escolha uma categoria...",
+      "hint": "selecione a categoria do ativo primeiro",
+      "required": "categoria é obrigatória"
+    },
+    "manufacturer": {
+      "label": "selecione o fabricante",
+      "placeholder": "escolha um fabricante...",
+      "hint": "selecione após escolher a categoria",
+      "disabled": "selecione a categoria primeiro",
+      "required": "fabricante é obrigatório"
+    },
+    "model": {
+      "label": "selecione o modelo",
+      "placeholder": "escolha um modelo...",
+      "hint": "selecione após escolher o fabricante",
+      "disabled": "selecione o fabricante primeiro",
+      "required": "modelo é obrigatório"
+    },
+    "version": {
+      "label": "versão",
+      "placeholder": "digite a versão (ex: v1.0, 2024)...",
+      "hint": "identificador de versão opcional",
+      "required": "versão é obrigatória"
+    },
+    "loading": "carregando...",
+    "noOptions": "nenhuma opção disponível"
+  },
+  "errors": {
+    "loadFailed": "falha ao carregar opções"
+  }
+}

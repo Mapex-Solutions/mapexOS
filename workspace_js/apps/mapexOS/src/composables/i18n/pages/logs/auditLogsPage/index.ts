@@ -1,0 +1,1 @@
+export { useAuditLogsPageTranslations } from './useAuditLogsPageTranslations';

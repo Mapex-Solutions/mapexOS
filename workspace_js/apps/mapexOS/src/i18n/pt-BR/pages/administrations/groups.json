@@ -1,0 +1,324 @@
+{
+  "title": "grupos",
+  "description": "gerencie grupos de usuários para sua organização",
+  "addButton": "adicionar grupo",
+  "listTitle": "lista de grupos",
+  "itemLabel": "grupo",
+  "itemLabelPlural": "grupos",
+  "info": {
+    "title": "O que é um Grupo?",
+    "description": "Um Grupo é uma configuração de roteamento que organiza e gerencia fluxos de dados no MapexOS. Os grupos permitem rotear dados de telemetria de ativos para múltiplos destinos com controle flexível e opções de configuração.",
+    "items": {
+      "routing": {
+        "title": "Organização de Roteamento de Dados",
+        "text": "Defina como os dados de telemetria fluem de ativos para vários destinos e sistemas"
+      },
+      "destinations": {
+        "title": "Suporte a Múltiplos Destinos",
+        "text": "Envie dados para múltiplos endpoints simultaneamente com configuração independente"
+      },
+      "association": {
+        "title": "Associação de Ativos",
+        "text": "Vincule ativos a grupos de roteamento para controlar seu fluxo de dados e destinos"
+      },
+      "control": {
+        "title": "Controle de Ativação/Desativação",
+        "text": "Ative ou desative rapidamente grupos de roteamento sem excluir configurações"
+      },
+      "configuration": {
+        "title": "Configuração Flexível",
+        "text": "Personalize regras de roteamento, transformações e parâmetros de destino por grupo"
+      }
+    },
+    "docsLabel": "Ver Documentação Completa"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar grupos...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "allStatus": "todos",
+    "name": "nome do grupo",
+    "status": "status",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "member": "membro",
+    "filterByMember": "filtrar por membro",
+    "memberPlaceholder": "clique para selecionar usuário...",
+    "searchMemberPlaceholder": "buscar membro...",
+    "isTemplate": "origem do modelo",
+    "options": {
+      "all": "todos",
+      "enabled": "habilitado",
+      "disabled": "desabilitado",
+      "yes": "sim",
+      "no": "não",
+      "templates": "compartilhado",
+      "local": "local"
+    }
+  },
+  "columns": {
+    "name": "nome",
+    "organization": "organização",
+    "members": "membros",
+    "templateSource": "origem do template",
+    "created": "criado"
+  },
+  "menuColumns": {
+    "organization": "organização",
+    "description": "descrição",
+    "members": "membros",
+    "created": "criado"
+  },
+  "status": {
+    "active": "ativo",
+    "inactive": "inativo"
+  },
+  "empty": {
+    "title": "nenhum grupo encontrado",
+    "description": "parece que não há grupos correspondentes aos seus critérios de pesquisa atuais ou você ainda não possui nenhum grupo."
+  },
+  "messages": {
+    "deletedSuccessfully": "grupo excluído com sucesso",
+    "confirmDelete": "tem certeza de que deseja excluir o grupo \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirmar exclusão"
+  },
+  "notifications": {
+    "sharedEdit": "grupos compartilhados de outras organizações não podem ser editados",
+    "sharedDelete": "grupos compartilhados de outras organizações não podem ser excluídos"
+  },
+  "errors": {
+    "apiNotInitialized": "API de grupos não está disponível",
+    "idMissing": "ID do grupo ausente"
+  },
+  "drawer": {
+    "title": "detalhes do grupo",
+    "close": "fechar",
+    "edit": "editar",
+    "loading": "carregando detalhes do grupo...",
+    "error": "falha ao carregar detalhes do grupo",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "roles": "papéis",
+      "members": "membros",
+      "organization": "organização",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "nome",
+      "description": "descrição",
+      "enabled": "status",
+      "isTemplate": "modelo",
+      "organization": "organização",
+      "pathKey": "path key",
+      "membersCount": "quantidade de membros",
+      "created": "criado",
+      "updated": "atualizado"
+    },
+    "empty": {
+      "description": "nenhuma descrição fornecida",
+      "roles": "nenhum papel atribuído",
+      "members": "nenhum membro atribuído"
+    },
+    "status": {
+      "enabled": "habilitado",
+      "disabled": "desabilitado"
+    },
+    "template": {
+      "yes": "compartilhado",
+      "no": "local"
+    }
+  },
+  "createEdit": {
+    "titleEdit": "editar grupo",
+    "titleCreate": "criar grupo",
+    "descriptionCreate": "crie um novo grupo com membros específicos",
+    "backButton": "voltar para grupos",
+    "steps": {
+      "basicInfo": "informações básicas",
+      "roles": "papéis",
+      "members": "membros",
+      "review": "revisão"
+    },
+    "stepDescriptions": {
+      "basicInfo": "defina o nome, descrição e configurações do grupo",
+      "roles": "selecione os papéis para este grupo",
+      "members": "selecione os membros para este grupo",
+      "review": "revise sua configuração antes de salvar"
+    },
+    "sections": {
+      "basicInfo": "informações básicas",
+      "roles": "papéis do grupo",
+      "members": "membros",
+      "progressSteps": "progresso"
+    },
+    "formDescriptions": {
+      "basicInfo": "insira os detalhes básicos deste grupo",
+      "roles": "selecione os papéis que os membros deste grupo herdarão",
+      "members": "selecione os usuários que serão membros deste grupo",
+      "name": "identificador único do grupo",
+      "description": "descrição opcional do grupo",
+      "enabled": "ativar ou desativar este grupo"
+    },
+    "fields": {
+      "name": "nome do grupo",
+      "description": "descrição",
+      "status": "status",
+      "enabled": "habilitado"
+    },
+    "statusOptions": {
+      "active": "Ativo",
+      "inactive": "Inativo"
+    },
+    "validation": {
+      "nameRequired": "nome do grupo é obrigatório",
+      "nameMinLength": "nome do grupo deve ter pelo menos 3 caracteres",
+      "nameMaxLength": "nome do grupo não deve exceder 150 caracteres",
+      "descriptionMaxLength": "descrição não deve exceder 500 caracteres"
+    },
+    "labels": {
+      "selectAll": "selecionar todos",
+      "deselectAll": "limpar seleção",
+      "membersSelected": "membros selecionados",
+      "memberSelected": "membro selecionado",
+      "member": "membro",
+      "members": "membros",
+      "searchMembers": "buscar membros...",
+      "noMembersFound": "nenhum membro encontrado",
+      "loadingMembers": "carregando membros...",
+      "noMembersMatch": "nenhum membro corresponde à sua busca",
+      "noMembersAvailable": "nenhum membro disponível",
+      "membersOptional": "membros são opcionais",
+      "addMembers": "adicionar membros",
+      "addMoreMembers": "adicionar mais membros",
+      "noMembersInGroup": "nenhum membro neste grupo",
+      "noMembersSelectedYet": "nenhum membro selecionado ainda",
+      "clickAddMembers": "clique em \"adicionar membros\" para selecionar usuários",
+      "removeMember": "remover membro",
+      "undoRemoval": "desfazer remoção",
+      "badgeNew": "novo",
+      "badgeRemoving": "removendo",
+      "rolesSelected": "papéis selecionados",
+      "roleSelected": "papel selecionado",
+      "role": "papel",
+      "roles": "papéis",
+      "addRoles": "adicionar papéis",
+      "removeRole": "remover papel",
+      "noRolesSelected": "nenhum papel selecionado",
+      "clickAddRoles": "clique em \"adicionar papéis\" para selecionar papéis para este grupo",
+      "rolesRequired": "pelo menos um papel é obrigatório"
+    },
+    "buttons": {
+      "back": "voltar",
+      "next": "próximo",
+      "createGroup": "criar grupo",
+      "updateGroup": "atualizar grupo"
+    },
+    "messages": {
+      "loadingGroup": "carregando grupo...",
+      "completeAllSteps": "complete todas as etapas para criar o grupo",
+      "allFieldsRequired": "campos marcados com * são obrigatórios",
+      "currentStep": "etapa atual"
+    },
+    "reviewStep": {
+      "subtitle": "revise a configuração do grupo antes de salvar",
+      "successMessage": "pronto para criar! clique em 'criar grupo' para salvar",
+      "successMessageEdit": "pronto para atualizar! clique em 'atualizar grupo' para salvar alterações",
+      "sections": {
+        "basicInfo": "informações básicas",
+        "roles": "papéis",
+        "members": "membros"
+      },
+      "fields": {
+        "name": "nome",
+        "description": "descrição",
+        "enabled": "habilitado",
+        "status": "status",
+        "isTemplate": "modelo compartilhado",
+        "totalRoles": "total de papéis",
+        "totalMembers": "total de membros"
+      },
+      "values": {
+        "notProvided": "não informado",
+        "yes": "sim",
+        "no": "não",
+        "noMembers": "nenhum membro selecionado",
+        "enabled": "habilitado",
+        "disabled": "desabilitado"
+      }
+    },
+    "notifications": {
+      "created": "grupo criado com sucesso",
+      "updated": "grupo atualizado com sucesso",
+      "createFailed": "falha ao criar grupo",
+      "updateFailed": "falha ao atualizar grupo",
+      "loadFailed": "falha ao carregar grupo",
+      "alreadyExists": "já existe um grupo com este nome",
+      "forbidden": "você não tem permissão para realizar esta ação"
+    }
+  },
+  "detail": {
+    "title": "detalhes do grupo",
+    "description": "visualize e gerencie informações do grupo",
+    "loading": "carregando detalhes do grupo...",
+    "loadError": "falha ao carregar detalhes do grupo",
+    "backButton": "voltar para auditoria",
+    "editButton": "editar",
+    "tabs": {
+      "info": "informações",
+      "roles": "papéis",
+      "members": "membros"
+    },
+    "info": {
+      "basicInfo": {
+        "title": "informações básicas"
+      },
+      "dates": {
+        "title": "datas"
+      },
+      "fields": {
+        "name": "nome",
+        "description": "descrição",
+        "status": "status",
+        "membersCount": "membros",
+        "organization": "organização",
+        "created": "criado",
+        "updated": "atualizado"
+      },
+      "status": {
+        "enabled": "habilitado",
+        "disabled": "desabilitado"
+      },
+      "noData": "dados do grupo não disponíveis"
+    },
+    "roles": {
+      "title": "papéis do grupo",
+      "loadError": "falha ao carregar papéis",
+      "columns": {
+        "name": "nome",
+        "type": "tipo",
+        "scope": "escopo"
+      },
+      "empty": {
+        "title": "sem papéis",
+        "description": "este grupo não possui papéis atribuídos"
+      }
+    },
+    "members": {
+      "title": "membros do grupo",
+      "loadError": "falha ao carregar membros",
+      "columns": {
+        "name": "nome",
+        "email": "email",
+        "addedAt": "adicionado em"
+      },
+      "empty": {
+        "title": "sem membros",
+        "description": "este grupo ainda não possui membros"
+      }
+    }
+  }
+}

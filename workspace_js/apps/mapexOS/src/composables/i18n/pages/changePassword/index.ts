@@ -1,0 +1,1 @@
+export { useChangePasswordTranslations } from './useChangePasswordTranslations';

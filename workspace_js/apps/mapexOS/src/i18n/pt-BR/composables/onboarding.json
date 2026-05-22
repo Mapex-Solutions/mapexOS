@@ -1,0 +1,34 @@
+{
+  "steps": {
+    "sidebar": {
+      "title": "Menu de navegação",
+      "description": "Acesse todas as seções do sistema pelo menu lateral"
+    },
+    "breadcrumbs": {
+      "title": "Breadcrumbs",
+      "description": "Veja onde você está e navegue facilmente entre as páginas"
+    },
+    "orgSelector": {
+      "title": "Organização",
+      "description": "Selecione a organização que deseja gerenciar"
+    },
+    "langSelector": {
+      "title": "Idioma",
+      "description": "Altere o idioma do sistema"
+    },
+    "userMenu": {
+      "title": "Menu do usuário",
+      "description": "Acesse seu perfil, configurações e reinicie este tour a qualquer momento. A seguir, vamos guiá-lo pelas páginas principais!"
+    }
+  },
+  "buttons": {
+    "next": "Próximo",
+    "previous": "Anterior",
+    "finish": "Finalizar",
+    "continue": "Continuar",
+    "skip": "Pular"
+  },
+  "menu": {
+    "startTour": "Iniciar tour"
+  }
+}

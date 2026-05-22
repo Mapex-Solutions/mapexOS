@@ -1,0 +1,128 @@
+{
+  "pageHeader": {
+    "title": "workflows",
+    "description": "automação visual de workflows com canvas DAG"
+  },
+  "buttons": {
+    "newWorkflow": "novo workflow",
+    "createWorkflow": "criar workflow"
+  },
+  "page": {
+    "listTitle": "lista de workflows",
+    "itemLabel": "workflow",
+    "itemLabelPlural": "workflows",
+    "addButton": "novo workflow",
+    "info": {
+      "title": "O que é um Workflow?",
+      "description": "Um Workflow é uma automação visual que define uma série de etapas (nós) conectados por arestas em um canvas DAG. Workflows podem ser acionados por eventos, timers ou outros workflows.",
+      "items": {
+        "visual": { "title": "Canvas Visual", "text": "Desenhe automações visualmente com canvas DAG drag-and-drop" },
+        "plugins": { "title": "Sistema de Plugins", "text": "Tipos de nós extensíveis incluindo código, condições, loops e sub-workflows" },
+        "triggers": { "title": "Multi-Trigger", "text": "Acione workflows via HTTP, NATS, MQTT, email, Slack, Teams e mais" },
+        "variables": { "title": "Variáveis", "text": "Persista dados entre etapas de execução com variáveis de workflow" }
+      },
+      "docsLabel": "ver documentação completa"
+    }
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar workflows...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes — clique para aplicar",
+    "clearAll": "limpar todos",
+    "allStatus": "todos",
+    "workflowName": "nome do workflow",
+    "status": "status",
+    "isTemplate": "template",
+    "version": "versão",
+    "versionPlaceholder": "ex. 1, 2, 3",
+    "health": "saúde",
+    "nodesCount": "quantidade de nós",
+    "nodesCountPlaceholder": "mínimo de nós",
+    "pluginType": "tipo de plugin",
+    "pluginTypePlaceholder": "ex. telegram, slack",
+    "options": {
+      "all": "todos",
+      "enabled": "ativo",
+      "disabled": "desativado",
+      "yes": "sim",
+      "no": "não",
+      "valid": "válido",
+      "pluginMissing": "plugins ausentes",
+      "invalid": "inválido"
+    }
+  },
+  "columns": {
+    "name": "nome",
+    "description": "descrição",
+    "status": "status",
+    "definitionStatus": "saúde",
+    "version": "versão",
+    "nodesCount": "nós",
+    "pluginsCount": "plugins"
+  },
+  "definitionStatus": {
+    "valid": "válido",
+    "pluginMissing": "plugins ausentes",
+    "invalid": "inválido"
+  },
+  "menuColumns": {
+    "version": "versão",
+    "nodesCount": "quantidade de nós",
+    "pluginsCount": "quantidade de plugins"
+  },
+  "status": {
+    "enabled": "ativo",
+    "disabled": "desativado"
+  },
+  "empty": {
+    "title": "nenhum workflow encontrado",
+    "description": "não há workflows correspondentes aos seus critérios de busca atuais."
+  },
+  "emptyState": {
+    "title": "nenhum workflow ainda",
+    "description": "crie seu primeiro workflow visual para automatizar processos complexos"
+  },
+  "badges": {
+    "active": "ativo",
+    "disabled": "desativado"
+  },
+  "messages": {
+    "deletedSuccessfully": "workflow excluído com sucesso",
+    "confirmDelete": "tem certeza que deseja excluir o workflow \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirmar exclusão"
+  },
+  "drawer": {
+    "title": "detalhes do workflow",
+    "close": "fechar",
+    "edit": "editar workflow",
+    "loading": "carregando detalhes do workflow...",
+    "error": "falha ao carregar detalhes do workflow",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "configuration": "configuração",
+      "timestamps": "datas"
+    },
+    "fields": {
+      "name": "nome",
+      "description": "descrição",
+      "status": "status",
+      "version": "versão da definição",
+      "nodesCount": "nós",
+      "edgesCount": "arestas",
+      "timezone": "fuso horário",
+      "isTemplate": "template",
+      "created": "criado",
+      "updated": "atualizado"
+    },
+    "values": {
+      "enabled": "ativo",
+      "disabled": "desativado",
+      "yes": "sim",
+      "no": "não",
+      "noDescription": "sem descrição fornecida"
+    }
+  }
+}

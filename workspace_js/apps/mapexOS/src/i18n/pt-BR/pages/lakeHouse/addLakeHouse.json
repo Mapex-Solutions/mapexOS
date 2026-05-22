@@ -1,0 +1,39 @@
+{
+  "title": "lakehouse",
+  "description": "adicionar novo canal de lakehouse",
+  "backButton": "voltar para lakehouses",
+  "steps": {
+    "general": "informações gerais",
+    "provider": "seleção de provedor",
+    "credentials": "credenciais",
+    "pathConfig": "configuração de caminho",
+    "frequency": "frequência",
+    "review": "revisão"
+  },
+  "stepDescriptions": {
+    "general": "informações básicas do lakehouse",
+    "provider": "selecione seu provedor de armazenamento em nuvem",
+    "credentials": "configurar credenciais de autenticação",
+    "pathConfig": "configurar configurações de caminho de armazenamento",
+    "frequency": "definir frequência de upload",
+    "review": "revisar e confirmar detalhes do lakehouse"
+  },
+  "formDescriptions": {
+    "general": "insira as informações básicas do lakehouse",
+    "provider": "selecione seu provedor de armazenamento em nuvem preferido",
+    "credentials": "insira as credenciais de autenticação para seu provedor",
+    "pathConfig": "configure o caminho de armazenamento e configurações de arquivo",
+    "frequency": "defina a frequência e cronograma de upload",
+    "review": "revise e confirme os detalhes do lakehouse antes da criação"
+  },
+  "stepper": {
+    "title": "configurar lakehouse",
+    "subtitle": "complete todas as etapas para criar um novo lakehouse"
+  },
+  "fields": {
+    "type": "tipo",
+    "name": "nome",
+    "description": "descrição",
+    "status": "status"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "pageHeader": {
+    "title": "Workflow Executions",
+    "description": "See all workflow execution logs for your organization."
+  },
+  "listTitle": "Execution History",
+  "itemLabel": "execution",
+  "itemLabelPlural": "executions",
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search by workflow name...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "dateRange": "date range",
+    "startDate": "start date",
+    "endDate": "end date",
+    "status": "status",
+    "instanceId": "instance ID",
+    "instanceIdPlaceholder": "enter instance ID to filter...",
+    "definitionId": "definition ID",
+    "definitionIdPlaceholder": "enter definition ID to filter...",
+    "workflow": "workflow",
+    "workflowPlaceholder": "search workflow by name...",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "options": {
+      "all": "all",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "statusOptions": {
+    "all": "All",
+    "running": "Running",
+    "waiting": "Waiting",
+    "created": "Created",
+    "completed": "Completed",
+    "failed": "Failed",
+    "cancelled": "Cancelled"
+  },
+  "columns": {
+    "workflowName": "Workflow",
+    "instanceName": "Instance",
+    "triggerSource": "Source",
+    "definitionName": "Definition",
+    "status": "Status",
+    "duration": "Duration",
+    "instanceId": "Instance ID",
+    "timestamp": "Timestamp"
+  },
+  "statusBadge": {
+    "running": "RUNNING",
+    "waiting": "WAITING",
+    "created": "CREATED",
+    "completed": "COMPLETED",
+    "failed": "FAILED",
+    "cancelled": "CANCELLED"
+  },
+  "modal": {
+    "title": "Execution Details",
+    "tabs": {
+      "dag": "Workflow",
+      "event": "Event",
+      "state": "State",
+      "logs": "Logs"
+    },
+    "legend": {
+      "completed": "Completed",
+      "waiting": "Waiting",
+      "retrying": "Retrying",
+      "timeout": "Timeout",
+      "error": "Error",
+      "cancelled": "Cancelled",
+      "notReached": "Not reached"
+    },
+    "states": {
+      "workflowState": "Workflow State",
+      "eventPayload": "Event Payload",
+      "nodeOutputs": "Node Outputs",
+      "colName": "Variable",
+      "colType": "Type",
+      "colDefault": "Default",
+      "colCurrent": "Current Value",
+      "durable": "Durable"
+    },
+    "drawer": {
+      "status": "Status",
+      "nodeType": "Node Type",
+      "nodeId": "Node ID",
+      "duration": "Duration",
+      "outputHandle": "Output Handle",
+      "configuration": "Configuration",
+      "configurationEmpty": "This node has no configuration",
+      "error": "Error",
+      "outputs": "Outputs"
+    },
+    "noData": "No data available"
+  },
+  "empty": {
+    "title": "No Workflow Executions Found",
+    "description": "It seems there are no workflow executions matching your current search criteria or you don't have any executions yet."
+  },
+  "pagination": {
+    "newer": "Newer",
+    "older": "Older"
+  },
+  "messages": {
+    "loadFailed": "Failed to load workflow executions"
+  },
+  "defaults": {
+    "unknown": "Unknown",
+    "notAvailable": "N/A"
+  }
+}

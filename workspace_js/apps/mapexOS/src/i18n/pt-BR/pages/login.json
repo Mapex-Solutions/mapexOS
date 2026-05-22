@@ -1,0 +1,43 @@
+{
+  "welcome": {
+    "title": "bem-vindo ao MapexOS",
+    "tagline": "automação IoT orientada a eventos",
+    "subtitle": "conecte dispositivos, receba eventos e automatize ações em uma plataforma aberta e modular."
+  },
+  "features": {
+    "monitoring": "ingestão multiprotocolo: MQTT/MQTTS, HTTP/HTTPS, LoRaWAN, CoAP",
+    "analytics": "motor de regras integrado: crie alertas, fluxos e integrações em poucos minutos",
+    "security": "monitoramento e analytics em tempo real para operações em escala"
+  },
+  "form": {
+    "title": "bem-vindo de volta! faça login na sua conta.",
+    "email": {
+      "label": "e-mail",
+      "placeholder": "digite seu e-mail"
+    },
+    "password": {
+      "label": "senha",
+      "placeholder": "digite sua senha"
+    },
+    "rememberMe": "lembrar-me",
+    "forgotPassword": "esqueceu a senha?",
+    "signIn": "entrar"
+  },
+  "validation": {
+    "emailRequired": "e-mail é obrigatório",
+    "emailInvalid": "digite um e-mail válido",
+    "passwordRequired": "senha é obrigatória"
+  },
+  "errors": {
+    "title": "erro de autenticação",
+    "default": "falha ao entrar. verifique suas credenciais e tente novamente."
+  },
+  "languages": {
+    "english": "inglês",
+    "portuguese": "português"
+  },
+  "aria": {
+    "closeError": "fechar mensagem de erro",
+    "languageSelector": "selecionar idioma"
+  }
+}

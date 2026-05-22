@@ -1,0 +1,69 @@
+{
+  "languageSelector": {
+    "changed": "Idioma alterado para",
+    "languages": {
+      "english": "Inglês",
+      "portuguese": "Português"
+    }
+  },
+  "customerSelector": {
+    "select": "Selecione um tenant para acessar",
+    "loggedOut": "Deslogado com sucesso!",
+    "loggedIn": "Logado no cliente",
+    "exit": "Sair do cliente"
+  },
+  "orgTree": {
+    "tooltip": "Árvore de organizações"
+  },
+  "orgIndicator": {
+    "label": "Organização ativa",
+    "tooltip": "Clique para trocar de organização"
+  },
+  "notifications": {
+    "title": "Notificações"
+  },
+  "userMenu": {
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "docs": "Documentação",
+    "startTour": "Iniciar tour",
+    "logout": "Sair"
+  },
+  "menu": {
+    "dashboard": "Painel",
+    "assets": "Ativos",
+    "assetsItems": "Ativos",
+    "assetsTemplate": "Templates de Ativos",
+    "data": "Dados",
+    "http": "HTTP",
+    "automation": "Automação",
+    "workflows": "Workflows",
+    "workflowInstances": "Instâncias de Workflow",
+    "triggers": "Triggers",
+    "routing": "Roteamento",
+    "routeGroups": "Grupos de Rotas",
+    "logsAndExecutions": "Logs e Execuções",
+    "eventTracer": "Rastreador de Eventos",
+    "rawEvents": "Eventos Brutos",
+    "assetConnectivity": "Conectividade de Ativos",
+    "jsExecutor": "Executor JS",
+    "router": "Roteador",
+    "triggerLogs": "Triggers",
+    "workflowExecutions": "Execuções de Workflow",
+    "dlq": "Fila de Mensagens Mortas",
+    "events": "Eventos",
+    "eventStore": "Armazém de Eventos",
+    "administration": "Administração",
+    "customers": "Clientes",
+    "users": "Usuários",
+    "roles": "Perfis",
+    "groups": "Grupos",
+    "accessAudit": "Auditoria de Acesso",
+    "lists": "Listas",
+    "settings": "Configurações"
+  },
+  "version": "Versão",
+  "breadcrumbs": {
+    "home": "início"
+  }
+}

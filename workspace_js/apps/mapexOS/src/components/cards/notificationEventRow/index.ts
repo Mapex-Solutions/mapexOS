@@ -1,0 +1,1 @@
+export { default as NotificationEventRow } from './NotificationEventRow.vue';

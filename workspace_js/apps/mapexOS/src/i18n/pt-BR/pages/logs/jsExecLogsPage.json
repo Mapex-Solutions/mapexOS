@@ -1,0 +1,85 @@
+{
+  "pageHeader": {
+    "title": "logs do executor JS",
+    "description": "visualize todos os logs de execução de scripts de seus ativos e fontes de dados."
+  },
+  "listTitle": "logs de execução",
+  "itemLabel": "log",
+  "itemLabelPlural": "logs",
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar por UUID...",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "allStatus": "todos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "dateRange": "intervalo de datas",
+    "status": "status",
+    "uuid": "UUID",
+    "includeChildren": "incluir filhos",
+    "execTimeOperator": "operador tempo exec",
+    "execTime": "tempo exec (ms)",
+    "execTimeEnd": "tempo exec fim (ms)",
+    "options": {
+      "success": "sucesso",
+      "failed": "falhou",
+      "yes": "sim",
+      "no": "não"
+    },
+    "includeChildrenOptions": {
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "columns": {
+    "dataSource": "fonte de dados",
+    "uuid": "UUID",
+    "status": "status",
+    "executionTime": "tempo de execução",
+    "execTime": "tempo exec",
+    "timestamp": "data/hora",
+    "retention": "retenção"
+  },
+  "statusOptions": {
+    "success": "sucesso",
+    "failed": "falhou"
+  },
+  "statusBadge": {
+    "success": "SUCESSO",
+    "failed": "FALHOU"
+  },
+  "execTimeOperators": {
+    "lessThan": "< (Menor que)",
+    "lessThanOrEqual": "<= (Menor ou igual)",
+    "greaterThan": "> (Maior que)",
+    "greaterThanOrEqual": ">= (Maior ou igual)",
+    "between": "Entre"
+  },
+  "drawer": {
+    "title": "detalhes do evento executor JS",
+    "subtitleSuccess": "sucesso",
+    "subtitleFailed": "falhou"
+  },
+  "empty": {
+    "title": "nenhum log de execução encontrado",
+    "description": "não há logs do executor JS correspondentes aos seus filtros atuais ou nenhuma execução de script foi registrada ainda."
+  },
+  "pagination": {
+    "newer": "mais recentes",
+    "older": "mais antigos"
+  },
+  "messages": {
+    "loadFailed": "falha ao carregar eventos do executor JS"
+  },
+  "defaults": {
+    "unknown": "desconhecido",
+    "retentionDays": "{days} dias",
+    "execTimeMs": "{time}ms",
+    "notAvailable": "N/D"
+  },
+  "placeholders": {
+    "execTime": "1000",
+    "execTimeEnd": "5000"
+  }
+}

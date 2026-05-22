@@ -1,0 +1,239 @@
+{
+  "title": "funções",
+  "titleEdit": "editar função",
+  "titleCreate": "criar função",
+  "description": "gerencie funções e permissões para sua organização",
+  "descriptionCreate": "crie uma nova função com permissões específicas",
+  "backButton": "voltar para funções",
+  "addButton": "adicionar função",
+  "listTitle": "lista de funções",
+  "itemLabel": "função",
+  "itemLabelPlural": "funções",
+  "info": {
+    "title": "O que é uma Função?",
+    "description": "Uma Função define um conjunto de permissões que controlam o que os usuários podem fazer no MapexOS. As funções implementam controle de acesso baseado em funções (RBAC) para proteger seu sistema e gerenciar capacidades de usuários em diferentes recursos e organizações.",
+    "items": {
+      "permissions": {
+        "title": "Gerenciamento de Permissões",
+        "text": "Defina permissões granulares para recursos como ativos, usuários, fontes de dados e roteamento"
+      },
+      "systemCustom": {
+        "title": "Funções de Sistema vs Personalizadas",
+        "text": "Use funções de sistema integradas ou crie funções personalizadas adaptadas às necessidades da sua organização"
+      },
+      "accessControl": {
+        "title": "Controle de Acesso Multi-Recurso",
+        "text": "Controle o acesso a vários tipos de recursos com uma única atribuição de função"
+      },
+      "userAssignment": {
+        "title": "Atribuição de Usuários",
+        "text": "Atribua funções aos usuários para conceder-lhes permissões e capacidades específicas"
+      },
+      "granular": {
+        "title": "Permissões Granulares",
+        "text": "Controle refinado com permissões de criar, ler, atualizar, excluir e executar"
+      }
+    },
+    "docsLabel": "Ver Documentação Completa"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar funções...",
+    "allStatus": "todos",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "name": "nome da função",
+    "isSystem": "tipo",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizações filhas",
+    "scope": "escopo",
+    "permission": "permissão",
+    "filterByPermission": "filtrar por permissão",
+    "isTemplate": "origem do modelo",
+    "options": {
+      "all": "todos",
+      "yes": "sim",
+      "no": "não",
+      "system": "sistema",
+      "custom": "customizado",
+      "global": "global",
+      "local": "local",
+      "templates": "compartilhado"
+    }
+  },
+  "columns": {
+    "name": "nome",
+    "organization": "organização",
+    "permissions": "permissões",
+    "scope": "escopo",
+    "type": "tipo",
+    "templateSource": "origem do template",
+    "created": "criado"
+  },
+  "menuColumns": {
+    "organization": "organização",
+    "description": "descrição",
+    "permissions": "permissões",
+    "scope": "escopo",
+    "created": "criado"
+  },
+  "scope": {
+    "global": "global",
+    "local": "local"
+  },
+  "type": {
+    "system": "sistema",
+    "custom": "customizado"
+  },
+  "empty": {
+    "title": "nenhuma função encontrada",
+    "description": "parece que não há funções correspondentes aos seus critérios de pesquisa atuais ou você ainda não possui nenhuma função."
+  },
+  "messages": {
+    "deletedSuccessfully": "função excluída com sucesso",
+    "confirmDelete": "tem certeza de que deseja excluir a função \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirmar exclusão"
+  },
+  "notifications": {
+    "systemEdit": "funções do sistema não podem ser editadas",
+    "systemDelete": "funções do sistema não podem ser excluídas",
+    "sharedEdit": "funções compartilhadas de outras organizações não podem ser editadas",
+    "sharedDelete": "funções compartilhadas de outras organizações não podem ser excluídas"
+  },
+  "errors": {
+    "apiNotInitialized": "API de funções não está disponível",
+    "idMissing": "ID da função ausente",
+    "orgPathKeyMissing": "Chave do caminho da organização ausente"
+  },
+  "drawer": {
+    "title": "detalhes da função",
+    "close": "fechar",
+    "edit": "editar",
+    "loading": "carregando detalhes da função...",
+    "error": "falha ao carregar detalhes da função",
+    "systemRoleWarning": "esta é uma função do sistema e não pode ser modificada ou excluída",
+    "systemRoleTooltip": "funções do sistema não podem ser editadas",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "permissions": "permissões",
+      "scope": "escopo & organização",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "nome",
+      "description": "descrição",
+      "type": "tipo",
+      "scope": "escopo",
+      "organization": "organização",
+      "pathKey": "caminho",
+      "permissionsCount": "total de permissões",
+      "created": "criado",
+      "updated": "atualizado"
+    },
+    "empty": {
+      "description": "nenhuma descrição fornecida",
+      "permissions": "nenhuma permissão atribuída"
+    },
+    "system": {
+      "yes": "sistema",
+      "no": "customizado"
+    }
+  },
+  "createEdit": {
+    "steps": {
+      "basicInfo": "informações básicas",
+      "permissions": "permissões",
+      "review": "revisão"
+    },
+    "stepDescriptions": {
+      "basicInfo": "defina o nome, descrição e escopo da função",
+      "permissions": "selecione as permissões para esta função",
+      "review": "revise sua configuração antes de salvar"
+    },
+    "sections": {
+      "basicInfo": "informações básicas",
+      "permissions": "permissões",
+      "progressSteps": "progresso"
+    },
+    "formDescriptions": {
+      "basicInfo": "insira os detalhes básicos para esta função",
+      "permissions": "selecione os recursos e ações que esta função pode acessar",
+      "isTemplate": "funções modelo podem ser compartilhadas com organizações filhas"
+    },
+    "fields": {
+      "name": "nome da função",
+      "description": "descrição",
+      "scope": "escopo",
+      "isTemplate": "compartilhar como modelo"
+    },
+    "scopeOptions": {
+      "global": "global",
+      "local": "local"
+    },
+    "validation": {
+      "nameRequired": "nome da função é obrigatório",
+      "nameMinLength": "nome da função deve ter pelo menos 3 caracteres",
+      "nameMaxLength": "nome da função não pode exceder 100 caracteres",
+      "descriptionMaxLength": "descrição não pode exceder 500 caracteres",
+      "scopeRequired": "por favor selecione um escopo",
+      "permissionsRequired": "por favor selecione pelo menos uma permissão"
+    },
+    "labels": {
+      "selectAll": "selecionar tudo",
+      "deselectAll": "limpar tudo",
+      "actionsSelected": "ações selecionadas",
+      "permissionSelected": "permissão selecionada",
+      "permissionsSelected": "permissões selecionadas",
+      "permission": "permissão",
+      "permissions": "permissões"
+    },
+    "buttons": {
+      "back": "voltar",
+      "next": "próximo",
+      "createRole": "criar função",
+      "updateRole": "atualizar função"
+    },
+    "messages": {
+      "loadingRole": "carregando função...",
+      "completeAllSteps": "complete todos os passos para criar a função",
+      "allFieldsRequired": "campos marcados com * são obrigatórios",
+      "currentStep": "passo atual",
+      "systemRoleWarning": "esta é uma função do sistema. alguns campos não podem ser modificados."
+    },
+    "reviewStep": {
+      "subtitle": "revise sua configuração de função antes de salvar",
+      "successMessage": "pronto para criar! clique em 'criar função' para salvar",
+      "successMessageEdit": "pronto para atualizar! clique em 'atualizar função' para salvar alterações",
+      "sections": {
+        "basicInfo": "informações básicas",
+        "permissions": "permissões"
+      },
+      "fields": {
+        "name": "nome",
+        "description": "descrição",
+        "scope": "escopo",
+        "isTemplate": "modelo compartilhado",
+        "totalPermissions": "total de permissões",
+        "enabledResources": "recursos habilitados"
+      },
+      "values": {
+        "notProvided": "não fornecido",
+        "notSelected": "não selecionado",
+        "noPermissions": "nenhuma permissão selecionada"
+      }
+    },
+    "notifications": {
+      "created": "função criada com sucesso",
+      "updated": "função atualizada com sucesso",
+      "createFailed": "falha ao criar função",
+      "updateFailed": "falha ao atualizar função",
+      "loadFailed": "falha ao carregar função",
+      "noPermissions": "por favor selecione pelo menos uma permissão",
+      "alreadyExists": "uma função com este nome já existe",
+      "forbidden": "você não tem permissão para realizar esta ação"
+    }
+  }
+}

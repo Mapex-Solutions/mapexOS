@@ -1,0 +1,435 @@
+{
+  "pageHeader": {
+    "title": "route groups",
+    "description": "manage event routing configurations and conditional routing rules.",
+    "button": "add route group",
+    "info": {
+      "title": "What is a Route Group?",
+      "description": "A Route Group defines how incoming events are routed to different processing destinations based on conditional rules. You can route events to Business Rules, LakeHouses, Notifications, or simply save them.",
+      "items": {
+        "conditionalRouting": {
+          "title": "Conditional Routing",
+          "text": "Define match rules to route events based on field values, using operators like equal, greater than, in array, etc."
+        },
+        "multipleDestinations": {
+          "title": "Multiple Destinations",
+          "text": "Route events to Business Rules for processing, LakeHouses for storage, or Notification channels for alerts"
+        },
+        "versionControl": {
+          "title": "Version Control",
+          "text": "Track routing configuration changes with semantic versioning"
+        },
+        "enableDisable": {
+          "title": "Enable/Disable",
+          "text": "Quickly activate or deactivate routing groups without deleting them"
+        },
+        "andOrLogic": {
+          "title": "AND/OR Logic",
+          "text": "Combine multiple rules using 'all' (AND) or 'any' (OR) policies for flexible matching"
+        }
+      },
+      "docsLabel": "View Complete Documentation"
+    }
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search route groups...",
+    "allStatus": "all",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "name": "search by name",
+    "enabled": "status",
+    "includeChildren": "include children",
+    "includeChildrenOrgs": "include child organizations",
+    "isTemplate": "template source",
+    "enabledOptions": {
+      "all": "all",
+      "active": "active only",
+      "inactive": "inactive only"
+    },
+    "includeChildrenOptions": {
+      "yes": "yes",
+      "no": "no"
+    },
+    "options": {
+      "yes": "yes",
+      "no": "no",
+      "active": "active",
+      "inactive": "inactive",
+      "templates": "shared",
+      "local": "local"
+    }
+  },
+  "listHeader": {
+    "title": "route groups list",
+    "itemLabel": "route group",
+    "itemLabelPlural": "route groups"
+  },
+  "columns": {
+    "name": "name",
+    "organization": "organization",
+    "routers": "routers",
+    "templateSource": "template source",
+    "status": "status"
+  },
+  "menuColumns": {
+    "organization": "organization"
+  },
+  "empty": {
+    "title": "no route groups found",
+    "description": "it seems there are no route groups matching your current search criteria or you don't have any route groups yet."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirm deletion",
+      "message": "are you sure you want to delete the route group \"{name}\"? This action cannot be undone."
+    }
+  },
+  "notifications": {
+    "created": "route group created successfully",
+    "updated": "route group updated successfully",
+    "deleted": "route group deleted successfully",
+    "deleteError": "error deleting route group",
+    "creationFailed": "error creating route group",
+    "updateFailed": "error updating route group",
+    "loadFailed": "failed to load route group data",
+    "alreadyExists": "a route group with this name already exists",
+    "validationFailed": "validation failed, please check your inputs",
+    "networkError": "network error, please try again",
+    "sharedEdit": "shared route groups from other organizations cannot be edited",
+    "sharedDelete": "shared route groups from other organizations cannot be deleted"
+  },
+  "errors": {
+    "apiNotInitialized": "Router API is not available",
+    "idMissing": "Route Group ID is missing"
+  },
+  "actions": {
+    "edit": "edit",
+    "view": "view",
+    "delete": "delete"
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "drawer": {
+    "title": "route group details",
+    "close": "close",
+    "edit": "edit",
+    "duplicate": "duplicate",
+    "loading": "loading route group details...",
+    "error": "failed to load route group details",
+    "sections": {
+      "basicInfo": "basic information",
+      "routers": "routers configuration",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "enabled": "enabled",
+      "description": "description",
+      "created": "created",
+      "updated": "updated"
+    },
+    "empty": {
+      "description": "no description provided",
+      "routers": "no routers configured"
+    }
+  },
+  "createEdit": {
+    "page": {
+      "title": "Create Route Group",
+      "titleEdit": "Edit Route Group",
+      "description": "Create a new route group with routing rules",
+      "descriptionEdit": "Edit route group configuration",
+      "backButton": "Back to Route Groups",
+      "loading": "Loading route group..."
+    },
+    "stepper": {
+      "title": "Configure Route Group",
+      "subtitle": "Complete all steps to configure your route group",
+      "requiredInfo": "* Required fields",
+      "currentStep": "Current Step"
+    },
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "save": "Save",
+      "update": "Update",
+      "cancel": "Cancel"
+    },
+    "steps": [
+      {
+        "title": "Basic Information",
+        "icon": "mdi-information",
+        "description": "Define route group name and status"
+      },
+      {
+        "title": "Routers Configuration",
+        "icon": "mdi-routes",
+        "description": "Configure routing destinations and rules"
+      },
+      {
+        "title": "Review",
+        "icon": "mdi-check-circle",
+        "description": "Review all configuration before saving"
+      }
+    ],
+    "basicInfoStep": {
+      "title": "Basic Information",
+      "subtitle": "Configure the basic details of your route group",
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter route group name",
+          "hint": "A descriptive name for this routing configuration",
+          "required": "Name is required"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter a description (optional)",
+          "hint": "Describe the purpose of this route group"
+        },
+        "enabled": {
+          "label": "Status",
+          "hint": "Enable or disable this route group",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "isTemplate": {
+          "label": "Shared Template",
+          "hint": "Mark as shared template for use by child organizations"
+        }
+      }
+    },
+    "routersStep": {
+      "title": "Routers Configuration",
+      "subtitle": "Add routers and define conditional routing rules",
+      "addRouter": "Add Router",
+      "removeRouter": "Remove Router",
+      "noRouters": "No routers configured yet. Click 'Add Router' to start.",
+      "noRoutersWarning": "At least one router is required",
+      "noRoutersHint": "Click the 'Add Router' button below to configure your first routing destination",
+      "infoBanner": {
+        "title": "At least one router is required",
+        "message": "Configure routing destinations to define where events will be sent"
+      },
+      "conditionalRouting": {
+        "label": "Conditional Routing",
+        "hint": "Add match rules to control when this router is used"
+      },
+      "routerCard": {
+        "title": "Router {index}",
+        "kind": {
+          "label": "Router Type",
+          "placeholder": "Select router type",
+          "required": "Router type is required",
+          "options": {
+            "lake_house": "LakeHouse",
+            "notification": "Notification",
+            "save_event": "Save Event",
+            "workflow": "Workflow"
+          }
+        },
+        "conditionalRouting": {
+          "label": "Conditional Routing",
+          "hint": "Define rules to conditionally route events",
+          "enable": "Enable conditional routing",
+          "disable": "Disable conditional routing",
+          "policy": {
+            "label": "Match Policy",
+            "options": {
+              "all": "All (AND) - all rules must match",
+              "any": "Any (OR) - at least one rule must match"
+            }
+          },
+          "addRule": "Add Rule",
+          "removeRule": "Remove Rule",
+          "noRules": "No rules defined yet",
+          "rule": {
+            "field": {
+              "label": "Field Path",
+              "placeholder": "e.g., payload.temperature",
+              "hint": "JSON path to the field to evaluate"
+            },
+            "operator": {
+              "label": "Operator",
+              "placeholder": "Select operator",
+              "options": {
+                "eq": "Equal (=)",
+                "neq": "Not Equal (!=)",
+                "gt": "Greater Than (>)",
+                "gte": "Greater or Equal (>=)",
+                "lt": "Less Than (<)",
+                "lte": "Less or Equal (<=)",
+                "in": "In Array",
+                "nin": "Not In Array"
+              }
+            },
+            "value": {
+              "label": "Value",
+              "placeholder": "Enter value",
+              "hint": "Value to compare against",
+              "arrayHint": "Enter comma-separated values for array operators"
+            }
+          }
+        },
+        "lakeHouse": {
+          "label": "LakeHouse",
+          "placeholder": "Select a lakehouse",
+          "required": "LakeHouse is required when kind is lake_house"
+        },
+        "notification": {
+          "label": "Notification",
+          "placeholder": "Select a notification channel",
+          "required": "Notification is required when kind is notification"
+        },
+        "workflow": {
+          "mode": "Delivery Mode",
+          "modeHint": "How events are delivered to the workflow service",
+          "modeOptions": {
+            "newInstance": "New Instance",
+            "signal": "Signal",
+            "signalOrStart": "Signal or Start"
+          },
+          "modeDescriptions": {
+            "newInstance": "Creates a new workflow instance for each event",
+            "signal": "Delivers a signal to an existing running instance",
+            "signalOrStart": "Tries signal first, creates new instance if none found"
+          },
+          "workflowId": "Workflow Definition ID",
+          "workflowIdHint": "MongoDB _id of the workflow template",
+          "workflowUUID": "Instance UUID",
+          "workflowUUIDHint": "Unique instance identifier (optional for new instance, required for signal)",
+          "signalName": "Signal Name",
+          "signalNameHint": "e.g. telegram.message, payment.confirmed",
+          "metadata": "Metadata (JSON)",
+          "metadataHint": "Additional data merged alongside the event payload"
+        }
+      }
+    },
+    "reviewStep": {
+      "title": "Review Configuration",
+      "subtitle": "Review your configuration before saving. You can edit any section by clicking the edit button.",
+      "successMessage": "Ready to save! Click \"Save\" or \"Update\" to confirm your changes.",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "routers": "Routers ({count})"
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "status": "Status",
+        "templateSource": "Template Source",
+        "routerType": "Type",
+        "conditionalRouting": "Conditional Routing",
+        "matchPolicy": "Match Policy",
+        "matchRules": "Match Rules",
+        "lakeHouse": "LakeHouse",
+        "notification": "Notification",
+        "workflow": "Workflow"
+      },
+      "values": {
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "shared": "Shared",
+        "local": "Local",
+        "none": "None",
+        "notConfigured": "Not configured"
+      }
+    }
+  },
+  "routerKinds": {
+    "trigger": {
+      "label": "Trigger",
+      "description": "Route to Trigger Service"
+    },
+    "lake_house": {
+      "label": "LakeHouse",
+      "description": "Route to LakeHouse"
+    },
+    "notification": {
+      "label": "Notification",
+      "description": "Route to Notification Service"
+    },
+    "save_event": {
+      "label": "Save Event",
+      "description": "Save Event (no routing)"
+    },
+    "workflow": {
+      "label": "Workflow",
+      "description": "Route events to Workflow Service"
+    }
+  },
+  "matchPolicies": {
+    "all": {
+      "label": "All (AND)",
+      "description": "All rules must pass (AND logic)"
+    },
+    "any": {
+      "label": "Any (OR)",
+      "description": "At least one rule must pass (OR logic)"
+    }
+  },
+  "matchOperators": {
+    "eq": "Equal",
+    "neq": "Not Equal",
+    "gt": "Greater Than",
+    "gte": "Greater or Equal",
+    "lt": "Less Than",
+    "lte": "Less or Equal",
+    "in": "In",
+    "nin": "Not In"
+  },
+  "tour": {
+    "welcome": {
+      "title": "Welcome to Route Groups",
+      "description": "Route Groups define how incoming events are routed to different processing destinations. You can route events to Business Rules, LakeHouses, Notifications, or simply save them for later use."
+    },
+    "stepperOverview": {
+      "title": "Three-Step Configuration",
+      "description": "Configure your route group in three simple steps: Basic Information, Routers Configuration, and Review. The stepper shows your progress and allows navigation between steps."
+    },
+    "step1Overview": {
+      "title": "Step 1: Basic Information",
+      "description": "Start by defining the basic details of your route group including name and status."
+    },
+    "fieldName": {
+      "title": "Route Group Name",
+      "description": "Give your route group a descriptive name that helps identify its purpose. This is a required field."
+    },
+    "fieldStatus": {
+      "title": "Status Control",
+      "description": "Enable or disable the route group. Disabled route groups won't process any incoming events."
+    },
+    "step2Overview": {
+      "title": "Step 2: Routers Configuration",
+      "description": "Add routers to define where events will be sent. Each router can have conditional rules to filter which events it receives."
+    },
+    "addRouter": {
+      "title": "Add Routers",
+      "description": "Click this button to add routing destinations. You can add multiple routers to send events to different destinations simultaneously."
+    },
+    "routerCard": {
+      "title": "Router Configuration",
+      "description": "Each router card represents a routing destination. Configure the router type and optionally add conditional routing rules."
+    },
+    "routerKind": {
+      "title": "Router Type",
+      "description": "Select where events should be routed: Business Rule (for processing logic), LakeHouse (for storage), Notification (for alerts), or Save Event (just persist)."
+    },
+    "conditionalRouting": {
+      "title": "Conditional Routing",
+      "description": "Enable conditional routing to add match rules. Only events that satisfy the conditions will be sent to this router. Use AND/OR logic to combine multiple rules."
+    },
+    "step3Overview": {
+      "title": "Step 3: Review",
+      "description": "Review all your configuration before saving. You can click the edit button on any section to make changes."
+    },
+    "saveButton": {
+      "title": "Save Configuration",
+      "description": "Click Save to create your route group. In edit mode, this button will show 'Update' to save your changes."
+    }
+  }
+}

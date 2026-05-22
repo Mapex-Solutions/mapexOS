@@ -1,0 +1,23 @@
+{
+  "pageHeader": {
+    "defaultDescription": "Manage your {resource}",
+    "tourTooltip": "Start guided tour",
+    "infoTooltip": "More information"
+  },
+  "listHeaderMenu": {
+    "itemsCount": "{count} {label}",
+    "itemsPerPage": "Items per page",
+    "columns": "Columns",
+    "showColumn": "Show {column}",
+    "hideColumn": "Hide {column}",
+    "filtered": "(filtered)",
+    "visibleColumns": "Visible Columns",
+    "refresh": "Refresh",
+    "lastUpdated": {
+      "now": "Updated now",
+      "seconds": "Updated {n}s ago",
+      "minutes": "Updated {n}m ago",
+      "hours": "Updated {n}h ago"
+    }
+  }
+}

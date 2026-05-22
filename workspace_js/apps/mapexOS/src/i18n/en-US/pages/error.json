@@ -1,0 +1,18 @@
+{
+  "notFound": {
+    "code": "404",
+    "title": "page not found",
+    "description": "the page you are looking for doesn't exist or has been moved.",
+    "goBack": "go back"
+  },
+  "forbidden": {
+    "code": "403",
+    "title": "access denied",
+    "description": "you don't have permission to access this page. Contact your administrator if you believe this is an error.",
+    "goBack": "go back",
+    "dashboard": "dashboard"
+  },
+  "aria": {
+    "logoAlt": "mapex logo"
+  }
+}

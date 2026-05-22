@@ -1,0 +1,171 @@
+{
+  "pageHeader": {
+    "title": "listas",
+    "description": "gerencie listas do sistema como tipos de ativos, grupos de ativos, prioridades, status e severidades.",
+    "button": "adicionar item",
+    "info": {
+      "title": "O que são Listas do Sistema?",
+      "description": "Listas do Sistema são coleções categorizadas de valores predefinidos usados em todo o MapexOS. Elas fornecem consistência e padronização para classificação de ativos, priorização e rastreamento de status.",
+      "items": {
+        "types": {
+          "title": "Categorias de Listas",
+          "text": "Tipos de Ativos, Grupos de Ativos, Prioridades, Status e Severidades - cada um atendendo necessidades específicas de classificação"
+        },
+        "hierarchy": {
+          "title": "Estrutura Hierárquica",
+          "text": "Suporte a relacionamentos pai-filho para categorização complexa (ex: Fabricante → Tipo de Dispositivo)"
+        },
+        "systemLists": {
+          "title": "Listas do Sistema",
+          "text": "Listas pré-construídas fornecidas pelo MapexOS, visíveis para todas as organizações mas somente leitura"
+        },
+        "customLists": {
+          "title": "Listas Personalizadas",
+          "text": "Crie itens de lista específicos da organização adaptados aos seus requisitos operacionais"
+        },
+        "templates": {
+          "title": "Templates Compartilhados",
+          "text": "Compartilhe itens de lista entre organizações como templates para padronização"
+        }
+      },
+      "docsLabel": "Ver Documentação Completa"
+    }
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "pesquisar itens...",
+    "allSource": "todos",
+    "advancedFilters": "filtros avançados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar tudo",
+    "name": "pesquisar por nome",
+    "category": "categoria",
+    "type": "tipo de lista",
+    "isSystem": "origem",
+    "isTemplate": "escopo",
+    "includeChildren": "incluir organizações filhas",
+    "categoryOptions": {
+      "all": "todos",
+      "iot": "IoT"
+    },
+    "typeOptions": {
+      "all": "todos",
+      "categories": "categorias",
+      "manufacturers": "fabricantes",
+      "models": "modelos"
+    },
+    "isSystemOptions": {
+      "all": "todos",
+      "system": "sistema",
+      "custom": "personalizado"
+    },
+    "isTemplateOptions": {
+      "all": "todos",
+      "shared": "compartilhado",
+      "local": "local"
+    },
+    "includeChildrenOptions": {
+      "all": "todos",
+      "yes": "sim",
+      "no": "não"
+    }
+  },
+  "listHeader": {
+    "title": "itens de lista",
+    "itemLabel": "item",
+    "itemLabelPlural": "itens"
+  },
+  "columns": {
+    "name": "nome",
+    "value": "valor",
+    "category": "categoria",
+    "type": "tipo",
+    "source": "origem",
+    "scope": "escopo",
+    "organization": "organização"
+  },
+  "status": {
+    "active": "ativo",
+    "inactive": "inativo"
+  },
+  "menuColumns": {
+    "organization": "organização",
+    "category": "categoria",
+    "type": "tipo",
+    "source": "origem",
+    "scope": "escopo"
+  },
+  "categories": {
+    "iot": "IoT"
+  },
+  "listTypes": {
+    "manufacturers": "fabricante",
+    "assets": "ativo",
+    "asset_category": "categoria",
+    "asset_manufacturer": "fabricante",
+    "asset_model": "modelo"
+  },
+  "empty": {
+    "title": "nenhum item encontrado",
+    "description": "parece que não há itens correspondentes aos seus critérios de pesquisa atuais ou você ainda não tem nenhum item."
+  },
+  "dialog": {
+    "confirmDelete": {
+      "title": "confirmar exclusão",
+      "message": "tem certeza de que deseja excluir o item \"{name}\"?"
+    }
+  },
+  "notifications": {
+    "deleted": "item excluído com sucesso",
+    "deleteError": "erro ao excluir item",
+    "loadFailed": "falha ao carregar itens",
+    "systemListEdit": "itens de lista do sistema não podem ser editados",
+    "systemListDelete": "itens de lista do sistema não podem ser excluídos",
+    "sharedListEdit": "itens de lista compartilhados de outras organizações não podem ser editados",
+    "sharedListDelete": "itens de lista compartilhados de outras organizações não podem ser excluídos"
+  },
+  "errors": {
+    "apiNotInitialized": "API de listas não está disponível",
+    "idMissing": "ID da lista ausente"
+  },
+  "actions": {
+    "edit": "editar",
+    "view": "visualizar",
+    "delete": "excluir"
+  },
+  "drawer": {
+    "title": "detalhes da lista",
+    "close": "fechar",
+    "loading": "carregando detalhes da lista...",
+    "error": "erro ao carregar detalhes da lista",
+    "sections": {
+      "basicInfo": "informações básicas",
+      "ids": "identificadores",
+      "metadata": "metadados",
+      "timestamps": "datas"
+    },
+    "fields": {
+      "name": "nome",
+      "value": "valor",
+      "category": "categoria",
+      "type": "tipo de lista",
+      "isSystem": "é sistema",
+      "isTemplate": "é template",
+      "id": "id",
+      "parentType": "tipo pai",
+      "parentName": "nome pai",
+      "orgId": "id da organização",
+      "created": "criado",
+      "updated": "atualizado"
+    },
+    "values": {
+      "yes": "sim",
+      "no": "não"
+    },
+    "empty": {
+      "parentType": "sem tipo pai",
+      "parentName": "sem pai",
+      "orgId": "sem organização"
+    }
+  }
+}

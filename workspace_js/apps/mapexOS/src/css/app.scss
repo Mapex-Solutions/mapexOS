@@ -1,0 +1,701 @@
+// app global css in SCSS form
+
+// ─── DESIGN TOKENS: LIGHT MODE ──────────────────────────────
+// CSS custom properties MUST be defined here (not in quasar.variables.scss)
+// because Quasar's build system treats that file as SCSS-only and may not
+// emit CSS custom property blocks to the final output.
+body.body--light {
+  --q-primary: #3b6d5e;
+
+  // Layout
+  --mapex-page-bg:            #F5F7F9;
+  --mapex-surface-bg:         #FFFFFF;
+  --mapex-surface-elevated:   #FFFFFF;
+  --mapex-sidebar-bg:         #FFFFFF;
+  --mapex-header-bg:          rgba(255, 255, 255, 0.95);
+  --mapex-header-border:      rgba(0, 0, 0, 0.1);
+  --mapex-popup-bg:           #FFFFFF;
+
+  // Text
+  --mapex-text-primary:       #212121;
+  --mapex-text-secondary:     #757575;
+  --mapex-text-muted:         #9E9E9E;
+
+  // Borders & Dividers
+  --mapex-card-border:        #E0E0E0;
+  --mapex-card-hover-border:  #BDBDBD;
+  --mapex-divider:            #E0E0E0;
+
+  // Shadows
+  --mapex-hover-shadow:       rgba(0, 0, 0, 0.08);
+  --mapex-elevation-shadow:   rgba(0, 0, 0, 0.06);
+
+  // Interactive
+  --mapex-primary:            #3b6d5e;
+  --mapex-primary-rgb:        59, 109, 94;
+  --mapex-submenu-bg:         rgba(0, 0, 0, 0.02);
+  --mapex-active-bg:          rgba(59, 109, 94, 0.1);
+  --mapex-active-border:      rgba(59, 109, 94, 0.45);
+
+  // Scrollbar
+  --mapex-scrollbar-track:    rgba(0, 0, 0, 0.02);
+  --mapex-scrollbar-thumb:    rgba(0, 0, 0, 0.10);
+  --mapex-scrollbar-thumb-hover: rgba(0, 0, 0, 0.16);
+
+  // Danger states
+  --mapex-danger:             #FF4D4F;
+  --mapex-danger-hover:       rgba(255, 77, 79, 0.08);
+  --mapex-danger-active:      rgba(255, 77, 79, 0.15);
+  --mapex-danger-border:      rgba(255, 77, 79, 0.25);
+
+  // Quasar overrides
+  --q-negative:               #C10015;
+
+  // Tooltip
+  --mapex-tooltip-bg:         var(--mapex-primary);
+  --mapex-tooltip-text:       #FFFFFF;
+  --mapex-tooltip-text-secondary: rgba(255, 255, 255, 0.75);
+
+  // Loading
+  --mapex-loading-bg:         #E0E0E0;
+  --mapex-loading-shimmer:    #F5F5F5;
+
+  // Surface (extra)
+  --mapex-surface-sunken:     #F0F2F5;
+  --mapex-surface-highlight:  rgba(0, 0, 0, 0.02);
+
+  // Border Radius Scale
+  --mapex-radius-xs:          4px;
+  --mapex-radius-sm:          6px;
+  --mapex-radius-md:          8px;
+  --mapex-radius-lg:          12px;
+  --mapex-radius-xl:          16px;
+  --mapex-radius-2xl:         24px;
+  --mapex-radius-full:        50%;
+
+  // Shadow Scale
+  --mapex-shadow-xs:          0 1px 3px rgba(0, 0, 0, 0.08);
+  --mapex-shadow-sm:          0 2px 8px rgba(0, 0, 0, 0.1);
+  --mapex-shadow-md:          0 4px 12px rgba(0, 0, 0, 0.1);
+  --mapex-shadow-lg:          0 8px 24px rgba(0, 0, 0, 0.12);
+  --mapex-shadow-xl:          0 12px 32px rgba(0, 0, 0, 0.15);
+
+  // Transition Scale
+  --mapex-transition-fast:    all 0.15s ease;
+  --mapex-transition-base:    all 0.2s ease;
+  --mapex-transition-slow:    all 0.3s ease;
+
+  // Spacing Scale
+  --mapex-spacing-2xs:        2px;
+  --mapex-spacing-xs:         4px;
+  --mapex-spacing-sm:         8px;
+  --mapex-spacing-md:         12px;
+  --mapex-spacing-lg:         16px;
+  --mapex-spacing-xl:         20px;
+  --mapex-spacing-2xl:        24px;
+  --mapex-spacing-3xl:        32px;
+
+  // Font Size Scale
+  --mapex-font-2xs:           0.625rem;
+  --mapex-font-xs:            0.75rem;
+  --mapex-font-sm:            0.8125rem;
+  --mapex-font-md:            0.875rem;
+  --mapex-font-lg:            1rem;
+
+  // Font Weight Scale
+  --mapex-font-weight-regular:  400;
+  --mapex-font-weight-medium:   500;
+  --mapex-font-weight-semibold: 600;
+  --mapex-font-weight-bold:     700;
+
+  // Line Height Scale
+  --mapex-line-height-tight:    1.2;
+  --mapex-line-height-base:     1.5;
+  --mapex-line-height-relaxed:  1.75;
+
+  // Focus Ring
+  --mapex-focus-ring:         0 0 0 2px rgba(59, 109, 94, 0.4);
+
+  background-color: var(--mapex-page-bg);
+}
+
+// ─── DESIGN TOKENS: DARK MODE ───────────────────────────────
+body.body--dark {
+  --q-primary: #4CAF7D;
+
+  // Layout
+  --mapex-page-bg:            #1B2530;
+  --mapex-surface-bg:         #222E3A;
+  --mapex-surface-elevated:   #2D3C4B;
+  --mapex-sidebar-bg:         #162029;
+  --mapex-header-bg:          rgba(27, 37, 48, 0.95);
+  --mapex-header-border:      rgba(255, 255, 255, 0.06);
+  --mapex-popup-bg:           #2D3C4B;
+
+  // Text
+  --mapex-text-primary:       #E6EDF3;
+  --mapex-text-secondary:     #A7B4C2;
+  --mapex-text-muted:         #738191;
+
+  // Borders & Dividers
+  --mapex-card-border:        rgba(255, 255, 255, 0.08);
+  --mapex-card-hover-border:  rgba(76, 175, 125, 0.35);
+  --mapex-divider:            rgba(255, 255, 255, 0.06);
+
+  // Shadows
+  --mapex-hover-shadow:       rgba(255, 255, 255, 0.05);
+  --mapex-elevation-shadow:   rgba(0, 0, 0, 0.45);
+
+  // Interactive
+  --mapex-primary:            #4CAF7D;
+  --mapex-primary-rgb:        76, 175, 125;
+  --mapex-submenu-bg:         rgba(255, 255, 255, 0.03);
+  --mapex-active-bg:          rgba(76, 175, 125, 0.20);
+  --mapex-active-border:      rgba(76, 175, 125, 0.55);
+
+  // Scrollbar
+  --mapex-scrollbar-track:    rgba(255, 255, 255, 0.03);
+  --mapex-scrollbar-thumb:    rgba(255, 255, 255, 0.10);
+  --mapex-scrollbar-thumb-hover: rgba(255, 255, 255, 0.16);
+
+  // Danger states
+  --mapex-danger:             #FF4D4F;
+  --mapex-danger-hover:       rgba(255, 77, 79, 0.14);
+  --mapex-danger-active:      rgba(255, 77, 79, 0.25);
+  --mapex-danger-border:      rgba(255, 77, 79, 0.35);
+
+  // Quasar dark mode alignment
+  --q-dark-page:              #1B2530;
+  --q-dark:                   #222E3A;
+  --q-negative:               #FF6B6B;
+
+  // Tooltip
+  --mapex-tooltip-bg:         #1B2530;
+  --mapex-tooltip-text:       #E6EDF3;
+  --mapex-tooltip-text-secondary: #A7B4C2;
+
+  // Loading
+  --mapex-loading-bg:         #2E3B48;
+  --mapex-loading-shimmer:    #374757;
+
+  // Surface (extra)
+  --mapex-surface-sunken:     #151E27;
+  --mapex-surface-highlight:  rgba(255, 255, 255, 0.04);
+
+  // Border Radius Scale
+  --mapex-radius-xs:          4px;
+  --mapex-radius-sm:          6px;
+  --mapex-radius-md:          8px;
+  --mapex-radius-lg:          12px;
+  --mapex-radius-xl:          16px;
+  --mapex-radius-2xl:         24px;
+  --mapex-radius-full:        50%;
+
+  // Shadow Scale
+  --mapex-shadow-xs:          0 1px 3px rgba(0, 0, 0, 0.25);
+  --mapex-shadow-sm:          0 2px 8px rgba(0, 0, 0, 0.3);
+  --mapex-shadow-md:          0 4px 12px rgba(0, 0, 0, 0.3);
+  --mapex-shadow-lg:          0 8px 24px rgba(0, 0, 0, 0.35);
+  --mapex-shadow-xl:          0 12px 32px rgba(0, 0, 0, 0.4);
+
+  // Transition Scale
+  --mapex-transition-fast:    all 0.15s ease;
+  --mapex-transition-base:    all 0.2s ease;
+  --mapex-transition-slow:    all 0.3s ease;
+
+  // Spacing Scale
+  --mapex-spacing-2xs:        2px;
+  --mapex-spacing-xs:         4px;
+  --mapex-spacing-sm:         8px;
+  --mapex-spacing-md:         12px;
+  --mapex-spacing-lg:         16px;
+  --mapex-spacing-xl:         20px;
+  --mapex-spacing-2xl:        24px;
+  --mapex-spacing-3xl:        32px;
+
+  // Font Size Scale
+  --mapex-font-2xs:           0.625rem;
+  --mapex-font-xs:            0.75rem;
+  --mapex-font-sm:            0.8125rem;
+  --mapex-font-md:            0.875rem;
+  --mapex-font-lg:            1rem;
+
+  // Font Weight Scale
+  --mapex-font-weight-regular:  400;
+  --mapex-font-weight-medium:   500;
+  --mapex-font-weight-semibold: 600;
+  --mapex-font-weight-bold:     700;
+
+  // Line Height Scale
+  --mapex-line-height-tight:    1.2;
+  --mapex-line-height-base:     1.5;
+  --mapex-line-height-relaxed:  1.75;
+
+  // Focus Ring
+  --mapex-focus-ring:         0 0 0 2px rgba(76, 175, 125, 0.4);
+
+  background-color: var(--mapex-page-bg);
+}
+
+// ─── PAGE BACKGROUND ────────────────────────────────────────
+.q-page {
+  background-color: var(--mapex-page-bg);
+}
+
+// ─── CARDS ──────────────────────────────────────────────────
+.q-card--hover {
+  transition: var(--mapex-transition-slow);
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--mapex-hover-shadow) !important;
+  }
+}
+
+.rounded-borders {
+  border-radius: var(--mapex-radius-md) !important;
+}
+
+.company-logo {
+  border-radius: var(--mapex-radius-md);
+  background: var(--mapex-surface-bg);
+  border: 1px solid var(--mapex-card-border);
+
+  &:deep(.q-img__content) {
+    background: var(--mapex-surface-bg);
+  }
+}
+
+.bg-grey-2 {
+  background-color: var(--mapex-page-bg);
+}
+
+// ─── DATA ROW CARDS ─────────────────────────────────────────
+.data-row-table {
+  background: transparent !important;
+  box-shadow: none !important;
+
+  .q-table__card {
+    box-shadow: none !important;
+  }
+
+  tbody {
+    background: transparent !important;
+  }
+
+  .data-row-card {
+    background: var(--mapex-surface-elevated);
+    border-radius: var(--mapex-radius-lg);
+    border: 1px solid var(--mapex-card-border);
+    box-shadow: 0 2px 4px var(--mapex-elevation-shadow);
+    transition: var(--mapex-transition-base);
+    cursor: pointer;
+    margin-bottom: 12px;
+
+    &:hover {
+      border-color: var(--mapex-card-hover-border);
+      box-shadow: 0 4px 12px var(--mapex-hover-shadow);
+      transform: translateY(-2px);
+    }
+
+    td {
+      padding: 20px !important;
+      border: none !important;
+    }
+
+    // Remove default table borders
+    &:first-child td {
+      border-top: none !important;
+    }
+  }
+}
+
+// ─── TYPOGRAPHY ─────────────────────────────────────────────
+.data-row-card {
+  // Main text should be bolder for better readability
+  .text-body2 {
+    font-weight: 500 !important;
+    color: var(--mapex-text-primary) !important;
+  }
+
+  // Labels should be lighter but still readable
+  .text-caption {
+    font-weight: 400 !important;
+    color: var(--mapex-text-secondary) !important;
+    letter-spacing: 0.02em;
+  }
+
+  // Secondary text (descriptions) lighter
+  .text-grey-6 {
+    color: var(--mapex-text-muted) !important;
+  }
+}
+
+// ─── DARK MODE GLOBAL OVERRIDES ─────────────────────────────
+// Aggressive global overrides to force dark mode on ALL Quasar
+// components and utility classes. Uses !important to win over
+// scoped component styles.
+body.body--dark {
+
+  // ── Background utility classes ───────────────────────────
+  .bg-white {
+    background-color: var(--mapex-surface-elevated) !important;
+  }
+
+  .bg-grey-1,
+  .bg-grey-2,
+  .bg-grey-3 {
+    background-color: var(--mapex-page-bg) !important;
+  }
+
+  .bg-grey-4,
+  .bg-grey-5 {
+    background-color: var(--mapex-surface-bg) !important;
+  }
+
+  // ── Tinted background utility classes ──────────────────────
+  // Quasar bg-*-1 classes are very light tints (e.g. #E3F2FD)
+  // that look jarring in dark mode. Override with subtle rgba.
+  .bg-blue-1 {
+    background-color: rgba(33, 150, 243, 0.12) !important;
+  }
+
+  .bg-teal-1 {
+    background-color: rgba(0, 150, 136, 0.12) !important;
+  }
+
+  .bg-purple-1 {
+    background-color: rgba(156, 39, 176, 0.12) !important;
+  }
+
+  .bg-orange-1 {
+    background-color: rgba(255, 152, 0, 0.12) !important;
+  }
+
+  .bg-indigo-1 {
+    background-color: rgba(63, 81, 181, 0.12) !important;
+  }
+
+  .bg-cyan-1 {
+    background-color: rgba(0, 188, 212, 0.12) !important;
+  }
+
+  .bg-amber-1 {
+    background-color: rgba(255, 193, 7, 0.12) !important;
+  }
+
+  .bg-deep-purple-1 {
+    background-color: rgba(103, 58, 183, 0.12) !important;
+  }
+
+  .bg-green-1 {
+    background-color: rgba(76, 175, 80, 0.12) !important;
+  }
+
+  .bg-red-1 {
+    background-color: rgba(255, 77, 79, 0.12) !important;
+  }
+
+  // ── Tinted text utility classes (dark-friendly) ──────────
+  .text-blue-9 {
+    color: #64B5F6 !important;
+  }
+
+  .text-green-9 {
+    color: #81C784 !important;
+  }
+
+  .text-orange-9 {
+    color: #FFB74D !important;
+  }
+
+  .text-amber-9 {
+    color: #FFD54F !important;
+  }
+
+  .text-purple-9 {
+    color: #CE93D8 !important;
+  }
+
+  .text-grey-8 {
+    color: var(--mapex-text-secondary) !important;
+  }
+
+  // ── q-card (NUCLEAR: !important) ─────────────────────────
+  .q-card {
+    background-color: var(--mapex-surface-elevated) !important;
+    color: var(--mapex-text-primary) !important;
+    border-color: var(--mapex-card-border) !important;
+  }
+
+  // ── q-page ───────────────────────────────────────────────
+  .q-page {
+    background-color: var(--mapex-page-bg) !important;
+  }
+
+  // ── q-drawer (sidebar, panels, org tree) ─────────────────
+  .q-drawer {
+    background-color: var(--mapex-sidebar-bg) !important;
+    color: var(--mapex-text-primary);
+  }
+
+  // ── q-toolbar / q-header ─────────────────────────────────
+  .q-toolbar {
+    color: var(--mapex-text-primary);
+  }
+
+  // ── q-input / q-select / q-field ─────────────────────────
+  .q-field__control {
+    background: var(--mapex-surface-bg) !important;
+  }
+
+  .q-field__native,
+  .q-field__prefix,
+  .q-field__suffix,
+  .q-field__input {
+    color: var(--mapex-text-primary) !important;
+  }
+
+  .q-field__label {
+    color: var(--mapex-text-secondary) !important;
+  }
+
+  .q-field--outlined .q-field__control:before {
+    border-color: var(--mapex-card-border) !important;
+  }
+
+  .q-field--outlined .q-field__control:hover:before {
+    border-color: var(--mapex-card-hover-border) !important;
+  }
+
+  // ── q-table ──────────────────────────────────────────────
+  .q-table {
+    color: var(--mapex-text-primary);
+
+    thead th {
+      color: var(--mapex-text-secondary);
+    }
+
+    tbody td {
+      color: var(--mapex-text-primary);
+    }
+
+    &__card {
+      background-color: var(--mapex-surface-elevated) !important;
+    }
+  }
+
+  // ── q-menu / q-popup / q-dialog ──────────────────────────
+  .q-menu {
+    background-color: var(--mapex-popup-bg) !important;
+    color: var(--mapex-text-primary);
+  }
+
+  .q-dialog__inner > .q-card {
+    background-color: var(--mapex-surface-elevated) !important;
+    color: var(--mapex-text-primary);
+  }
+
+  // ── q-item (lists, menus) ────────────────────────────────
+  .q-item {
+    color: var(--mapex-text-primary);
+  }
+
+  .q-item__label {
+    color: var(--mapex-text-primary);
+  }
+
+  .q-item__label--header {
+    color: var(--mapex-text-secondary);
+  }
+
+  .q-item__label--caption {
+    color: var(--mapex-text-muted) !important;
+  }
+
+  // ── q-list ───────────────────────────────────────────────
+  .q-list {
+    color: var(--mapex-text-primary);
+  }
+
+  // ── q-separator ──────────────────────────────────────────
+  .q-separator {
+    background-color: var(--mapex-divider) !important;
+  }
+
+  // ── q-chip ───────────────────────────────────────────────
+  .q-chip--outline {
+    border-color: var(--mapex-card-border);
+  }
+
+  // ── q-banner ─────────────────────────────────────────────
+  .q-banner {
+    color: var(--mapex-text-primary);
+  }
+
+  // ── q-tab-panels / q-tabs (NUCLEAR: !important) ──────────
+  .q-tab-panels {
+    background-color: var(--mapex-surface-bg) !important;
+  }
+
+  .q-tab-panel {
+    color: var(--mapex-text-primary);
+  }
+
+  .q-tabs {
+    .q-tab {
+      color: var(--mapex-text-secondary);
+
+      &--active {
+        color: var(--q-primary);
+      }
+    }
+  }
+
+  // ── q-stepper (NUCLEAR: !important) ──────────────────────
+  .q-stepper {
+    background-color: var(--mapex-surface-bg) !important;
+    color: var(--mapex-text-primary);
+
+    &__content {
+      background-color: var(--mapex-surface-bg) !important;
+    }
+
+    &__header {
+      border-color: var(--mapex-card-border);
+
+      .q-stepper__tab {
+        color: var(--mapex-text-secondary);
+      }
+
+      .q-stepper__label {
+        color: var(--mapex-text-secondary);
+      }
+
+      .q-stepper__dot {
+        background-color: var(--mapex-surface-elevated);
+      }
+
+      .q-stepper__tab--active {
+        .q-stepper__label {
+          color: var(--q-primary);
+        }
+      }
+    }
+
+    &__step-inner {
+      background-color: var(--mapex-surface-bg) !important;
+    }
+  }
+
+  // ── q-expansion-item ─────────────────────────────────────
+  .q-expansion-item__content {
+    background-color: var(--mapex-submenu-bg);
+  }
+
+  // ── q-btn-toggle / q-btn-group (NUCLEAR: !important) ─────
+  .q-btn-toggle {
+    border-color: rgba(var(--mapex-primary-rgb), 0.25) !important;
+    background-color: var(--mapex-surface-bg) !important;
+
+    .q-btn {
+      background-color: rgba(var(--mapex-primary-rgb), 0.08) !important;
+      color: var(--mapex-primary) !important;
+
+      &--active {
+        background-color: var(--q-primary) !important;
+        color: white !important;
+      }
+    }
+  }
+
+  .q-btn-group {
+    border-color: var(--mapex-card-border);
+
+    .q-btn {
+      border-color: var(--mapex-card-border) !important;
+    }
+  }
+
+  // ── q-checkbox / q-toggle / q-radio labels ───────────────
+  .q-checkbox__label,
+  .q-toggle__label,
+  .q-radio__label {
+    color: var(--mapex-text-primary);
+  }
+
+  // ── q-breadcrumbs ────────────────────────────────────────
+  .q-breadcrumbs__separator {
+    color: var(--mapex-text-muted);
+  }
+
+  // ── q-tooltip ────────────────────────────────────────────
+  .q-tooltip {
+    background-color: var(--mapex-surface-elevated);
+    color: var(--mapex-text-primary);
+  }
+
+  // ── q-skeleton (loading placeholders) ────────────────────
+  .q-skeleton {
+    background-color: var(--mapex-loading-bg) !important;
+
+    &::after {
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--mapex-loading-shimmer),
+        transparent
+      ) !important;
+    }
+  }
+
+  // ── Scrollbar global ─────────────────────────────────────
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--mapex-scrollbar-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--mapex-scrollbar-thumb);
+    border-radius: var(--mapex-radius-xs);
+
+    &:hover {
+      background: var(--mapex-scrollbar-thumb-hover);
+    }
+  }
+
+  // ── Text utility overrides ───────────────────────────────
+  .text-dark,
+  .text-grey-9 {
+    color: var(--mapex-text-primary) !important;
+  }
+
+  .text-grey,
+  .text-grey-6,
+  .text-grey-7,
+  .text-grey-8 {
+    color: var(--mapex-text-secondary) !important;
+  }
+
+  .text-grey-5,
+  .text-grey-4 {
+    color: var(--mapex-text-muted) !important;
+  }
+
+  .text-grey-3 {
+    color: var(--mapex-text-muted) !important;
+  }
+
+  .text-black {
+    color: var(--mapex-text-primary) !important;
+  }
+
+  .text-white {
+    color: #FFFFFF !important;
+  }
+}

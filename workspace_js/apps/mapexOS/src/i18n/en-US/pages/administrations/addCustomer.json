@@ -1,0 +1,96 @@
+{
+  "title": "add customer",
+  "titleEdit": "edit customer",
+  "description": "create a new customer organization",
+  "descriptionEdit": "update customer organization details",
+  "backButton": "back to customers",
+  "steps": {
+    "basic": "basic information",
+    "address": "address",
+    "accessPolicy": "access policy",
+    "review": "review"
+  },
+  "stepDescriptions": {
+    "basic": "organization name and basic settings",
+    "address": "organization address information",
+    "accessPolicy": "authentication and access policy configuration",
+    "review": "review and confirm details"
+  },
+  "formDescriptions": {
+    "basic": "enter the organization name and basic settings",
+    "address": "add the organization address (optional)",
+    "authConfig": "configure how users will authenticate to this organization",
+    "accessPolicy": "define how roles and permissions are applied in this organization",
+    "review": "review and confirm all details before saving"
+  },
+  "fields": {
+    "name": "organization name",
+    "phone": "phone number",
+    "enabled": "enabled",
+    "city": "city",
+    "state": "state/province",
+    "country": "country",
+    "zipCode": "zip/postal code",
+    "authProvider": "authentication provider",
+    "issuerUrl": "issuer URL",
+    "clientId": "client ID",
+    "rolePolicy": "role policy",
+    "defaultScope": "default scope"
+  },
+  "hints": {
+    "phoneFormat": "use international format (e.g., +1 555-123-4567)",
+    "enabled": "when disabled, users cannot access this organization",
+    "issuerUrl": "the OpenID Connect issuer URL for your Keycloak realm",
+    "clientId": "the client ID registered in Keycloak for this organization"
+  },
+  "sections": {
+    "basicInfo": "basic information",
+    "address": "address",
+    "authConfig": "authentication",
+    "accessPolicy": "access policy",
+    "progressSteps": "progress steps"
+  },
+  "buttons": {
+    "back": "back",
+    "next": "next",
+    "review": "review",
+    "createCustomer": "create customer",
+    "updateCustomer": "update customer"
+  },
+  "messages": {
+    "allFieldsRequired": "all fields marked with * are required",
+    "currentStep": "current step:",
+    "completeAllSteps": "complete all steps to create a new customer",
+    "loading": "loading customer data...",
+    "loadFailed": "failed to load customer data",
+    "reviewCreateSummary": "all information has been validated. Please review and confirm to create the customer.",
+    "reviewEditSummary": "review the changes before updating the customer."
+  },
+  "notifications": {
+    "created": "customer created successfully",
+    "updated": "customer updated successfully",
+    "createFailed": "failed to create customer",
+    "updateFailed": "failed to update customer",
+    "alreadyExists": "a customer with this name already exists",
+    "forbidden": "you don't have permission to perform this action"
+  },
+  "errors": {
+    "apiNotInitialized": "Organizations API is not available",
+    "idMissing": "Customer ID is missing"
+  },
+  "validation": {
+    "nameRequired": "organization name is required",
+    "nameMinLength": "name must be at least 3 characters",
+    "nameMaxLength": "name cannot exceed 150 characters",
+    "cityMaxLength": "city cannot exceed 100 characters",
+    "stateMaxLength": "state cannot exceed 100 characters",
+    "countryMaxLength": "country cannot exceed 100 characters",
+    "zipCodeMaxLength": "zip code cannot exceed 20 characters",
+    "issuerUrlRequired": "issuer URL is required for Keycloak authentication",
+    "clientIdRequired": "client ID is required for Keycloak authentication"
+  },
+  "status": {
+    "enabled": "enabled",
+    "disabled": "disabled"
+  }
+}

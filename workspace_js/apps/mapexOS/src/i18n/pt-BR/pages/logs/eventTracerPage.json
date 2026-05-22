@@ -1,0 +1,97 @@
+{
+  "pageHeader": {
+    "title": "rastreador de eventos",
+    "description": "rastreie a jornada completa de um evento pelo pipeline de processamento."
+  },
+  "search": {
+    "label": "ID do Rastreador",
+    "placeholder": "digite o ID do rastreador para rastrear...",
+    "button": "rastrear",
+    "hint": "digite o ID do rastreador de eventos para ver sua jornada completa pelo pipeline"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar por ID do rastreador...",
+    "advancedFilters": "filtros avancados",
+    "pendingFilters": "filtros pendentes - clique para aplicar",
+    "clearAll": "limpar todos",
+    "allStatus": "todos",
+    "eventTrackerId": "ID do rastreador",
+    "dateRange": "periodo",
+    "includeChildren": "incluir filhos",
+    "includeChildrenOrgs": "incluir organizacoes filhas",
+    "options": {
+      "yes": "sim",
+      "no": "nao"
+    }
+  },
+  "phases": {
+    "ingestion": "ingestao",
+    "routing": "roteamento"
+  },
+  "stages": {
+    "raw": "evento bruto",
+    "jsExec": "executor JS",
+    "router": "roteador",
+    "directTrigger": "trigger direto",
+    "trigger": "trigger",
+    "saveEvent": "salvar evento",
+    "lakeHouse": "lakehouse"
+  },
+  "stageStatus": {
+    "success": "sucesso",
+    "failed": "falhou",
+    "noData": "sem dados",
+    "notImplemented": "em breve",
+    "matched": "correspondeu",
+    "notMatched": "nao correspondeu"
+  },
+  "routing": {
+    "destinations": "destinos",
+    "routers": "roteadores",
+    "matched": "correspondidos",
+    "published": "publicados",
+    "conditions": "condicoes"
+  },
+  "timeline": {
+    "title": "fluxo do evento",
+    "executionTime": "tempo de execucao",
+    "timestamp": "timestamp",
+    "viewDetails": "ver detalhes",
+    "totalTime": "tempo total"
+  },
+  "drawer": {
+    "title": "detalhes do estagio"
+  },
+  "empty": {
+    "title": "sem resultados",
+    "description": "nenhum evento encontrado para este ID de rastreador. verifique se o ID esta correto e se o evento existe.",
+    "searchFirst": "digite um ID de rastreador para rastrear",
+    "searchFirstDescription": "use a caixa de busca acima para rastrear um evento pelo pipeline de processamento."
+  },
+  "messages": {
+    "loadFailed": "falha ao rastrear evento",
+    "invalidUuid": "por favor digite um ID de rastreador valido",
+    "minLength": "o ID do rastreador deve ter pelo menos 8 caracteres",
+    "loading": "carregando dados do rastreamento...",
+    "fetchingRaw": "buscando eventos brutos...",
+    "fetchingJsExec": "buscando logs do executor JS...",
+    "fetchingRouter": "buscando logs do roteador...",
+    "fetchingTriggers": "buscando logs de triggers..."
+  },
+  "summary": {
+    "title": "resumo do rastreamento",
+    "stagesProcessed": "estagios processados",
+    "totalExecutionTime": "tempo total de execucao",
+    "status": "status",
+    "allSuccess": "todos os estagios com sucesso",
+    "hasFailed": "alguns estagios falharam",
+    "totalTriggers": "total de triggers"
+  },
+  "actions": {
+    "trackEvent": "rastrear este evento",
+    "viewJson": "ver JSON",
+    "copyId": "copiar ID",
+    "refresh": "atualizar"
+  }
+}

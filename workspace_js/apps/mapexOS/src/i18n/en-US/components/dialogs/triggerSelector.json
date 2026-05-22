@@ -1,0 +1,11 @@
+{
+  "title": "select trigger",
+  "searchPlaceholder": "search triggers...",
+  "infoBanner": "click on a trigger to select it.",
+  "emptyText": "no triggers available",
+  "itemSingular": "trigger",
+  "itemPlural": "triggers",
+  "allFilter": "all",
+  "category": "category",
+  "fetchError": "failed to fetch triggers"
+}

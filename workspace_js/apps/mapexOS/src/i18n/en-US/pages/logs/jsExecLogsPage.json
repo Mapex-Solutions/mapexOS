@@ -1,0 +1,85 @@
+{
+  "pageHeader": {
+    "title": "JS executor logs",
+    "description": "view all script execution logs from your assets and data sources."
+  },
+  "listTitle": "execution logs",
+  "itemLabel": "log",
+  "itemLabelPlural": "logs",
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search by UUID...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters - click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "includeChildrenOrgs": "include child organizations",
+    "dateRange": "date range",
+    "status": "status",
+    "uuid": "UUID",
+    "includeChildren": "include children",
+    "execTimeOperator": "exec time operator",
+    "execTime": "exec time (ms)",
+    "execTimeEnd": "exec time end (ms)",
+    "options": {
+      "success": "success",
+      "failed": "failed",
+      "yes": "yes",
+      "no": "no"
+    },
+    "includeChildrenOptions": {
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "columns": {
+    "dataSource": "data source",
+    "uuid": "UUID",
+    "status": "status",
+    "executionTime": "execution time",
+    "execTime": "exec time",
+    "timestamp": "timestamp",
+    "retention": "retention"
+  },
+  "statusOptions": {
+    "success": "success",
+    "failed": "failed"
+  },
+  "statusBadge": {
+    "success": "SUCCESS",
+    "failed": "FAILED"
+  },
+  "execTimeOperators": {
+    "lessThan": "< (Less than)",
+    "lessThanOrEqual": "<= (Less than or equal)",
+    "greaterThan": "> (Greater than)",
+    "greaterThanOrEqual": ">= (Greater than or equal)",
+    "between": "Between"
+  },
+  "drawer": {
+    "title": "JS executor event details",
+    "subtitleSuccess": "success",
+    "subtitleFailed": "failed"
+  },
+  "empty": {
+    "title": "no execution logs found",
+    "description": "there are no JS executor logs matching your current filters or no script executions have been recorded yet."
+  },
+  "pagination": {
+    "newer": "newer",
+    "older": "older"
+  },
+  "messages": {
+    "loadFailed": "failed to load JS executor events"
+  },
+  "defaults": {
+    "unknown": "unknown",
+    "retentionDays": "{days} days",
+    "execTimeMs": "{time}ms",
+    "notAvailable": "N/A"
+  },
+  "placeholders": {
+    "execTime": "1000",
+    "execTimeEnd": "5000"
+  }
+}

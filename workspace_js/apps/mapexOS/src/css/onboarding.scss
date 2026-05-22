@@ -1,0 +1,143 @@
+@use 'sass:color';
+
+// Onboarding Tour - Driver.js Theme Override
+// Matches MapexOS design system
+
+.driver-popover {
+  background-color: var(--mapex-surface-elevated) !important;
+  border-radius: var(--mapex-radius-lg) !important;
+  box-shadow: 0 8px 32px var(--mapex-elevation-shadow) !important;
+  border: 1px solid var(--mapex-card-border) !important;
+  padding: 20px;
+  max-width: 360px;
+
+  .driver-popover-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--mapex-text-primary) !important;
+    margin-bottom: 8px;
+  }
+
+  .driver-popover-description {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--mapex-text-secondary) !important;
+    line-height: 1.5;
+  }
+
+  .driver-popover-progress-text {
+    font-size: 0.75rem;
+    color: var(--mapex-text-muted) !important;
+  }
+
+  .driver-popover-footer {
+    margin-top: 16px;
+    gap: 8px;
+
+    .driver-popover-navigation-btns {
+      gap: 8px;
+    }
+  }
+
+  // Primary action buttons (Next, Finish)
+  .driver-popover-next-btn {
+    background-color: $primary !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--mapex-radius-md) !important;
+    padding: 8px 20px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--mapex-transition-base);
+    text-shadow: none !important;
+
+    &:hover {
+      background-color: color.adjust($primary, $lightness: -8%) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba($primary, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // Close (X) button - top-right corner
+  .driver-popover-close-btn {
+    background: none !important;
+    color: var(--mapex-text-muted) !important;
+    border: none;
+    border-radius: var(--mapex-radius-full);
+    padding: 2px;
+    font-size: 1rem;
+    font-weight: 400;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--mapex-transition-base);
+    text-shadow: none !important;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    &:hover {
+      background-color: var(--mapex-submenu-bg) !important;
+      color: var(--mapex-text-secondary) !important;
+    }
+  }
+
+  // Secondary action buttons (Previous, Skip)
+  .driver-popover-prev-btn {
+    background-color: transparent !important;
+    color: $primary !important;
+    border: 1px solid rgba($primary, 0.3) !important;
+    border-radius: var(--mapex-radius-md) !important;
+    padding: 8px 20px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--mapex-transition-base);
+    text-shadow: none !important;
+
+    &:hover {
+      background-color: rgba($primary, 0.05) !important;
+      border-color: $primary !important;
+    }
+  }
+
+  // Arrow styling
+  .driver-popover-arrow {
+    border-color: var(--mapex-surface-elevated) !important;
+  }
+
+  // Arrow side-specific overrides (driver.js sets inline border colors)
+  &.driver-popover-arrow-side-top .driver-popover-arrow {
+    border-bottom-color: var(--mapex-surface-elevated) !important;
+  }
+
+  &.driver-popover-arrow-side-bottom .driver-popover-arrow {
+    border-top-color: var(--mapex-surface-elevated) !important;
+  }
+
+  &.driver-popover-arrow-side-left .driver-popover-arrow {
+    border-right-color: var(--mapex-surface-elevated) !important;
+  }
+
+  &.driver-popover-arrow-side-right .driver-popover-arrow {
+    border-left-color: var(--mapex-surface-elevated) !important;
+  }
+}
+
+// Overlay
+.driver-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+// Highlighted element
+.driver-active-element {
+  border-radius: var(--mapex-radius-md);
+}

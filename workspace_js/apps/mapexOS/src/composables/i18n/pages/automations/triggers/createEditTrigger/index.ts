@@ -1,0 +1,1 @@
+export { useCreateEditTriggerTranslations } from './useCreateEditTriggerTranslations';

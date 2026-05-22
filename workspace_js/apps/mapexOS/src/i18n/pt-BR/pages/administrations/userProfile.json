@@ -1,0 +1,111 @@
+{
+  "title": "meu perfil",
+  "description": "gerencie suas configurações de conta e preferências",
+  "backButton": "voltar ao dashboard",
+  "navigation": {
+    "personal": {
+      "label": "informações pessoais",
+      "description": "atualizar seus dados pessoais"
+    },
+    "password": {
+      "label": "senha",
+      "description": "alterar sua senha"
+    },
+    "groupsAccess": {
+      "label": "grupos e acessos",
+      "description": "visualizar seus grupos e acessos organizacionais"
+    },
+    "review": {
+      "label": "revisar e salvar",
+      "description": "revisar alterações e salvar"
+    }
+  },
+  "sections": {
+    "personalInfo": "informações pessoais",
+    "password": "alterar senha",
+    "groupsAccess": "grupos e acessos",
+    "profileSettings": "configurações do perfil",
+    "review": "revisar e salvar"
+  },
+  "sectionDescriptions": {
+    "personalInfo": "atualize seus dados pessoais e informações de contato",
+    "password": "atualize a senha da sua conta",
+    "groupsAccess": "visualize seus grupos e acessos organizacionais",
+    "profileSettings": "configure as preferências da sua conta",
+    "review": "revise todas as suas alterações antes de salvar"
+  },
+  "stepper": {
+    "infoText": "selecione uma seção para configurar seu perfil",
+    "currentSection": "seção atual"
+  },
+  "fields": {
+    "firstName": "primeiro nome",
+    "lastName": "sobrenome",
+    "email": "endereço de email",
+    "phone": "número de telefone",
+    "jobTitle": "cargo",
+    "currentPassword": "senha atual",
+    "newPassword": "nova senha",
+    "confirmPassword": "confirmar nova senha",
+    "required": "obrigatório"
+  },
+  "buttons": {
+    "saveChanges": "salvar alterações",
+    "updatePassword": "atualizar senha",
+    "cancel": "cancelar",
+    "save": "salvar"
+  },
+  "groupsAccess": {
+    "groupsTitle": "grupos",
+    "groupsCount": "grupos",
+    "membershipsTitle": "acesso organizacional",
+    "membershipsCount": "associações",
+    "noGroups": "você não é membro de nenhum grupo",
+    "noMemberships": "você não possui associações organizacionais",
+    "noDescription": "sem descrição",
+    "columns": {
+      "organization": "organização",
+      "roles": "funções",
+      "scope": "escopo",
+      "via": "via"
+    }
+  },
+  "validation": {
+    "firstNameRequired": "primeiro nome é obrigatório",
+    "lastNameRequired": "sobrenome é obrigatório",
+    "emailRequired": "email é obrigatório",
+    "emailInvalid": "por favor, insira um email válido",
+    "currentPasswordRequired": "senha atual é obrigatória",
+    "newPasswordRequired": "nova senha é obrigatória",
+    "passwordMinLength": "a senha deve ter pelo menos 8 caracteres",
+    "confirmPasswordRequired": "confirmação de senha é obrigatória",
+    "passwordsDoNotMatch": "as senhas não coincidem"
+  },
+  "messages": {
+    "personalInfoUpdated": "informações pessoais atualizadas com sucesso!",
+    "passwordUpdated": "senha atualizada com sucesso!",
+    "profileSaved": "perfil salvo com sucesso!",
+    "errorLoading": "falha ao carregar dados do perfil. Tente novamente."
+  },
+  "review": {
+    "title": "revise suas alterações",
+    "subtitle": "por favor, revise as informações do seu perfil antes de salvar",
+    "sections": {
+      "personal": "informações pessoais",
+      "password": "senha",
+      "groupsAccess": "grupos e acessos"
+    },
+    "fields": {
+      "firstName": "primeiro nome",
+      "lastName": "sobrenome",
+      "email": "email",
+      "phone": "telefone",
+      "jobTitle": "cargo",
+      "passwordChanged": "senha alterada",
+      "yes": "sim",
+      "no": "não",
+      "groupsCount": "grupos",
+      "membershipsCount": "associações"
+    }
+  }
+}

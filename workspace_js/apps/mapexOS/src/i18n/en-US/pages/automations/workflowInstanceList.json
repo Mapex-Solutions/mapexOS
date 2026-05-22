@@ -1,0 +1,125 @@
+{
+  "pageHeader": {
+    "title": "workflow instances",
+    "description": "manage workflow bindings — link workflow templates with filled inputs"
+  },
+  "page": {
+    "listTitle": "instances list",
+    "itemLabel": "instance",
+    "itemLabelPlural": "instances",
+    "addButton": "new instance",
+    "info": {
+      "title": "What is a Workflow Instance?",
+      "description": "A Workflow Instance binds a workflow template to specific input values. When triggered, the workflow executes with those pre-configured inputs.",
+      "items": {
+        "binding": { "title": "Template Binding", "text": "Link a workflow template with filled external inputs" },
+        "inputs": { "title": "Dynamic Inputs", "text": "Fill inputs defined by the workflow designer — strings, numbers, assets, etc." },
+        "trigger": { "title": "Trigger Ready", "text": "Once created, instances are ready to be triggered by events, timers, or HTTP calls" },
+        "reuse": { "title": "Reusable", "text": "Create multiple instances from the same workflow with different input values" }
+      },
+      "docsLabel": "view complete documentation"
+    }
+  },
+  "buttons": {
+    "newInstance": "new instance",
+    "createInstance": "create instance"
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search instances...",
+    "advancedFilters": "advanced filters",
+    "pendingFilters": "pending filters — click to apply",
+    "clearAll": "clear all",
+    "allStatus": "all",
+    "instanceName": "instance name",
+    "status": "status",
+    "workflow": "workflow",
+    "allWorkflows": "all workflows",
+    "uniqueExecution": "unique execution",
+    "options": {
+      "all": "all",
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "columns": {
+    "name": "name",
+    "description": "description",
+    "definition": "definition",
+    "inputsCount": "inputs",
+    "unique": "unique",
+    "uniqueYes": "unique",
+    "uniqueNo": "N/A",
+    "uniqueNoTooltip": "Dynamic UUID — new ID per execution"
+  },
+  "menuColumns": {
+    "definitionName": "definition",
+    "inputsCount": "inputs count",
+    "uniqueExecution": "unique execution"
+  },
+  "status": {
+    "enabled": "enabled",
+    "disabled": "disabled"
+  },
+  "empty": {
+    "title": "no instances found",
+    "description": "there are no workflow instances matching your current search criteria."
+  },
+  "emptyState": {
+    "title": "no instances yet",
+    "description": "create your first workflow instance to bind a workflow template with input values"
+  },
+  "badges": {
+    "active": "active",
+    "disabled": "disabled"
+  },
+  "messages": {
+    "deletedSuccessfully": "instance deleted successfully",
+    "confirmDelete": "are you sure you want to delete the instance \"{name}\"?"
+  },
+  "dialog": {
+    "deleteTitle": "confirm deletion"
+  },
+  "executeResult": {
+    "title": "Execution Result",
+    "executing": "Executing workflow...",
+    "statusLabel": "Status",
+    "uuidLabel": "UUID",
+    "viewExecutionsButton": "View Executions"
+  },
+  "drawer": {
+    "title": "instance details",
+    "close": "close",
+    "edit": "edit instance",
+    "loading": "loading instance details...",
+    "error": "failed to load instance details",
+    "sections": {
+      "basicInfo": "basic information",
+      "workflow": "linked workflow",
+      "inputs": "configured inputs",
+      "timestamps": "timestamps"
+    },
+    "fields": {
+      "name": "name",
+      "description": "description",
+      "status": "status",
+      "unique": "unique execution",
+      "instanceUUID": "instance UUID",
+      "definition": "definition",
+      "version": "version",
+      "inputsCount": "inputs",
+      "noInputs": "no external inputs configured",
+      "created": "created",
+      "updated": "updated"
+    },
+    "values": {
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "unique": "unique",
+      "notApplicable": "N/A",
+      "noDescription": "no description provided"
+    }
+  }
+}

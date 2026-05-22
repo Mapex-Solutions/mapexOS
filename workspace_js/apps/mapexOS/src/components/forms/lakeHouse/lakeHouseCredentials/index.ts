@@ -1,0 +1,1 @@
+export { default as LakeHouseCredentials } from './LakeHouseCredentials.vue';

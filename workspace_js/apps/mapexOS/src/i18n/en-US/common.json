@@ -1,0 +1,76 @@
+{
+  "actions": {
+    "add": "Add",
+    "addNew": "Add new",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "saveChanges": "Save changes",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "apply": "Apply",
+    "view": "View",
+    "viewDetails": "View details",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish"
+  },
+  "messages": {
+    "success": "Action was successful",
+    "error": "Action failed",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "confirmDelete": "Are you sure you want to delete {item}?",
+    "deletedSuccessfully": "{item} deleted successfully",
+    "savedSuccessfully": "{item} saved successfully",
+    "updatedSuccessfully": "{item} updated successfully",
+    "createdSuccessfully": "{item} created successfully"
+  },
+  "labels": {
+    "name": "Name",
+    "description": "Description",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "created": "Created",
+    "updated": "Updated",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "actions": "Actions",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "other": "Other"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "failed": "Failed"
+  },
+  "pagination": {
+    "itemsPerPage": "Items per page",
+    "of": "of",
+    "showing": "Showing",
+    "to": "to",
+    "items": "{count} items | {count} item | {count} items"
+  },
+  "validation": {
+    "required": "{field} is required",
+    "invalidEmail": "Invalid email address",
+    "invalidPhone": "Invalid phone number",
+    "minLength": "{field} must be at least {min} characters",
+    "maxLength": "{field} must not exceed {max} characters"
+  }
+}

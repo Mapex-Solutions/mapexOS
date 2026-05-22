@@ -1,0 +1,69 @@
+{
+  "languageSelector": {
+    "changed": "Language changed to",
+    "languages": {
+      "english": "English",
+      "portuguese": "Portuguese"
+    }
+  },
+  "customerSelector": {
+    "select": "Select one tenant to access",
+    "loggedOut": "Log out successfully!",
+    "loggedIn": "Logged on customer",
+    "exit": "Exit customer"
+  },
+  "orgTree": {
+    "tooltip": "Organization tree"
+  },
+  "orgIndicator": {
+    "label": "Active organization",
+    "tooltip": "Click to switch organization"
+  },
+  "notifications": {
+    "title": "Notifications"
+  },
+  "userMenu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "docs": "Docs",
+    "startTour": "Start tour",
+    "logout": "Logout"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "assets": "Assets",
+    "assetsItems": "Assets",
+    "assetsTemplate": "Assets Template",
+    "data": "Data",
+    "http": "HTTP",
+    "automation": "Automation",
+    "workflows": "Workflows",
+    "workflowInstances": "Workflow Instances",
+    "triggers": "Triggers",
+    "routing": "Routing",
+    "routeGroups": "Route Groups",
+    "logsAndExecutions": "Logs & Executions",
+    "eventTracer": "Event Tracer",
+    "rawEvents": "Raw Events",
+    "assetConnectivity": "Asset Connectivity",
+    "jsExecutor": "JS Executor",
+    "router": "Router",
+    "triggerLogs": "Triggers",
+    "workflowExecutions": "Workflow Executions",
+    "dlq": "Dead Letter Queue",
+    "events": "Events",
+    "eventStore": "Event Store",
+    "administration": "Administration",
+    "customers": "Customers",
+    "users": "Users",
+    "roles": "Roles",
+    "groups": "Groups",
+    "accessAudit": "Access Audit",
+    "lists": "Lists",
+    "settings": "Settings"
+  },
+  "version": "Version",
+  "breadcrumbs": {
+    "home": "home"
+  }
+}

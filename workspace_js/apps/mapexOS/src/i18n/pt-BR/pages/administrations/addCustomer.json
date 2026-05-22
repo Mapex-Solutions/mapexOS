@@ -1,0 +1,96 @@
+{
+  "title": "adicionar cliente",
+  "titleEdit": "editar cliente",
+  "description": "criar uma nova organização cliente",
+  "descriptionEdit": "atualizar detalhes da organização cliente",
+  "backButton": "voltar para clientes",
+  "steps": {
+    "basic": "informações básicas",
+    "address": "endereço",
+    "accessPolicy": "política de acesso",
+    "review": "revisão"
+  },
+  "stepDescriptions": {
+    "basic": "nome da organização e configurações básicas",
+    "address": "informações de endereço da organização",
+    "accessPolicy": "configuração de autenticação e política de acesso",
+    "review": "revisar e confirmar detalhes"
+  },
+  "formDescriptions": {
+    "basic": "insira o nome da organização e configurações básicas",
+    "address": "adicione o endereço da organização (opcional)",
+    "authConfig": "configure como os usuários irão autenticar nesta organização",
+    "accessPolicy": "defina como roles e permissões são aplicadas nesta organização",
+    "review": "revise e confirme todos os detalhes antes de salvar"
+  },
+  "fields": {
+    "name": "nome da organização",
+    "phone": "telefone",
+    "enabled": "habilitado",
+    "city": "cidade",
+    "state": "estado",
+    "country": "país",
+    "zipCode": "CEP",
+    "authProvider": "provedor de autenticação",
+    "issuerUrl": "URL do emissor",
+    "clientId": "ID do cliente",
+    "rolePolicy": "política de roles",
+    "defaultScope": "escopo padrão"
+  },
+  "hints": {
+    "phoneFormat": "use formato internacional (ex: +55 11 99999-9999)",
+    "enabled": "quando desabilitado, usuários não podem acessar esta organização",
+    "issuerUrl": "a URL do emissor OpenID Connect do seu realm Keycloak",
+    "clientId": "o ID do cliente registrado no Keycloak para esta organização"
+  },
+  "sections": {
+    "basicInfo": "informações básicas",
+    "address": "endereço",
+    "authConfig": "autenticação",
+    "accessPolicy": "política de acesso",
+    "progressSteps": "etapas do progresso"
+  },
+  "buttons": {
+    "back": "voltar",
+    "next": "próximo",
+    "review": "revisar",
+    "createCustomer": "criar cliente",
+    "updateCustomer": "atualizar cliente"
+  },
+  "messages": {
+    "allFieldsRequired": "todos os campos marcados com * são obrigatórios",
+    "currentStep": "etapa atual:",
+    "completeAllSteps": "complete todas as etapas para criar um novo cliente",
+    "loading": "carregando dados do cliente...",
+    "loadFailed": "falha ao carregar dados do cliente",
+    "reviewCreateSummary": "todas as informações foram validadas. Revise e confirme para criar o cliente.",
+    "reviewEditSummary": "revise as alterações antes de atualizar o cliente."
+  },
+  "notifications": {
+    "created": "cliente criado com sucesso",
+    "updated": "cliente atualizado com sucesso",
+    "createFailed": "falha ao criar cliente",
+    "updateFailed": "falha ao atualizar cliente",
+    "alreadyExists": "já existe um cliente com este nome",
+    "forbidden": "você não tem permissão para realizar esta ação"
+  },
+  "errors": {
+    "apiNotInitialized": "API de organizações não está disponível",
+    "idMissing": "ID do cliente ausente"
+  },
+  "validation": {
+    "nameRequired": "nome da organização é obrigatório",
+    "nameMinLength": "nome deve ter pelo menos 3 caracteres",
+    "nameMaxLength": "nome não pode exceder 150 caracteres",
+    "cityMaxLength": "cidade não pode exceder 100 caracteres",
+    "stateMaxLength": "estado não pode exceder 100 caracteres",
+    "countryMaxLength": "país não pode exceder 100 caracteres",
+    "zipCodeMaxLength": "CEP não pode exceder 20 caracteres",
+    "issuerUrlRequired": "URL do emissor é obrigatória para autenticação Keycloak",
+    "clientIdRequired": "ID do cliente é obrigatório para autenticação Keycloak"
+  },
+  "status": {
+    "enabled": "habilitado",
+    "disabled": "desabilitado"
+  }
+}

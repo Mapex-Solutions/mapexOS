@@ -1,0 +1,11 @@
+{
+  "filters": "filtros",
+  "results": "resultados",
+  "emptyText": "nenhum resultado encontrado",
+  "loading": "carregando...",
+  "confirmLabel": "confirmar seleção",
+  "cancelLabel": "cancelar",
+  "itemSingular": "item",
+  "itemPlural": "itens",
+  "searchPlaceholder": "buscar..."
+}
