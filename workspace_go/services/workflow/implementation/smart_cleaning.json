@@ -1,0 +1,745 @@
+{
+  "name": "",
+  "description": "",
+  "enabled": true,
+  "isTemplate": false,
+  "definitionVersion": 1,
+  "timezone": {
+    "type": "literal",
+    "value": "UTC"
+  },
+  "retryPolicy": {
+    "enabled": false,
+    "maxAttempts": 3,
+    "initialInterval": "1s",
+    "backoffMultiplier": 2,
+    "maxInterval": "5m",
+    "nonRetryableErrors": []
+  },
+  "variables": [
+    {
+      "field": "counter",
+      "type": "number",
+      "defaultValue": 0,
+      "durable": true,
+      "description": "People Counter"
+    }
+  ],
+  "captureFields": [],
+  "nodes": [
+    {
+      "id": "__start__",
+      "type": "core/start",
+      "position": {
+        "x": 60,
+        "y": -120
+      },
+      "config": {},
+      "label": "Start"
+    },
+    {
+      "id": "n_core_sequence_1",
+      "type": "core/sequence",
+      "position": {
+        "x": 30,
+        "y": -15
+      },
+      "config": {
+        "steps": 2
+      },
+      "label": "Sequence"
+    },
+    {
+      "id": "n_core_set_state_2",
+      "type": "core/set_state",
+      "position": {
+        "x": -15,
+        "y": 105
+      },
+      "config": {
+        "operation": "set",
+        "targetField": "counter",
+        "valueSource": {
+          "type": "literal",
+          "value": "1"
+        },
+        "selectedTemplateIds": []
+      },
+      "label": "Set State"
+    },
+    {
+      "id": "n_core_end_1772809788931",
+      "type": "core/end",
+      "position": {
+        "x": -15,
+        "y": 210
+      },
+      "config": {
+        "terminateWithError": false,
+        "errorCode": "",
+        "errorMessage": {
+          "type": "literal",
+          "value": ""
+        }
+      },
+      "label": "End"
+    },
+    {
+      "id": "n_core_group_frame_1772809812787",
+      "type": "core/group_frame",
+      "position": {
+        "x": -75,
+        "y": -165
+      },
+      "config": {
+        "title": "Dynamic Task",
+        "description": "Smart cleaning",
+        "color": "blue-grey",
+        "width": 315,
+        "height": 530
+      },
+      "label": "Group Frame"
+    },
+    {
+      "id": "n_core_goto_3",
+      "type": "core/goto",
+      "position": {
+        "x": 105,
+        "y": 105
+      },
+      "config": {
+        "role": "sender",
+        "pairLabel": "CONDITIONS",
+        "pairColor": "green-6"
+      },
+      "label": "Goto"
+    },
+    {
+      "id": "note_1772809868952",
+      "type": "core/text_note",
+      "parentNodeId": "n_core_goto_3",
+      "position": {
+        "x": 30,
+        "y": -30
+      },
+      "config": {
+        "text": "Check the conditions",
+        "color": "grey"
+      }
+    },
+    {
+      "id": "note_1772809884776",
+      "type": "core/text_note",
+      "parentNodeId": "n_core_set_state_2",
+      "position": {
+        "x": -45,
+        "y": -60
+      },
+      "config": {
+        "text": "Increment the counter",
+        "color": "grey"
+      }
+    },
+    {
+      "id": "note_1772809907039",
+      "type": "core/text_note",
+      "parentNodeId": "__start__",
+      "position": {
+        "x": 45,
+        "y": 15
+      },
+      "config": {
+        "text": "Start",
+        "color": "grey"
+      }
+    },
+    {
+      "id": "note_1772809922353",
+      "type": "core/text_note",
+      "parentNodeId": "n_core_end_1772809788931",
+      "position": {
+        "x": 45,
+        "y": 15
+      },
+      "config": {
+        "text": "End",
+        "color": "grey"
+      }
+    },
+    {
+      "id": "n_core_group_frame_1772809938907_4",
+      "type": "core/group_frame",
+      "position": {
+        "x": 270,
+        "y": -165
+      },
+      "config": {
+        "title": "Check conditions",
+        "description": "Smart cleaning conditions",
+        "color": "green",
+        "width": 345,
+        "height": 530
+      },
+      "label": "Group Frame"
+    },
+    {
+      "id": "n_core_goto_1772810038687_5",
+      "type": "core/goto",
+      "position": {
+        "x": 390,
+        "y": -105
+      },
+      "config": {
+        "role": "receiver",
+        "pairLabel": "CONDITIONS",
+        "pairColor": "green-6"
+      },
+      "label": "Goto"
+    },
+    {
+      "id": "n_core_switch_6",
+      "type": "core/switch",
+      "position": {
+        "x": 345,
+        "y": 30
+      },
+      "config": {
+        "cases": [
+          {
+            "id": "case_1772810069655",
+            "name": "Case 1",
+            "condition": {
+              "logic": "AND",
+              "items": []
+            }
+          },
+          {
+            "id": "case_1772810073167",
+            "name": "Case 2",
+            "condition": {
+              "logic": "AND",
+              "items": []
+            }
+          },
+          {
+            "id": "case_1772810447382",
+            "name": "Case 3",
+            "condition": {
+              "logic": "AND",
+              "items": []
+            }
+          }
+        ],
+        "matchMode": "first",
+        "selectedTemplateIds": []
+      },
+      "label": "Switch"
+    },
+    {
+      "id": "note_1772810099869",
+      "type": "core/text_note",
+      "parentNodeId": "n_core_switch_6",
+      "position": {
+        "x": 135,
+        "y": -30
+      },
+      "config": {
+        "text": "Check conditions to start \na new task",
+        "color": "grey"
+      }
+    },
+    {
+      "id": "note_1772810228310",
+      "type": "core/text_note",
+      "parentNodeId": "n_core_sequence_1",
+      "position": {
+        "x": 75,
+        "y": -30
+      },
+      "config": {
+        "text": "1. Increment the counter\n2. Check the conditions",
+        "color": "grey"
+      }
+    },
+    {
+      "id": "n_core_goto_7",
+      "type": "core/goto",
+      "position": {
+        "x": 315,
+        "y": 150
+      },
+      "config": {
+        "role": "sender",
+        "pairLabel": "COMPLETE",
+        "pairColor": "amber-6"
+      },
+      "label": "Goto"
+    },
+    {
+      "id": "n_core_merge_8",
+      "type": "core/merge",
+      "position": {
+        "x": 390,
+        "y": 135
+      },
+      "config": {
+        "branches": 2,
+        "strategy": "any"
+      },
+      "label": "Merge"
+    },
+    {
+      "id": "n_core_goto_9",
+      "type": "core/goto",
+      "position": {
+        "x": 420,
+        "y": 240
+      },
+      "config": {
+        "role": "sender",
+        "pairLabel": "NEW_TASK",
+        "pairColor": "red-6"
+      },
+      "label": "Goto"
+    },
+    {
+      "id": "n_core_goto_1772810637350",
+      "type": "core/goto",
+      "position": {
+        "x": 510,
+        "y": 135
+      },
+      "config": {
+        "role": "sender",
+        "pairLabel": "SET_STATE",
+        "pairColor": "blue-6"
+      },
+      "label": "Goto"
+    },
+    {
+      "id": "n_core_group_frame_1772810728674",
+      "type": "core/group_frame",
+      "position": {
+        "x": -240,
+        "y": 465
+      },
+      "config": {
+        "title": "Task Complete",
+        "description": "Task complete",
+        "color": "amber",
+        "width": 300,
+        "height": 440
+      },
+      "label": "Group Frame"
+    },
+    {
+      "id": "n_core_goto_1772810779406_10",
+      "type": "core/goto",
+      "position": {
+        "x": -120,
+        "y": 510
+      },
+      "config": {
+        "role": "receiver",
+        "pairLabel": "COMPLETE",
+        "pairColor": "amber-6"
+      },
+      "label": "Goto"
+    },
+    {
+      "id": "n_core_set_state_11",
+      "type": "core/set_state",
+      "position": {
+        "x": -120,
+        "y": 645
+      },
+      "config": {
+        "operation": "set",
+        "targetField": "",
+        "valueSource": {
+          "type": "literal",
+          "value": ""
+        },
+        "selectedTemplateIds": []
+      },
+      "label": "Set State"
+    },
+    {
+      "id": "n_core_end_12",
+      "type": "core/end",
+      "position": {
+        "x": -150,
+        "y": 750
+      },
+      "config": {
+        "terminateWithError": false,
+        "errorCode": "",
+        "errorMessage": {
+          "type": "literal",
+          "value": ""
+        }
+      },
+      "label": "End"
+    },
+    {
+      "id": "note_1772810872080",
+      "type": "core/text_note",
+      "parentNodeId": "n_core_end_12",
+      "position": {
+        "x": -45,
+        "y": 0
+      },
+      "config": {
+        "text": "End",
+        "color": "grey"
+      }
+    },
+    {
+      "id": "note_1772810883529",
+      "type": "core/text_note",
+      "parentNodeId": "n_core_set_state_11",
+      "position": {
+        "x": -105,
+        "y": 0
+      },
+      "config": {
+        "text": "Set counter to 0\nSet flag opened_task \nto false",
+        "color": "grey"
+      }
+    },
+    {
+      "id": "n_core_group_frame_1772812674720_13",
+      "type": "core/group_frame",
+      "position": {
+        "x": 105,
+        "y": 465
+      },
+      "config": {
+        "title": "Start a new task",
+        "description": "Task complete",
+        "color": "red",
+        "width": 330,
+        "height": 440
+      },
+      "label": "Group Frame"
+    },
+    {
+      "id": "n_core_group_frame_1772812687486_14",
+      "type": "core/group_frame",
+      "position": {
+        "x": 465,
+        "y": 465
+      },
+      "config": {
+        "title": "Task Complete",
+        "description": "Task complete",
+        "color": "blue",
+        "width": 300,
+        "height": 440
+      },
+      "label": "Group Frame"
+    },
+    {
+      "id": "n_core_goto_1772812728978_15",
+      "type": "core/goto",
+      "position": {
+        "x": 225,
+        "y": 525
+      },
+      "config": {
+        "role": "receiver",
+        "pairLabel": "NEW_TASK",
+        "pairColor": "red-6"
+      },
+      "label": "Goto"
+    },
+    {
+      "id": "n_core_trigger_event_1772812750040",
+      "type": "core/trigger_event",
+      "position": {
+        "x": 195,
+        "y": 645
+      },
+      "config": {},
+      "label": "Trigger Event"
+    },
+    {
+      "id": "n_core_end_1772812764579_16",
+      "type": "core/end",
+      "position": {
+        "x": 150,
+        "y": 825
+      },
+      "config": {
+        "terminateWithError": false,
+        "errorCode": "",
+        "errorMessage": {
+          "type": "literal",
+          "value": ""
+        }
+      },
+      "label": "End"
+    },
+    {
+      "id": "n_core_set_state_1772812784244_17",
+      "type": "core/set_state",
+      "position": {
+        "x": 150,
+        "y": 735
+      },
+      "config": {
+        "operation": "set",
+        "targetField": "",
+        "valueSource": {
+          "type": "literal",
+          "value": ""
+        },
+        "selectedTemplateIds": []
+      },
+      "label": "Set State"
+    },
+    {
+      "id": "n_core_end_1772812840708",
+      "type": "core/end",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "config": {
+        "terminateWithError": true,
+        "errorCode": "ERROR",
+        "errorMessage": {
+          "type": "literal",
+          "value": "1"
+        }
+      },
+      "label": "End"
+    },
+    {
+      "id": "n_core_goto_1772812863959_18",
+      "type": "core/goto",
+      "position": {
+        "x": 570,
+        "y": 525
+      },
+      "config": {
+        "role": "receiver",
+        "pairLabel": "SET_STATE",
+        "pairColor": "blue-6"
+      },
+      "label": "Goto"
+    },
+    {
+      "id": "n_core_end_1772812880072_19",
+      "type": "core/end",
+      "position": {
+        "x": 570,
+        "y": 735
+      },
+      "config": {
+        "terminateWithError": false,
+        "errorCode": "",
+        "errorMessage": {
+          "type": "literal",
+          "value": ""
+        }
+      },
+      "label": "End"
+    },
+    {
+      "id": "n_core_set_state_1772812880072_20",
+      "type": "core/set_state",
+      "position": {
+        "x": 570,
+        "y": 645
+      },
+      "config": {
+        "operation": "set",
+        "targetField": "",
+        "valueSource": {
+          "type": "literal",
+          "value": ""
+        },
+        "selectedTemplateIds": []
+      },
+      "label": "Set State"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_8c04b967-bef6-425a-9fb4-ca5b97abf423",
+      "source": "__start__",
+      "target": "n_core_sequence_1",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_c4bb10b6-7434-4286-beee-101a83a8e717",
+      "source": "n_core_sequence_1",
+      "target": "n_core_set_state_2",
+      "sourceHandle": "step_1",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_5fe1118e-422d-47db-b384-6965e9375cc4",
+      "source": "n_core_set_state_2",
+      "target": "n_core_end_1772809788931",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_4ab3d24b-d782-4f93-a7dc-52dc8d2620ff",
+      "source": "n_core_sequence_1",
+      "target": "n_core_goto_3",
+      "sourceHandle": "step_2",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_907c2f41-d595-4ca6-9fa0-078ec2e68b23",
+      "source": "note_1772809884776",
+      "target": "n_core_set_state_2",
+      "sourceHandle": "__note_out",
+      "targetHandle": "__note"
+    },
+    {
+      "id": "e_7a720663-a04c-4d86-a4f8-689014128518",
+      "source": "note_1772809907039",
+      "target": "__start__",
+      "sourceHandle": "__note_out",
+      "targetHandle": "__note"
+    },
+    {
+      "id": "e_8b7297e3-972c-4f2c-bd41-3cd08e34b0cf",
+      "source": "note_1772809922353",
+      "target": "n_core_end_1772809788931",
+      "sourceHandle": "__note_out",
+      "targetHandle": "__note"
+    },
+    {
+      "id": "e_480b579b-89ef-4d19-8db7-054763a68ddd",
+      "source": "n_core_goto_1772810038687_5",
+      "target": "n_core_switch_6",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_6697f320-cb78-42e8-8d3d-d5d14af3fe68",
+      "source": "note_1772810228310",
+      "target": "n_core_sequence_1",
+      "sourceHandle": "__note_out",
+      "targetHandle": "__note"
+    },
+    {
+      "id": "e_9df479a1-86da-4100-9c11-d1631267d073",
+      "source": "n_core_switch_6",
+      "target": "n_core_goto_7",
+      "sourceHandle": "case_1772810069655",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_05311c6f-ef4f-454e-9d3d-6a60f01c8287",
+      "source": "n_core_switch_6",
+      "target": "n_core_merge_8",
+      "sourceHandle": "case_1772810073167",
+      "targetHandle": "in_1"
+    },
+    {
+      "id": "e_ea5c7d6e-0a0a-4788-8d34-a59c315fe15b",
+      "source": "n_core_switch_6",
+      "target": "n_core_merge_8",
+      "sourceHandle": "case_1772810447382",
+      "targetHandle": "in_2"
+    },
+    {
+      "id": "e_e2b96a32-e75e-495a-a67d-8fbd8aea0223",
+      "source": "n_core_merge_8",
+      "target": "n_core_goto_9",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_c8d67449-6582-4777-9025-6eaab929338d",
+      "source": "n_core_switch_6",
+      "target": "n_core_goto_1772810637350",
+      "sourceHandle": "default",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_b3cf4c8b-664d-478d-87d7-a75aeec339b5",
+      "source": "n_core_goto_1772810779406_10",
+      "target": "n_core_set_state_11",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_46f86ed6-59a7-4d92-980f-a305514bac5f",
+      "source": "n_core_set_state_11",
+      "target": "n_core_end_12",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_1b8d3c26-cdfc-4982-85b1-19b2d02f3e0c",
+      "source": "note_1772810872080",
+      "target": "n_core_end_12",
+      "sourceHandle": "__note_out",
+      "targetHandle": "__note"
+    },
+    {
+      "id": "e_e330acfd-6d12-48d0-9418-de5559630f92",
+      "source": "note_1772810883529",
+      "target": "n_core_set_state_11",
+      "sourceHandle": "__note_out",
+      "targetHandle": "__note"
+    },
+    {
+      "id": "e_924b8c08-9e58-49a3-8e66-231f84d4c8e6",
+      "source": "n_core_goto_1772812728978_15",
+      "target": "n_core_trigger_event_1772812750040",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_d3bd7541-d86c-4570-8481-77acde9266a1",
+      "source": "n_core_trigger_event_1772812750040",
+      "target": "n_core_set_state_1772812784244_17",
+      "sourceHandle": "success",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_d7576849-2606-48fd-951a-d6cfd7ff5cf7",
+      "source": "n_core_set_state_1772812784244_17",
+      "target": "n_core_end_1772812764579_16",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_7cd07d74-fc83-4811-8ecc-8bfea494efe3",
+      "source": "n_core_trigger_event_1772812750040",
+      "target": "n_core_end_1772812840708",
+      "sourceHandle": "error",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_041a37dc-676a-4c20-8775-b2b2e4d24ed2",
+      "source": "n_core_set_state_1772812880072_20",
+      "target": "n_core_end_1772812880072_19",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e_490784ec-f3a8-4732-820e-c879d7bd77e9",
+      "source": "n_core_goto_1772812863959_18",
+      "target": "n_core_set_state_1772812880072_20",
+      "sourceHandle": "out",
+      "targetHandle": "in"
+    }
+  ],
+  "metadata": {
+    "canvasViewport": {
+      "x": 617.6591060897347,
+      "y": -60.32678843054137,
+      "zoom": 0.3356344015979894
+    }
+  }
+}

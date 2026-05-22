@@ -1,0 +1,35 @@
+{
+  "mode": "newInstance",
+  "orgId": "68f5bbce1aef22967c3ebb30",
+  "pathKey": "000001",
+  "eventTrackerId": "9004b37e-c835-4f67-9f06-6b7dcff078ce",
+  "executionId": "59664ff0-43f0-440f-977d-d8d909303c6e",
+  "data": {
+    "instanceId": "69dd7dfc60dc24b065b8d711"
+  },
+  "event": {
+    "created": "2026-03-25T18:59:00.150Z",
+    "eventId": "d7230qetlurc73bbk1g0",
+    "eventType": "temperature",
+    "data": {
+      "value": 73,
+      "updateTime": "2026-03-25T18:58:49.182320Z",
+      "samples": [
+        {
+          "sampleTime": "2026-03-25T18:58:49.182320Z",
+          "value": 73
+        }
+      ]
+    },
+    "metadata": {
+      "deviceId": "emud4ade19omr2c73bnoe50",
+      "deviceName": "Temperature",
+      "deviceType": "temperature",
+      "projectId": "c8caej0697o000f6gmm0"
+    }
+  },
+  "assetId": "69c3d9423879f39d1c51deee",
+  "assetUUID": "emud4ade19omr2c73bnoe50",
+  "assetTemplateId": "293b3402c531a438f59c053b",
+  "assetTemplateOrgId": "mapexos_public"
+}

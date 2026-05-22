@@ -1,0 +1,13 @@
+{
+  "name": "Increment counter and notify the user",
+  "description": "Here a beautiful description",
+  "definitionId": "683f1a2b3c4d5e6f7a8b9c0e",
+  "definitionVersion": 1,
+  "enabled": true,
+  "pathKey": "org.site.floor1",
+
+  "externalInputs": {
+    "temperatureSensor1": "873482734632874682376",
+    "userName": "John Doe"
+  }
+}

@@ -1,0 +1,293 @@
+{
+  "name": "Test",
+  "description": "hi 123",
+  "enabled": true,
+  "isTemplate": false,
+  "definitionVersion": 1,
+  "timezone": {
+    "type": "literal",
+    "value": "UTC"
+  },
+  "retryPolicy": {
+    "enabled": false,
+    "maxAttempts": 3,
+    "initialInterval": "1s",
+    "backoffMultiplier": 2,
+    "maxInterval": "5m",
+    "nonRetryableErrors": []
+  },
+  "states": [
+    {
+      "field": "counter",
+      "type": "number",
+      "defaultValue": 0,
+      "description": "Teste de counter",
+      "durable": true
+    },
+    {
+      "field": "counter 2",
+      "type": "number",
+      "defaultValue": 0,
+      "description": "",
+      "durable": false
+    }
+  ],
+  "captureFields": [],
+  "externalInputs": [
+    {
+      "field": "test",
+      "label": "Um test de campo",
+      "icon": "input",
+      "type": "string",
+      "description": "Um etste de campo muito massa",
+      "defaultValue": "",
+      "required": true
+    },
+    {
+      "field": "peopleCounterSensor",
+      "label": "Select the people counter",
+      "icon": "devices",
+      "type": "assetFromTemplate",
+      "description": "This sensor is resposible to counter the total of people.",
+      "defaultValue": "",
+      "required": true,
+      "assetTemplateId": "293b3402c531a438f59c053b",
+      "fieldPath": "assetUUID"
+    }
+  ],
+  "externalSignals": [
+    {
+      "name": "teste",
+      "description": "teste"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "__start__",
+      "type": "core/start",
+      "label": "Start",
+      "position": {
+        "x": -1110,
+        "y": -795
+      },
+      "config": {},
+      "parentNodeId": ""
+    },
+    {
+      "id": "n_core_set_state_1",
+      "type": "core/set_state",
+      "label": "Set State",
+      "position": {
+        "x": -1095,
+        "y": -675
+      },
+      "config": {
+        "operation": "set",
+        "selectedTemplateIds": [],
+        "targetField": "counter",
+        "valueSource": {
+          "type": "literal",
+          "value": "1"
+        }
+      },
+      "parentNodeId": ""
+    },
+    {
+      "id": "n_core_condition_1773923932047",
+      "type": "core/condition",
+      "label": "Conditions",
+      "position": {
+        "x": -1155,
+        "y": -540
+      },
+      "config": {
+        "items": [
+          {
+            "data": {
+              "field": {
+                "type": "state",
+                "value": "counter"
+              },
+              "id": "c_1773923950943",
+              "name": "condition",
+              "operator": "greaterThanEquals",
+              "value": {
+                "type": "literal",
+                "value": "1"
+              }
+            },
+            "type": "condition"
+          }
+        ],
+        "logic": "AND",
+        "selectedTemplateIds": []
+      },
+      "parentNodeId": ""
+    },
+    {
+      "id": "n_core_goto_2",
+      "type": "core/goto",
+      "label": "Goto",
+      "position": {
+        "x": -1140,
+        "y": -405
+      },
+      "config": {
+        "pairColor": "blue-6",
+        "pairLabel": "SEND",
+        "role": "sender"
+      },
+      "parentNodeId": ""
+    },
+    {
+      "id": "n_core_end_3",
+      "type": "core/end",
+      "label": "End",
+      "position": {
+        "x": -1050,
+        "y": -435
+      },
+      "config": {
+        "errorCode": "FAILED",
+        "errorMessage": {
+          "type": "literal",
+          "value": "100"
+        },
+        "terminateWithError": true
+      },
+      "parentNodeId": ""
+    },
+    {
+      "id": "n_core_goto_4",
+      "type": "core/goto",
+      "label": "Goto",
+      "position": {
+        "x": -870,
+        "y": -735
+      },
+      "config": {
+        "pairColor": "blue-6",
+        "pairLabel": "SEND",
+        "role": "receiver"
+      },
+      "parentNodeId": ""
+    },
+    {
+      "id": "n_telegram_message_5",
+      "type": "telegram/message",
+      "label": "Telegram Message",
+      "position": {
+        "x": -975,
+        "y": -585
+      },
+      "config": {
+        "chatId": {
+          "value": "5847825355",
+          "type": "loadOptions"
+        },
+        "credentialId": "69bb337c149f0abdb360c083",
+        "disableNotification": false,
+        "operation": "sendText",
+        "parseMode": "HTML",
+        "protectContent": false,
+        "text": {
+          "type": "literal",
+          "value": ""
+        }
+      },
+      "timeout": {
+        "duration": 30,
+        "unit": "seconds",
+        "enableOutput": false
+      },
+      "parentNodeId": ""
+    },
+    {
+      "id": "n_core_end_6",
+      "type": "core/end",
+      "label": "End",
+      "position": {
+        "x": -1035,
+        "y": -555
+      },
+      "config": {
+        "errorCode": "",
+        "errorMessage": {
+          "value": "",
+          "type": "literal"
+        },
+        "terminateWithError": false
+      },
+      "parentNodeId": ""
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_1ab93936-cb39-4544-971e-e064018a9138",
+      "source": "__start__",
+      "target": "n_core_set_state_1",
+      "sourceHandle": "out",
+      "targetHandle": "in",
+      "label": "",
+      "pathOffsetY": -15
+    },
+    {
+      "id": "e_bc25062a-132c-465a-8125-2f8d69200229",
+      "source": "n_core_set_state_1",
+      "target": "n_core_condition_1773923932047",
+      "sourceHandle": "out",
+      "targetHandle": "in",
+      "label": ""
+    },
+    {
+      "id": "e_beb837d9-d5f2-4473-8074-263255c1f53b",
+      "source": "n_core_condition_1773923932047",
+      "target": "n_core_goto_2",
+      "sourceHandle": "true",
+      "targetHandle": "in",
+      "label": ""
+    },
+    {
+      "id": "e_9e74120a-f42e-44d5-a031-e718d643dd07",
+      "source": "n_core_condition_1773923932047",
+      "target": "n_core_end_3",
+      "sourceHandle": "false",
+      "targetHandle": "in",
+      "label": ""
+    },
+    {
+      "id": "e_836b52c9-2503-43c1-b138-62f11feb0363",
+      "source": "n_core_goto_4",
+      "target": "n_telegram_message_5",
+      "sourceHandle": "out",
+      "targetHandle": "in",
+      "label": ""
+    },
+    {
+      "id": "e_4b726c16-648d-43ab-ad02-6378c2a7debf",
+      "source": "n_telegram_message_5",
+      "target": "n_core_end_3",
+      "sourceHandle": "error",
+      "targetHandle": "in",
+      "label": ""
+    },
+    {
+      "id": "e_e69e9a38-2607-4330-bd3c-dae8558f790d",
+      "source": "n_telegram_message_5",
+      "target": "n_core_end_6",
+      "sourceHandle": "success",
+      "targetHandle": "in",
+      "label": ""
+    }
+  ],
+  "installedPlugins": [
+    "telegram"
+  ],
+  "metadata": {
+    "canvasViewport": {
+      "x": 1922.8554614967725,
+      "y": 1253.5000000000002,
+      "zoom": 1.5
+    }
+  }
+}

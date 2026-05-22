@@ -1,0 +1,51 @@
+{
+  "_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "instanceId": "683f1a2b3c4d5e6f7a8b9c0d",
+  "definitionId": "683f1a2b3c4d5e6f7a8b9c0e",
+  "workflowName": "Increment counter and notify the user",
+  "orgId": "683f1a2b3c4d5e6f7a8b9c0f",
+  "version": 3,
+  "status": "completed",
+  "activeNodeIds": [],
+  "state": {
+    "counter": "1",
+    "currentStatus": ""
+  },
+  "executionPath": [
+    {
+      "nodeId": "__start__",
+      "nodeType": "core/start",
+      "status": "completed",
+      "enteredAt": "2026-03-19T10:00:00Z",
+      "exitedAt": "2026-03-19T10:00:00Z",
+      "durationMs": 0
+    },
+    {
+      "nodeId": "n_core_set_state_1",
+      "nodeType": "core/set_state",
+      "status": "completed",
+      "enteredAt": "2026-03-19T10:00:00Z",
+      "exitedAt": "2026-03-19T10:00:00Z",
+      "durationMs": 0
+    },
+    {
+      "nodeId": "n_core_condition_1",
+      "nodeType": "core/condition",
+      "status": "completed",
+      "enteredAt": "2026-03-19T10:00:00Z",
+      "exitedAt": "2026-03-19T10:00:00Z",
+      "durationMs": 0,
+      "outputHandle": "true"
+    }
+  ],
+  "nodeOutputs": {},
+  "stateDefaults": {
+    "counter": "0",
+    "currentStatus": ""
+  },
+  "eventPayload": {},
+  "startedAt": "2026-03-19T10:00:00Z",
+  "completedAt": "2026-03-19T10:00:01Z",
+  "created": "2026-03-19T10:00:00Z",
+  "updated": "2026-03-19T10:00:01Z"
+}
