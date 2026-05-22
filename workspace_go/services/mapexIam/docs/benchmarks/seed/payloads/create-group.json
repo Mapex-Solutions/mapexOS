@@ -1,0 +1,6 @@
+{
+  "name": "bench-new-group",
+  "description": "Benchmark group created by load test",
+  "enabled": true,
+  "roleIds": ["000000000000000000040001"]
+}

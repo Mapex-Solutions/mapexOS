@@ -1,0 +1,8 @@
+{
+  "name": "bench-new-role",
+  "description": "Benchmark role created by load test",
+  "permissions": ["user:list", "user:read", "group:list", "group:read"],
+  "isSystem": false,
+  "isTemplate": false,
+  "scope": "local"
+}

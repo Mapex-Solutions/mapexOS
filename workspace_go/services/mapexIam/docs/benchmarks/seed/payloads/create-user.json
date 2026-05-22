@@ -1,0 +1,11 @@
+{
+  "email": "bench-new-user@benchmark.local",
+  "password": "BenchPass123!",
+  "changePasswordNextLogin": false,
+  "firstName": "Benchmark",
+  "lastName": "NewUser",
+  "phone": "+15551234567",
+  "jobTitle": "Load Test Engineer",
+  "enabled": true,
+  "startTour": false
+}

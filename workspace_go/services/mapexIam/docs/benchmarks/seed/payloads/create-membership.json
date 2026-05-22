@@ -1,0 +1,8 @@
+{
+  "assigneeType": "user",
+  "assigneeId": "000000000000000000020001",
+  "orgId": "000000000000000000010002",
+  "roleIds": ["000000000000000000040001"],
+  "scope": "local",
+  "enabled": true
+}
