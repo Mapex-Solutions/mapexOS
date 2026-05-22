@@ -1,0 +1,25 @@
+{
+    "_id": "000000000000000000000012",
+    "version": "1.0.0",
+    "name": "bench-trigger",
+    "description": "Benchmark RouteGroup for trigger scenario",
+    "orgId": "000000000000000000000001",
+    "pathKey": "benchmark",
+    "enabled": true,
+    "isSystem": false,
+    "isTemplate": false,
+    "routers": [{
+        "kind": "trigger",
+        "match": {
+            "policy": "all",
+            "rules": [{
+                "field": "data.temperature",
+                "operator": "gte",
+                "value": 25
+            }]
+        },
+        "trigger": {
+            "triggerId": "000000000000000000000021"
+        }
+    }]
+}

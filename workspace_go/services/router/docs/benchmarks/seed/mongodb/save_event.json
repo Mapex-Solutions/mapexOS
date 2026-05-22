@@ -1,0 +1,14 @@
+{
+    "_id": "000000000000000000000010",
+    "version": "1.0.0",
+    "name": "bench-save-event",
+    "description": "Benchmark RouteGroup for save_event scenario",
+    "orgId": "000000000000000000000001",
+    "pathKey": "benchmark",
+    "enabled": true,
+    "isSystem": false,
+    "isTemplate": false,
+    "routers": [{
+        "kind": "save_event"
+    }]
+}

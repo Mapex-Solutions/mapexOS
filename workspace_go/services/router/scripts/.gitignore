@@ -1,0 +1,5 @@
+# Compiled benchmark binary
+router_bench
+
+# Benchmark results (generated, not committed)
+benchmark-results/

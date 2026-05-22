@@ -1,0 +1,19 @@
+{
+  "orgId": "000000000000000000000001",
+  "assetUUID": "bench-asset-save-event",
+  "pathKey": "benchmark",
+  "eventTrackerId": "bench-tracker-001",
+  "event": {
+    "data": {
+      "temperature": 28.5,
+      "humidity": 65.2,
+      "pressure": 1013.25,
+      "battery": 87,
+      "status": "active"
+    },
+    "eventId": "bench-event-001",
+    "eventType": "sensorData",
+    "targetName": "projects/bench/devices/bench-asset-001",
+    "timestamp": "2026-02-16T12:00:00.000Z"
+  }
+}

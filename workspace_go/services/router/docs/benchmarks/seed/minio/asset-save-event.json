@@ -1,0 +1,16 @@
+{
+    "id": "000000000000000000000002",
+    "uuid": "bench-asset-save-event",
+    "orgId": "000000000000000000000001",
+    "pathKey": "benchmark",
+    "enabled": true,
+    "debugEnabled": true,
+    "name": "Benchmark Asset — save_event",
+    "routeGroupIds": [
+        "000000000000000000000010"
+    ],
+    "assetTemplateId": "000000000000000000000003",
+    "assetTemplateOrgId": "000000000000000000000001",
+    "created": "2026-02-16T00:00:00Z",
+    "updated": "2026-02-16T00:00:00Z"
+}
