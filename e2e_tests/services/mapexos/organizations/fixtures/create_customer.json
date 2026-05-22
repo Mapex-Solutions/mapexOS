@@ -1,0 +1,19 @@
+{
+  "name": "ACME Corporation",
+  "type": "customer",
+  "enabled": true,
+  "address": {
+    "city": "San Francisco",
+    "state": "California",
+    "country": "USA",
+    "zipCode": "94105"
+  },
+  "phone": "+14155551234",
+  "authConfig": {
+    "providerType": "internal"
+  },
+  "accessPolicy": {
+    "rolePolicy": "merge",
+    "defaultScope": "local"
+  }
+}

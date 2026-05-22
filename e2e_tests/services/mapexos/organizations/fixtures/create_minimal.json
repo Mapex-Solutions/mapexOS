@@ -1,0 +1,19 @@
+{
+  "name": "Minimal Org",
+  "type": "customer",
+  "enabled": true,
+  "address": {
+    "city": "New York",
+    "state": "New York",
+    "country": "USA",
+    "zipCode": "10001"
+  },
+  "phone": "+12125551234",
+  "authConfig": {
+    "providerType": "internal"
+  },
+  "accessPolicy": {
+    "rolePolicy": "strict",
+    "defaultScope": "local"
+  }
+}

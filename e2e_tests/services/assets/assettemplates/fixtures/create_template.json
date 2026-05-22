@@ -1,0 +1,13 @@
+{
+  "name": "Temperature Sensor v2",
+  "status": true,
+  "description": "Advanced temperature sensor with high precision",
+  "manufacture": "Acme Corp",
+  "model": "TS-2000",
+  "version": "2.1.0",
+  "assetIdPath": "payload.deviceId",
+  "scriptTest": "function test() { return true; }",
+  "scriptProcessor": "function process(data) { return data; }",
+  "scriptValidator": "function validate(data) { return data.temperature !== undefined; }",
+  "scriptConversion": "function convert(data) { return { temp: data.temperature }; }"
+}

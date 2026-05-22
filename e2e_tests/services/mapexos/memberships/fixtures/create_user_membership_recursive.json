@@ -1,0 +1,8 @@
+{
+  "assigneeType": "user",
+  "assigneeId": "{{USER_ID}}",
+  "orgId": "{{ORG_ID}}",
+  "roleIds": ["{{ROLE_ID}}"],
+  "scope": "recursive",
+  "enabled": true
+}

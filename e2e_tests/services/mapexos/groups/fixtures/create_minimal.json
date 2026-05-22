@@ -1,0 +1,6 @@
+{
+  "name": "Minimal Group",
+  "enabled": true,
+  "isSystem": false,
+  "orgId": "{{ORG_ID}}"
+}

@@ -1,0 +1,14 @@
+{
+  "email": "john.doe@example.com",
+  "password": "SecurePass123!",
+  "changePasswordNextLogin": false,
+  "authProvider": {
+    "type": "internal"
+  },
+  "firstName": "John",
+  "lastName": "Doe",
+  "phone": "+5511999999999",
+  "jobTitle": "Software Engineer",
+  "enabled": true,
+  "avatar": "https://example.com/avatar.jpg"
+}

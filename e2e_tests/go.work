@@ -1,0 +1,35 @@
+// Go workspace for the root e2e_tests module.
+//
+// Resolves the local sibling modules the e2eTests code depends on
+// (contracts, mapexGoKit submodules) without polluting go.mod with
+// replace directives. Mirrors the resolution path the per-service
+// go.mod replaces use, just with relative paths anchored at this
+// directory.
+//
+// Layout assumption (kept stable so this file stays portable):
+//
+//   <repo-root>/
+//   ├── mapexOS/
+//   │   ├── e2e_tests/                 (this module, contains go.work)
+//   │   └── workspace_go/
+//   │       └── packages/
+//   │           ├── contracts/         (sibling module — DTOs)
+//   │           └── permissions/       (sibling module — permission catalog)
+//   └── mapexGoKit/
+//       ├── utils/
+//       ├── infrastructure/
+//       └── microservices/
+//
+// If the layout shifts, update the `use` paths below; no other file
+// needs to change.
+
+go 1.25.3
+
+use (
+	.
+	../workspace_go/packages/contracts
+	../workspace_go/packages/permissions
+	../../mapexGoKit/utils
+	../../mapexGoKit/infrastructure
+	../../mapexGoKit/microservices
+)

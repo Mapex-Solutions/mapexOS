@@ -1,0 +1,9 @@
+{
+  "name": "Site Manager",
+  "description": "Manages site operations",
+  "permissions": ["user.read", "user.list", "asset.read", "asset.list", "asset.update"],
+  "isSystem": false,
+  "orgId": "{{CUSTOMER_ID}}",
+  "pathKey": "",
+  "scope": "local"
+}

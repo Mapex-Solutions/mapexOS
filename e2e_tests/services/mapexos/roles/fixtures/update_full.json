@@ -1,0 +1,6 @@
+{
+  "name": "Operations Manager",
+  "description": "Updated role for operations",
+  "permissions": ["asset.*", "user.read", "user.list"],
+  "enabled": true
+}

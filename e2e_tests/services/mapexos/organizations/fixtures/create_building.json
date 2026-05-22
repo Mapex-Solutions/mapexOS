@@ -1,0 +1,20 @@
+{
+  "name": "Building A",
+  "type": "building",
+  "parentOrgId": "{{PARENT_ID}}",
+  "enabled": true,
+  "address": {
+    "city": "São Paulo",
+    "state": "São Paulo",
+    "country": "Brazil",
+    "zipCode": "01310-100"
+  },
+  "phone": "+551155551235",
+  "authConfig": {
+    "providerType": "internal"
+  },
+  "accessPolicy": {
+    "rolePolicy": "merge",
+    "defaultScope": "local"
+  }
+}

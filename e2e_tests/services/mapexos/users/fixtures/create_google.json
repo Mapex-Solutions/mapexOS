@@ -1,0 +1,14 @@
+{
+  "email": "jane.smith@gmail.com",
+  "authProvider": {
+    "type": "google",
+    "externalId": "google-123456789",
+    "metadata": {
+      "picture": "https://lh3.googleusercontent.com/a/default-user",
+      "locale": "en"
+    }
+  },
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "enabled": true
+}

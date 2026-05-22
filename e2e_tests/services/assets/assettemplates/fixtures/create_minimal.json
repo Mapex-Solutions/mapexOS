@@ -1,0 +1,9 @@
+{
+  "name": "Basic Sensor",
+  "status": true,
+  "manufacture": "Basic Inc",
+  "model": "BS-100",
+  "assetIdPath": "payload.id",
+  "scriptValidator": "function validate(data) { return true; }",
+  "scriptConversion": "function convert(data) { return data; }"
+}
