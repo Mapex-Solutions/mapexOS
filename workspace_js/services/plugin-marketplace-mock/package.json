@@ -1,0 +1,20 @@
+{
+  "name": "@mapexos/plugin-marketplace-mock",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mock server simulating Netlify CDN for plugin marketplace",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.19",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.2"
+  }
+}

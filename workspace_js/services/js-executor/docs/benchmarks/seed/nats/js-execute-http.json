@@ -1,0 +1,48 @@
+{
+  "sourceType": "http",
+  "eventTrackerId": "00000000-0000-0000-0000-000000000001",
+  "assetUUID": "bench-asset-uuid-0001",
+  "dataSource": {
+    "id": "000000000000000000000003",
+    "name": "bench-datasource",
+    "description": "Benchmark data source",
+    "enabled": true,
+    "orgId": "000000000000000000000001",
+    "pathKey": "000001",
+    "assetBind": {
+      "type": "fixedAssetId",
+      "data": {
+        "assetId": "000000000000000000000002",
+        "uuidField": ["metadata.deviceId"]
+      }
+    }
+  },
+  "event": {
+    "event": {
+      "data": {
+        "networkStatus": {
+          "cloudConnectors": [
+            { "id": "emulated-ccon", "rssi": -50, "signalStrength": 100 }
+          ],
+          "rssi": -50,
+          "signalStrength": 100,
+          "transmissionMode": "LOW_POWER_STANDARD_MODE",
+          "updateTime": "2026-02-12T12:34:02.991434Z"
+        }
+      },
+      "eventId": "bench-event-001",
+      "eventType": "networkStatus",
+      "targetName": "projects/bench-project/devices/bench-asset-uuid-0001",
+      "timestamp": "2026-02-12T12:34:02.991434Z"
+    },
+    "labels": {
+      "name": "Bench Device"
+    },
+    "metadata": {
+      "deviceId": "bench-asset-uuid-0001",
+      "deviceType": "temperature",
+      "productNumber": "",
+      "projectId": "bench-project"
+    }
+  }
+}

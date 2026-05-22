@@ -1,0 +1,14 @@
+{
+    "id": "000000000000000000000002",
+    "uuid": "bench-asset-uuid-0001",
+    "orgId": "000000000000000000000001",
+    "pathKey": "000001",
+    "enabled": true,
+    "debugEnabled": false,
+    "name": "Bench Asset",
+    "assetTemplateId": "000000000000000000000001",
+    "assetTemplateOrgId": "000000000000000000000001",
+    "routeGroupIds": [],
+    "created": "2026-02-16T00:00:00Z",
+    "updated": "2026-02-16T00:00:00Z"
+}

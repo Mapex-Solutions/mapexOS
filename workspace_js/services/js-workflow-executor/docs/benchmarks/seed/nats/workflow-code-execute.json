@@ -1,0 +1,39 @@
+{
+  "orgId": "000000000000000000000001",
+  "workflowId": "bench-workflow-0001",
+  "nodeId": "bench-code-node-0001",
+  "instanceId": "bench-instance-0001",
+  "callbackSubject": "workflow.resume.callback.bench-instance-0001",
+  "eventPayload": {
+    "eventType": "networkStatus",
+    "eventId": "bench-event-001",
+    "timestamp": "2026-03-08T12:00:00.000Z",
+    "data": {
+      "signalStrength": 100,
+      "rssi": -50,
+      "updateTime": "2026-03-08T12:00:00.000Z",
+      "cloudConnectors": [
+        { "id": "emulated-ccon", "rssi": -50, "signalStrength": 100 }
+      ]
+    },
+    "metadata": {
+      "deviceId": "bench-device-001",
+      "projectId": "bench-project",
+      "deviceType": "temperature"
+    }
+  },
+  "state": {
+    "processedCount": 0,
+    "lastProcessedEvent": null
+  },
+  "variables": {
+    "threshold": 80,
+    "alertEnabled": true
+  },
+  "nodeOutputs": {
+    "trigger-node-001": {
+      "eventType": "networkStatus",
+      "source": "http"
+    }
+  }
+}

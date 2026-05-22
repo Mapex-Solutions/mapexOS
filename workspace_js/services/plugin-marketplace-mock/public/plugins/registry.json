@@ -1,0 +1,154 @@
+{
+  "$schema": "mapex-plugin-registry/v1",
+  "version": "1.0.0",
+  "updatedAt": "2026-03-26T00:00:00Z",
+  "plugins": [
+    {
+      "pluginId": "telegram",
+      "name": "Telegram",
+      "version": "1.0.0",
+      "category": "messaging",
+      "icon": "send",
+      "color": "#0088CC",
+      "description": "Send messages, photos and manage chats via Telegram Bot API",
+      "manifestUrl": "telegram/manifest.json",
+      "metadata": {
+        "brandIcon": "telegram/icon.svg",
+        "color": "#0088CC",
+        "docs": "https://core.telegram.org/bots/api"
+      },
+      "author": "Mapex Solutions",
+      "tags": ["messaging", "chat", "bot", "notifications"],
+      "enabled": true,
+      "requiresCredentials": true,
+      "nodeCount": 2,
+      "triggerCount": 1
+    },
+    {
+      "pluginId": "slack",
+      "name": "Slack",
+      "version": "1.0.0",
+      "category": "messaging",
+      "icon": "tag",
+      "color": "#4A154B",
+      "description": "Send messages, files and manage channels via Slack API",
+      "manifestUrl": "slack/manifest.json",
+      "metadata": {
+        "brandIcon": "slack/icon.svg",
+        "color": "#4A154B",
+        "docs": "https://api.slack.com/methods"
+      },
+      "author": "Mapex Solutions",
+      "tags": ["messaging", "chat", "notifications", "team"],
+      "enabled": true,
+      "requiresCredentials": true,
+      "nodeCount": 1,
+      "triggerCount": 0
+    },
+    {
+      "pluginId": "discord",
+      "name": "Discord",
+      "version": "1.0.0",
+      "category": "messaging",
+      "icon": "forum",
+      "color": "#5865F2",
+      "description": "Send messages, embeds and manage channels via Discord API",
+      "manifestUrl": "discord/manifest.json",
+      "metadata": {
+        "brandIcon": "discord/icon.svg",
+        "color": "#5865F2",
+        "docs": "https://discord.com/developers/docs"
+      },
+      "author": "Mapex Solutions",
+      "tags": ["messaging", "chat", "notifications", "community"],
+      "enabled": true,
+      "requiresCredentials": true,
+      "nodeCount": 1,
+      "triggerCount": 0
+    },
+    {
+      "pluginId": "teams",
+      "name": "Microsoft Teams",
+      "version": "1.0.0",
+      "category": "messaging",
+      "icon": "groups",
+      "color": "#6264A7",
+      "description": "Send messages and Adaptive Cards to Microsoft Teams channels via Workflows",
+      "manifestUrl": "teams/manifest.json",
+      "metadata": {
+        "brandIcon": "teams/icon.svg",
+        "color": "#6264A7",
+        "docs": "https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook"
+      },
+      "author": "Mapex Solutions",
+      "tags": ["messaging", "chat", "notifications", "enterprise"],
+      "enabled": true,
+      "requiresCredentials": true,
+      "nodeCount": 1,
+      "triggerCount": 0
+    },
+    {
+      "pluginId": "email",
+      "name": "Email (SMTP)",
+      "version": "1.0.0",
+      "category": "email",
+      "icon": "email",
+      "color": "#EA4335",
+      "description": "Send emails via SMTP with text or HTML content, attachments and multiple recipients",
+      "manifestUrl": "email/manifest.json",
+      "metadata": {
+        "brandIcon": "email/icon.svg",
+        "color": "#EA4335",
+        "docs": "https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol"
+      },
+      "author": "Mapex Solutions",
+      "tags": ["email", "smtp", "notifications", "alerts"],
+      "enabled": true,
+      "requiresCredentials": true,
+      "nodeCount": 1,
+      "triggerCount": 0
+    },
+    {
+      "pluginId": "mqtt",
+      "name": "MQTT",
+      "version": "1.0.0",
+      "category": "iot",
+      "icon": "sensors",
+      "color": "#660066",
+      "description": "Publish messages to MQTT brokers with configurable QoS and retain",
+      "manifestUrl": "mqtt/manifest.json",
+      "metadata": {
+        "brandIcon": "mqtt/icon.svg",
+        "color": "#660066",
+        "docs": "https://mqtt.org/mqtt-specification/"
+      },
+      "author": "Mapex Solutions",
+      "tags": ["iot", "mqtt", "broker", "publish", "devices"],
+      "enabled": true,
+      "requiresCredentials": true,
+      "nodeCount": 1,
+      "triggerCount": 0
+    },
+    {
+      "pluginId": "http-request",
+      "name": "HTTP Request",
+      "version": "1.0.0",
+      "category": "integration",
+      "icon": "language",
+      "color": "#FF6D00",
+      "description": "Make HTTP requests to any REST API with configurable method, headers and authentication",
+      "manifestUrl": "http-request/manifest.json",
+      "metadata": {
+        "brandIcon": "http-request/icon.svg",
+        "color": "#FF6D00",
+        "docs": "https://developer.mozilla.org/en-US/docs/Web/HTTP"
+      },
+      "author": "Mapex Solutions",
+      "tags": ["http", "rest", "api", "webhook", "integration"],
+      "enabled": true,
+      "requiresCredentials": false,
+      "nodeCount": 1,
+      "triggerCount": 0
+    }
+  ]
+}

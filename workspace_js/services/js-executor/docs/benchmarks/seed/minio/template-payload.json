@@ -1,0 +1,13 @@
+{
+    "_id": "000000000000000000000001",
+    "name": "Bench Template",
+    "scriptProcessor": "",
+    "scriptValidator": "const schema = $mv.object({ event: $mv.object({ eventId: $mv.string().required(), targetName: $mv.string().required(), eventType: $mv.string().required(), data: $mv.object().required(), timestamp: $mv.string().required() }).required(), labels: $mv.object({ name: $mv.string().required() }).required(), metadata: $mv.object({ deviceId: $mv.string().required(), projectId: $mv.string().required(), deviceType: $mv.string().required(), productNumber: $mv.string().optional() }).required() }).required(); const { value, error } = schema.validate(payload, { abortEarly: false, stripUnknown: true }); if (error) throw new Error('Validation failed: ' + error.message); const result = { ...value, _validated: true, _validationTimestamp: Date.now() };",
+    "scriptConversion": "const result = { eventType: payload.event.eventType, eventId: payload.event.eventId, data: {}, metadata: { deviceId: payload.metadata.deviceId, projectId: payload.metadata.projectId, deviceType: payload.metadata.deviceType, productNumber: payload.metadata.productNumber, deviceName: payload.labels.name, targetName: payload.event.targetName }, created: new Date().toISOString(), originalTimestamp: payload.event.timestamp }; if (payload.event.eventType === 'temperature') { result.data = { value: payload.event.data.temperature?.value, updateTime: payload.event.data.temperature?.updateTime, samples: payload.event.data.temperature?.samples }; } else if (payload.event.eventType === 'networkStatus') { result.data = { signalStrength: payload.event.data.networkStatus?.signalStrength, rssi: payload.event.data.networkStatus?.rssi, updateTime: payload.event.data.networkStatus?.updateTime, cloudConnectors: payload.event.data.networkStatus?.cloudConnectors }; }",
+    "dynamicFields": [
+        { "fieldId": 1, "field": "temperature", "value": "data.value", "type": "number", "status": 1 },
+        { "fieldId": 2, "field": "deviceType", "value": "metadata.deviceType", "type": "string", "status": 1 },
+        { "fieldId": 3, "field": "deviceID", "value": "metadata.deviceId", "type": "string", "status": 1 }
+    ],
+    "nextFieldId": 4
+}

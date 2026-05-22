@@ -1,0 +1,27 @@
+{
+  "name": "@mapexos/js-workflow-executor",
+  "version": "1.0.0",
+  "description": "Workflow JS Executor - Executes workflow code nodes in isolated V8",
+  "productName": "JS Workflow Executor",
+  "author": "Thiago Anselmo <thiagoo.anselmoo@gmail.com>",
+  "private": true,
+  "scripts": {
+    "dev": "node --no-node-snapshot -r ts-node/register -r tsconfig-paths/register src/main.ts",
+    "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "start": "node --no-node-snapshot dist/main.js",
+    "test": "jest"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "dependencies": {
+    "@mapexos/infrastructure": "0.0.1",
+    "@mapexos/microservices": "0.0.1",
+    "@mapexos/script-registry": "0.0.1",
+    "@mapexos/utils": "0.0.1",
+    "@types/cors": "^2.8.19",
+    "cors": "^2.8.5",
+    "isolated-vm": "^6.0.2",
+    "piscina": "^5.1.4"
+  }
+}

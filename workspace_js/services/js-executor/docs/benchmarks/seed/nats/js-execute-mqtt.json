@@ -1,0 +1,21 @@
+{
+  "sourceType": "mqtt",
+  "eventTrackerId": "00000000-0000-0000-0000-000000000002",
+  "assetUUID": "bench-asset-uuid-0001",
+  "dataSource": {
+    "id": "bench-asset-uuid-0001",
+    "name": "bench-mqtt-device",
+    "description": "Benchmark MQTT device",
+    "enabled": true,
+    "orgId": "000000000000000000000001",
+    "pathKey": "bench/org"
+  },
+  "event": {
+    "temperature": 23.5,
+    "humidity": 60.0,
+    "pressure": 1013.25,
+    "timestamp": "2026-02-16T03:00:00Z",
+    "deviceId": "bench-device-001",
+    "status": "ok"
+  }
+}

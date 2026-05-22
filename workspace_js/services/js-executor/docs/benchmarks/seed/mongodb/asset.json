@@ -1,0 +1,13 @@
+{
+    "_id": "000000000000000000000002",
+    "name": "Bench Asset",
+    "enabled": true,
+    "debugEnabled": false,
+    "description": "Benchmark asset",
+    "assetUUID": "bench-asset-uuid-0001",
+    "assetTemplateId": "000000000000000000000001",
+    "orgId": "000000000000000000000001",
+    "pathKey": "000001",
+    "routeGroupIds": [],
+    "protocol": { "type": "http", "http": {} }
+}
