@@ -1,0 +1,47 @@
+================================================================
+  Auth Callout Benchmark (MQTT Connect)
+================================================================
+  Scenario:     cache-hit
+  Count:        1000000
+  Concurrency:  200
+  Warmup:       10000
+  MQTT Broker:  localhost:1883
+  Timeout:      5s
+  User pool:    10000 users (rotating)
+================================================================
+
+[1/4] Built 10000 credential pairs (user pool)
+[2/4] Warmup: 10000 sequential MQTT connections...
+      Warmup complete.
+[3/4] Running 1000000 MQTT connections @ 200 concurrency...
+[4/4] Benchmark complete.
+
+# --- AUTH BENCH RESULTS (machine-parseable) ---
+AUTH_BENCH_RPS=4007
+AUTH_BENCH_AVG_MS=49.90
+AUTH_BENCH_P50_MS=49.80
+AUTH_BENCH_P95_MS=51.11
+AUTH_BENCH_P99_MS=52.28
+AUTH_BENCH_OK=1000000
+AUTH_BENCH_FAIL=0
+AUTH_BENCH_TIMEOUT=0
+AUTH_BENCH_DURATION_S=249.5
+
+  ┌──────────────────────────────────────────────────────────┐
+  │ Auth Callout Benchmark — cache-hit
+  ├──────────────────────────────────────────────────────────┤
+  │ Throughput:  4007 req/s
+  │ Duration:   249.5s
+  │ Concurrency: 200
+  ├──────────────────────────────────────────────────────────┤
+  │ Latency avg: 49.90 ms
+  │ Latency p50: 49.80 ms
+  │ Latency p95: 51.11 ms
+  │ Latency p99: 52.28 ms
+  ├──────────────────────────────────────────────────────────┤
+  │ OK:       1000000
+  │ Failed:   0
+  │ Timeout:  0
+  │ Total:    1000000
+  └──────────────────────────────────────────────────────────┘
+

@@ -1,0 +1,31 @@
+{
+  "name": "bench-template-create",
+  "enabled": true,
+  "description": "Benchmark template created by full-benchmark.sh",
+  "categoryName": "Benchmark",
+  "manufacturerName": "BenchCorp",
+  "modelName": "BenchModel-v1",
+  "version": "1.0.0",
+  "isSystem": false,
+  "isTemplate": false,
+  "assetIdPath": "metadata.deviceId",
+  "scriptConversion": "return payload;",
+  "scriptValidator": "return true;",
+  "availableFields": ["data.temperature", "data.humidity", "metadata.deviceId"],
+  "dynamicFields": [
+    {
+      "fieldId": 0,
+      "field": "temperature",
+      "value": "data.temperature",
+      "type": "number",
+      "status": 1
+    },
+    {
+      "fieldId": 0,
+      "field": "humidity",
+      "value": "data.humidity",
+      "type": "number",
+      "status": 1
+    }
+  ]
+}

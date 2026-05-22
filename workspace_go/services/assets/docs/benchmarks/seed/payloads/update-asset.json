@@ -1,0 +1,6 @@
+{
+  "name": "bench-asset-updated",
+  "enabled": true,
+  "debugEnabled": true,
+  "description": "Benchmark asset updated by full-benchmark.sh"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "bench-asset-create",
+  "enabled": true,
+  "debugEnabled": false,
+  "description": "Benchmark asset created by full-benchmark.sh",
+  "assetUUID": "bench-device-create-001",
+  "assetTemplateId": "000000000000000000000010",
+  "routeGroupIds": ["000000000000000000000020"],
+  "protocol": {
+    "type": "http",
+    "http": {}
+  }
+}

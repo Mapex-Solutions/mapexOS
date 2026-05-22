@@ -1,0 +1,47 @@
+WARN: --user-count (10000) < --count (1000000) — after first 10000 requests, subsequent ones will hit Redis cache
+================================================================
+  Auth Callout Benchmark (MQTT Connect)
+================================================================
+  Scenario:     cache-miss
+  Count:        1000000
+  Concurrency:  200
+  Warmup:       0
+  MQTT Broker:  localhost:1883
+  Timeout:      5s
+  User pool:    10000 users (rotating)
+================================================================
+
+[1/4] Built 10000 credential pairs (user pool)
+[2/4] Warmup skipped.
+[3/4] Running 1000000 MQTT connections @ 200 concurrency...
+[4/4] Benchmark complete.
+
+# --- AUTH BENCH RESULTS (machine-parseable) ---
+AUTH_BENCH_RPS=3785
+AUTH_BENCH_AVG_MS=52.83
+AUTH_BENCH_P50_MS=52.09
+AUTH_BENCH_P95_MS=54.45
+AUTH_BENCH_P99_MS=91.23
+AUTH_BENCH_OK=1000000
+AUTH_BENCH_FAIL=0
+AUTH_BENCH_TIMEOUT=0
+AUTH_BENCH_DURATION_S=264.2
+
+  ┌──────────────────────────────────────────────────────────┐
+  │ Auth Callout Benchmark — cache-miss
+  ├──────────────────────────────────────────────────────────┤
+  │ Throughput:  3785 req/s
+  │ Duration:   264.2s
+  │ Concurrency: 200
+  ├──────────────────────────────────────────────────────────┤
+  │ Latency avg: 52.83 ms
+  │ Latency p50: 52.09 ms
+  │ Latency p95: 54.45 ms
+  │ Latency p99: 91.23 ms
+  ├──────────────────────────────────────────────────────────┤
+  │ OK:       1000000
+  │ Failed:   0
+  │ Timeout:  0
+  │ Total:    1000000
+  └──────────────────────────────────────────────────────────┘
+
