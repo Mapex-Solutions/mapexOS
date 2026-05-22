@@ -1,0 +1,26 @@
+{
+    "_id": "000000000000000000000001",
+    "name": "bench-jwt",
+    "enabled": true,
+    "description": "Benchmark JWT datasource",
+    "mode": "push",
+    "protocol": "http",
+    "orgId": "000000000000000000000001",
+    "pathKey": "000001",
+    "debugEnabled": true,
+    "auth": {
+        "type": "jwt",
+        "jwt": {
+            "secret": "2ca98cd7-4619-4f80-b80a-94df59e74ef7",
+            "algorithms": "HS256",
+            "headerName": "x-dt-signature"
+        }
+    },
+    "assetBind": {
+        "type": "fixedAssetId",
+        "data": {
+            "uuidField": ["metadata.deviceId"],
+            "assetId": "000000000000000000000002"
+        }
+    }
+}

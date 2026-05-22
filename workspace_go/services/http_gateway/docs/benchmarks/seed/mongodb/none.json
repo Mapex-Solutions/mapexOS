@@ -1,0 +1,22 @@
+{
+    "_id": "000000000000000000000004",
+    "name": "bench-none",
+    "enabled": true,
+    "description": "Benchmark no-auth datasource",
+    "mode": "push",
+    "protocol": "http",
+    "orgId": "000000000000000000000001",
+    "pathKey": "000001",
+    "debugEnabled": true,
+    "auth": {
+        "type": "none",
+        "none": {}
+    },
+    "assetBind": {
+        "type": "fixedAssetId",
+        "data": {
+            "uuidField": ["metadata.deviceId"],
+            "assetId": "000000000000000000000002"
+        }
+    }
+}

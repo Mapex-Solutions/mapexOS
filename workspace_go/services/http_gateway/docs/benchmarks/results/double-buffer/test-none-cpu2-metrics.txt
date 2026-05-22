@@ -1,0 +1,208 @@
+# HELP go_gc_duration_seconds A summary of the wall-time pause (stop-the-world) duration in garbage collection cycles.
+# TYPE go_gc_duration_seconds summary
+go_gc_duration_seconds{quantile="0"} 2.9578e-05
+go_gc_duration_seconds{quantile="0.25"} 4.544e-05
+go_gc_duration_seconds{quantile="0.5"} 5.4693e-05
+go_gc_duration_seconds{quantile="0.75"} 5.9386e-05
+go_gc_duration_seconds{quantile="1"} 0.00015024
+go_gc_duration_seconds_sum 0.030528616
+go_gc_duration_seconds_count 576
+# HELP go_gc_gogc_percent Heap size target percentage configured by the user, otherwise 100. This value is set by the GOGC environment variable, and the runtime/debug.SetGCPercent function. Sourced from /gc/gogc:percent.
+# TYPE go_gc_gogc_percent gauge
+go_gc_gogc_percent 100
+# HELP go_gc_gomemlimit_bytes Go runtime memory limit configured by the user, otherwise math.MaxInt64. This value is set by the GOMEMLIMIT environment variable, and the runtime/debug.SetMemoryLimit function. Sourced from /gc/gomemlimit:bytes.
+# TYPE go_gc_gomemlimit_bytes gauge
+go_gc_gomemlimit_bytes 9.223372036854776e+18
+# HELP go_goroutines Number of goroutines that currently exist.
+# TYPE go_goroutines gauge
+go_goroutines 220
+# HELP go_info Information about the Go environment.
+# TYPE go_info gauge
+go_info{version="go1.25.3"} 1
+# HELP go_memstats_alloc_bytes Number of bytes allocated in heap and currently in use. Equals to /memory/classes/heap/objects:bytes.
+# TYPE go_memstats_alloc_bytes gauge
+go_memstats_alloc_bytes 3.0874104e+07
+# HELP go_memstats_alloc_bytes_total Total number of bytes allocated in heap until now, even if released already. Equals to /gc/heap/allocs:bytes.
+# TYPE go_memstats_alloc_bytes_total counter
+go_memstats_alloc_bytes_total 1.5606652496e+10
+# HELP go_memstats_buck_hash_sys_bytes Number of bytes used by the profiling bucket hash table. Equals to /memory/classes/profiling/buckets:bytes.
+# TYPE go_memstats_buck_hash_sys_bytes gauge
+go_memstats_buck_hash_sys_bytes 1.445952e+06
+# HELP go_memstats_frees_total Total number of heap objects frees. Equals to /gc/heap/frees:objects + /gc/heap/tiny/allocs:objects.
+# TYPE go_memstats_frees_total counter
+go_memstats_frees_total 3.46014795e+08
+# HELP go_memstats_gc_sys_bytes Number of bytes used for garbage collection system metadata. Equals to /memory/classes/metadata/other:bytes.
+# TYPE go_memstats_gc_sys_bytes gauge
+go_memstats_gc_sys_bytes 3.919632e+06
+# HELP go_memstats_heap_alloc_bytes Number of heap bytes allocated and currently in use, same as go_memstats_alloc_bytes. Equals to /memory/classes/heap/objects:bytes.
+# TYPE go_memstats_heap_alloc_bytes gauge
+go_memstats_heap_alloc_bytes 3.0874104e+07
+# HELP go_memstats_heap_idle_bytes Number of heap bytes waiting to be used. Equals to /memory/classes/heap/released:bytes + /memory/classes/heap/free:bytes.
+# TYPE go_memstats_heap_idle_bytes gauge
+go_memstats_heap_idle_bytes 2.4682496e+07
+# HELP go_memstats_heap_inuse_bytes Number of heap bytes that are in use. Equals to /memory/classes/heap/objects:bytes + /memory/classes/heap/unused:bytes
+# TYPE go_memstats_heap_inuse_bytes gauge
+go_memstats_heap_inuse_bytes 3.91168e+07
+# HELP go_memstats_heap_objects Number of currently allocated objects. Equals to /gc/heap/objects:objects.
+# TYPE go_memstats_heap_objects gauge
+go_memstats_heap_objects 84886
+# HELP go_memstats_heap_released_bytes Number of heap bytes released to OS. Equals to /memory/classes/heap/released:bytes.
+# TYPE go_memstats_heap_released_bytes gauge
+go_memstats_heap_released_bytes 3.670016e+06
+# HELP go_memstats_heap_sys_bytes Number of heap bytes obtained from system. Equals to /memory/classes/heap/objects:bytes + /memory/classes/heap/unused:bytes + /memory/classes/heap/released:bytes + /memory/classes/heap/free:bytes.
+# TYPE go_memstats_heap_sys_bytes gauge
+go_memstats_heap_sys_bytes 6.3799296e+07
+# HELP go_memstats_last_gc_time_seconds Number of seconds since 1970 of last garbage collection.
+# TYPE go_memstats_last_gc_time_seconds gauge
+go_memstats_last_gc_time_seconds 1.7716767497709622e+09
+# HELP go_memstats_mallocs_total Total number of heap objects allocated, both live and gc-ed. Semantically a counter version for go_memstats_heap_objects gauge. Equals to /gc/heap/allocs:objects + /gc/heap/tiny/allocs:objects.
+# TYPE go_memstats_mallocs_total counter
+go_memstats_mallocs_total 3.46099681e+08
+# HELP go_memstats_mcache_inuse_bytes Number of bytes in use by mcache structures. Equals to /memory/classes/metadata/mcache/inuse:bytes.
+# TYPE go_memstats_mcache_inuse_bytes gauge
+go_memstats_mcache_inuse_bytes 2416
+# HELP go_memstats_mcache_sys_bytes Number of bytes used for mcache structures obtained from system. Equals to /memory/classes/metadata/mcache/inuse:bytes + /memory/classes/metadata/mcache/free:bytes.
+# TYPE go_memstats_mcache_sys_bytes gauge
+go_memstats_mcache_sys_bytes 15704
+# HELP go_memstats_mspan_inuse_bytes Number of bytes in use by mspan structures. Equals to /memory/classes/metadata/mspan/inuse:bytes.
+# TYPE go_memstats_mspan_inuse_bytes gauge
+go_memstats_mspan_inuse_bytes 325600
+# HELP go_memstats_mspan_sys_bytes Number of bytes used for mspan structures obtained from system. Equals to /memory/classes/metadata/mspan/inuse:bytes + /memory/classes/metadata/mspan/free:bytes.
+# TYPE go_memstats_mspan_sys_bytes gauge
+go_memstats_mspan_sys_bytes 718080
+# HELP go_memstats_next_gc_bytes Number of heap bytes when next garbage collection will take place. Equals to /gc/heap/goal:bytes.
+# TYPE go_memstats_next_gc_bytes gauge
+go_memstats_next_gc_bytes 5.572093e+07
+# HELP go_memstats_other_sys_bytes Number of bytes used for other system allocations. Equals to /memory/classes/other:bytes.
+# TYPE go_memstats_other_sys_bytes gauge
+go_memstats_other_sys_bytes 608096
+# HELP go_memstats_stack_inuse_bytes Number of bytes obtained from system for stack allocator in non-CGO environments. Equals to /memory/classes/heap/stacks:bytes.
+# TYPE go_memstats_stack_inuse_bytes gauge
+go_memstats_stack_inuse_bytes 3.309568e+06
+# HELP go_memstats_stack_sys_bytes Number of bytes obtained from system for stack allocator. Equals to /memory/classes/heap/stacks:bytes + /memory/classes/os-stacks:bytes.
+# TYPE go_memstats_stack_sys_bytes gauge
+go_memstats_stack_sys_bytes 3.309568e+06
+# HELP go_memstats_sys_bytes Number of bytes obtained from system. Equals to /memory/classes/total:byte.
+# TYPE go_memstats_sys_bytes gauge
+go_memstats_sys_bytes 7.3816328e+07
+# HELP go_sched_gomaxprocs_threads The current runtime.GOMAXPROCS setting, or the number of operating system threads that can execute user-level Go code simultaneously. Sourced from /sched/gomaxprocs:threads.
+# TYPE go_sched_gomaxprocs_threads gauge
+go_sched_gomaxprocs_threads 2
+# HELP go_threads Number of OS threads created.
+# TYPE go_threads gauge
+go_threads 5
+# HELP httpgw_ds_cache_total Data source cache lookups by result (hit/miss)
+# TYPE httpgw_ds_cache_total counter
+httpgw_ds_cache_total{result="hit"} 1e+06
+# HELP httpgw_ds_list_results_count Items returned per list query
+# TYPE httpgw_ds_list_results_count histogram
+httpgw_ds_list_results_count_bucket{le="0"} 0
+httpgw_ds_list_results_count_bucket{le="1"} 0
+httpgw_ds_list_results_count_bucket{le="5"} 0
+httpgw_ds_list_results_count_bucket{le="10"} 0
+httpgw_ds_list_results_count_bucket{le="25"} 0
+httpgw_ds_list_results_count_bucket{le="50"} 0
+httpgw_ds_list_results_count_bucket{le="100"} 0
+httpgw_ds_list_results_count_bucket{le="250"} 0
+httpgw_ds_list_results_count_bucket{le="+Inf"} 0
+httpgw_ds_list_results_count_sum 0
+httpgw_ds_list_results_count_count 0
+# HELP httpgw_ds_operation_duration_seconds Data source CRUD operation latency
+# TYPE httpgw_ds_operation_duration_seconds histogram
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="0.005"} 1237
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="0.01"} 950849
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="0.025"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="0.05"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="0.1"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="0.25"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="0.5"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="1"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="2.5"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="5"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="10"} 1e+06
+httpgw_ds_operation_duration_seconds_bucket{operation="read",le="+Inf"} 1e+06
+httpgw_ds_operation_duration_seconds_sum{operation="read"} 7648.083756066217
+httpgw_ds_operation_duration_seconds_count{operation="read"} 1e+06
+# HELP httpgw_ds_operations_total Data source CRUD operations by type and result
+# TYPE httpgw_ds_operations_total counter
+httpgw_ds_operations_total{operation="read",status="success"} 1e+06
+# HELP httpgw_event_auth_duration_seconds Webhook auth validation latency per strategy
+# TYPE httpgw_event_auth_duration_seconds histogram
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="0.005"} 805
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="0.01"} 895896
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="0.025"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="0.05"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="0.1"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="0.25"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="0.5"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="1"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="2.5"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="5"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="10"} 1e+06
+httpgw_event_auth_duration_seconds_bucket{auth_type="none",le="+Inf"} 1e+06
+httpgw_event_auth_duration_seconds_sum{auth_type="none"} 8482.27778868078
+httpgw_event_auth_duration_seconds_count{auth_type="none"} 1e+06
+# HELP httpgw_event_auth_total Webhook auth attempts by strategy and result
+# TYPE httpgw_event_auth_total counter
+httpgw_event_auth_total{auth_type="none",result="success"} 1e+06
+# HELP httpgw_event_payload_size_bytes Incoming webhook body size
+# TYPE httpgw_event_payload_size_bytes histogram
+httpgw_event_payload_size_bytes_bucket{le="100"} 0
+httpgw_event_payload_size_bytes_bucket{le="500"} 0
+httpgw_event_payload_size_bytes_bucket{le="1000"} 1e+06
+httpgw_event_payload_size_bytes_bucket{le="5000"} 1e+06
+httpgw_event_payload_size_bytes_bucket{le="10000"} 1e+06
+httpgw_event_payload_size_bytes_bucket{le="50000"} 1e+06
+httpgw_event_payload_size_bytes_bucket{le="100000"} 1e+06
+httpgw_event_payload_size_bytes_bucket{le="+Inf"} 1e+06
+httpgw_event_payload_size_bytes_sum 8.02e+08
+httpgw_event_payload_size_bytes_count 1e+06
+# HELP httpgw_event_processed_total Events processed through the full handler flow
+# TYPE httpgw_event_processed_total counter
+httpgw_event_processed_total{status="success"} 1e+06
+# HELP httpgw_event_processing_duration_seconds Handler processing time excluding auth
+# TYPE httpgw_event_processing_duration_seconds histogram
+httpgw_event_processing_duration_seconds_bucket{le="0.005"} 999771
+httpgw_event_processing_duration_seconds_bucket{le="0.01"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="0.025"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="0.05"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="0.1"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="0.25"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="0.5"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="1"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="2.5"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="5"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="10"} 1e+06
+httpgw_event_processing_duration_seconds_bucket{le="+Inf"} 1e+06
+httpgw_event_processing_duration_seconds_sum 822.8691845949977
+httpgw_event_processing_duration_seconds_count 1e+06
+# HELP httpgw_event_published_total NATS publish attempts by subject and result
+# TYPE httpgw_event_published_total counter
+httpgw_event_published_total{status="success",subject="processor.js.execute"} 1e+06
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 87.73
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 1.048575e+06
+# HELP process_network_receive_bytes_total Number of bytes received by the process over the network.
+# TYPE process_network_receive_bytes_total counter
+process_network_receive_bytes_total 1.72141232519e+11
+# HELP process_network_transmit_bytes_total Number of bytes sent by the process over the network.
+# TYPE process_network_transmit_bytes_total counter
+process_network_transmit_bytes_total 1.88097134281e+11
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 33
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 6.5593344e+07
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.77167670381e+09
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 1.28946176e+09
+# HELP process_virtual_memory_max_bytes Maximum amount of virtual memory available in bytes.
+# TYPE process_virtual_memory_max_bytes gauge
+process_virtual_memory_max_bytes 1.8446744073709552e+19

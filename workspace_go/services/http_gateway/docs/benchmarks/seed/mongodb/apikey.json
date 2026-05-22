@@ -1,0 +1,26 @@
+{
+    "_id": "000000000000000000000002",
+    "name": "bench-apikey",
+    "enabled": true,
+    "description": "Benchmark API Key datasource",
+    "mode": "push",
+    "protocol": "http",
+    "orgId": "000000000000000000000001",
+    "pathKey": "000001",
+    "debugEnabled": true,
+    "auth": {
+        "type": "apiKey",
+        "apiKey": {
+            "type": "header",
+            "fieldName": "x-api-key",
+            "key": "bench-api-key-2026-secure-token"
+        }
+    },
+    "assetBind": {
+        "type": "fixedAssetId",
+        "data": {
+            "uuidField": ["metadata.deviceId"],
+            "assetId": "000000000000000000000002"
+        }
+    }
+}

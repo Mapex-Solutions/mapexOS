@@ -1,0 +1,33 @@
+{
+  "event": {
+    "eventId": "a11bcd0001000000000000001",
+    "eventType": "touch",
+    "targetName": "projects/c8caej0697o000f6gmm0/devices/emud4ade19omr2c73bnoe50",
+    "timestamp": "2026-02-12T12:34:02.991434Z",
+    "data": {
+      "temperature": {
+        "value": 24.7,
+        "unit": "celsius",
+        "updateTime": "2026-02-12T12:34:02.991434Z"
+      },
+      "humidity": {
+        "value": 62.3,
+        "unit": "percent"
+      },
+      "battery": {
+        "percentage": 88
+      }
+    }
+  },
+  "labels": {
+    "name": "TemperatureSensor",
+    "location": "warehouse-a"
+  },
+  "metadata": {
+    "deviceId": "emud4ade19omr2c73bnoe50",
+    "deviceType": "temperature",
+    "productNumber": "TS-200",
+    "projectId": "c8caej0697o000f6gmm0",
+    "firmwareVersion": "2.1.4"
+  }
+}

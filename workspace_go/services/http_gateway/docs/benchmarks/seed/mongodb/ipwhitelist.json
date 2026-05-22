@@ -1,0 +1,24 @@
+{
+    "_id": "000000000000000000000003",
+    "name": "bench-ipwhitelist",
+    "enabled": true,
+    "description": "Benchmark IP Whitelist datasource",
+    "mode": "push",
+    "protocol": "http",
+    "orgId": "000000000000000000000001",
+    "pathKey": "000001",
+    "debugEnabled": true,
+    "auth": {
+        "type": "ip_whitelist",
+        "ipWhitelist": {
+            "cidrs": ["127.0.0.0/8", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+        }
+    },
+    "assetBind": {
+        "type": "fixedAssetId",
+        "data": {
+            "uuidField": ["metadata.deviceId"],
+            "assetId": "000000000000000000000002"
+        }
+    }
+}
