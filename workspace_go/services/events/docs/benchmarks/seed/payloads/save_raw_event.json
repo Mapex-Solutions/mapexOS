@@ -1,0 +1,15 @@
+{
+  "threadId": "bench-asset-001",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "eventTrackerId": "bench-tracker-001",
+  "source": "mqtt_gateway",
+  "success": true,
+  "event": {
+    "temperature": 28.5,
+    "humidity": 65.2,
+    "pressure": 1013.25,
+    "battery": 87,
+    "status": "active"
+  }
+}

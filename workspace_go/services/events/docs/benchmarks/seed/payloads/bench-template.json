@@ -1,0 +1,14 @@
+{
+  "_id": "bench-template-001",
+  "name": "Benchmark Template",
+  "dynamicFields": [
+    { "fieldId": 1, "field": "temperature", "type": "number", "status": 1 },
+    { "fieldId": 2, "field": "humidity", "type": "number", "status": 1 },
+    { "fieldId": 3, "field": "pressure", "type": "number", "status": 1 },
+    { "fieldId": 4, "field": "battery", "type": "number", "status": 1 },
+    { "fieldId": 5, "field": "status", "type": "string", "status": 1 },
+    { "fieldId": 6, "field": "latitude", "type": "number", "status": 1 },
+    { "fieldId": 7, "field": "longitude", "type": "number", "status": 1 }
+  ],
+  "nextFieldId": 8
+}

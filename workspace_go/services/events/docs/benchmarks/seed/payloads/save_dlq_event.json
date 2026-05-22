@@ -1,0 +1,24 @@
+{
+  "id": "bench-dlq-001",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "eventTrackerId": "bench-tracker-001",
+  "serviceName": "events",
+  "serviceType": "processor",
+  "eventType": "raw",
+  "originalSubject": "events.raw",
+  "originalStream": "EVENTS-RAW",
+  "originalData": {"temperature": 28.5, "humidity": 65.2, "pressure": 1013.25, "battery": 87, "status": "active"},
+  "originalHeaders": {
+    "Nats-Msg-Id": "msg-bench-001",
+    "X-Org-Id": "000000000000000000000001",
+    "X-Path-Key": "benchmark"
+  },
+  "lastError": "validation failed: missing required field threadId",
+  "errorCount": 3,
+  "firstDelivery": "2026-02-16T12:00:00.000Z",
+  "lastDelivery": "2026-02-16T12:00:06.000Z",
+  "totalDeliveries": 3,
+  "consumerName": "events-events-raw",
+  "sentToDLQAt": "2026-02-16T12:00:07.000Z"
+}

@@ -1,0 +1,16 @@
+{
+  "created": "2026-02-16T12:00:00.000Z",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "eventTrackerId": "bench-tracker-001",
+  "triggerId": "bench-trigger-001",
+  "triggerName": "Benchmark HTTP Trigger",
+  "triggerType": "http",
+  "category": "technical",
+  "source": "router",
+  "success": true,
+  "durationMs": 45,
+  "error": "",
+  "requestData": "{\"url\":\"https://example.com/webhook\",\"method\":\"POST\",\"headers\":{\"Content-Type\":\"application/json\",\"Authorization\":\"Bearer bench-token\"},\"body\":{\"temperature\":28.5,\"humidity\":65.2,\"status\":\"active\",\"assetId\":\"bench-asset-001\"}}",
+  "responseData": "{\"statusCode\":200,\"body\":{\"acknowledged\":true,\"id\":\"resp-001\"},\"headers\":{\"Content-Type\":\"application/json\"},\"duration\":42}"
+}

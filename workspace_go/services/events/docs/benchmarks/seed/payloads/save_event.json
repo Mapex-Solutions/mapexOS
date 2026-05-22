@@ -1,0 +1,26 @@
+{
+  "created": "2026-02-16T12:00:00.000Z",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "eventTrackerId": "bench-tracker-001",
+  "threadId": "bench-asset-001",
+  "source": "asset",
+  "assetId": "bench-asset-001",
+  "assetUUID": "bench-device-eui-001",
+  "templateId": "bench-template-001",
+  "templateOrgId": "000000000000000000000001",
+  "event": {
+    "temperature": 28.5,
+    "humidity": 65.2,
+    "pressure": 1013.25,
+    "battery": 87,
+    "status": "active",
+    "latitude": -23.5505,
+    "longitude": -46.6333
+  },
+  "metadata": {
+    "gateway": "mqtt_gateway",
+    "rssi": -65,
+    "snr": 8.5
+  }
+}

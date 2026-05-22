@@ -1,0 +1,21 @@
+{
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "eventTrackerId": "bench-tracker-001",
+  "threadId": "bench-asset-001",
+  "name": "Benchmark DataSource",
+  "description": "Benchmark JS executor test",
+  "execution": {
+    "success": true,
+    "failedAt": "",
+    "totalExecutionTime": 15,
+    "error": ""
+  },
+  "event": {
+    "temperature": 28.5,
+    "humidity": 65.2,
+    "pressure": 1013.25,
+    "battery": 87,
+    "status": "active"
+  }
+}

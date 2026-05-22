@@ -1,0 +1,62 @@
+{
+  "created": "2026-02-16T12:00:00.000Z",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "eventTrackerId": "bench-tracker-001",
+  "threadId": "bench-asset-001",
+  "assetId": "bench-asset-001",
+  "routerId": "bench-router-001",
+  "name": "Benchmark RouteGroup",
+  "description": "Benchmark router execution test",
+  "routers": [
+    {
+      "kind": "mqtt",
+      "matched": true,
+      "published": true,
+      "conditions": [
+        {
+          "field": "temperature",
+          "operator": "gt",
+          "expected": 20,
+          "actual": 28.5,
+          "passed": true
+        },
+        {
+          "field": "humidity",
+          "operator": "lt",
+          "expected": 80,
+          "actual": 65.2,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "kind": "http",
+      "matched": false,
+      "published": false,
+      "conditions": [
+        {
+          "field": "pressure",
+          "operator": "gt",
+          "expected": 1020,
+          "actual": 1013.25,
+          "passed": false
+        }
+      ]
+    },
+    {
+      "kind": "nats",
+      "matched": true,
+      "published": true,
+      "conditions": [
+        {
+          "field": "battery",
+          "operator": "gte",
+          "expected": 50,
+          "actual": 87,
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

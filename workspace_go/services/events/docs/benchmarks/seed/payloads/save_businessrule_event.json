@@ -1,0 +1,72 @@
+{
+  "created": "2026-02-16T12:00:00.000Z",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "eventTrackerId": "bench-tracker-001",
+  "threadId": "bench-asset-001",
+  "ruleId": "bench-rule-tpl-001",
+  "businessRuleId": "bench-br-001",
+  "businessRuleName": "Temperature Alert Rule",
+  "businessRuleDescription": "Alerts when temperature exceeds threshold",
+  "matched": true,
+  "durationMs": 12,
+  "conditionsEvaluated": 4,
+  "conditionsMatched": 3,
+  "groupsEvaluated": 2,
+  "maxDepthReached": 2,
+  "finalState": {
+    "temperature": 28.5,
+    "alarm": true,
+    "lastCheck": "2026-02-16T12:00:00.000Z"
+  },
+  "stateChanges": {
+    "alarm": { "from": false, "to": true },
+    "temperature": { "from": 22.1, "to": 28.5 }
+  },
+  "evaluationTree": {
+    "type": "AND",
+    "result": true,
+    "children": [
+      {
+        "type": "condition",
+        "field": "temperature",
+        "operator": "gt",
+        "expected": 25,
+        "actual": 28.5,
+        "result": true
+      },
+      {
+        "type": "OR",
+        "result": true,
+        "children": [
+          {
+            "type": "condition",
+            "field": "humidity",
+            "operator": "gt",
+            "expected": 80,
+            "actual": 65.2,
+            "result": false
+          },
+          {
+            "type": "condition",
+            "field": "battery",
+            "operator": "lt",
+            "expected": 90,
+            "actual": 87,
+            "result": true
+          }
+        ]
+      }
+    ]
+  },
+  "conditionLogs": [
+    { "field": "temperature", "operator": "gt", "expected": 25, "actual": 28.5, "passed": true, "duration": 1 },
+    { "field": "humidity", "operator": "gt", "expected": 80, "actual": 65.2, "passed": false, "duration": 1 },
+    { "field": "battery", "operator": "lt", "expected": 90, "actual": 87, "passed": true, "duration": 1 },
+    { "field": "pressure", "operator": "gte", "expected": 1000, "actual": 1013.25, "passed": true, "duration": 1 }
+  ],
+  "actionsToDispatch": [
+    { "type": "trigger", "triggerId": "bench-trigger-001", "config": { "url": "https://example.com/alert" } },
+    { "type": "notification", "channel": "email", "recipients": ["admin@example.com"] }
+  ]
+}
