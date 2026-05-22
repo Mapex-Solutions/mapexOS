@@ -1,0 +1,21 @@
+{
+  "_id": "000000000000000000000033",
+  "triggerType": "rabbitmq",
+  "category": "technical",
+  "name": "Bench RabbitMQ Trigger",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "enabled": true,
+  "isSystem": false,
+  "isTemplate": false,
+  "config": {
+    "rabbitmq": {
+      "host": "localhost",
+      "port": 5673,
+      "username": "guest",
+      "password": "guest",
+      "vhost": "/",
+      "queue": "bench-triggers"
+    }
+  }
+}

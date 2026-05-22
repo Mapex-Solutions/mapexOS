@@ -1,0 +1,19 @@
+{
+  "_id": "000000000000000000000031",
+  "triggerType": "mqtt",
+  "category": "technical",
+  "name": "Bench MQTT Trigger",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "enabled": true,
+  "isSystem": false,
+  "isTemplate": false,
+  "config": {
+    "mqtt": {
+      "broker": "localhost",
+      "port": 1884,
+      "topic": "bench/triggers",
+      "qos": 1
+    }
+  }
+}

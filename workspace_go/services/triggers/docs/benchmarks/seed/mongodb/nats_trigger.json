@@ -1,0 +1,17 @@
+{
+  "_id": "000000000000000000000032",
+  "triggerType": "nats",
+  "category": "technical",
+  "name": "Bench NATS Trigger",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "enabled": true,
+  "isSystem": false,
+  "isTemplate": false,
+  "config": {
+    "nats": {
+      "server": "nats://localhost:4333",
+      "subject": "bench.trigger.out"
+    }
+  }
+}

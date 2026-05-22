@@ -1,0 +1,23 @@
+{
+  "_id": "000000000000000000000034",
+  "triggerType": "email",
+  "category": "communication",
+  "name": "Bench Email Trigger",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "enabled": true,
+  "isSystem": false,
+  "isTemplate": false,
+  "config": {
+    "email": {
+      "smtpHost": "localhost",
+      "smtpPort": 2525,
+      "username": "bench",
+      "password": "bench",
+      "fromAddr": "bench@mapex.local",
+      "to": "target@mapex.local",
+      "subject": "Bench Alert",
+      "body": "Benchmark trigger fired"
+    }
+  }
+}

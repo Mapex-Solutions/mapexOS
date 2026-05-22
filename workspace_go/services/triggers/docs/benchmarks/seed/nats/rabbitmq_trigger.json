@@ -1,0 +1,16 @@
+{
+  "triggerId": "000000000000000000000033",
+  "executionId": "bench-exec-001",
+  "eventTrackerId": "bench-tracker-001",
+  "source": "benchmark",
+  "payload": {
+    "temperature": 28.5,
+    "humidity": 65.2,
+    "pressure": 1013.25,
+    "battery": 87,
+    "status": "active"
+  },
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "created": "2026-02-17T12:00:00.000Z"
+}

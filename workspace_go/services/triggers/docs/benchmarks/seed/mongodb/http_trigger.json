@@ -1,0 +1,18 @@
+{
+  "_id": "000000000000000000000030",
+  "triggerType": "http",
+  "category": "technical",
+  "name": "Bench HTTP Trigger",
+  "orgId": "000000000000000000000001",
+  "pathKey": "benchmark",
+  "enabled": true,
+  "isSystem": false,
+  "isTemplate": false,
+  "config": {
+    "http": {
+      "endpoint": "http://localhost:9999/webhook",
+      "method": "POST",
+      "headers": {}
+    }
+  }
+}
