@@ -1,0 +1,14 @@
+{
+  "extends": "../../configs/tsconfig.packages.json",
+  "compilerOptions": {
+    "outDir": "./lib/esm",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@src/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}

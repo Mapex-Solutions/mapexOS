@@ -1,0 +1,52 @@
+{
+  "name": "@mapexos/script-registry",
+  "version": "0.0.1",
+  "description": "Script Registry with TTL and LRU eviction for isolated-vm Script Objects",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "prepublishOnly": "npm run test && npm run build",
+    "build": "tsc -p tsconfig.json && resolve-tspaths && tsc -p tsconfig-cjs.json && resolve-tspaths -p tsconfig-cjs.json",
+    "build:all": "npm run build && typedoc",
+    "build:mjs": "tsc -p tsconfig.json && resolve-tspaths",
+    "build:cjs": "tsc -p tsconfig-cjs.json && resolve-tspaths -p tsconfig-cjs.json",
+    "build:docs": "typedoc",
+    "test": "jest --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://github.com/Mapex-Solutions/MapexOS.git",
+    "directory": "packages/script-registry"
+  },
+  "keywords": [
+    "script-registry",
+    "isolated-vm",
+    "cache",
+    "ttl",
+    "lru"
+  ],
+  "author": "Thiago Anselmo <thiagoo.anselmoo@gmail.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/Mapex-Solutions/MapexOS/README.md",
+  "dependencies": {
+    "isolated-vm": "^6.0.2",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.9.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.0",
+    "jest": "^30.1.3",
+    "resolve-tspaths": "^0.8.23",
+    "ts-jest": "^29.4.6",
+    "typedoc": "^0.28.19"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "@mapexos/utils",
+  "version": "0.0.1",
+  "description": "Utils to reuse code and components across different projects",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "prepublishOnly": "npm run test && npm run build ",
+    "build": "tsc -p tsconfig.json && resolve-tspaths && tsc -p tsconfig-cjs.json && resolve-tspaths -p tsconfig-cjs.json",
+    "build:all": "npm run build && typedoc",
+    "build:mjs": "tsc -p tsconfig.json",
+    "build:cjs": "tsc -p tsconfig-cjs.json",
+    "build:docs": "typedoc",
+    "test": "jest --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://github.com/Mapex-Solutions/MapexOS",
+    "directory": "packages/utils"
+  },
+  "keywords": [
+    "utils"
+  ],
+  "author": "thiagoo.anselmoo@gmail.com",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Mapex-Solutions/MapexOS/workspace-js/packages/utils/README.md",
+  "dependencies": {
+    "rimraf": "^6.0.1",
+    "@mapexos/validations": "0.0.1"
+  }
+}

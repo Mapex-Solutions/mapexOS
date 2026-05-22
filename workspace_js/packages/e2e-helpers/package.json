@@ -1,0 +1,37 @@
+{
+  "name": "@mapexos/e2e-helpers",
+  "version": "0.0.1",
+  "description": "Reusable E2E testing helpers for MapexOS Playwright tests",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://github.com/Mapex-Solutions/MapexOS",
+    "directory": "packages/e2e-helpers"
+  },
+  "keywords": [
+    "e2e",
+    "playwright",
+    "testing",
+    "helpers"
+  ],
+  "author": "thiagoo.anselmoo@gmail.com",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "rimraf": "^6.0.1"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.40.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0"
+  }
+}
