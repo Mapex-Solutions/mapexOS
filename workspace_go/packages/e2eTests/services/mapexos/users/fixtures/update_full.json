@@ -1,0 +1,9 @@
+{
+  "email": "john.updated@example.com",
+  "firstName": "John",
+  "lastName": "Doe Jr",
+  "phone": "+5511988888888",
+  "jobTitle": "Senior Software Engineer",
+  "enabled": true,
+  "avatar": "https://example.com/new-avatar.jpg"
+}

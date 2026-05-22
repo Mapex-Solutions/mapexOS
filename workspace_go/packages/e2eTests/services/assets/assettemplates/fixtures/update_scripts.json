@@ -1,0 +1,5 @@
+{
+  "assetIdPath": "payload.id",
+  "scriptValidator": "function validate(data) { /* updated */ return data.temp > 0; }",
+  "scriptConversion": "function convert(data) { /* updated */ return { celsius: data.temp }; }"
+}

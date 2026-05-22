@@ -1,0 +1,10 @@
+{
+  "email": "minimal.user@example.com",
+  "password": "MinPass123!",
+  "authProvider": {
+    "type": "internal"
+  },
+  "firstName": "Min",
+  "lastName": "User",
+  "enabled": true
+}

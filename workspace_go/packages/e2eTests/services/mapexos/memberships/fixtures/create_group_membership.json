@@ -1,0 +1,8 @@
+{
+  "assigneeType": "group",
+  "assigneeId": "{{GROUP_ID}}",
+  "orgId": "{{ORG_ID}}",
+  "roleIds": ["{{ROLE_ID}}"],
+  "scope": "local",
+  "enabled": true
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Viewer",
+  "permissions": ["asset.read", "asset.list"],
+  "isSystem": false,
+  "orgId": "{{CUSTOMER_ID}}",
+  "pathKey": "",
+  "scope": "local"
+}

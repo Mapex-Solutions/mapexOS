@@ -1,0 +1,26 @@
+{
+  "name": "MQTT DataSource Test",
+  "enabled": false,
+  "description": "Test MQTT datasource with JWT auth",
+  "mode": "push",
+  "protocol": "mqtt",
+  "auth": {
+    "type": "jwt",
+    "jwt": {
+      "secret": "test-jwt-secret-key",
+      "algorithms": "HS256"
+    }
+  },
+  "assetBind": {
+    "type": "uuidField",
+    "data": {
+      "uuidField": ["clientId", "deviceId"]
+    }
+  },
+  "rateLimit": {
+    "type": "minute",
+    "value": 100,
+    "burstCapacity": 150,
+    "actionOnExceed": "drop"
+  }
+}

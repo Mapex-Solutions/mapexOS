@@ -1,0 +1,17 @@
+{
+  "name": "API Routes v1",
+  "description": "Main API routing configuration",
+  "enabled": true,
+  "version": "1.0.0",
+  "orgId": "68f5bbce1aef22967c3ebb30",
+  "routers": [
+    {
+      "kind": "save_event",
+      "saveEvent": {
+        "metadata": {
+          "source": "api"
+        }
+      }
+    }
+  ]
+}

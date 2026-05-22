@@ -1,0 +1,7 @@
+{
+  "name": "Engineering Team",
+  "description": "Software engineering department",
+  "enabled": true,
+  "isSystem": false,
+  "orgId": "{{ORG_ID}}"
+}

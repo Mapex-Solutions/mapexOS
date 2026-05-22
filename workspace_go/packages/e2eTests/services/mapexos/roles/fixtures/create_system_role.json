@@ -1,0 +1,8 @@
+{
+  "name": "System Administrator",
+  "description": "Full system access",
+  "permissions": ["mapex.*"],
+  "isSystem": true,
+  "pathKey": "",
+  "scope": "global"
+}

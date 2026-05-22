@@ -1,0 +1,21 @@
+{
+  "name": "HTTP DataSource Test",
+  "enabled": true,
+  "description": "Test HTTP datasource with API Key auth",
+  "mode": "pull",
+  "protocol": "http",
+  "auth": {
+    "type": "apiKey",
+    "apiKey": {
+      "type": "header",
+      "fieldName": "X-API-Key",
+      "key": "test-api-key-12345678901234567890"
+    }
+  },
+  "assetBind": {
+    "type": "uuidField",
+    "data": {
+      "uuidField": ["deviceUUID", "assetUUID"]
+    }
+  }
+}

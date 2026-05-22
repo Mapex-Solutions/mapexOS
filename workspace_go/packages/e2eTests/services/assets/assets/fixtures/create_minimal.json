@@ -1,0 +1,13 @@
+{
+  "name": "Minimal Device",
+  "status": true,
+  "assetUUID": "MINIMAL001",
+  "assetTemplateId": "WILL_BE_INJECTED_BY_TEST",
+  "category": "670a4cde48e006e3f95e8eb3",
+  "assetType": "670a4cde48e006e3f95e8eb4",
+  "orgId": "670a4cde48e006e3f95e8eb2",
+  "routeGroupIds": ["670a4cde48e006e3f95e8eb5"],
+  "protocol": {
+    "type": "http"
+  }
+}
