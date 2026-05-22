@@ -1,0 +1,40 @@
+{
+  "private": true,
+  "name": "mapex-workspaces",
+  "version": "1.0.0",
+  "description": "MAPEX Workspaces",
+  "author": "thiagoo.anselmoo@gmail.com",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Mapex-Solutions/MapexOS/README.md",
+  "workspaces": [
+    "packages/utils",
+    "packages/infrastructure",
+    "packages/validations",
+    "packages/schemas",
+    "packages/apis",
+    "packages/microservices",
+    "packages/script-registry",
+    "packages/e2e-helpers",
+    "services/**",
+    "apps/**"
+  ],
+  "scripts": {
+    "pre-push": "npm run pre-push -w services --if-present",
+    "build:lockfile": "npm i --package-lock-only",
+    "test:packages": "npm run test -workspace=packages --if-present",
+    "build:packages": "npm run build -workspace=packages --if-present",
+    "test:services": "npm run test -workspace=services --if-present",
+    "build:services": "npm run build -workspace=services --if-present"
+  },
+  "dependencies": {
+    "@dagrejs/dagre": "^2.0.4",
+    "ip-address": "^10.1.0"
+  },
+  "overrides": {
+    "vue-i18n": "^11.1.11",
+    "test-exclude": "^8.0.0"
+  },
+  "devDependencies": {
+    "piscina": "^5.1.4"
+  }
+}

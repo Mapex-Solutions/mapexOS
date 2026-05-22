@@ -1,0 +1,13 @@
+**/node_modules/
+**/dist/
+**/lib/
+**/docs/
+**/benchmarks/
+**/*.test.ts
+**/*.spec.ts
+**/__tests__/
+**/e2e-helpers/
+**/e2e/
+**/coverage/
+**/.git
+services/*/cache/
