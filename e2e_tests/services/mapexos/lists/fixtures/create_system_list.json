@@ -2,5 +2,7 @@
   "type": "assetType",
   "name": "Physical Server",
   "value": "physical_server",
-  "isSystem": true
+  "enabled": true,
+  "isSystem": true,
+  "orgId": "0000000000000000000aa001"
 }

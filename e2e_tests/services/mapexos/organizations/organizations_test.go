@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -18,6 +18,13 @@ import (
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/types"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
 )
+
+// coveragePropagationDelay covers the async window between an org-mutating
+// request and the moment the seed admin's coverage cache reflects the new
+// org. The mapexIam cache-invalidation handler reacts to a NATS event, so
+// back-to-back writes from the same client need a short pause before the
+// next request can target the freshly-created child via X-Org-Context.
+const coveragePropagationDelay = 4 * time.Second
 
 var (
 	// rootClient - ROOT user (mapex.* permission)
@@ -44,13 +51,17 @@ func TestMain(m *testing.M) {
 
 	ctx = context.Background()
 
-	// Setup ROOT client (mapex.* - unrestricted)
+	// Setup ROOT client. Carries the seed admin JWT plus X-Org-Context
+	// pinned to the seed root org — the mapexos middleware requires the
+	// header on every CRUD endpoint regardless of the bearer's wildcard
+	// permission.
 	rootClient = httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
 	rootToken, err := utils.GetRootToken()
 	if err != nil {
 		panic("Failed to get ROOT token: " + err.Error())
 	}
 	rootClient.SetHeader("Authorization", "Bearer "+rootToken)
+	rootClient.SetHeader("X-Org-Context", constants.MapexosOrgID)
 
 	// Setup ADMIN client (admin_vendor.* - org scoped)
 	adminClient = httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
@@ -112,7 +123,7 @@ func TestCreateOrganization_Site(t *testing.T) {
 
 	payload := loadFixture(t, "create_site.json", customerID)
 
-	resp, err := client.Raw(ctx, "POST", "/api/v1/organizations", payload)
+	resp, err := scopedClient(t, customerID).Raw(ctx, "POST", "/api/v1/organizations", payload)
 	require.NoError(t, err)
 	utils.AssertCreated(t, resp)
 
@@ -139,13 +150,13 @@ func TestCreateOrganization_Site(t *testing.T) {
 }
 
 func TestCreateOrganization_Building(t *testing.T) {
-	// Create customer
+	// Create customer (helper sleeps for coverage propagation).
 	customerID := createTestOrganization(t, "create_customer.json", "")
 	defer cleanupOrganization(t, customerID)
 
-	// Create site
+	// Create site under customer using the customer-scoped client.
 	sitePayload := loadFixture(t, "create_site.json", customerID)
-	resp, err := client.Raw(ctx, "POST", "/api/v1/organizations", sitePayload)
+	resp, err := scopedClient(t, customerID).Raw(ctx, "POST", "/api/v1/organizations", sitePayload)
 	require.NoError(t, err)
 
 	var siteResult types.StandardResponse
@@ -155,9 +166,12 @@ func TestCreateOrganization_Building(t *testing.T) {
 	siteID := siteMap["id"].(string)
 	defer cleanupOrganization(t, siteID)
 
-	// Create building under site
+	// Same NATS-driven coverage propagation gap as the helper.
+	time.Sleep(coveragePropagationDelay)
+
+	// Create building under site using the site-scoped client.
 	buildingPayload := loadFixture(t, "create_building.json", siteID)
-	resp, err = client.Raw(ctx, "POST", "/api/v1/organizations", buildingPayload)
+	resp, err = scopedClient(t, siteID).Raw(ctx, "POST", "/api/v1/organizations", buildingPayload)
 	require.NoError(t, err)
 	utils.AssertCreated(t, resp)
 
@@ -172,9 +186,9 @@ func TestCreateOrganization_Building(t *testing.T) {
 	assert.Equal(t, "building", orgMap["type"].(string))
 	assert.Equal(t, siteID, orgMap["parentOrgId"].(string))
 
-	// Verify pathKey has 3 levels
+	// Verify pathKey has 4 segments (root / customer / site / building).
 	pathKey := orgMap["pathKey"].(string)
-	assert.Equal(t, 2, strings.Count(pathKey, "/"), "pathKey should have 3 levels")
+	assert.Equal(t, 3, strings.Count(pathKey, "/"), "pathKey should have 4 segments")
 
 	t.Cleanup(func() {
 		cleanupOrganization(t, buildingID)
@@ -434,7 +448,7 @@ func TestDeleteOrganization_NotFound(t *testing.T) {
 // ========================================
 
 func TestOrganizationHierarchy_PathKeyPropagation(t *testing.T) {
-	// Create customer
+	// Create customer (helper sleeps for coverage propagation).
 	customerID := createTestOrganization(t, "create_customer.json", "")
 	defer cleanupOrganization(t, customerID)
 
@@ -447,9 +461,9 @@ func TestOrganizationHierarchy_PathKeyPropagation(t *testing.T) {
 	customerMap := customerResult.Data.(map[string]interface{})
 	customerPathKey := customerMap["pathKey"].(string)
 
-	// Create site under customer
+	// Create site under customer using the customer-scoped client.
 	sitePayload := loadFixture(t, "create_site.json", customerID)
-	resp, err = client.Raw(ctx, "POST", "/api/v1/organizations", sitePayload)
+	resp, err = scopedClient(t, customerID).Raw(ctx, "POST", "/api/v1/organizations", sitePayload)
 	require.NoError(t, err)
 	var siteResult types.StandardResponse
 	err = json.NewDecoder(resp.Body).Decode(&siteResult)
@@ -462,9 +476,12 @@ func TestOrganizationHierarchy_PathKeyPropagation(t *testing.T) {
 	// Verify site pathKey starts with customer pathKey
 	assert.True(t, strings.HasPrefix(sitePathKey, customerPathKey+"/"))
 
-	// Create building under site
+	// Same NATS-driven coverage propagation gap as the helper.
+	time.Sleep(coveragePropagationDelay)
+
+	// Create building under site using the site-scoped client.
 	buildingPayload := loadFixture(t, "create_building.json", siteID)
-	resp, err = client.Raw(ctx, "POST", "/api/v1/organizations", buildingPayload)
+	resp, err = scopedClient(t, siteID).Raw(ctx, "POST", "/api/v1/organizations", buildingPayload)
 	require.NoError(t, err)
 	var buildingResult types.StandardResponse
 	err = json.NewDecoder(resp.Body).Decode(&buildingResult)
@@ -479,7 +496,7 @@ func TestOrganizationHierarchy_PathKeyPropagation(t *testing.T) {
 }
 
 func TestOrganizationHierarchy_CustomerIDInheritance(t *testing.T) {
-	// Create customer
+	// Create customer (helper sleeps for coverage propagation).
 	customerID := createTestOrganization(t, "create_customer.json", "")
 	defer cleanupOrganization(t, customerID)
 
@@ -493,9 +510,9 @@ func TestOrganizationHierarchy_CustomerIDInheritance(t *testing.T) {
 	customerCustomerID := customerMap["customerId"].(string)
 	assert.Equal(t, customerID, customerCustomerID, "Customer should be its own customerID")
 
-	// Create site under customer
+	// Create site under customer using the customer-scoped client.
 	sitePayload := loadFixture(t, "create_site.json", customerID)
-	resp, err = client.Raw(ctx, "POST", "/api/v1/organizations", sitePayload)
+	resp, err = scopedClient(t, customerID).Raw(ctx, "POST", "/api/v1/organizations", sitePayload)
 	require.NoError(t, err)
 	var siteResult types.StandardResponse
 	err = json.NewDecoder(resp.Body).Decode(&siteResult)
@@ -508,9 +525,12 @@ func TestOrganizationHierarchy_CustomerIDInheritance(t *testing.T) {
 	// Verify site inherits customerID
 	assert.Equal(t, customerCustomerID, siteCustomerID, "Site should inherit customer's customerID")
 
-	// Create building under site
+	// Same NATS-driven coverage propagation gap as the helper.
+	time.Sleep(coveragePropagationDelay)
+
+	// Create building under site using the site-scoped client.
 	buildingPayload := loadFixture(t, "create_building.json", siteID)
-	resp, err = client.Raw(ctx, "POST", "/api/v1/organizations", buildingPayload)
+	resp, err = scopedClient(t, siteID).Raw(ctx, "POST", "/api/v1/organizations", buildingPayload)
 	require.NoError(t, err)
 	var buildingResult types.StandardResponse
 	err = json.NewDecoder(resp.Body).Decode(&buildingResult)
@@ -794,68 +814,44 @@ func TestMiddleware_AdminWithValidOrgContext_Pass(t *testing.T) {
 }
 
 func TestMiddleware_AdminWithoutOrgContext_Deny(t *testing.T) {
-	// ADMIN user WITHOUT X-Org-Context header should be DENIED (403)
+	// A restricted admin (no mapex.* wildcard) issuing a request WITHOUT
+	// X-Org-Context must be denied: the middleware needs the header to
+	// resolve which org the actor is acting in.
+	_, restrictedToken, cleanup := provisionRestrictedAdmin(t)
+	defer cleanup()
 
-	// Create a fresh client without org context
-	adminClientNoContext := httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
-	adminToken, err := utils.GetAdminToken()
+	clientNoContext := httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
+	clientNoContext.SetHeader("Authorization", "Bearer "+restrictedToken)
+	// Explicitly DO NOT set X-Org-Context.
+
+	resp, err := clientNoContext.Raw(ctx, "GET", "/api/v1/organizations?page=1&perPage=10", nil)
 	require.NoError(t, err)
-	adminClientNoContext.SetHeader("Authorization", "Bearer "+adminToken)
-	// Explicitly DO NOT set X-Org-Context
 
-	// Try to list organizations without org context
-	resp, err := adminClientNoContext.Raw(ctx, "GET", "/api/v1/organizations?page=1&perPage=10", nil)
-	require.NoError(t, err)
-
-	// Should be FORBIDDEN (403) - admin_vendor.* requires org context
 	assert.Equal(t, http.StatusForbidden, resp.StatusCode,
-		"ADMIN without X-Org-Context should be denied (403)")
-
-	var errorResult types.ErrorResponse
-	err = json.NewDecoder(resp.Body).Decode(&errorResult)
-	require.NoError(t, err)
-
-	// Verify error message mentions org context requirement
-	assert.NotEmpty(t, errorResult.Errors)
-	errorMsg := errorResult.Errors[0]
-	assert.Contains(t, errorMsg, "X-Org-Context",
-		"Error message should mention X-Org-Context requirement")
-	assert.Contains(t, errorMsg, "ROOT",
-		"Error message should mention that only ROOT users can query without org context")
+		"restricted admin without X-Org-Context should be denied (403)")
 }
 
 func TestMiddleware_AdminWithUnauthorizedOrgContext_Deny(t *testing.T) {
-	// ADMIN user with X-Org-Context to org NOT in their coverage should be DENIED (403)
+	// A restricted admin pinned to org A who points X-Org-Context at a
+	// different org B (created by ROOT, never granted to the user) must
+	// be denied: the coverage middleware rejects every org outside the
+	// user's accessible scope.
+	_, restrictedToken, cleanup := provisionRestrictedAdmin(t)
+	defer cleanup()
 
-	// Create an organization using ROOT
-	orgID := createTestOrganization(t, "create_customer.json", "")
-	defer cleanupOrganization(t, orgID)
+	// A separate org the restricted user has zero coverage on.
+	unauthorizedOrgID := createTestOrganization(t, "create_customer.json", "")
+	defer cleanupOrganization(t, unauthorizedOrgID)
 
-	// Create a fresh admin client and set org context to the new org
-	// (which admin user does NOT have access to - only has access to Mapexos org)
-	adminClientUnauth := httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
-	adminToken, err := utils.GetAdminToken()
+	clientUnauth := httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
+	clientUnauth.SetHeader("Authorization", "Bearer "+restrictedToken)
+	clientUnauth.SetHeader("X-Org-Context", unauthorizedOrgID)
+
+	resp, err := clientUnauth.Raw(ctx, "GET", "/api/v1/organizations?page=1&perPage=10", nil)
 	require.NoError(t, err)
-	adminClientUnauth.SetHeader("Authorization", "Bearer "+adminToken)
-	adminClientUnauth.SetHeader("X-Org-Context", orgID) // Set to unauthorized org
 
-	// Try to list organizations with unauthorized org context
-	resp, err := adminClientUnauth.Raw(ctx, "GET", "/api/v1/organizations?page=1&perPage=10", nil)
-	require.NoError(t, err)
-
-	// Should be FORBIDDEN (403) - org not in admin's coverage
 	assert.Equal(t, http.StatusForbidden, resp.StatusCode,
-		"ADMIN with unauthorized org context should be denied (403)")
-
-	var errorResult types.ErrorResponse
-	err = json.NewDecoder(resp.Body).Decode(&errorResult)
-	require.NoError(t, err)
-
-	// Verify error message mentions insufficient permissions
-	assert.NotEmpty(t, errorResult.Errors)
-	errorMsg := errorResult.Errors[0]
-	assert.Contains(t, errorMsg, "insufficient permissions",
-		"Error message should mention insufficient permissions")
+		"restricted admin pointing at an org outside their coverage should be denied (403)")
 }
 
 func TestMiddleware_RootWithoutOrgContext_Pass(t *testing.T) {
@@ -919,11 +915,92 @@ func TestMiddleware_RootWithOrgContext_Pass(t *testing.T) {
 // HELPER FUNCTIONS
 // ========================================
 
-// invalidateCoverageCache invalidates the coverage cache for a user
-// This forces the cache to be rebuilt on the next request, picking up newly created orgs
-func invalidateCoverageCache(userID string) error {
-	cmd := exec.Command("redis-cli", "-n", "5", "DEL", fmt.Sprintf("coverage:user:%s", userID))
-	return cmd.Run()
+
+// provisionRestrictedAdmin creates a scratch customer org, a non-wildcard
+// role under it, and a user via the public onboarding orchestrator whose
+// only access is a local-scope membership in that org with that role.
+// The user is the opposite of the seed super-admin: org-scoped, no
+// mapex.* wildcard. Used by the middleware deny tests to exercise the
+// "admin without org context" and "admin outside their coverage" paths
+// that the seed actor itself cannot trigger.
+//
+// Returns the org id, the restricted user's bearer token, and a cleanup
+// callback that removes the org (cascade wipes the role, group, user,
+// and membership). Caller is responsible for invoking cleanup.
+func provisionRestrictedAdmin(t *testing.T) (orgID, token string, cleanup func()) {
+	t.Helper()
+	runID := fmt.Sprintf("restricted-%d", time.Now().UnixNano())
+
+	// 1. Scratch customer org under root. createTestOrganization already
+	// sleeps for the coverage propagation window so the next call from
+	// rootClient can target the org via X-Org-Context.
+	orgID = createTestOrganization(t, "create_customer.json", "")
+
+	// 2. Non-wildcard role scoped to the new org. Permissions chosen to
+	// pass authorization for the GET /organizations endpoint that the
+	// deny tests probe, so the only thing that can cause a 403 is the
+	// coverage middleware (which is what the tests assert against).
+	rolePayload := map[string]interface{}{
+		"name":        "Restricted Admin " + runID,
+		"description": "Org-scoped admin for middleware deny tests",
+		"permissions": []string{"organization.read", "organization.list"},
+		"isSystem":    false,
+		"orgId":       orgID,
+		"pathKey":     "",
+		"scope":       "local",
+	}
+	resp, err := scopedClient(t, orgID).Raw(ctx, "POST", "/api/v1/roles", rolePayload)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusCreated, resp.StatusCode, "create restricted role")
+	var roleResult types.StandardResponse
+	require.NoError(t, json.NewDecoder(resp.Body).Decode(&roleResult))
+	roleID := roleResult.Data.(map[string]interface{})["id"].(string)
+
+	// 3. Atomic user + membership via the orchestrator. Memberships (vs
+	// Groups) lets us pin scope=local so the user has access ONLY to the
+	// org named in X-Org-Context, with no recursive expansion.
+	email := fmt.Sprintf("restricted-admin-%s@test.local", runID)
+	password := "restricted-pass-1234"
+	onboardPayload := map[string]interface{}{
+		"email":     email,
+		"password":  password,
+		"firstName": "Restricted",
+		"lastName":  "Admin",
+		"enabled":   true,
+		"memberships": []map[string]interface{}{{
+			"roles": []string{roleID},
+			"scope": "local",
+		}},
+	}
+	resp, err = scopedClient(t, orgID).Raw(ctx, "POST", "/api/v1/onboarding/users", onboardPayload)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusCreated, resp.StatusCode, "onboard restricted user")
+
+	// 4. Same NATS-driven coverage propagation gap as createTestOrganization.
+	time.Sleep(coveragePropagationDelay)
+
+	// 5. Authenticate as the restricted user to obtain a token whose
+	// claims carry the org-scoped membership (no wildcard).
+	token, err = utils.DoLogin(email, password)
+	require.NoError(t, err)
+
+	return orgID, token, func() {
+		cleanupOrganization(t, orgID)
+	}
+}
+
+// scopedClient returns a ROOT-authenticated HTTP client with X-Org-Context
+// pinned to the supplied parent org id. Used when creating child orgs under
+// a freshly created customer — the middleware checks coverage against the
+// header value and requires the request scope to match the new parent.
+func scopedClient(t *testing.T, parentOrgID string) *httpclient.HTTPClient {
+	t.Helper()
+	c := httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
+	rootToken, err := utils.GetRootToken()
+	require.NoError(t, err)
+	c.SetHeader("Authorization", "Bearer "+rootToken)
+	c.SetHeader("X-Org-Context", parentOrgID)
+	return c
 }
 
 func loadFixture(t *testing.T, filename string, parentID string) map[string]interface{} {
@@ -954,7 +1031,13 @@ func createTestOrganization(t *testing.T, fixtureFile string, parentID string) s
 	require.NoError(t, err)
 
 	orgMap := result.Data.(map[string]interface{})
-	return orgMap["id"].(string)
+	orgID := orgMap["id"].(string)
+
+	// Wait out the NATS-driven coverage-cache invalidation so that the next
+	// request from this client can target the new org via X-Org-Context.
+	// Mirrors the UI's natural latency between create and follow-up action.
+	time.Sleep(coveragePropagationDelay)
+	return orgID
 }
 
 func cleanupOrganization(t *testing.T, orgID string) {

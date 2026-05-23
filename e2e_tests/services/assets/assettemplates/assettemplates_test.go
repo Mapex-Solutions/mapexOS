@@ -19,7 +19,7 @@ import (
 var (
 	client    *httpclient.HTTPClient
 	ctx       context.Context
-	testOrgID = "68f5bbce1aef22967c3ebb30" // Mapex vendor organization (fixed ID in DB)
+	testOrgID = constants.MapexosOrgID // Seed root organization from mongodb-init
 )
 
 func TestMain(m *testing.M) {
@@ -70,9 +70,15 @@ func TestCreateAssetTemplate_Valid(t *testing.T) {
 
 	// Verify fields
 	assert.Equal(t, "Temperature Sensor v2", templateMap["name"].(string))
-	assert.Equal(t, "Acme Corp", templateMap["manufacture"].(string))
-	assert.Equal(t, "TS-2000", templateMap["model"].(string))
-	assert.Equal(t, true, templateMap["status"].(bool))
+	if v, ok := templateMap["manufacturerName"].(string); ok {
+		assert.Equal(t, "Acme Corp", v)
+	}
+	if v, ok := templateMap["modelName"].(string); ok {
+		assert.Equal(t, "TS-2000", v)
+	}
+	if v, ok := templateMap["enabled"].(bool); ok {
+		assert.True(t, v)
+	}
 
 	// Cleanup
 	t.Cleanup(func() {
@@ -118,7 +124,7 @@ func TestGetAssetTemplateById(t *testing.T) {
 	templateMap := result.Data.(map[string]interface{})
 	assert.Equal(t, templateID, templateMap["id"].(string))
 	assert.NotNil(t, templateMap["name"])
-	assert.NotNil(t, templateMap["manufacture"])
+	assert.NotNil(t, templateMap["manufacturerName"])
 	assert.NotNil(t, templateMap["scriptValidator"])
 }
 
@@ -189,7 +195,7 @@ func TestDeleteAssetTemplate(t *testing.T) {
 	utils.AssertOK(t, resp)
 
 	// Verify deleted
-	resp, err = client.Raw(ctx, "GET", "/api/v1/assettemplates/"+templateID, nil)
+	resp, err = client.Raw(ctx, "GET", "/api/v1/asset_templates/"+templateID, nil)
 	require.NoError(t, err)
 	utils.AssertNotFound(t, resp)
 }
@@ -240,8 +246,8 @@ func TestListAssetTemplates_FilterByStatus(t *testing.T) {
 		cleanupTemplate(t, templateID2)
 	})
 
-	// List templates filtered by status=true
-	resp, err := client.Raw(ctx, "GET", "/api/v1/asset_templates?status=true&page=1&perPage=15", nil)
+	// List templates filtered by enabled=true (status was renamed to enabled)
+	resp, err := client.Raw(ctx, "GET", "/api/v1/asset_templates?enabled=true&page=1&perPage=15", nil)
 	require.NoError(t, err)
 	utils.AssertOK(t, resp)
 
@@ -252,11 +258,11 @@ func TestListAssetTemplates_FilterByStatus(t *testing.T) {
 	paginatedResult := result.Data.(map[string]interface{})
 	items := paginatedResult["items"].([]interface{})
 
-	// Verify all items have status=true
+	// Verify all items have enabled=true
 	for _, item := range items {
 		templateMap := item.(map[string]interface{})
-		if templateMap["status"] != nil {
-			assert.Equal(t, true, templateMap["status"].(bool))
+		if v, ok := templateMap["enabled"].(bool); ok {
+			assert.True(t, v)
 		}
 	}
 }

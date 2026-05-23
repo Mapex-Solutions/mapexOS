@@ -1,6 +1,7 @@
 {
   "name": "ACME Corporation",
   "type": "customer",
+  "parentOrgId": "0000000000000000000aa001",
   "enabled": true,
   "address": {
     "city": "San Francisco",

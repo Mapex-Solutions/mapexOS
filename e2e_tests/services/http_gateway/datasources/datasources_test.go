@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -172,10 +173,13 @@ func TestListDataSources_FilterByName(t *testing.T) {
 	paginatedResult := result.Data.(map[string]interface{})
 	items := paginatedResult["items"].([]interface{})
 
+	// The service performs a case-insensitive partial match — assert the
+	// same so saga-created datasources named with lowercase "http" are
+	// still considered valid matches.
 	for _, item := range items {
 		dataSourceMap := item.(map[string]interface{})
 		name := dataSourceMap["name"].(string)
-		assert.Contains(t, name, "HTTP")
+		assert.Contains(t, strings.ToLower(name), "http")
 	}
 }
 

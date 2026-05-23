@@ -1,18 +1,17 @@
 {
   "name": "IoT Device 001",
-  "status": true,
+  "enabled": true,
   "description": "Temperature and humidity sensor for warehouse",
   "assetUUID": "ABC123DEF456",
   "assetTemplateId": "WILL_BE_INJECTED_BY_TEST",
-  "category": "670a4cde48e006e3f95e8eb3",
-  "assetType": "670a4cde48e006e3f95e8eb4",
-  "orgId": "670a4cde48e006e3f95e8eb2",
-  "routeGroupIds": ["670a4cde48e006e3f95e8eb5"],
+  "orgId": "0000000000000000000aa001",
+  "routeGroupIds": ["WILL_BE_INJECTED_BY_TEST"],
   "protocol": {
     "type": "mqtt",
     "mqtt": {
       "clientId": "device-001",
       "username": "iot_user",
+      "authType": "password",
       "password": "secure_password_123"
     }
   },

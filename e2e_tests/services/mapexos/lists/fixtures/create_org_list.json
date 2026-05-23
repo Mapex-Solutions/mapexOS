@@ -2,6 +2,7 @@
   "type": "assetGroup",
   "name": "Servers",
   "value": "servers",
+  "enabled": true,
   "isSystem": false,
-  "orgId": "670a4cde48e006e3f95e8eb2"
+  "orgId": "0000000000000000000aa001"
 }

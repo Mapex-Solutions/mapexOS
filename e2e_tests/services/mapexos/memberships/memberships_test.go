@@ -39,13 +39,17 @@ func TestMain(m *testing.M) {
 
 	ctx = context.Background()
 
-	// Setup ROOT client (mapex.* - unrestricted, no X-Org-Context required)
+	// Setup ROOT client. Carries the seed admin JWT plus X-Org-Context
+	// pinned to the seed root org — the mapexos middleware requires the
+	// header on every CRUD endpoint regardless of the bearer's wildcard
+	// permission.
 	rootClient = httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
 	rootToken, err := utils.GetRootToken()
 	if err != nil {
 		panic("Failed to get ROOT token: " + err.Error())
 	}
 	rootClient.SetHeader("Authorization", "Bearer "+rootToken)
+	rootClient.SetHeader("X-Org-Context", constants.MapexosOrgID)
 
 	// Setup ADMIN client (admin_vendor.* - org scoped, X-Org-Context required)
 	adminClient = httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
@@ -492,9 +496,10 @@ func cleanupRole(roleID string) {
 
 func createTestGroup() string {
 	payload := map[string]interface{}{
-		"name":     "Test Group Membership",
-		"enabled":  true,
-		"isSystem": true,
+		"name":    "Test Group Membership",
+		"enabled": true,
+		"orgId":   testOrgID,
+		"roleIds": []string{testRoleID},
 	}
 
 	resp, err := rootClient.Raw(ctx, "POST", "/api/v1/groups", payload)

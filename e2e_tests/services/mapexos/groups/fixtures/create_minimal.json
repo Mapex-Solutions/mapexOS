@@ -1,6 +1,6 @@
 {
   "name": "Minimal Group",
   "enabled": true,
-  "isSystem": false,
-  "orgId": "{{ORG_ID}}"
+  "orgId": "{{ORG_ID}}",
+  "roleIds": ["0000000000000000000aa201"]
 }

@@ -1,9 +1,9 @@
 {
   "name": "Temperature Sensor v2",
-  "status": true,
+  "enabled": true,
   "description": "Advanced temperature sensor with high precision",
-  "manufacture": "Acme Corp",
-  "model": "TS-2000",
+  "manufacturerName": "Acme Corp",
+  "modelName": "TS-2000",
   "version": "2.1.0",
   "assetIdPath": "payload.deviceId",
   "scriptTest": "function test() { return true; }",

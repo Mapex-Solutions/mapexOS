@@ -31,13 +31,17 @@ func TestMain(m *testing.M) {
 
 	ctx = context.Background()
 
-	// Setup ROOT client (mapex.* - unrestricted, no X-Org-Context required)
+	// Setup ROOT client. Carries the seed admin JWT plus X-Org-Context
+	// pinned to the seed root org — the mapexos middleware requires the
+	// header on every CRUD endpoint regardless of the bearer's wildcard
+	// permission.
 	rootClient = httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
 	rootToken, err := utils.GetRootToken()
 	if err != nil {
 		panic("Failed to get ROOT token: " + err.Error())
 	}
 	rootClient.SetHeader("Authorization", "Bearer "+rootToken)
+	rootClient.SetHeader("X-Org-Context", constants.MapexosOrgID)
 
 	// Setup ADMIN client (admin_vendor.* - org scoped, X-Org-Context required)
 	adminClient = httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
@@ -68,8 +72,8 @@ func TestCreateUser_Internal(t *testing.T) {
 	}
 	onboardingPayload["memberships"] = []map[string]interface{}{
 		{
-			"orgId": "68f5bbce1aef22967c3ebb30", // Mapexos org
-			"roles": []string{"68f5bbce1aef22967c3ebb29"}, // viewer role
+			"orgId": constants.MapexosOrgID,
+			"roles": []string{constants.SuperAdminRoleID},
 			"scope": "local",
 		},
 	}
@@ -106,8 +110,8 @@ func TestCreateUser_Google(t *testing.T) {
 	}
 	onboardingPayload["memberships"] = []map[string]interface{}{
 		{
-			"orgId": "68f5bbce1aef22967c3ebb30", // Mapexos org
-			"roles": []string{"68f5bbce1aef22967c3ebb29"}, // viewer role
+			"orgId": constants.MapexosOrgID,
+			"roles": []string{constants.SuperAdminRoleID},
 			"scope": "local",
 		},
 	}
@@ -140,8 +144,8 @@ func TestCreateUser_Minimal(t *testing.T) {
 	}
 	onboardingPayload["memberships"] = []map[string]interface{}{
 		{
-			"orgId": "68f5bbce1aef22967c3ebb30", // Mapexos org
-			"roles": []string{"68f5bbce1aef22967c3ebb29"}, // viewer role
+			"orgId": constants.MapexosOrgID,
+			"roles": []string{constants.SuperAdminRoleID},
 			"scope": "local",
 		},
 	}
@@ -412,8 +416,8 @@ func createTestUser(t *testing.T, fixtureFile string) string {
 	// Add membership to Mapexos organization with viewer role
 	onboardingPayload["memberships"] = []map[string]interface{}{
 		{
-			"orgId": "68f5bbce1aef22967c3ebb30", // Mapexos org
-			"roles": []string{"68f5bbce1aef22967c3ebb29"}, // viewer role
+			"orgId": constants.MapexosOrgID,
+			"roles": []string{constants.SuperAdminRoleID},
 			"scope": "local",
 		},
 	}

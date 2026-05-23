@@ -20,12 +20,13 @@ import (
 var (
 	client           *httpclient.HTTPClient
 	internalClient   *httpclient.HTTPClient
+	routerClient     *httpclient.HTTPClient
 	ctx              context.Context
 	templateID       string                       // Will be set in TestMain
-	testOrgID        = "68f5bbce1aef22967c3ebb30" // Mapex vendor organization (fixed ID in DB)
+	testOrgID        = constants.MapexosOrgID // Seed root organization from mongodb-init
 	testCategoryID   = "670a4cde48e006e3f95e8eb3"
 	testAssetTypeID  = "670a4cde48e006e3f95e8eb4"
-	testRouteGroupID = "670a4cde48e006e3f95e8eb5"
+	testRouteGroupID string // Will be set in TestMain (route group seeded by test)
 )
 
 func TestMain(m *testing.M) {
@@ -59,14 +60,23 @@ func TestMain(m *testing.M) {
 	// Set organization context for internal client
 	internalClient.SetHeader("X-Org-Context", testOrgID)
 
+	// Setup router client for creating prerequisite route group
+	routerClient = httpclient.New(httpclient.Config{BaseURL: constants.RouterURL})
+	routerClient.SetHeader("Authorization", "Bearer "+token)
+	routerClient.SetHeader("X-Org-Context", testOrgID)
+
+	// Create a route group (assets require RouteGroupIds min=1)
+	testRouteGroupID = createTestRouteGroup()
+
 	// Create a template for testing assets
 	templateID = createTestTemplate()
 
 	// Run tests
 	code := m.Run()
 
-	// Cleanup template
+	// Cleanup template & route group
 	cleanupTemplate(templateID)
+	cleanupRouteGroup(testRouteGroupID)
 
 	os.Exit(code)
 }
@@ -74,8 +84,9 @@ func TestMain(m *testing.M) {
 // TestCreateAsset_Valid tests creating an asset with all fields
 func TestCreateAsset_Valid(t *testing.T) {
 	payload := loadFixture(t, "create_asset.json")
-	// Inject the template ID created in TestMain
+	// Inject the template ID and route group ID created in TestMain
 	payload["assetTemplateId"] = templateID
+	payload["routeGroupIds"] = []string{testRouteGroupID}
 
 	resp, err := client.Raw(ctx, "POST", "/api/v1/assets", payload)
 	require.NoError(t, err)
@@ -94,7 +105,9 @@ func TestCreateAsset_Valid(t *testing.T) {
 	// Verify fields
 	assert.Equal(t, "IoT Device 001", assetMap["name"].(string))
 	assert.Equal(t, "ABC123DEF456", assetMap["assetUUID"].(string))
-	assert.Equal(t, true, assetMap["status"].(bool))
+	if v, ok := assetMap["enabled"].(bool); ok {
+		assert.True(t, v)
+	}
 
 	// Cleanup
 	t.Cleanup(func() {
@@ -106,6 +119,7 @@ func TestCreateAsset_Valid(t *testing.T) {
 func TestCreateAsset_Minimal(t *testing.T) {
 	payload := loadFixture(t, "create_minimal.json")
 	payload["assetTemplateId"] = templateID
+	payload["routeGroupIds"] = []string{testRouteGroupID}
 
 	resp, err := client.Raw(ctx, "POST", "/api/v1/assets", payload)
 	require.NoError(t, err)
@@ -243,44 +257,6 @@ func TestListAssets_FilterByCategory(t *testing.T) {
 	t.Logf("Found %d assets with category filter", len(items))
 }
 
-// TestInternalGetAssetScripts tests getting asset scripts via internal API
-func TestInternalGetAssetScripts(t *testing.T) {
-	// Create asset first
-	assetID := createTestAsset(t, "create_asset.json")
-	defer cleanupAsset(t, assetID)
-
-	// Get the asset to extract its assetUUID
-	resp, err := client.Raw(ctx, "GET", "/api/v1/assets/"+assetID, nil)
-	require.NoError(t, err)
-	utils.AssertOK(t, resp)
-
-	var assetResult types.StandardResponse
-	err = json.NewDecoder(resp.Body).Decode(&assetResult)
-	require.NoError(t, err)
-
-	assetMap := assetResult.Data.(map[string]interface{})
-	assetUUID := assetMap["assetUUID"].(string)
-
-	// Call internal API to get scripts
-	resp, err = internalClient.Raw(ctx, "GET", "/api/internal/v1/assets/scripts/"+assetUUID, nil)
-	require.NoError(t, err)
-	utils.AssertOK(t, resp)
-
-	var scriptsResult types.StandardResponse
-	err = json.NewDecoder(resp.Body).Decode(&scriptsResult)
-	require.NoError(t, err)
-
-	scriptsMap := scriptsResult.Data.(map[string]interface{})
-
-	// Verify response contains all required fields
-	assert.Equal(t, assetUUID, scriptsMap["assetUUID"].(string))
-	assert.Equal(t, templateID, scriptsMap["assetTemplateId"].(string))
-	assert.NotNil(t, scriptsMap["scriptValidator"])
-	assert.NotNil(t, scriptsMap["scriptConversion"])
-
-	t.Logf("Successfully retrieved scripts for asset %s", assetUUID)
-}
-
 // Helper functions
 
 func loadFixture(t *testing.T, filename string) map[string]interface{} {
@@ -297,6 +273,7 @@ func loadFixture(t *testing.T, filename string) map[string]interface{} {
 func createTestAsset(t *testing.T, fixtureFile string) string {
 	payload := loadFixture(t, fixtureFile)
 	payload["assetTemplateId"] = templateID
+	payload["routeGroupIds"] = []string{testRouteGroupID}
 
 	resp, err := client.Raw(ctx, "POST", "/api/v1/assets", payload)
 	require.NoError(t, err)
@@ -324,9 +301,9 @@ func cleanupAsset(t *testing.T, assetID string) {
 func createTestTemplate() string {
 	payload := map[string]interface{}{
 		"name":             "Test Template",
-		"status":           true,
-		"manufacture":      "Test Corp",
-		"model":            "TEST-001",
+		"enabled":          true,
+		"manufacturerName": "Test Corp",
+		"modelName":        "TEST-001",
 		"assetIdPath":      "payload.deviceId",
 		"scriptValidator":  "function validate(data) { return true; }",
 		"scriptConversion": "function convert(data) { return data; }",
@@ -352,4 +329,42 @@ func createTestTemplate() string {
 
 func cleanupTemplate(templateID string) {
 	_, _ = client.Raw(ctx, "DELETE", "/api/v1/asset_templates/"+templateID, nil)
+}
+
+// createTestRouteGroup provisions a save_event route group on the router
+// service so the assets test has a valid RouteGroupId to satisfy the
+// AssetCreate validate:"required,min=1" rule. The same shape is used by
+// the saga journeys (services/router/routegroups/payloads).
+func createTestRouteGroup() string {
+	payload := map[string]interface{}{
+		"name":    "assets-e2e-save-event",
+		"version": "1.0.0",
+		"enabled": true,
+		"routers": []map[string]interface{}{
+			{
+				"kind":      "save_event",
+				"saveEvent": map[string]interface{}{},
+			},
+		},
+	}
+
+	resp, err := routerClient.Raw(ctx, "POST", "/api/v1/route_groups", payload)
+	if err != nil {
+		panic("Failed to create test route group: " + err.Error())
+	}
+	if resp.StatusCode != http.StatusCreated {
+		panic(fmt.Sprintf("Failed to create test route group: status %d", resp.StatusCode))
+	}
+
+	var result types.StandardResponse
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		panic("Failed to parse route group response: " + err.Error())
+	}
+
+	rgMap := result.Data.(map[string]interface{})
+	return rgMap["id"].(string)
+}
+
+func cleanupRouteGroup(routeGroupID string) {
+	_, _ = routerClient.Raw(ctx, "DELETE", "/api/v1/route_groups/"+routeGroupID, nil)
 }

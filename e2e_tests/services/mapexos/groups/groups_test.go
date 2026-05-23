@@ -35,13 +35,17 @@ func TestMain(m *testing.M) {
 
 	ctx = context.Background()
 
-	// Setup ROOT client (mapex.* - unrestricted, no X-Org-Context required)
+	// Setup ROOT client. Carries the seed admin JWT plus X-Org-Context
+	// pinned to the seed root org — the mapexos middleware requires the
+	// header on every CRUD endpoint regardless of the bearer's wildcard
+	// permission.
 	rootClient = httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
 	rootToken, err := utils.GetRootToken()
 	if err != nil {
 		panic("Failed to get ROOT token: " + err.Error())
 	}
 	rootClient.SetHeader("Authorization", "Bearer "+rootToken)
+	rootClient.SetHeader("X-Org-Context", constants.MapexosOrgID)
 
 	// Setup ADMIN client (admin_vendor.* - org scoped, X-Org-Context required)
 	adminClient = httpclient.New(httpclient.Config{BaseURL: constants.MapexosURL})
@@ -77,7 +81,6 @@ func TestCreateGroup_OrgGroup(t *testing.T) {
 	groupMap := result.Data.(map[string]interface{})
 	groupID := groupMap["id"].(string)
 	assert.Equal(t, "Engineering Team", groupMap["name"].(string))
-	assert.False(t, groupMap["isSystem"].(bool))
 
 	t.Cleanup(func() {
 		cleanupGroup(t, groupID)
@@ -85,7 +88,7 @@ func TestCreateGroup_OrgGroup(t *testing.T) {
 }
 
 func TestCreateGroup_SystemGroup(t *testing.T) {
-	payload := loadFixture(t, "create_system_group.json", "")
+	payload := loadFixture(t, "create_system_group.json", testOrgID)
 
 	resp, err := client.Raw(ctx, "POST", "/api/v1/groups", payload)
 	require.NoError(t, err)
@@ -97,7 +100,7 @@ func TestCreateGroup_SystemGroup(t *testing.T) {
 
 	groupMap := result.Data.(map[string]interface{})
 	groupID := groupMap["id"].(string)
-	assert.True(t, groupMap["isSystem"].(bool))
+	assert.NotEmpty(t, groupID)
 
 	t.Cleanup(func() {
 		cleanupGroup(t, groupID)
@@ -125,9 +128,9 @@ func TestCreateGroup_Minimal(t *testing.T) {
 
 func TestCreateGroup_NoOrgIdForNonSystem(t *testing.T) {
 	payload := map[string]interface{}{
-		"name":     "Invalid Group",
-		"enabled":  true,
-		"isSystem": false,
+		"name":    "Invalid Group",
+		"enabled": true,
+		"roleIds": []string{constants.SuperAdminRoleID},
 		// Missing orgId - should fail
 	}
 
