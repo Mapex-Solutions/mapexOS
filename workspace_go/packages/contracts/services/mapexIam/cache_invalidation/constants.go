@@ -42,4 +42,8 @@ var (
 	RoleDeletedSubjectFormat            = subjectPrefix + ".role.%s.deleted"
 	GroupChangedSubjectFormat           = subjectPrefix + ".group.%s.changed"
 	GroupDeletedSubjectFormat           = subjectPrefix + ".group.%s.deleted"
+	OrgHierarchyChangedSubjectFormat    = subjectPrefix + ".organization.%s.hierarchy.changed"
+	OrgAccessPolicyChangedSubjectFormat = subjectPrefix + ".organization.%s.access_policy.changed"
+	MembershipChangedSubjectFormat      = subjectPrefix + ".membership.%s.changed"
+	MembershipDeletedSubjectFormat      = subjectPrefix + ".membership.%s.deleted"
 )

@@ -7,6 +7,7 @@ import (
 	events "mapexIam/src/modules/cache_invalidation/application/events"
 	"mapexIam/src/modules/organizations/domain/entities"
 
+	contractsCacheInvalidation "github.com/Mapex-Solutions/MapexOS/contracts/services/mapexIam/cache_invalidation"
 	contractsDtos "github.com/Mapex-Solutions/MapexOS/contracts/services/mapexIam/organizations"
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
@@ -41,7 +42,7 @@ func (s *OrganizationService) publishOrgHierarchyChangedEvent(orgID string, pare
 
 		event := events.NewOrgHierarchyChangedEvent(orgID, ancestorOrgIds, action, "")
 
-		subject := fmt.Sprintf("mapexos.cache.invalidation.organization.%s.hierarchy.changed", orgID)
+		subject := fmt.Sprintf(contractsCacheInvalidation.OrgHierarchyChangedSubjectFormat, orgID)
 		if err := s.deps.NatsBus.Publish(natsModel.PublishConfig{Subject: subject, Data: event}); err != nil {
 			logger.Error(err, fmt.Sprintf("[SERVICE:Organization] Failed to publish OrgHierarchyChangedEvent for org=%s", orgID))
 			return
@@ -62,7 +63,7 @@ func (s *OrganizationService) publishOrgCreatedEvent(org *entities.Organization)
 			Type:    org.Type,
 		}
 
-		subject := "mapexos.events.organization.created"
+		subject := contractsDtos.SubjectOrganizationCreated
 		if err := s.deps.NatsBus.Publish(natsModel.PublishConfig{Subject: subject, Data: event}); err != nil {
 			logger.Error(err, fmt.Sprintf("[SERVICE:Organization] Failed to publish OrganizationCreatedEvent for org=%s", org.ID.Hex()))
 			return

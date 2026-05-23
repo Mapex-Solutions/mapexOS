@@ -10,6 +10,7 @@ import (
 	"mapexIam/src/modules/organizations/application/ports"
 	"mapexIam/src/modules/organizations/domain/entities"
 
+	contractsCacheInvalidation "github.com/Mapex-Solutions/MapexOS/contracts/services/mapexIam/cache_invalidation"
 	common "github.com/Mapex-Solutions/MapexOS/contracts/common"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
@@ -244,7 +245,7 @@ func (s *OrganizationService) publishOrgAccessPolicyChanged(updated, oldOrg *ent
 		"",
 	)
 
-	subject := fmt.Sprintf("mapexos.cache.invalidation.organization.%s.access_policy.changed", updated.ID.Hex())
+	subject := fmt.Sprintf(contractsCacheInvalidation.OrgAccessPolicyChangedSubjectFormat, updated.ID.Hex())
 	if err := s.deps.NatsBus.Publish(natsModel.PublishConfig{Subject: subject, Data: event}); err != nil {
 		logger.Error(err, fmt.Sprintf("[SERVICE:Organization] Failed to publish OrgAccessPolicyChangedEvent for org=%s", updated.ID.Hex()))
 		return

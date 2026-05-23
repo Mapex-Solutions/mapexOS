@@ -10,6 +10,7 @@ import (
 	"mapexIam/src/modules/memberships/application/ports"
 	"mapexIam/src/modules/memberships/domain/entities"
 
+	contractsCacheInvalidation "github.com/Mapex-Solutions/MapexOS/contracts/services/mapexIam/cache_invalidation"
 	common "github.com/Mapex-Solutions/mapexGoKit/infrastructure/common/ports"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
@@ -306,7 +307,7 @@ func (s *MembershipService) GetAssigneeIdsByOrgIds(c ctx.Context, orgIds []model
 func (s *MembershipService) publishMembershipChanged(membershipId, userId, orgId string) {
 	logger.Info(fmt.Sprintf("[SERVICE:Membership] Membership changed for user=%s org=%s - publishing cache invalidation event", userId, orgId))
 	event := events.NewMembershipChangedEvent(membershipId, userId, orgId, "", "", "")
-	subject := fmt.Sprintf("mapexos.cache.invalidation.membership.%s.changed", membershipId)
+	subject := fmt.Sprintf(contractsCacheInvalidation.MembershipChangedSubjectFormat, membershipId)
 	if err := s.deps.NatsBus.Publish(natsModel.PublishConfig{Subject: subject, Data: event}); err != nil {
 		logger.Error(err, fmt.Sprintf("[SERVICE:Membership] Failed to publish MembershipChangedEvent for user=%s", userId))
 		return
@@ -319,7 +320,7 @@ func (s *MembershipService) publishMembershipChanged(membershipId, userId, orgId
 func (s *MembershipService) publishMembershipDeleted(membershipId, userId, orgId string) {
 	logger.Info(fmt.Sprintf("[SERVICE:Membership] Membership deleted for user=%s org=%s - publishing cache invalidation event", userId, orgId))
 	event := events.NewMembershipDeletedEvent(membershipId, userId, orgId, "")
-	subject := fmt.Sprintf("mapexos.cache.invalidation.membership.%s.deleted", membershipId)
+	subject := fmt.Sprintf(contractsCacheInvalidation.MembershipDeletedSubjectFormat, membershipId)
 	if err := s.deps.NatsBus.Publish(natsModel.PublishConfig{Subject: subject, Data: event}); err != nil {
 		logger.Error(err, fmt.Sprintf("[SERVICE:Membership] Failed to publish MembershipDeletedEvent for user=%s", userId))
 		return
