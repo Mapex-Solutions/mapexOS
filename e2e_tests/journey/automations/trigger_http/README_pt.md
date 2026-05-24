@@ -8,7 +8,7 @@ faz POST em um listener HTTP real.
 | Fase | Caminho de disparo |
 |---|---|
 | [`phase1_connectivity`](./phase1_connectivity/) | Force-offline / force-online via healthmonitor → trigger faz POST no sink. |
-| `phase2_event_pipeline` *(planejado)* | POST telemetria no gateway → js-executor → router → trigger faz POST no sink. |
+| [`phase2_event_pipeline`](./phase2_event_pipeline/) | POST telemetria no gateway → js-executor → router → trigger faz POST no sink. |
 
 ## Como rodar
 

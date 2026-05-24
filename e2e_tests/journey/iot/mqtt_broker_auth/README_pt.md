@@ -55,7 +55,7 @@ FANOUT na camada L1 (Pebble) do plugin do broker.
 ## Como rodar
 
 ```sh
-cd workspace_go/packages/e2eTests
+cd e2e_tests
 
 # Só a phase 0 (smoke do bootstrap IAM)
 go test -tags=saga -v -count=1 ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap/

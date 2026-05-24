@@ -1,305 +1,145 @@
-# E2E Tests - MapexOS
+# MapexOS E2E Tests
 
-End-to-end tests for MapexOS microservices.
+End-to-end test suite for the MapexOS platform. Two kinds of tests live
+here:
+
+- **Module e2e** (`services/<svc>/<module>/`) — CRUD and contract tests
+  scoped to a single module. Every endpoint of each module is exercised
+  with real fixtures against the running stack.
+- **Saga journeys** (`journey/<context>/<journey_name>/phaseN_*/`) —
+  cross-module flows organised as ordered phases. Each phase is a saga
+  with steps + asserts + rollback. Gated by the `saga` build tag.
+
+The whole suite runs against the canonical stack from
+[`mapexOSDeploy`](../../mapexOSDeploy/) and uses the seed admin user
+(`admin@mapex.local` / `mapex@123`) as the bootstrap actor.
 
 ## Prerequisites
 
-1. **Running services:**
-   - **mapexos: `http://localhost:5000`** (required - includes auth endpoints)
-   - router: `http://localhost:5003` (optional for some tests)
-   - assets: `http://localhost:5002` (optional for some tests)
-   - http_gateway: `http://localhost:5001` (optional for some tests)
-
-2. **Databases:**
-   - MongoDB: `mongodb://localhost:27017`
-   - Redis: `localhost:6379`
-
-3. **Admin user created:**
-   - Email: `admin@mapex.global`
-   - Password: `mapex123`
-   - Tests perform real login with this user via `/auth/login`
-
-4. **Start services:**
+1. Stack up via the canonical docker-compose:
    ```bash
-   cd workspace_go
-   make run
+   cd ../mapexOSDeploy
+   docker compose up -d
    ```
+2. The Go services running and listening on the default ports — see
+   [Service ports](#service-ports) below.
+3. Go 1.25+ on the host running the tests.
 
-## Structure
+The seed admin user, role, organization, and recursive membership are
+provisioned by the `mongodb-init` container on first boot of mongo.
+Tests that need additional users provision them at runtime via the
+public onboarding orchestrator (`POST /api/v1/onboarding/users`) — the
+seed is for real/production data only and is never modified by tests.
+
+## Layout
 
 ```
-e2eTests/
-├── common/                    # Shared code
-│   ├── constants/            # URLs, timeouts, configs
-│   ├── handlers/             # HTTPClient
-│   ├── types/                # Common types (StandardResponse)
-│   └── utils/                # JWT generation, assertions
+e2e_tests/
+├── common/                     # Shared test code
+│   ├── constants/              # URLs, ids, credentials
+│   ├── types/                  # StandardResponse, ErrorResponse, ...
+│   └── utils/                  # Login, assertions, setup
 │
-├── services/                  # Tests per service/module
-│   ├── mapexos/
-│   │   ├── organizations/    # ✅ CRUD + Hierarchy
-│   │   ├── roles/            # ✅ CRUD + Permissions
-│   │   ├── groups/           # ✅ CRUD
-│   │   ├── users/            # ✅ CRUD
-│   │   └── memberships/      # 🚧 TODO
-│   ├── assets/
-│   │   ├── assets/           # 🚧 TODO
-│   │   └── assettemplates/   # 🚧 TODO
-│   ├── router/
-│   │   └── routegroups/      # 🚧 TODO
-│   └── http_gateway/
-│       └── datasources/      # 🚧 TODO
+├── services/                   # Module e2e — one test package per module
+│   ├── assets/{assets,assettemplates}/
+│   ├── events/events/
+│   ├── http_gateway/datasources/
+│   ├── mapexIam/{auth,onboarding,organizations,roles}/
+│   ├── mapexos/{auth,groups,lists,memberships,organizations,roles,users}/
+│   ├── router/routegroups/
+│   ├── triggers/triggers/
+│   └── workflow/{definitions,instances}/
 │
-└── journeys/                  # Integration tests (multiple services)
-    ├── user_onboarding/      # 🚧 TODO
-    ├── authorization_flow/   # 🚧 TODO
-    └── permission_validation/# 🚧 TODO
+└── journey/                    # Saga journeys (build tag: saga)
+    ├── automations/            # 8 trigger journeys (http, email, websocket,
+    │   │                       #   slack, teams, mqtt, nats, rabbitmq)
+    │   └── trigger_<type>/{phase1_connectivity,phase2_event_pipeline}/
+    └── iot/
+        ├── connectivity_actions_{http,mqtt}/{phase1_workflow,phase2_trigger}/
+        └── mqtt_broker_auth/{phase0_iam_bootstrap..phase3_cascade}/
 ```
 
-## How to Run
+## How to run
 
-### 🚀 Recommended Method: Using the Helper Script
-
-The `run-tests.sh` script provides a friendly interface for running tests:
+Every command runs from `e2e_tests/`.
 
 ```bash
-cd workspace_go/packages/e2eTests
+cd e2e_tests
 
-# ============================================
-# NEW FORMAT: SERVICE MODULE
-# ============================================
+# All module e2e tests (saga tag NOT set)
+go test ./services/...
 
-# Run tests for a specific module
-./run-tests.sh mapexos organizations    # Organizations from mapexos
-./run-tests.sh mapexos roles            # Roles from mapexos
-./run-tests.sh mapexos users            # Users from mapexos
-./run-tests.sh assets assets            # Assets from assets service
-./run-tests.sh router routegroups       # Routegroups from router
-
-# Run all tests from a service
-./run-tests.sh mapexos                  # All tests from mapexos
-./run-tests.sh assets                   # All tests from assets
-./run-tests.sh router                   # All tests from router
-./run-tests.sh http_gateway             # All tests from http_gateway
-
-# Run ALL E2E tests
-./run-tests.sh all
-
-# ============================================
-# USEFUL COMMANDS
-# ============================================
-
-# View complete help
-./run-tests.sh help
-
-# List available services and modules
-./run-tests.sh list
-
-# Check if services are running
-./run-tests.sh check
-
-# ============================================
-# OPTIONS
-# ============================================
-
-# Run without verbose (quiet)
-./run-tests.sh mapexos users -q
-
-# Run in parallel (4 workers)
-./run-tests.sh mapexos users -p 4
-
-# With custom timeout
-./run-tests.sh mapexos users -t 10m
-
-# Combining options
-./run-tests.sh mapexos organizations -q -p 4 -t 5m
-```
-
-### 🎯 Autocomplete (Bash Completion)
-
-To enable autocomplete with TAB:
-
-```bash
-# Add to your ~/.bashrc or ~/.zshrc:
-source /path/to/e2eTests/.run-tests-completion.bash
-
-# Or directly in the current session:
-cd workspace_go/packages/e2eTests
-source .run-tests-completion.bash
-
-# Now use TAB to autocomplete:
-./run-tests.sh [TAB]           # Shows: all check list mapexos assets router http_gateway
-./run-tests.sh mapexos [TAB]   # Shows: organizations roles groups users memberships
-```
-
-### 📋 View Available Options
-
-```bash
-# View detailed help with examples
-./run-tests.sh help
-
-# List all available services and modules
-./run-tests.sh list
-```
-
-### ⚙️ Alternative Method: Direct Go Commands
-
-If you prefer to run tests directly with `go test`:
-
-```bash
-# Tests authenticate themselves at startup; no login script step is needed.
+# A single module
 go test ./services/mapexos/organizations -v
-go test ./services/mapexos/roles -v
-go test ./services/mapexos/... -v
-```
 
-### 🔍 Run a Specific Test
-
-```bash
-# Only the customer creation test
+# A single test
 go test ./services/mapexos/organizations -v -run TestCreateOrganization_Customer
 
-# Only hierarchy tests
-go test ./services/mapexos/organizations -v -run TestOrganizationHierarchy
+# All saga journeys (saga tag REQUIRED)
+go test -tags=saga ./journey/...
+
+# A single journey context / journey / phase
+go test -tags=saga ./journey/automations/...
+go test -tags=saga ./journey/automations/trigger_http/...
+go test -tags=saga ./journey/automations/trigger_http/phase1_connectivity
 ```
 
-### 4. Run ALL E2E Tests
+For longer-running suites, set `-timeout`:
 
 ```bash
-go test ./... -v
+go test -tags=saga -timeout 15m ./journey/...
 ```
 
-### 5. Run with Longer Timeout (for slow tests)
+## Service ports
 
-```bash
-go test ./services/mapexos/organizations -v -timeout 5m
-```
+| Service        | Port  | Required for                       |
+|----------------|-------|------------------------------------|
+| mapexos / iam  | 5000  | All tests (auth + org CRUD)        |
+| http_gateway   | 5001  | datasources tests, saga phase 2    |
+| assets         | 5002  | assets / assettemplates / saga IoT |
+| router         | 5003  | routegroups + saga                 |
+| events         | 5004  | event-pipeline saga phases         |
+| triggers       | 5006  | trigger journeys                   |
+| workflow       | 5007  | workflow tests + IoT actions       |
 
-### 6. Run in Parallel (faster)
+Saga journeys also bind in-process sinks on the host: `11010` (HTTP),
+`11025` (SMTP), `11026` (WebSocket). Make sure those ports are free.
 
-```bash
-go test ./... -v -parallel 4
-```
+## Environment overrides
 
-## Environment Variables
-
-You can customize service URLs:
+The defaults match the canonical stack. Override only if your stack is
+on different hosts/ports:
 
 ```bash
 export MAPEXOS_URL=http://localhost:5000
-export ROUTER_URL=http://localhost:5003
-export ASSETS_URL=http://localhost:5002
 export GATEWAY_URL=http://localhost:5001
-export MONGO_URI=mongodb://localhost:27017
-export MONGO_DATABASE=mapexos_test
-export REDIS_HOST=localhost
-export REDIS_PORT=6379
+export ASSETS_URL=http://localhost:5002
+export ROUTER_URL=http://localhost:5003
+export EVENTS_URL=http://localhost:5004
+export TRIGGERS_URL=http://localhost:5006
+export WORKFLOW_URL=http://localhost:5007
 ```
-
-## Service Ports
-
-| Service | Port | Required | Note |
-|---------|------|----------|------|
-| mapexos | 5000 | ✅ Yes | Includes /auth/* endpoints |
-| router | 5003 | ⚠️ Optional | For routegroups tests |
-| assets | 5002 | ⚠️ Optional | For assets tests |
-| http_gateway | 5001 | ⚠️ Optional | For datasources tests |
-
-## Test Coverage
-
-### ✅ Implemented
-
-- **Organizations:** 18 tests
-  - CREATE: Customer, Site, Building, Minimal, Validations
-  - GET: ById, List, NotFound
-  - UPDATE: Name, Disable, Full
-  - DELETE: Delete, NotFound
-  - HIERARCHY: PathKey propagation, CustomerID inheritance
-
-- **Roles:** 20 tests
-  - CREATE: System, Org, Minimal, Validations
-  - GET: ById, List, NotFound
-  - UPDATE: Name, Permissions, Disable, Full
-  - DELETE: Delete, NotFound
-  - PERMISSIONS: Wildcards, Admin
-
-- **Groups:** ~15 tests (existing)
-- **Users:** ~12 tests (existing)
-
-### 🚧 TODO
-
-- Memberships (mapexos)
-- Assets (assets service)
-- AssetTemplates (assets service)
-- DataSources (http_gateway)
-- RouteGroups (router)
-- Journey Tests (3 integration tests)
-
-## Tips
-
-1. **Clean test data:**
-   ```bash
-   # Tests use automatic cleanup, but if something gets stuck:
-   mongo mapexos_test --eval "db.organizations.deleteMany({slug: /test-org-e2e/})"
-   ```
-
-2. **Debug a test:**
-   ```bash
-   # Add -v for verbose
-   go test ./services/mapexos/organizations -v -run TestCreateOrganization_Customer
-   ```
-
-3. **View only failures:**
-   ```bash
-   go test ./... -v | grep -E "FAIL|PASS"
-   ```
-
-4. **Run with race detector:**
-   ```bash
-   go test ./... -race -v
-   ```
-
-## Fixtures
-
-Each module has its `fixtures/` folder with example JSON payloads:
-
-```
-organizations/fixtures/
-├── create_customer.json
-├── create_site.json
-├── create_building.json
-├── update_name.json
-└── ...
-
-roles/fixtures/
-├── create_system_role.json
-├── create_org_role.json
-├── update_permissions.json
-└── ...
-```
-
-Fixtures support placeholders:
-- `{{ORG_ID}}` - Replaced by test organization ID
-- `{{PARENT_ID}}` - Replaced by parent ID in hierarchy
-- `{{USER_ID}}` - Replaced by test user ID
 
 ## Conventions
 
-1. **Test naming:**
-   - `TestCreate{Resource}_{Scenario}`
-   - `TestGet{Resource}ById`
-   - `TestUpdate{Resource}_{Field}`
-   - `TestDelete{Resource}`
+- **Tests use only the public API.** Internal routes (`/internal/*`) are
+  cache-rebuild fallbacks and are never invoked by tests.
+- **The seed admin is the bootstrap actor.** Any additional users a test
+  needs are provisioned at runtime through the onboarding orchestrator
+  (`POST /api/v1/onboarding/users`). The seed JSON is never modified by
+  tests.
+- **Fixtures live next to the test** in a `fixtures/` folder and use the
+  canonical seed ids (`0000000000000000000aa001` for the root org,
+  `0000000000000000000aa201` for the SuperAdmin role).
+- **Cleanup is mandatory.** Every mutating test registers `t.Cleanup` or
+  `defer` to delete what it created.
 
-2. **Cleanup:**
-   - Always use `t.Cleanup(func() { cleanup...})` or `defer cleanup()`
-   - Tests must be idempotent
+## Documentation
 
-3. **Fixtures:**
-   - Use fixtures for complex payloads
-   - Minimal fixtures for required field tests
+Each module e2e package and each saga journey carries a
+`README.md` + `README_pt.md` describing scope, fixtures, and how to run
+it standalone. Start at the directory you care about — the per-folder
+READMEs are the source of truth for each test surface.
 
-4. **Assertions:**
-   - Use `utils.AssertCreated()`, `utils.AssertOK()`, etc.
-   - Use `require.*` for fatal errors
-   - Use `assert.*` for non-critical validations
+See also: [`journey/README.md`](./journey/README.md) for the saga
+journey hierarchy rules.

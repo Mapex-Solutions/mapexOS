@@ -10,7 +10,7 @@ envelope + subject.
 | Fase | Caminho de disparo |
 |---|---|
 | [`phase1_connectivity`](./phase1_connectivity/) | Force-offline / force-online via healthmonitor → trigger dispara. |
-| `phase2_event_pipeline` *(planejado)* | POST telemetria no gateway → js-executor → router → trigger dispara. |
+| [`phase2_event_pipeline`](./phase2_event_pipeline/) | POST telemetria no gateway → js-executor → router → trigger dispara. |
 
 ## Como rodar
 

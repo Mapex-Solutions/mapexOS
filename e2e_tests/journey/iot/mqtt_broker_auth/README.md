@@ -55,7 +55,7 @@ plugin's L1 (Pebble) tier.
 ## Run
 
 ```sh
-cd workspace_go/packages/e2eTests
+cd e2e_tests
 
 # Phase 0 only (smoke the IAM bootstrap)
 go test -tags=saga -v -count=1 ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap/

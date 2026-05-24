@@ -8,7 +8,7 @@ pipeline and POSTs to a real HTTP listener.
 | Phase | Firing path |
 |---|---|
 | [`phase1_connectivity`](./phase1_connectivity/) | Healthmonitor force-offline / force-online → trigger POSTs to the sink. |
-| `phase2_event_pipeline` *(planned)* | POST telemetry to gateway → js-executor → router → trigger POSTs to the sink. |
+| [`phase2_event_pipeline`](./phase2_event_pipeline/) | POST telemetry to gateway → js-executor → router → trigger POSTs to the sink. |
 
 ## How to run
 

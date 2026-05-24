@@ -26,7 +26,11 @@ trigger_<type>/
 │   ├── journey_test.go
 │   ├── README.md
 │   └── README_pt.md
-└── phase2_event_pipeline/  (planned — POST telemetry → gateway → js-executor → router → trigger)
+└── phase2_event_pipeline/  POST telemetry → gateway → js-executor → router → trigger
+    ├── journey.go
+    ├── journey_test.go
+    ├── README.md
+    └── README_pt.md
 ```
 
 ## How to run all

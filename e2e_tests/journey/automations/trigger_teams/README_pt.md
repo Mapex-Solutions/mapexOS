@@ -9,7 +9,7 @@ faz POST do payload MessageCard do webhook para um listener HTTP real
 | Fase | Caminho de disparo |
 |---|---|
 | [`phase1_connectivity`](./phase1_connectivity/) | Force-offline / force-online via healthmonitor → trigger faz POST do webhook. |
-| `phase2_event_pipeline` *(planejado)* | POST telemetria → gateway → js-executor → router → trigger faz POST do webhook. |
+| [`phase2_event_pipeline`](./phase2_event_pipeline/) | POST telemetria → gateway → js-executor → router → trigger faz POST do webhook. |
 
 ## Como rodar
 

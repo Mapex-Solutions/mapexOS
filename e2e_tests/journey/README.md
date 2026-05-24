@@ -48,26 +48,37 @@ journey/
 
 - **Documentation never bakes in a developer-specific absolute path.**
   Run commands assume the working directory is the repository root and
-  use relative paths (e.g. `cd workspace_go/packages/e2eTests`). Anyone
-  who clones the monorepo can copy-paste without editing.
+  use relative paths (e.g. `cd e2e_tests`). Anyone who clones the
+  monorepo can copy-paste without editing.
 
 ## Currently registered journeys
 
-| Context | Journey                    | Phases                                  |
-|---------|----------------------------|-----------------------------------------|
-| iot     | mqtt_full_pipeline         | phase0_iam_bootstrap, phase1_iot_setup  |
+| Context     | Journey                       | Phases                                                                                |
+|-------------|-------------------------------|---------------------------------------------------------------------------------------|
+| automations | trigger_email                 | phase1_connectivity, phase2_event_pipeline                                            |
+| automations | trigger_http                  | phase1_connectivity, phase2_event_pipeline                                            |
+| automations | trigger_mqtt                  | phase1_connectivity, phase2_event_pipeline                                            |
+| automations | trigger_nats                  | phase1_connectivity, phase2_event_pipeline                                            |
+| automations | trigger_rabbitmq              | phase1_connectivity, phase2_event_pipeline                                            |
+| automations | trigger_slack                 | phase1_connectivity, phase2_event_pipeline                                            |
+| automations | trigger_teams                 | phase1_connectivity, phase2_event_pipeline                                            |
+| automations | trigger_websocket             | phase1_connectivity, phase2_event_pipeline                                            |
+| iot         | connectivity_actions_http     | phase1_workflow, phase2_trigger                                                       |
+| iot         | connectivity_actions_mqtt     | phase1_workflow, phase2_trigger                                                       |
+| iot         | mqtt_broker_auth              | phase0_iam_bootstrap, phase1_password_user, phase2_cert_user, phase3_cascade (skeleton) |
 
 ## How to run
 
-Every command runs from the e2eTests package root.
+Every command runs from the e2e_tests package root.
 
 ```bash
-cd workspace_go/packages/e2eTests
+cd e2e_tests
 
 # All journeys in every context
 go test -tags=saga -v ./journey/...
 
 # All journeys in one context (see the per-context README for finer scopes)
+go test -tags=saga -v ./journey/automations/...
 go test -tags=saga -v ./journey/iot/...
 ```
 

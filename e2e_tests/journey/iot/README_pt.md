@@ -23,7 +23,7 @@ a intenção óbvia.
 Todo comando roda a partir da raiz do pacote e2eTests.
 
 ```bash
-cd workspace_go/packages/e2eTests
+cd e2e_tests
 
 # Todas as fases de toda journey neste contexto
 go test -tags=saga -v ./journey/iot/...

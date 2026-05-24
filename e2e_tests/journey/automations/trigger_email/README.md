@@ -9,7 +9,7 @@ message to an in-process SMTP server and validate envelope + subject.
 | Phase | Firing path |
 |---|---|
 | [`phase1_connectivity`](./phase1_connectivity/) | Healthmonitor force-offline / force-online → trigger fires. |
-| `phase2_event_pipeline` *(planned)* | POST telemetry to gateway → js-executor → router → trigger fires. |
+| [`phase2_event_pipeline`](./phase2_event_pipeline/) | POST telemetry to gateway → js-executor → router → trigger fires. |
 
 ## How to run
 

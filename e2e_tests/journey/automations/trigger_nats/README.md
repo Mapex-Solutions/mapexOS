@@ -8,7 +8,7 @@ via the live pipeline; verified via the events_trigger oracle.
 | Phase | Firing path |
 |---|---|
 | [`phase1_connectivity`](./phase1_connectivity/) | Healthmonitor force-offline / force-online → trigger publishes to subject. |
-| `phase2_event_pipeline` *(planned)* | POST telemetry → gateway → js-executor → router → trigger publishes to subject. |
+| [`phase2_event_pipeline`](./phase2_event_pipeline/) | POST telemetry → gateway → js-executor → router → trigger publishes to subject. |
 
 ## How to run
 

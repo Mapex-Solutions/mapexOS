@@ -9,7 +9,7 @@ pipeline and POSTs its webhook payload to a real HTTP listener
 | Phase | Firing path |
 |---|---|
 | [`phase1_connectivity`](./phase1_connectivity/) | Healthmonitor force-offline / force-online → trigger POSTs webhook. |
-| `phase2_event_pipeline` *(planned)* | POST telemetry → gateway → js-executor → router → trigger POSTs webhook. |
+| [`phase2_event_pipeline`](./phase2_event_pipeline/) | POST telemetry → gateway → js-executor → router → trigger POSTs webhook. |
 
 ## How to run
 

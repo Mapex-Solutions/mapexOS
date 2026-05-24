@@ -8,7 +8,7 @@ pipeline ao vivo; validado via oracle events_trigger.
 | Fase | Caminho de disparo |
 |---|---|
 | [`phase1_connectivity`](./phase1_connectivity/) | Force-offline / force-online via healthmonitor → trigger disca para o sink WS. |
-| `phase2_event_pipeline` *(planejado)* | POST telemetria → gateway → js-executor → router → trigger disca para o sink WS. |
+| [`phase2_event_pipeline`](./phase2_event_pipeline/) | POST telemetria → gateway → js-executor → router → trigger disca para o sink WS. |
 
 ## Como rodar
 

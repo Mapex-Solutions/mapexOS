@@ -21,7 +21,7 @@ short (`phase0`, `phase1`) so the import alias makes intent obvious.
 Every command runs from the e2eTests package root.
 
 ```bash
-cd workspace_go/packages/e2eTests
+cd e2e_tests
 
 # All phases of every journey in this context
 go test -tags=saga -v ./journey/iot/...
