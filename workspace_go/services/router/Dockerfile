@@ -1,6 +1,9 @@
 # Stage 1: Builder
 FROM golang:1.25-alpine AS builder
 
+ARG TARGETOS
+ARG TARGETARCH
+
 WORKDIR /build
 
 RUN apk add --no-cache git ca-certificates
@@ -15,7 +18,7 @@ ENV GOWORK=off
 
 RUN go mod download
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH \
     go build -ldflags="-w -s" -o /app/service \
     ./src/main.go
 

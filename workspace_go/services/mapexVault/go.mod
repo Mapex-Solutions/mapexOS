@@ -79,6 +79,7 @@ require (
 )
 
 require (
+	github.com/Mapex-Solutions/MapexOS/contracts v0.0.0
 	github.com/Mapex-Solutions/MapexOS/permissions v0.0.0
 	github.com/nats-io/nats.go v1.50.0
 )
