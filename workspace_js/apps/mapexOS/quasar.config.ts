@@ -87,7 +87,7 @@ export default defineConfig((ctx: any) => {
 				JS_EXECUTOR_API_BASE_URL: process.env.JS_EXECUTOR_API_BASE_URL || 'http://localhost:8000',
 
 				// Plugin CDN / Marketplace
-				PLUGIN_CDN_BASE_URL: process.env.PLUGIN_CDN_BASE_URL || 'http://localhost:3099/plugins',
+				PLUGIN_CDN_BASE_URL: process.env.PLUGIN_CDN_BASE_URL || '__PLUGIN_CDN_BASE_URL__',
 			},
 			// rawDefine: {}
 			// ignorePublicFolder: true,
