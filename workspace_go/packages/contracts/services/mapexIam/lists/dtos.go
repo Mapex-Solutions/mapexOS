@@ -16,8 +16,10 @@ type ListCreate struct {
 	Value   string `json:"value" validate:"required,max=254"`
 	Enabled bool   `json:"enabled" validate:"required"`
 
-	// Hierarchical reference - links to parent list item (e.g., manufacturer for asset types)
-	ParentId *model.ObjectId `json:"parentId,omitempty" validate:"omitempty,mongoid"`
+	// Hierarchical reference - links to parent list item (e.g., manufacturer for asset types).
+	// Kept as *string so the validator's "mongoid" tag (regex on the underlying string)
+	// works correctly; the service converts to ObjectID before persisting.
+	ParentId *string `json:"parentId,omitempty" validate:"omitempty,mongoid"`
 
 	// Flexible metadata for type-specific fields
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
@@ -32,10 +34,12 @@ type ListCreate struct {
 }
 
 type ListUpdate struct {
-	Name     *string                `json:"name,omitempty" validate:"omitempty,max=254"`
-	Value    *string                `json:"value,omitempty" validate:"omitempty,max=254"`
-	Enabled  *bool                  `json:"enabled,omitempty" validate:"omitempty"`
-	ParentId *model.ObjectId        `json:"parentId,omitempty" validate:"omitempty,mongoid"`
+	Name    *string `json:"name,omitempty" validate:"omitempty,max=254"`
+	Value   *string `json:"value,omitempty" validate:"omitempty,max=254"`
+	Enabled *bool   `json:"enabled,omitempty" validate:"omitempty"`
+	// ParentId is kept as *string so the validator's "mongoid" tag works on the underlying
+	// string value; the service converts to ObjectID before issuing the Mongo $set.
+	ParentId *string                `json:"parentId,omitempty" validate:"omitempty,mongoid"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 

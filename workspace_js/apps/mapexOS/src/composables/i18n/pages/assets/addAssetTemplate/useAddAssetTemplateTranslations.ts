@@ -17,6 +17,16 @@ export function useAddAssetTemplateTranslations() {
 
   return {
     /**
+     * Convention banner shown above every Monaco editor reminding users that
+     * scripts must assign to `result` (not use `return`).
+     */
+    scriptConvention: {
+      title: computed(() => ts('pages.assets.addAssetTemplate.scriptConvention.title')),
+      textPrefix: computed(() => tsRaw('pages.assets.addAssetTemplate.scriptConvention.textPrefix')),
+      textSuffix: computed(() => tsRaw('pages.assets.addAssetTemplate.scriptConvention.textSuffix')),
+    },
+
+    /**
      * Page header translations
      */
     page: {
@@ -114,7 +124,6 @@ export function useAddAssetTemplateTranslations() {
             placeholder: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step2.fields.assetIdPath.placeholder')),
             hint: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step2.fields.assetIdPath.hint')),
             required: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step2.fields.assetIdPath.required')),
-            invalidFormat: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step2.fields.assetIdPath.invalidFormat')),
           },
         },
       },

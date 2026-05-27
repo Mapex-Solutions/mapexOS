@@ -9,6 +9,18 @@ export function useListsTranslations() {
 	const tsTitle = useTS({ titleCase: true });
 
 	return {
+		/**
+		 * CreateEditListPage header translations (title/description/buttons)
+		 */
+		page: {
+			title: computed(() => tsTitle('pages.administrations.lists.page.titleCreate')),
+			titleCreate: computed(() => tsTitle('pages.administrations.lists.page.titleCreate')),
+			titleEdit: computed(() => tsTitle('pages.administrations.lists.page.titleEdit')),
+			descriptionCreate: computed(() => ts('pages.administrations.lists.page.descriptionCreate')),
+			backButton: computed(() => ts('pages.administrations.lists.page.backButton')),
+			addButton: computed(() => ts('pages.administrations.lists.page.addButton')),
+		},
+
 		pageHeader: {
 			title: computed(() => tsTitle('pages.administrations.lists.pageHeader.title')),
 			description: computed(() => ts('pages.administrations.lists.pageHeader.description')),
@@ -70,6 +82,7 @@ export function useListsTranslations() {
 			clearAll: computed(() => ts('pages.administrations.lists.filters.clearAll')),
 			name: computed(() => ts('pages.administrations.lists.filters.name')),
 			category: computed(() => ts('pages.administrations.lists.filters.category')),
+			manufacturer: computed(() => ts('pages.administrations.lists.filters.manufacturer')),
 			type: computed(() => ts('pages.administrations.lists.filters.type')),
 			isSystem: computed(() => ts('pages.administrations.lists.filters.isSystem')),
 			isTemplate: computed(() => ts('pages.administrations.lists.filters.isTemplate')),
@@ -226,6 +239,107 @@ export function useListsTranslations() {
 			edit: computed(() => ts('pages.administrations.lists.actions.edit')),
 			view: computed(() => ts('pages.administrations.lists.actions.view')),
 			delete: computed(() => ts('pages.administrations.lists.actions.delete')),
+		},
+
+		/**
+		 * CreateEditListPage - stepper labels
+		 */
+		steps: {
+			basicInfo: computed(() => tsTitle('pages.administrations.lists.createEdit.steps.basicInfo')),
+			review: computed(() => tsTitle('pages.administrations.lists.createEdit.steps.review')),
+		},
+
+		stepDescriptions: {
+			basicInfo: computed(() => ts('pages.administrations.lists.createEdit.stepDescriptions.basicInfo')),
+			review: computed(() => ts('pages.administrations.lists.createEdit.stepDescriptions.review')),
+		},
+
+		sections: {
+			basicInfo: computed(() => tsTitle('pages.administrations.lists.createEdit.sections.basicInfo')),
+			progressSteps: computed(() => tsTitle('pages.administrations.lists.createEdit.sections.progressSteps')),
+		},
+
+		formDescriptions: {
+			basicInfo: computed(() => ts('pages.administrations.lists.createEdit.formDescriptions.basicInfo')),
+			isTemplate: computed(() => ts('pages.administrations.lists.createEdit.formDescriptions.isTemplate')),
+		},
+
+		/**
+		 * CreateEditListPage - field labels
+		 */
+		fields: {
+			type: computed(() => ts('pages.administrations.lists.createEdit.fields.type')),
+			parent: computed(() => ts('pages.administrations.lists.createEdit.fields.parent')),
+			name: computed(() => ts('pages.administrations.lists.createEdit.fields.name')),
+			value: computed(() => ts('pages.administrations.lists.createEdit.fields.value')),
+			enabled: computed(() => ts('pages.administrations.lists.createEdit.fields.enabled')),
+			isTemplate: computed(() => ts('pages.administrations.lists.createEdit.fields.isTemplate')),
+		},
+
+		typeOptions: {
+			asset_category: computed(() => ts('pages.administrations.lists.createEdit.typeOptions.asset_category')),
+			asset_manufacturer: computed(() => ts('pages.administrations.lists.createEdit.typeOptions.asset_manufacturer')),
+			asset_model: computed(() => ts('pages.administrations.lists.createEdit.typeOptions.asset_model')),
+		},
+
+		validation: {
+			typeRequired: computed(() => ts('pages.administrations.lists.createEdit.validation.typeRequired')),
+			parentRequired: computed(() => ts('pages.administrations.lists.createEdit.validation.parentRequired')),
+			nameRequired: computed(() => ts('pages.administrations.lists.createEdit.validation.nameRequired')),
+			nameMaxLength: computed(() => ts('pages.administrations.lists.createEdit.validation.nameMaxLength')),
+			valueRequired: computed(() => ts('pages.administrations.lists.createEdit.validation.valueRequired')),
+			valueMaxLength: computed(() => ts('pages.administrations.lists.createEdit.validation.valueMaxLength')),
+			valuePattern: computed(() => ts('pages.administrations.lists.createEdit.validation.valuePattern')),
+		},
+
+		buttons: {
+			back: computed(() => ts('pages.administrations.lists.createEdit.buttons.back')),
+			next: computed(() => ts('pages.administrations.lists.createEdit.buttons.next')),
+			createList: computed(() => ts('pages.administrations.lists.createEdit.buttons.createList')),
+			updateList: computed(() => ts('pages.administrations.lists.createEdit.buttons.updateList')),
+		},
+
+		messages: {
+			loadingList: computed(() => ts('pages.administrations.lists.createEdit.messages.loadingList')),
+			completeAllSteps: computed(() => ts('pages.administrations.lists.createEdit.messages.completeAllSteps')),
+			allFieldsRequired: computed(() => ts('pages.administrations.lists.createEdit.messages.allFieldsRequired')),
+			currentStep: computed(() => ts('pages.administrations.lists.createEdit.messages.currentStep')),
+			systemListWarning: computed(() => ts('pages.administrations.lists.createEdit.messages.systemListWarning')),
+			typeLocked: computed(() => ts('pages.administrations.lists.createEdit.messages.typeLocked')),
+			noParentForCategory: computed(() => ts('pages.administrations.lists.createEdit.messages.noParentForCategory')),
+			parentLoadFailed: computed(() => ts('pages.administrations.lists.createEdit.messages.parentLoadFailed')),
+		},
+
+		reviewStep: {
+			subtitle: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.subtitle')),
+			successMessage: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.successMessage')),
+			successMessageEdit: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.successMessageEdit')),
+			sections: {
+				basicInfo: computed(() => tsTitle('pages.administrations.lists.createEdit.reviewStep.sections.basicInfo')),
+			},
+			fields: {
+				type: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.fields.type')),
+				parent: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.fields.parent')),
+				name: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.fields.name')),
+				value: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.fields.value')),
+				enabled: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.fields.enabled')),
+				isTemplate: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.fields.isTemplate')),
+			},
+			values: {
+				notProvided: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.values.notProvided')),
+				notSelected: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.values.notSelected')),
+				noParent: computed(() => ts('pages.administrations.lists.createEdit.reviewStep.values.noParent')),
+			},
+		},
+
+		createEditNotifications: {
+			created: computed(() => ts('pages.administrations.lists.createEdit.notifications.created')),
+			updated: computed(() => ts('pages.administrations.lists.createEdit.notifications.updated')),
+			createFailed: computed(() => ts('pages.administrations.lists.createEdit.notifications.createFailed')),
+			updateFailed: computed(() => ts('pages.administrations.lists.createEdit.notifications.updateFailed')),
+			loadFailed: computed(() => ts('pages.administrations.lists.createEdit.notifications.loadFailed')),
+			alreadyExists: computed(() => ts('pages.administrations.lists.createEdit.notifications.alreadyExists')),
+			forbidden: computed(() => ts('pages.administrations.lists.createEdit.notifications.forbidden')),
 		},
 	};
 }

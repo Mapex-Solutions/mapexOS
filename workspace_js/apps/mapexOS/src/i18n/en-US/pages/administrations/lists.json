@@ -1,4 +1,11 @@
 {
+  "page": {
+    "titleCreate": "create list item",
+    "titleEdit": "edit list item",
+    "descriptionCreate": "create a new list item under a category, manufacturer or model.",
+    "backButton": "back to lists",
+    "addButton": "add list item"
+  },
   "pageHeader": {
     "title": "lists",
     "description": "manage system lists such as asset types, asset groups, priorities, statuses, and severities.",
@@ -40,6 +47,7 @@
     "clearAll": "clear all",
     "name": "search by name",
     "category": "category",
+    "manufacturer": "manufacturer",
     "type": "list type",
     "isSystem": "source",
     "isTemplate": "scope",
@@ -166,6 +174,92 @@
       "parentType": "no parent type",
       "parentName": "no parent",
       "orgId": "no organization"
+    }
+  },
+  "createEdit": {
+    "steps": {
+      "basicInfo": "basic information",
+      "review": "review"
+    },
+    "stepDescriptions": {
+      "basicInfo": "select the type and define the item identity",
+      "review": "review your configuration before saving"
+    },
+    "sections": {
+      "basicInfo": "basic information",
+      "progressSteps": "progress"
+    },
+    "formDescriptions": {
+      "basicInfo": "lists are organized as a tree: category contains manufacturers, which contain models.",
+      "isTemplate": "shared list items propagate to child organizations as templates."
+    },
+    "fields": {
+      "type": "list type",
+      "parent": "parent",
+      "name": "name",
+      "value": "value",
+      "enabled": "enabled",
+      "isTemplate": "share as template"
+    },
+    "typeOptions": {
+      "asset_category": "category",
+      "asset_manufacturer": "manufacturer",
+      "asset_model": "model"
+    },
+    "validation": {
+      "typeRequired": "please select a list type",
+      "parentRequired": "please select a parent",
+      "nameRequired": "name is required",
+      "nameMaxLength": "name must not exceed 254 characters",
+      "valueRequired": "value is required",
+      "valueMaxLength": "value must not exceed 254 characters",
+      "valuePattern": "use only lowercase letters, numbers and underscore"
+    },
+    "buttons": {
+      "back": "back",
+      "next": "next",
+      "createList": "create list item",
+      "updateList": "update list item"
+    },
+    "messages": {
+      "loadingList": "loading list item...",
+      "completeAllSteps": "complete all steps to save the list item",
+      "allFieldsRequired": "fields marked with * are required",
+      "currentStep": "current step",
+      "systemListWarning": "this is a system list item. it cannot be modified.",
+      "typeLocked": "the list type cannot be changed after creation",
+      "noParentForCategory": "categories sit at the top of the tree and have no parent",
+      "parentLoadFailed": "failed to load available parents"
+    },
+    "reviewStep": {
+      "subtitle": "review the list item configuration before saving",
+      "successMessage": "ready to create! click 'create list item' to save",
+      "successMessageEdit": "ready to update! click 'update list item' to save changes",
+      "sections": {
+        "basicInfo": "basic information"
+      },
+      "fields": {
+        "type": "type",
+        "parent": "parent",
+        "name": "name",
+        "value": "value",
+        "enabled": "enabled",
+        "isTemplate": "shared template"
+      },
+      "values": {
+        "notProvided": "not provided",
+        "notSelected": "not selected",
+        "noParent": "no parent (top level)"
+      }
+    },
+    "notifications": {
+      "created": "list item created successfully",
+      "updated": "list item updated successfully",
+      "createFailed": "failed to create list item",
+      "updateFailed": "failed to update list item",
+      "loadFailed": "failed to load list item",
+      "alreadyExists": "a list item with this value already exists in the selected parent",
+      "forbidden": "you do not have permission to perform this action"
     }
   }
 }

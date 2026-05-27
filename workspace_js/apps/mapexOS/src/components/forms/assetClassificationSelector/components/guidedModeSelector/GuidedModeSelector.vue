@@ -24,7 +24,9 @@ const t = useAssetClassificationSelectorTranslations();
 const selectedCategoryId = ref<string | undefined>(undefined);
 const selectedManufacturerId = ref<string | undefined>(undefined);
 const selectedModelId = ref<string | undefined>(undefined);
-const version = ref<string>('');
+// Defaults to "1.0.0" — the field is optional in the UI but the backend
+// always receives a value so users can advance without ever filling it in.
+const version = ref<string>('1.0.0');
 
 const categories = ref<ListOption[]>([]);
 const manufacturers = ref<ListOption[]>([]);
@@ -57,7 +59,7 @@ watch(() => props.modelValue, (newValue) => {
     selectedCategoryId.value = newValue.categoryId;
     selectedManufacturerId.value = newValue.manufacturerId;
     selectedModelId.value = newValue.modelId;
-    version.value = newValue.version;
+    version.value = newValue.version || '1.0.0';
 
     // Pre-populate dropdown options with the selected items (for edit mode)
     // This ensures the names are displayed correctly even if these items aren't in the first page
@@ -102,7 +104,7 @@ watch(() => props.modelValue, (newValue) => {
     selectedCategoryId.value = undefined;
     selectedManufacturerId.value = undefined;
     selectedModelId.value = undefined;
-    version.value = '';
+    version.value = '1.0.0';
   }
 }, { immediate: true });
 
@@ -258,7 +260,7 @@ function handleCategoryChange(categoryId: string | null) {
   selectedCategoryId.value = categoryId || undefined;
   selectedManufacturerId.value = undefined;
   selectedModelId.value = undefined;
-  version.value = '';
+  version.value = '1.0.0';
   manufacturers.value = [];
   models.value = [];
 
@@ -277,7 +279,7 @@ function handleCategoryChange(categoryId: string | null) {
 function handleManufacturerChange(manufacturerId: string | null) {
   selectedManufacturerId.value = manufacturerId || undefined;
   selectedModelId.value = undefined;
-  version.value = '';
+  version.value = '1.0.0';
   models.value = [];
 
   // Reset model pagination
@@ -297,8 +299,11 @@ function handleModelChange(modelId: string | null) {
   emitValue();
 }
 
-// Handle version input
+// Handle version input — keep "1.0.0" as fallback when the user empties the field
 function handleVersionInput() {
+  if (!version.value || !version.value.trim()) {
+    version.value = '1.0.0';
+  }
   emitValue();
 }
 
@@ -466,11 +471,9 @@ void fetchCategories();
         v-model="version"
         outlined
         dense
-        clearable
         :label="t.guided.version.label.value"
         :placeholder="t.guided.version.placeholder.value"
         :hint="t.guided.version.hint.value"
-        :rules="required ? [(val: any) => !!val || t.guided.version.required.value] : []"
         @update:model-value="handleVersionInput"
       />
     </div>

@@ -87,12 +87,43 @@ function handleFieldClick(field: string): void {
     </div>
 
     <!-- Fields List -->
-    <q-scroll-area
-      v-else
-      :style="{ height: scrollAreaHeight }"
-      class="fields-scroll-area"
-    >
-      <q-list bordered separator>
+    <!-- Short lists render flat; only wrap in a scroll-area when the list
+         exceeds the threshold. q-scroll-area collapses to zero with height
+         "auto", so we cannot use it unconditionally. -->
+    <template v-else>
+      <q-scroll-area
+        v-if="shouldScroll"
+        :style="{ height: scrollAreaHeight }"
+        class="fields-scroll-area"
+      >
+        <q-list bordered separator>
+          <q-item
+            v-for="(field, index) in fields"
+            :key="field"
+            clickable
+            dense
+            @click="handleFieldClick(field)"
+          >
+            <q-item-section avatar>
+              <q-avatar size="24px" color="grey-3" text-color="grey-8">
+                {{ index + 1 }}
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label class="field-path-text">
+                {{ field }}
+              </q-item-label>
+            </q-item-section>
+
+            <q-item-section side>
+              <q-icon name="code" size="xs" color="grey-6" />
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-scroll-area>
+
+      <q-list v-else bordered separator class="fields-scroll-area">
         <q-item
           v-for="(field, index) in fields"
           :key="field"
@@ -117,7 +148,7 @@ function handleFieldClick(field: string): void {
           </q-item-section>
         </q-item>
       </q-list>
-    </q-scroll-area>
+    </template>
   </div>
 </template>
 

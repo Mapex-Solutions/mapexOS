@@ -5,6 +5,11 @@
     "description": "Create a new asset template with data processing scripts",
     "button": "Back to Templates"
   },
+  "scriptConvention": {
+    "title": "Result variable",
+    "textPrefix": "every script must end by assigning",
+    "textSuffix": "with the value the next step should receive. Do NOT use `return X` at the top level — it is silently ignored. Throw with `throw new Error(...)` to fail the pipeline."
+  },
   "stepper": {
     "title": "Configure Asset Template",
     "subtitle": "Complete all steps to create a new template",
@@ -78,8 +83,7 @@
           "label": "Asset ID Path",
           "placeholder": "e.g., payload.deviceId",
           "hint": "Use dot notation to specify the path to your asset's unique identifier",
-          "required": "Asset ID Path is required",
-          "invalidFormat": "Must contain at least one dot (.)"
+          "required": "Asset ID Path is required"
         }
       }
     },
@@ -94,7 +98,7 @@
         "payloadVar": "payload - The incoming data object",
         "consoleLog": "console.log() - For debugging output",
         "expectedReturn": "Expected Return:",
-        "expectedReturnValue": "Modified payload object",
+        "expectedReturnValue": "const result = <modified payload object>",
         "example": "Example:"
       },
       "exampleCode": {
@@ -116,7 +120,7 @@
         "availableVariables": "Available Variables:",
         "payloadVar": "payload - The preprocessed data object",
         "expectedReturn": "Expected Return:",
-        "expectedReturnValue": "Boolean (true if valid) or throw Error",
+        "expectedReturnValue": "const result = <validated payload>; — throw Error to fail",
         "example": "Example:"
       },
       "exampleCode": {

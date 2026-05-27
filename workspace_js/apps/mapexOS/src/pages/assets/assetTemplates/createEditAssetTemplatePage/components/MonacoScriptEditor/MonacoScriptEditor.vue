@@ -8,6 +8,7 @@ import { createMonacoEditorManager } from '../../handlers';
 import type { MonacoEditorManager } from '../../handlers';
 import { applyMapexMonacoTheme } from '@utils/monaco-theme';
 import { useThemeStore } from '@stores/theme';
+import { useAddAssetTemplateTranslations } from '@src/composables/i18n/pages/assets/addAssetTemplate/useAddAssetTemplateTranslations';
 
 // Props
 interface Props {
@@ -42,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 const themeStore = useThemeStore();
+const t = useAddAssetTemplateTranslations();
 
 // Watch theme changes to update Monaco editor
 watch(() => themeStore.isDark, (isDark: boolean) => {
@@ -92,6 +94,19 @@ watch(() => props.modelValue, (newValue) => {
         {{ subtitle }}
       </div>
     </div>
+
+    <!-- Result-assignment convention: visible across every script step -->
+    <q-banner dense rounded class="bg-amber-1 text-amber-10 q-mb-sm script-convention-banner">
+      <template v-slot:avatar>
+        <q-icon name="rule" color="amber-9" size="sm" />
+      </template>
+      <div class="text-body2">
+        <span class="text-weight-medium">{{ t.scriptConvention.title.value }}</span>
+        — {{ t.scriptConvention.textPrefix.value }}
+        <code>const result = …;</code>
+        {{ t.scriptConvention.textSuffix.value }}
+      </div>
+    </q-banner>
 
     <q-card flat bordered class="code-editor-card">
       <div

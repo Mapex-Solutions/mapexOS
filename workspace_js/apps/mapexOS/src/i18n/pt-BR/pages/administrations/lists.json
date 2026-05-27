@@ -1,4 +1,11 @@
 {
+  "page": {
+    "titleCreate": "criar item de lista",
+    "titleEdit": "editar item de lista",
+    "descriptionCreate": "crie um novo item dentro de uma categoria, fabricante ou modelo.",
+    "backButton": "voltar para listas",
+    "addButton": "adicionar item"
+  },
   "pageHeader": {
     "title": "listas",
     "description": "gerencie listas do sistema como tipos de ativos, grupos de ativos, prioridades, status e severidades.",
@@ -40,6 +47,7 @@
     "clearAll": "limpar tudo",
     "name": "pesquisar por nome",
     "category": "categoria",
+    "manufacturer": "fabricante",
     "type": "tipo de lista",
     "isSystem": "origem",
     "isTemplate": "escopo",
@@ -166,6 +174,92 @@
       "parentType": "sem tipo pai",
       "parentName": "sem pai",
       "orgId": "sem organização"
+    }
+  },
+  "createEdit": {
+    "steps": {
+      "basicInfo": "informações básicas",
+      "review": "revisão"
+    },
+    "stepDescriptions": {
+      "basicInfo": "selecione o tipo e defina a identidade do item",
+      "review": "revise a configuração antes de salvar"
+    },
+    "sections": {
+      "basicInfo": "informações básicas",
+      "progressSteps": "progresso"
+    },
+    "formDescriptions": {
+      "basicInfo": "listas são organizadas em árvore: categoria contém fabricantes, que contêm modelos.",
+      "isTemplate": "itens compartilhados propagam para organizações filhas como template."
+    },
+    "fields": {
+      "type": "tipo da lista",
+      "parent": "pai",
+      "name": "nome",
+      "value": "valor",
+      "enabled": "habilitado",
+      "isTemplate": "compartilhar como template"
+    },
+    "typeOptions": {
+      "asset_category": "categoria",
+      "asset_manufacturer": "fabricante",
+      "asset_model": "modelo"
+    },
+    "validation": {
+      "typeRequired": "selecione um tipo de lista",
+      "parentRequired": "selecione um pai",
+      "nameRequired": "nome é obrigatório",
+      "nameMaxLength": "nome não pode exceder 254 caracteres",
+      "valueRequired": "valor é obrigatório",
+      "valueMaxLength": "valor não pode exceder 254 caracteres",
+      "valuePattern": "use apenas letras minúsculas, números e underline"
+    },
+    "buttons": {
+      "back": "voltar",
+      "next": "avançar",
+      "createList": "criar item",
+      "updateList": "atualizar item"
+    },
+    "messages": {
+      "loadingList": "carregando item...",
+      "completeAllSteps": "complete todas as etapas para salvar o item",
+      "allFieldsRequired": "campos marcados com * são obrigatórios",
+      "currentStep": "etapa atual",
+      "systemListWarning": "este item é do sistema. não pode ser modificado.",
+      "typeLocked": "o tipo da lista não pode ser alterado após a criação",
+      "noParentForCategory": "categorias ficam no topo da árvore e não têm pai",
+      "parentLoadFailed": "falha ao carregar pais disponíveis"
+    },
+    "reviewStep": {
+      "subtitle": "revise a configuração do item antes de salvar",
+      "successMessage": "pronto para criar! clique em 'criar item' para salvar",
+      "successMessageEdit": "pronto para atualizar! clique em 'atualizar item' para salvar as alterações",
+      "sections": {
+        "basicInfo": "informações básicas"
+      },
+      "fields": {
+        "type": "tipo",
+        "parent": "pai",
+        "name": "nome",
+        "value": "valor",
+        "enabled": "habilitado",
+        "isTemplate": "template compartilhado"
+      },
+      "values": {
+        "notProvided": "não informado",
+        "notSelected": "não selecionado",
+        "noParent": "sem pai (topo da árvore)"
+      }
+    },
+    "notifications": {
+      "created": "item criado com sucesso",
+      "updated": "item atualizado com sucesso",
+      "createFailed": "falha ao criar item",
+      "updateFailed": "falha ao atualizar item",
+      "loadFailed": "falha ao carregar item",
+      "alreadyExists": "já existe um item com este valor sob o pai selecionado",
+      "forbidden": "você não tem permissão para realizar esta ação"
     }
   }
 }

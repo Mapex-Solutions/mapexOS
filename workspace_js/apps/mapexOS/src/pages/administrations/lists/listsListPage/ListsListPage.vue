@@ -11,10 +11,12 @@ import type { ListResponse } from '@mapexos/schemas';
 import type {
 	ListsListPageFilters,
 	ListsListPageColumnVisibility,
+	ListCascadeOption,
 } from './interfaces';
 
 /** VUE IMPORTS */
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 /** COMPONENTS */
 import { PageHeader, ListHeaderMenu } from '@components/headers';
@@ -48,9 +50,11 @@ import {
 
 /** COMPOSABLES & STORES */
 const t = useListsTranslations();
+const router = useRouter();
 const orgStore = useOrganizationStore();
 const logger = useLogger('ListsListPage');
-const { canUpdate, canDelete, canRead } = usePermissions();
+const { canCreate, canUpdate, canDelete, canRead } = usePermissions();
+const canCreateList = canCreate('lists');
 const canUpdateList = canUpdate('lists');
 const canDeleteList = canDelete('lists');
 const canReadList = canRead('lists');
@@ -75,12 +79,19 @@ const quickSource = ref<boolean | null>(null);
 // Advanced filters (applied via drawer)
 const showAdvancedFilters = ref(false);
 const advancedFilterValues = ref<FilterValues>({
-	category: 'iot',
 	type: null,
+	categoryId: null,
+	manufacturerId: null,
 	isTemplate: null,
 	includeChildren: null,
 });
 const hasPendingAdvancedFilters = ref(false);
+
+// Cascade pickers: loaded on demand from the lists API itself
+const categoryOptions = ref<ListCascadeOption[]>([]);
+const manufacturerOptions = ref<ListCascadeOption[]>([]);
+const loadingCategoryOptions = ref(false);
+const loadingManufacturerOptions = ref(false);
 
 const columnVisibilityState = ref<ListsListPageColumnVisibility>({ ...COLUMN_VISIBILITY_DEFAULTS });
 const drawerOpen = ref(false);
@@ -89,41 +100,62 @@ const selectedListId = ref<string | undefined>(undefined);
 /** COMPUTED */
 
 /**
- * Combined filters for API request
+ * Combined filters for the API request.
+ *
+ * `parentId` is the deepest selection in the cascade (manufacturer beats
+ * category) so the backend returns the direct children of that ancestor.
  */
 const appliedFilters = computed((): ListsListPageFilters => ({
 	name: quickSearch.value || undefined,
-	category: advancedFilterValues.value.category || undefined,
 	type: advancedFilterValues.value.type || undefined,
+	parentId:
+		advancedFilterValues.value.manufacturerId ||
+		advancedFilterValues.value.categoryId ||
+		undefined,
 	isSystem: quickSource.value ?? undefined,
 	isTemplate: advancedFilterValues.value.isTemplate ?? undefined,
 	includeChildren: advancedFilterValues.value.includeChildren ?? undefined,
 }));
 
 /**
- * Advanced filter fields configuration
+ * Advanced filter fields configuration — cascade Category -> Manufacturer
+ * mirrors the asset-creation guided selector (see GuidedModeSelector.vue).
  */
 const advancedFilterFields = computed((): FilterField[] => [
-	{
-		key: 'category',
-		type: 'select',
-		label: t.filters.category.value,
-		icon: 'folder_special',
-		options: [
-			{ label: t.filters.options.iot.value, value: 'iot' },
-		],
-	},
 	{
 		key: 'type',
 		type: 'select',
 		label: t.filters.type.value,
 		icon: 'category',
 		options: [
+			{ label: t.filters.options.all.value, value: null },
 			{ label: t.filters.options.categories.value, value: 'asset_category' },
 			{ label: t.filters.options.manufacturers.value, value: 'asset_manufacturer' },
 			{ label: t.filters.options.models.value, value: 'asset_model' },
 		],
-		disabled: !advancedFilterValues.value.category,
+	},
+	{
+		key: 'categoryId',
+		type: 'select',
+		label: t.filters.category.value,
+		icon: 'folder_special',
+		loading: loadingCategoryOptions.value,
+		options: [
+			{ label: t.filters.options.all.value, value: null },
+			...categoryOptions.value.map((opt) => ({ label: opt.name, value: opt.id })),
+		],
+	},
+	{
+		key: 'manufacturerId',
+		type: 'select',
+		label: t.filters.manufacturer.value,
+		icon: 'precision_manufacturing',
+		loading: loadingManufacturerOptions.value,
+		disabled: !advancedFilterValues.value.categoryId,
+		options: [
+			{ label: t.filters.options.all.value, value: null },
+			...manufacturerOptions.value.map((opt) => ({ label: opt.name, value: opt.id })),
+		],
 	},
 	{
 		key: 'isTemplate',
@@ -154,8 +186,9 @@ const advancedFilterFields = computed((): FilterField[] => [
  */
 const advancedFiltersCount = computed(() => {
 	let count = 0;
-	if (advancedFilterValues.value.category) count++;
 	if (advancedFilterValues.value.type) count++;
+	if (advancedFilterValues.value.categoryId) count++;
+	if (advancedFilterValues.value.manufacturerId) count++;
 	if (advancedFilterValues.value.isTemplate !== null) count++;
 	if (advancedFilterValues.value.includeChildren !== null) count++;
 	return count;
@@ -167,14 +200,6 @@ const advancedFiltersCount = computed(() => {
 const activeFilterChips = computed(() => {
 	const chips: { key: string; label: string; value: string }[] = [];
 
-	if (advancedFilterValues.value.category) {
-		chips.push({
-			key: 'category',
-			label: t.filters.category.value,
-			value: t.filters.options.iot.value,
-		});
-	}
-
 	if (advancedFilterValues.value.type) {
 		const typeLabel = advancedFilterValues.value.type === 'asset_category'
 			? t.filters.options.categories.value
@@ -185,6 +210,24 @@ const activeFilterChips = computed(() => {
 			key: 'type',
 			label: t.filters.type.value,
 			value: typeLabel,
+		});
+	}
+
+	if (advancedFilterValues.value.categoryId) {
+		const cat = categoryOptions.value.find((c) => c.id === advancedFilterValues.value.categoryId);
+		chips.push({
+			key: 'categoryId',
+			label: t.filters.category.value,
+			value: cat?.name ?? advancedFilterValues.value.categoryId,
+		});
+	}
+
+	if (advancedFilterValues.value.manufacturerId) {
+		const mfr = manufacturerOptions.value.find((m) => m.id === advancedFilterValues.value.manufacturerId);
+		chips.push({
+			key: 'manufacturerId',
+			label: t.filters.manufacturer.value,
+			value: mfr?.name ?? advancedFilterValues.value.manufacturerId,
 		});
 	}
 
@@ -308,11 +351,11 @@ async function fetchLists(): Promise<void> {
 		if (appliedFilters.value.name) {
 			queryParams.name = appliedFilters.value.name;
 		}
-		if (appliedFilters.value.category) {
-			queryParams.category = appliedFilters.value.category;
-		}
 		if (appliedFilters.value.type) {
 			queryParams.type = appliedFilters.value.type;
+		}
+		if (appliedFilters.value.parentId) {
+			queryParams.parentId = appliedFilters.value.parentId;
 		}
 		if (typeof appliedFilters.value.isSystem === 'boolean') {
 			queryParams.isSystem = appliedFilters.value.isSystem;
@@ -370,13 +413,14 @@ function applyQuickFilters(): void {
 
 /**
  * Handle advanced filters apply
- * @param {FilterValues} values - Applied filter values
- * @returns {void}
+ *
+ * @param {FilterValues} values - Applied filter values from the drawer
  */
 function handleAdvancedFiltersApply(values: FilterValues): void {
 	advancedFilterValues.value = {
-		category: values.category || null,
 		type: values.type || null,
+		categoryId: values.categoryId || null,
+		manufacturerId: values.manufacturerId || null,
 		isTemplate: values.isTemplate,
 		includeChildren: values.includeChildren,
 	};
@@ -400,15 +444,16 @@ function handleAdvancedFiltersApply(values: FilterValues): void {
 
 /**
  * Handle advanced filters reset
- * @returns {void}
  */
 function handleAdvancedFiltersReset(): void {
 	advancedFilterValues.value = {
-		category: 'iot',
 		type: null,
+		categoryId: null,
+		manufacturerId: null,
 		isTemplate: null,
 		includeChildren: null,
 	};
+	manufacturerOptions.value = [];
 	hasPendingAdvancedFilters.value = false;
 
 	// Restore column visibility
@@ -418,6 +463,76 @@ function handleAdvancedFiltersReset(): void {
 
 	currentPage.value = 1;
 	void fetchLists();
+}
+
+/**
+ * Load top-level categories (`asset_category`). Called once on mount.
+ * Failures are non-fatal — the cascade just stays empty and the user
+ * still has the type and other filters available.
+ */
+async function loadCategoryOptions(): Promise<void> {
+	if (!apis.mapexOS?.lists) return;
+	loadingCategoryOptions.value = true;
+	try {
+		const response = await apis.mapexOS.lists.list({
+			type: 'asset_category',
+			perPage: 100,
+			projection: 'name,value,type',
+		});
+		categoryOptions.value = (response?.items ?? []).map((item: ListResponse) => ({
+			id: item.id ?? '',
+			name: item.name ?? '',
+		}));
+	} catch (err: any) {
+		logger.error('Error loading category options:', err);
+	} finally {
+		loadingCategoryOptions.value = false;
+	}
+}
+
+/**
+ * Load manufacturers under the selected category. Called when the category
+ * picker changes, and when the page loads with a pre-selected category.
+ *
+ * @param categoryId - selected category id; pass null/undefined to clear
+ */
+async function loadManufacturerOptions(categoryId: string | null | undefined): Promise<void> {
+	if (!categoryId || !apis.mapexOS?.lists) {
+		manufacturerOptions.value = [];
+		return;
+	}
+	loadingManufacturerOptions.value = true;
+	try {
+		const response = await apis.mapexOS.lists.list({
+			type: 'asset_manufacturer',
+			parentId: categoryId,
+			perPage: 100,
+			projection: 'name,value,type',
+		});
+		manufacturerOptions.value = (response?.items ?? []).map((item: ListResponse) => ({
+			id: item.id ?? '',
+			name: item.name ?? '',
+		}));
+	} catch (err: any) {
+		logger.error('Error loading manufacturer options:', err);
+		manufacturerOptions.value = [];
+	} finally {
+		loadingManufacturerOptions.value = false;
+	}
+}
+
+/**
+ * React to in-drawer field edits so the cascade updates before the user clicks Apply.
+ * When the category changes we reload its manufacturers and clear any stale selection.
+ *
+ * @param key   - filter field key that changed
+ * @param value - new value for that field
+ */
+function handleFieldChange(key: string, value: any): void {
+	if (key === 'categoryId') {
+		advancedFilterValues.value.manufacturerId = null;
+		void loadManufacturerOptions(value);
+	}
 }
 
 /**
@@ -435,17 +550,19 @@ function handlePendingChange(hasPending: boolean): void {
  * @returns {void}
  */
 function removeFilter(key: string): void {
-	if (key === 'category') {
-		advancedFilterValues.value.category = null;
-		// Clear type when category is cleared
+	if (key === 'type') {
 		advancedFilterValues.value.type = null;
-	} else if (key === 'type') {
-		advancedFilterValues.value.type = null;
+	} else if (key === 'categoryId') {
+		// Clearing the category invalidates the manufacturer selection
+		advancedFilterValues.value.categoryId = null;
+		advancedFilterValues.value.manufacturerId = null;
+		manufacturerOptions.value = [];
+	} else if (key === 'manufacturerId') {
+		advancedFilterValues.value.manufacturerId = null;
 	} else if (key === 'isTemplate') {
 		advancedFilterValues.value.isTemplate = null;
 	} else if (key === 'includeChildren') {
 		advancedFilterValues.value.includeChildren = null;
-		// Restore column visibility
 		columnVisibilityState.value.type = true;
 		columnVisibilityState.value.source = true;
 		columnVisibilityState.value.scope = true;
@@ -463,11 +580,13 @@ function clearAllFilters(): void {
 	quickSearch.value = '';
 	quickSource.value = null;
 	advancedFilterValues.value = {
-		category: 'iot',
 		type: null,
+		categoryId: null,
+		manufacturerId: null,
 		isTemplate: null,
 		includeChildren: null,
 	};
+	manufacturerOptions.value = [];
 	hasPendingAdvancedFilters.value = false;
 
 	// Restore column visibility
@@ -565,8 +684,7 @@ function editList(list: any): void {
 		}
 		return;
 	}
-	logger.debug('Edit list:', list);
-	// TODO: Navigate to edit page
+	void router.push(`/admin/lists/edit/${list.id}`);
 }
 
 /**
@@ -648,23 +766,36 @@ function getListActions(list: any): DataRowActionConfig {
 	};
 }
 
+/** WATCHERS */
+
+// Refresh category options whenever the filter drawer opens so newly created
+// categories appear without forcing a full page reload.
+watch(showAdvancedFilters, (isOpen) => {
+	if (isOpen) void loadCategoryOptions();
+});
+
 /** LIFECYCLE HOOKS */
-onMounted(async () => await fetchLists());
+onMounted(async () => {
+	// Categories drive the cascade — load them in parallel with the first list fetch
+	await Promise.all([loadCategoryOptions(), fetchLists()]);
+});
 
 // Auto-refresh lists when organization changes
 useOrgChangeRefresh(async () => {
-	// Reset pagination and filters when org changes
+	// Reset pagination, filters and cascade caches when org changes
 	currentPage.value = 1;
 	quickSearch.value = '';
 	quickSource.value = null;
 	advancedFilterValues.value = {
-		category: 'iot',
 		type: null,
+		categoryId: null,
+		manufacturerId: null,
 		isTemplate: null,
 		includeChildren: null,
 	};
+	manufacturerOptions.value = [];
 	hasPendingAdvancedFilters.value = false;
-	await fetchLists();
+	await Promise.all([loadCategoryOptions(), fetchLists()]);
 });
 </script>
 
@@ -678,6 +809,12 @@ useOrgChangeRefresh(async () => {
 			:title="t.pageHeader.title.value"
 			:description="t.pageHeader.description.value"
 			:info="t.pageHeader.info.value"
+			:button="canCreateList ? {
+				label: t.page.addButton.value,
+				icon: 'add',
+				color: 'primary',
+				to: '/admin/lists/add',
+			} : undefined"
 		/>
 
 		<!-- Filters Section -->
@@ -869,6 +1006,7 @@ useOrgChangeRefresh(async () => {
 			@apply="handleAdvancedFiltersApply"
 			@reset="handleAdvancedFiltersReset"
 			@pending-change="handlePendingChange"
+			@field-change="handleFieldChange"
 		/>
 	</q-page>
 </template>

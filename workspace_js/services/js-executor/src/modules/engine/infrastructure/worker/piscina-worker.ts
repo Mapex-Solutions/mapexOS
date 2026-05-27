@@ -142,6 +142,13 @@ function runScript(
 ): { data: any } | { error: string } {
 	try {
 		const jsonResult = script.runSync(context, { timeout: config.timeoutMs });
+		// A non-string runSync return means the user's code exited the wrapper IIFE
+		// early (e.g. typed `return X` instead of `const result = X`). The
+		// JSON.parse on a non-string would surface a cryptic "undefined is not
+		// valid JSON" — translate it here into something actionable.
+		if (typeof jsonResult !== 'string') {
+			return { error: `Error into script ${scriptName}: scripts must assign to a "result" variable (e.g. \`const result = X;\`) — do not use \`return X\` at the top level.` };
+		}
 		return { data: JSON.parse(jsonResult) };
 	} catch (err) {
 		const error = err instanceof Error ? err : new Error(String(err));

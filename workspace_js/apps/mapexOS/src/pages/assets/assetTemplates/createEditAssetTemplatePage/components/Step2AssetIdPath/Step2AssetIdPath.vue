@@ -60,7 +60,6 @@ const data = computed({
       :hint="t.steps.step2.fields.assetIdPath.hint.value"
       :rules="[
         (val) => !!val || t.steps.step2.fields.assetIdPath.required.value,
-        (val) => (val && val.includes('.')) || t.steps.step2.fields.assetIdPath.invalidFormat.value,
       ]"
     >
       <template v-slot:prepend>

@@ -5,6 +5,11 @@
     "description": "Crie um novo template de ativo com scripts de processamento de dados",
     "button": "Voltar para Templates"
   },
+  "scriptConvention": {
+    "title": "Variável result",
+    "textPrefix": "todo script deve terminar atribuindo",
+    "textSuffix": "com o valor que o próximo passo deve receber. NÃO use `return X` no topo — ele é silenciosamente ignorado. Lance erros com `throw new Error(...)` para falhar o pipeline."
+  },
   "stepper": {
     "title": "Configurar Template de Ativo",
     "subtitle": "Complete todas as etapas para criar um novo template",
@@ -78,8 +83,7 @@
           "label": "Caminho do ID do Ativo",
           "placeholder": "ex.: payload.deviceId",
           "hint": "Use notação de ponto para especificar o caminho para o identificador único do seu ativo",
-          "required": "Caminho do ID do Ativo é obrigatório",
-          "invalidFormat": "Deve conter pelo menos um ponto (.)"
+          "required": "Caminho do ID do Ativo é obrigatório"
         }
       }
     },
@@ -94,7 +98,7 @@
         "payloadVar": "payload - O objeto de dados recebido",
         "consoleLog": "console.log() - Para saída de depuração",
         "expectedReturn": "Retorno Esperado:",
-        "expectedReturnValue": "Objeto payload modificado",
+        "expectedReturnValue": "const result = <objeto payload modificado>",
         "example": "Exemplo:"
       },
       "exampleCode": {
@@ -116,7 +120,7 @@
         "availableVariables": "Variáveis Disponíveis:",
         "payloadVar": "payload - O objeto de dados pré-processado",
         "expectedReturn": "Retorno Esperado:",
-        "expectedReturnValue": "Boolean (true se válido) ou lance Error",
+        "expectedReturnValue": "const result = <payload validado>; — lance Error para falhar",
         "example": "Exemplo:"
       },
       "exampleCode": {

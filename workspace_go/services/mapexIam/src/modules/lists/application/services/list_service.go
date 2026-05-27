@@ -27,11 +27,15 @@ func New(deps di.ListServiceDependenciesInjection) ports.ListServicePort {
 // resolve scope (system / template-ancestor / org-local) and apply org
 // context -> map DTO to entity, defaulting Scope to "local" -> persist
 // -> map back to response DTO.
+//
+// StringToObjectId is enabled so the DTO's `*string` ParentId is converted
+// to `*model.ObjectId` on the entity (the DTO uses string so the validator's
+// `mongoid` tag can inspect the underlying hex).
 func (s *ListService) CreateList(c ctx.Context, requestContext *reqCtx.RequestContext, dto *dtos.ListCreateDTO) (*dtos.ListResponse, error) {
 	if err := s.applyListScope(requestContext, dto); err != nil {
 		return nil, err
 	}
-	listEntity, _ := mapper.DtoToEntity[dtos.ListCreateDTO, entities.List](dto)
+	listEntity, _ := mapper.DtoToEntityWithOptions[dtos.ListCreateDTO, entities.List](dto, mapper.MapperOptions{StringToObjectId: true})
 	if listEntity.Scope == "" && !listEntity.IsSystem {
 		listEntity.Scope = "local"
 	}
@@ -68,6 +72,15 @@ func (s *ListService) UpdateListById(c ctx.Context, listId *string, dto *dtos.Li
 	}
 
 	fields, _ := mapper.DtoToMap(dto)
+	// parentId travels through the contract DTO as a string (so the validator
+	// can inspect it) — convert it to ObjectID before letting Mongo $set the
+	// document, otherwise the field would be persisted as a string and break
+	// downstream lookups.
+	if pid, ok := fields["parentId"].(string); ok && pid != "" {
+		if oid, err := model.ToObjectID(pid); err == nil {
+			fields["parentId"] = oid
+		}
+	}
 	updated, _ := s.deps.Repo.FindByIdAndUpdate(c, listId, fields)
 	if updated.ID.IsZero() {
 		return nil, &customErrors.ServerCustomError{Code: httpStatus.NOT_FOUND, Errors: []string{"List not found"}}
