@@ -221,8 +221,8 @@
 			"description": "Descrição",
 			"status": "Status",
 			"statusOptions": {
-				"enabled": "Habilitado",
-				"disabled": "Desabilitado"
+				"enabled": "Ativo",
+				"disabled": "Inativo"
 			},
 			"debugMode": "Modo Debug",
 			"debugModeTooltip": "Habilite o modo debug para registrar requisições recebidas para diagnóstico"
@@ -380,8 +380,8 @@
 				"uuidPaths": "Caminhos UUID"
 			},
 			"values": {
-				"enabled": "Habilitado",
-				"disabled": "Desabilitado",
+				"enabled": "Ativo",
+				"disabled": "Inativo",
 				"notConfigured": "Não configurado",
 				"none": "Nenhum",
 				"noDescription": "Nenhuma descrição fornecida",
@@ -395,7 +395,7 @@
 			},
 			"basicInfo": "Informações Básicas",
 			"name": "Nome",
-			"enabled": "Habilitado",
+			"enabled": "Ativo",
 			"yes": "Sim",
 			"no": "Não",
 			"description": "Descrição",

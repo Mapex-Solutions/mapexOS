@@ -50,8 +50,8 @@
     "filterByLastName": "filter by last name",
     "options": {
       "all": "all",
-      "enabled": "enabled",
-      "disabled": "disabled",
+      "enabled": "active",
+      "disabled": "inactive",
       "yes": "yes",
       "no": "no"
     }
@@ -275,8 +275,8 @@
         "custom": "custom"
       },
       "status": {
-        "enabled": "enabled",
-        "disabled": "disabled"
+        "enabled": "active",
+        "disabled": "inactive"
       },
       "template": {
         "yes": "shared",

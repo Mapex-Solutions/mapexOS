@@ -331,8 +331,8 @@
         "workflow": "Workflow"
       },
       "values": {
-        "enabled": "Enabled",
-        "disabled": "Disabled",
+        "enabled": "Active",
+        "disabled": "Inactive",
         "shared": "Shared",
         "local": "Local",
         "none": "None",

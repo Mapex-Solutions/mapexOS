@@ -35,7 +35,7 @@ export interface ListCascadeOption {
 export interface ListsListPageColumnVisibility {
 	organization: boolean;
 	description: boolean;
-	category: boolean;
+	parent: boolean;
 	type: boolean;
 	items: boolean;
 	isTemplate: boolean;

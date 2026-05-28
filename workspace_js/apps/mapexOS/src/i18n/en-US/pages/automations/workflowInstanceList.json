@@ -38,8 +38,8 @@
     "uniqueExecution": "unique execution",
     "options": {
       "all": "all",
-      "enabled": "enabled",
-      "disabled": "disabled",
+      "enabled": "active",
+      "disabled": "inactive",
       "yes": "yes",
       "no": "no"
     }
@@ -60,8 +60,8 @@
     "uniqueExecution": "unique execution"
   },
   "status": {
-    "enabled": "enabled",
-    "disabled": "disabled"
+    "enabled": "active",
+    "disabled": "inactive"
   },
   "empty": {
     "title": "no instances found",
@@ -73,7 +73,7 @@
   },
   "badges": {
     "active": "active",
-    "disabled": "disabled"
+    "disabled": "inactive"
   },
   "messages": {
     "deletedSuccessfully": "instance deleted successfully",
@@ -115,8 +115,8 @@
       "updated": "updated"
     },
     "values": {
-      "enabled": "enabled",
-      "disabled": "disabled",
+      "enabled": "active",
+      "disabled": "inactive",
       "unique": "unique",
       "notApplicable": "N/A",
       "noDescription": "no description provided"

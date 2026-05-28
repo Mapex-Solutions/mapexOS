@@ -52,7 +52,7 @@
       "depth": "Profundidade",
       "status": "Status",
       "enabled": "Ativo",
-      "disabled": "Desativado",
+      "disabled": "Inativo",
       "organizationName": "Nome da Organização",
       "email": "E-mail",
       "description": "Descrição",

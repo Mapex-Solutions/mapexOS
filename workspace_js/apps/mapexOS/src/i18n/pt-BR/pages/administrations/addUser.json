@@ -128,8 +128,8 @@
     "noOrgContext": "nenhuma organização selecionada. selecione uma organização na barra lateral primeiro."
   },
   "status": {
-    "enabled": "habilitado",
-    "disabled": "desabilitado",
+    "enabled": "ativo",
+    "disabled": "inativo",
     "yes": "sim",
     "no": "não"
   },

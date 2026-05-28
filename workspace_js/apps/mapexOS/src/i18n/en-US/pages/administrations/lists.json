@@ -86,7 +86,7 @@
   "columns": {
     "name": "name",
     "value": "value",
-    "category": "category",
+    "parent": "parent",
     "type": "type",
     "source": "source",
     "scope": "scope",
@@ -98,7 +98,7 @@
   },
   "menuColumns": {
     "organization": "organization",
-    "category": "category",
+    "parent": "parent",
     "type": "type",
     "source": "source",
     "scope": "scope"
@@ -199,12 +199,30 @@
       "name": "name",
       "value": "value",
       "enabled": "enabled",
-      "isTemplate": "share as template"
+      "isTemplate": "share as template",
+      "status": {
+        "label": "status",
+        "placeholder": "select a status",
+        "hint": "controls whether this list item is currently usable",
+        "required": "status is required"
+      }
+    },
+    "hints": {
+      "type": "Defines where this item sits in the tree: category, manufacturer or model.",
+      "parentForManufacturer": "Pick the category this manufacturer belongs to.",
+      "parentForModel": "Pick the manufacturer this model belongs to.",
+      "name": "Human-readable name shown across the application.",
+      "value": "Machine identifier used in payloads — lowercase letters, numbers and underscore only.",
+      "isTemplate": "When enabled, the item is shared with child organizations as a reusable template."
     },
     "typeOptions": {
       "asset_category": "category",
       "asset_manufacturer": "manufacturer",
       "asset_model": "model"
+    },
+    "statusOptions": {
+      "active": { "label": "active", "value": true },
+      "inactive": { "label": "inactive", "value": false }
     },
     "validation": {
       "typeRequired": "please select a list type",

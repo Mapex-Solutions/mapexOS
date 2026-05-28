@@ -50,8 +50,8 @@
     "filterByLastName": "filtrar por sobrenome",
     "options": {
       "all": "todos",
-      "enabled": "habilitado",
-      "disabled": "desabilitado",
+      "enabled": "ativo",
+      "disabled": "inativo",
       "yes": "sim",
       "no": "não"
     }
@@ -275,8 +275,8 @@
         "custom": "customizado"
       },
       "status": {
-        "enabled": "habilitado",
-        "disabled": "desabilitado"
+        "enabled": "ativo",
+        "disabled": "inativo"
       },
       "template": {
         "yes": "compartilhado",

@@ -128,8 +128,8 @@
     "noOrgContext": "no organization selected. please select an organization from the sidebar first."
   },
   "status": {
-    "enabled": "enabled",
-    "disabled": "disabled",
+    "enabled": "active",
+    "disabled": "inactive",
     "yes": "yes",
     "no": "no"
   },

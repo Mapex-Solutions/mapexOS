@@ -221,8 +221,8 @@
 			"description": "Description",
 			"status": "Status",
 			"statusOptions": {
-				"enabled": "Enabled",
-				"disabled": "Disabled"
+				"enabled": "Active",
+				"disabled": "Inactive"
 			},
 			"debugMode": "Debug Mode",
 			"debugModeTooltip": "Enable debug mode to log incoming requests for troubleshooting"
@@ -380,8 +380,8 @@
 				"uuidPaths": "UUID Paths"
 			},
 			"values": {
-				"enabled": "Enabled",
-				"disabled": "Disabled",
+				"enabled": "Active",
+				"disabled": "Inactive",
 				"notConfigured": "Not configured",
 				"none": "None",
 				"noDescription": "No description provided",
@@ -395,7 +395,7 @@
 			},
 			"basicInfo": "Basic Information",
 			"name": "Name",
-			"enabled": "Enabled",
+			"enabled": "Active",
 			"yes": "Yes",
 			"no": "No",
 			"description": "Description",

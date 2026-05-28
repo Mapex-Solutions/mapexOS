@@ -67,7 +67,7 @@ export function useListsTranslations() {
 
 		menuColumns: {
 			organization: computed(() => ts('pages.administrations.lists.menuColumns.organization')),
-			category: computed(() => ts('pages.administrations.lists.menuColumns.category')),
+			parent: computed(() => ts('pages.administrations.lists.menuColumns.parent')),
 			type: computed(() => ts('pages.administrations.lists.menuColumns.type')),
 			source: computed(() => ts('pages.administrations.lists.menuColumns.source')),
 			scope: computed(() => ts('pages.administrations.lists.menuColumns.scope')),
@@ -125,11 +125,10 @@ export function useListsTranslations() {
 					};
 					return iconMap[row.type] || 'list';
 				},
-				color: (value: any, row: any) => row.enabled ? 'primary' : 'grey-5',
-				tooltip: (value: any, row: any) =>
-					row.enabled
-						? ts('pages.administrations.lists.status.active')
-						: ts('pages.administrations.lists.status.inactive'),
+				// List items have no deactivation flow in the UI yet, so the
+				// chip/icon always renders the active styling and "Ativo" tooltip.
+				color: () => 'primary',
+				tooltip: () => ts('pages.administrations.lists.status.active'),
 			},
 			{
 				key: 'name',
@@ -141,17 +140,15 @@ export function useListsTranslations() {
 				secondaryKey: 'value',
 			},
 			{
-				key: 'category',
-				label: ts('pages.administrations.lists.columns.category'),
+				key: 'parentName',
+				label: ts('pages.administrations.lists.columns.parent'),
 				type: 'chip',
 				visible: 'laptop',
-				width: 120,
-				format: (value: any) => {
-					if (!value) return '—';
-					return ts(`pages.administrations.lists.categories.${value}`).toUpperCase();
-				},
+				width: 180,
+				ellipsis: true,
+				format: (value: any) => value || '—',
 				color: () => 'indigo-6',
-				icon: 'folder_special',
+				icon: 'account_tree',
 			},
 			{
 				key: 'type',
@@ -274,12 +271,38 @@ export function useListsTranslations() {
 			value: computed(() => ts('pages.administrations.lists.createEdit.fields.value')),
 			enabled: computed(() => ts('pages.administrations.lists.createEdit.fields.enabled')),
 			isTemplate: computed(() => ts('pages.administrations.lists.createEdit.fields.isTemplate')),
+			status: {
+				label: computed(() => ts('pages.administrations.lists.createEdit.fields.status.label')),
+				placeholder: computed(() => ts('pages.administrations.lists.createEdit.fields.status.placeholder')),
+				hint: computed(() => ts('pages.administrations.lists.createEdit.fields.status.hint')),
+				required: computed(() => ts('pages.administrations.lists.createEdit.fields.status.required')),
+			},
 		},
 
 		typeOptions: {
 			asset_category: computed(() => ts('pages.administrations.lists.createEdit.typeOptions.asset_category')),
 			asset_manufacturer: computed(() => ts('pages.administrations.lists.createEdit.typeOptions.asset_manufacturer')),
 			asset_model: computed(() => ts('pages.administrations.lists.createEdit.typeOptions.asset_model')),
+		},
+
+		statusOptions: {
+			active: {
+				label: computed(() => ts('pages.administrations.lists.createEdit.statusOptions.active.label')),
+				value: true,
+			},
+			inactive: {
+				label: computed(() => ts('pages.administrations.lists.createEdit.statusOptions.inactive.label')),
+				value: false,
+			},
+		},
+
+		hints: {
+			type: computed(() => ts('pages.administrations.lists.createEdit.hints.type')),
+			parentForManufacturer: computed(() => ts('pages.administrations.lists.createEdit.hints.parentForManufacturer')),
+			parentForModel: computed(() => ts('pages.administrations.lists.createEdit.hints.parentForModel')),
+			name: computed(() => ts('pages.administrations.lists.createEdit.hints.name')),
+			value: computed(() => ts('pages.administrations.lists.createEdit.hints.value')),
+			isTemplate: computed(() => ts('pages.administrations.lists.createEdit.hints.isTemplate')),
 		},
 
 		validation: {

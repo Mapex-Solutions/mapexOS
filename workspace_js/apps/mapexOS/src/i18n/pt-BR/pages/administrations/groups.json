@@ -50,8 +50,8 @@
     "isTemplate": "origem do modelo",
     "options": {
       "all": "todos",
-      "enabled": "habilitado",
-      "disabled": "desabilitado",
+      "enabled": "ativo",
+      "disabled": "inativo",
       "yes": "sim",
       "no": "não",
       "templates": "compartilhado",
@@ -124,8 +124,8 @@
       "members": "nenhum membro atribuído"
     },
     "status": {
-      "enabled": "habilitado",
-      "disabled": "desabilitado"
+      "enabled": "ativo",
+      "disabled": "inativo"
     },
     "template": {
       "yes": "compartilhado",
@@ -167,7 +167,7 @@
       "name": "nome do grupo",
       "description": "descrição",
       "status": "status",
-      "enabled": "habilitado"
+      "enabled": "ativo"
     },
     "statusOptions": {
       "active": "Ativo",
@@ -235,7 +235,7 @@
       "fields": {
         "name": "nome",
         "description": "descrição",
-        "enabled": "habilitado",
+        "enabled": "ativo",
         "status": "status",
         "isTemplate": "modelo compartilhado",
         "totalRoles": "total de papéis",
@@ -246,8 +246,8 @@
         "yes": "sim",
         "no": "não",
         "noMembers": "nenhum membro selecionado",
-        "enabled": "habilitado",
-        "disabled": "desabilitado"
+        "enabled": "ativo",
+        "disabled": "inativo"
       }
     },
     "notifications": {
@@ -289,8 +289,8 @@
         "updated": "atualizado"
       },
       "status": {
-        "enabled": "habilitado",
-        "disabled": "desabilitado"
+        "enabled": "ativo",
+        "disabled": "inativo"
       },
       "noData": "dados do grupo não disponíveis"
     },

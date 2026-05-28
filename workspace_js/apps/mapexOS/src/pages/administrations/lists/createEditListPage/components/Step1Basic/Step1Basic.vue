@@ -21,6 +21,7 @@
 					map-options
 					class="rounded-borders"
 					:label="`${t.fields.type.value} *`"
+					:hint="t.hints.type.value"
 					:options="typeOptions"
 					:disable="isEditMode || isSystemList"
 					:rules="[(val) => !!val || t.validation.typeRequired.value]"
@@ -47,6 +48,7 @@
 					map-options
 					class="rounded-borders"
 					:label="`${t.fields.parent.value} *`"
+					:hint="parentHint"
 					:options="parentSelectOptions"
 					:loading="loadingParents"
 					:disable="!localData.type || isSystemList"
@@ -78,6 +80,7 @@
 					dense
 					class="rounded-borders"
 					:label="`${t.fields.name.value} *`"
+					:hint="t.hints.name.value"
 					:maxlength="NAME_MAX_LENGTH"
 					:disable="isSystemList"
 					:rules="[
@@ -100,6 +103,7 @@
 					dense
 					class="rounded-borders"
 					:label="`${t.fields.value.value} *`"
+					:hint="t.hints.value.value"
 					:maxlength="VALUE_MAX_LENGTH"
 					:disable="isSystemList"
 					:rules="[
@@ -115,30 +119,22 @@
 				</q-input>
 			</div>
 
-			<!-- Enabled & isTemplate toggles -->
-			<div class="col-12 col-md-6">
+			<!-- Shared template checkbox (matches the asset-template wizard).
+			     List items have no deactivation flow yet, so the form never
+			     exposes the enabled flag — the API receives `enabled: true`
+			     from INITIAL_LIST_FORM_DATA. -->
+			<div class="col-12">
 				<div class="q-py-sm">
-					<q-toggle
-						v-model="localData.enabled"
-						color="primary"
-						:label="t.fields.enabled.value"
-						:disable="isSystemList"
-						@update:model-value="updateValue"
-					/>
-				</div>
-			</div>
-
-			<div class="col-12 col-md-6">
-				<div class="q-py-sm">
-					<q-toggle
+					<q-checkbox
 						v-model="localData.isTemplate"
 						color="primary"
+						class="q-mb-xs"
 						:label="t.fields.isTemplate.value"
 						:disable="isSystemList"
 						@update:model-value="updateValue"
 					/>
 					<div class="text-caption text-grey-7 q-pl-lg">
-						{{ t.formDescriptions.isTemplate.value }}
+						{{ t.hints.isTemplate.value }}
 					</div>
 				</div>
 			</div>
@@ -213,6 +209,17 @@ const typeOptions = computed(() => [
 	{ label: t.typeOptions.asset_manufacturer.value, value: 'asset_manufacturer' },
 	{ label: t.typeOptions.asset_model.value, value: 'asset_model' },
 ]);
+
+/**
+ * Hint for the parent select — wording depends on the selected type so the
+ * user knows whether they're picking a category (for a manufacturer) or a
+ * manufacturer (for a model).
+ */
+const parentHint = computed(() =>
+	localData.type === 'asset_model'
+		? t.hints.parentForModel.value
+		: t.hints.parentForManufacturer.value,
+);
 
 /**
  * Parent options mapped to the q-select shape (`{ label, value }`)

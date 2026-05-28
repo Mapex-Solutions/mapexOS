@@ -57,8 +57,8 @@
       "all": "todos",
       "active": "ativo",
       "inactive": "inativo",
-      "enabled": "habilitado",
-      "disabled": "desabilitado",
+      "enabled": "ativo",
+      "disabled": "inativo",
       "yes": "sim",
       "no": "não"
     }
@@ -225,8 +225,8 @@
   },
   "healthMonitoring": {
     "title": "monitoramento de saúde",
-    "enabled": "habilitado",
-    "disabled": "desabilitado",
+    "enabled": "ativo",
+    "disabled": "inativo",
     "mqttAlwaysOn": "MQTT — sempre monitorado",
     "mqttBanner": {
       "title": "A presença MQTT é a fonte da verdade",

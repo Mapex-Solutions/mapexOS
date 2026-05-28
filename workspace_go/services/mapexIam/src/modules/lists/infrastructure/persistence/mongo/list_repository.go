@@ -48,6 +48,72 @@ func (r *repository) FindById(ctx context.Context, listId *string) (*entities.Li
 	return retData, nil
 }
 
+// FindByIds retrieves multiple List entities by their IDs.
+// Uses cursor-based pagination internally so the caller can resolve
+// hundreds of parents in a single round-trip without overwhelming Mongo.
+//
+// Parameters:
+//   - ctx: The context for managing request deadlines and cancellation signals.
+//   - listIds: A slice of list ID strings to retrieve.
+//
+// Returns:
+//   - A slice of pointers to List entities; empty slice for empty / invalid input.
+//   - An error if the underlying query fails.
+func (r *repository) FindByIds(ctx context.Context, listIds []string) ([]*entities.List, error) {
+	if len(listIds) == 0 {
+		return []*entities.List{}, nil
+	}
+
+	objectIDs := make([]any, 0, len(listIds))
+	for _, id := range listIds {
+		objID, err := model.ToObjectID(id)
+		if err != nil {
+			continue
+		}
+		objectIDs = append(objectIDs, objID)
+	}
+
+	if len(objectIDs) == 0 {
+		return []*entities.List{}, nil
+	}
+
+	filters := model.Map{"_id": model.Map{"$in": objectIDs}}
+
+	var all []*entities.List
+	var lastCursorID any = nil
+	perPage := int64(1000)
+
+	for {
+		pagination := &model.PaginationOpts{
+			UseCursor:     true,
+			CursorID:      lastCursorID,
+			PerPage:       perPage,
+			SortDirection: 1,
+		}
+
+		result, err := r.model.FindByCursor(ctx, filters, pagination, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		for i := range result.Items {
+			all = append(all, &result.Items[i])
+		}
+
+		if result.Pagination.HasNext == nil || !*result.Pagination.HasNext {
+			break
+		}
+
+		if len(result.Items) > 0 {
+			lastCursorID = result.Items[len(result.Items)-1].ID
+		} else {
+			break
+		}
+	}
+
+	return all, nil
+}
+
 // FindByIdAndUpdate updates a List entity in the repository by its ID.
 // It accepts a context for cancellation and timeouts, a pointer to the list ID,
 // and a map containing the fields to be updated.

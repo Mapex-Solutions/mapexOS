@@ -50,8 +50,8 @@
     "isTemplate": "template source",
     "options": {
       "all": "all",
-      "enabled": "enabled",
-      "disabled": "disabled",
+      "enabled": "active",
+      "disabled": "inactive",
       "yes": "yes",
       "no": "no",
       "templates": "shared",
@@ -124,8 +124,8 @@
       "members": "no members assigned"
     },
     "status": {
-      "enabled": "enabled",
-      "disabled": "disabled"
+      "enabled": "active",
+      "disabled": "inactive"
     },
     "template": {
       "yes": "shared",
@@ -167,7 +167,7 @@
       "name": "group name",
       "description": "description",
       "status": "status",
-      "enabled": "enabled"
+      "enabled": "active"
     },
     "statusOptions": {
       "active": "Active",
@@ -235,7 +235,7 @@
       "fields": {
         "name": "name",
         "description": "description",
-        "enabled": "enabled",
+        "enabled": "active",
         "status": "status",
         "isTemplate": "shared template",
         "totalRoles": "total roles",
@@ -246,8 +246,8 @@
         "yes": "yes",
         "no": "no",
         "noMembers": "no members selected",
-        "enabled": "enabled",
-        "disabled": "disabled"
+        "enabled": "active",
+        "disabled": "inactive"
       }
     },
     "notifications": {
@@ -289,8 +289,8 @@
         "updated": "updated"
       },
       "status": {
-        "enabled": "enabled",
-        "disabled": "disabled"
+        "enabled": "active",
+        "disabled": "inactive"
       },
       "noData": "no group data available"
     },

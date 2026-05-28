@@ -26,7 +26,7 @@
   "fields": {
     "name": "nome da organização",
     "phone": "telefone",
-    "enabled": "habilitado",
+    "enabled": "ativo",
     "city": "cidade",
     "state": "estado",
     "country": "país",
@@ -90,7 +90,7 @@
     "clientIdRequired": "ID do cliente é obrigatório para autenticação Keycloak"
   },
   "status": {
-    "enabled": "habilitado",
-    "disabled": "desabilitado"
+    "enabled": "ativo",
+    "disabled": "inativo"
   }
 }

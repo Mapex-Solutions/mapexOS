@@ -43,8 +43,8 @@
     "pluginTypePlaceholder": "e.g. telegram, slack",
     "options": {
       "all": "all",
-      "enabled": "enabled",
-      "disabled": "disabled",
+      "enabled": "active",
+      "disabled": "inactive",
       "yes": "yes",
       "no": "no",
       "valid": "valid",
@@ -72,8 +72,8 @@
     "pluginsCount": "plugins count"
   },
   "status": {
-    "enabled": "enabled",
-    "disabled": "disabled"
+    "enabled": "active",
+    "disabled": "inactive"
   },
   "empty": {
     "title": "no workflows found",
@@ -85,7 +85,7 @@
   },
   "badges": {
     "active": "active",
-    "disabled": "disabled"
+    "disabled": "inactive"
   },
   "messages": {
     "deletedSuccessfully": "workflow deleted successfully",
@@ -118,8 +118,8 @@
       "updated": "updated"
     },
     "values": {
-      "enabled": "enabled",
-      "disabled": "disabled",
+      "enabled": "active",
+      "disabled": "inactive",
       "yes": "yes",
       "no": "no",
       "noDescription": "no description provided"

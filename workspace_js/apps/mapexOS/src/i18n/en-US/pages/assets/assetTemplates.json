@@ -53,8 +53,8 @@
       "all": "all",
       "active": "active",
       "inactive": "inactive",
-      "enabled": "enabled",
-      "disabled": "disabled"
+      "enabled": "active",
+      "disabled": "inactive"
     },
     "isSystemOptions": {
       "all": "all",

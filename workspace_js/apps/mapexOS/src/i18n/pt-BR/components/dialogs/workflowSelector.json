@@ -6,7 +6,7 @@
   "itemSingular": "workflow",
   "itemPlural": "workflows",
   "allFilter": "todos",
-  "enabled": "ativado",
-  "disabled": "desativado",
+  "enabled": "ativo",
+  "disabled": "inativo",
   "status": "status"
 }

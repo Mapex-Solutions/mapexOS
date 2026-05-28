@@ -86,7 +86,7 @@
   "columns": {
     "name": "nome",
     "value": "valor",
-    "category": "categoria",
+    "parent": "pai",
     "type": "tipo",
     "source": "origem",
     "scope": "escopo",
@@ -98,7 +98,7 @@
   },
   "menuColumns": {
     "organization": "organização",
-    "category": "categoria",
+    "parent": "pai",
     "type": "tipo",
     "source": "origem",
     "scope": "escopo"
@@ -199,12 +199,30 @@
       "name": "nome",
       "value": "valor",
       "enabled": "habilitado",
-      "isTemplate": "compartilhar como template"
+      "isTemplate": "compartilhar como template",
+      "status": {
+        "label": "status",
+        "placeholder": "selecione um status",
+        "hint": "define se este item da lista está disponível para uso",
+        "required": "status é obrigatório"
+      }
+    },
+    "hints": {
+      "type": "Define o nível na árvore: categoria, fabricante ou modelo.",
+      "parentForManufacturer": "Selecione a categoria à qual este fabricante pertence.",
+      "parentForModel": "Selecione o fabricante ao qual este modelo pertence.",
+      "name": "Nome legível exibido em toda a aplicação.",
+      "value": "Identificador usado nos payloads — apenas minúsculas, números e underline.",
+      "isTemplate": "Quando marcado, o item é propagado para organizações filhas como template reutilizável."
     },
     "typeOptions": {
       "asset_category": "categoria",
       "asset_manufacturer": "fabricante",
       "asset_model": "modelo"
+    },
+    "statusOptions": {
+      "active": { "label": "ativo", "value": true },
+      "inactive": { "label": "inativo", "value": false }
     },
     "validation": {
       "typeRequired": "selecione um tipo de lista",

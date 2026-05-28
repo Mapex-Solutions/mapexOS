@@ -48,7 +48,8 @@ func (s *ListService) CreateList(c ctx.Context, requestContext *reqCtx.RequestCo
 }
 
 // GetListById fetches a single list by id. Returns 404 when the id is
-// unknown.
+// unknown. The response is enriched with ParentName / ParentType so the
+// UI can show the parent hierarchy without an extra round-trip.
 func (s *ListService) GetListById(c ctx.Context, listId *string) (*dtos.ListResponse, error) {
 	listEntity, err := s.deps.Repo.FindById(c, listId)
 	if err != nil {
@@ -58,6 +59,7 @@ func (s *ListService) GetListById(c ctx.Context, listId *string) (*dtos.ListResp
 		return nil, &customErrors.ServerCustomError{Code: httpStatus.NOT_FOUND, Errors: []string{"List not found"}}
 	}
 	resp, _ := mapper.EntityToDto[entities.List, dtos.ListResponse](listEntity)
+	s.populateParentFields(c, []*dtos.ListResponse{resp}, []*entities.List{listEntity})
 	return resp, nil
 }
 
@@ -126,12 +128,64 @@ func (s *ListService) GetLists(c ctx.Context, requestContext *reqCtx.RequestCont
 	}
 
 	dtoItems := make([]dtos.ListResponse, len(result.Items))
-	for i, entity := range result.Items {
+	dtoPtrs := make([]*dtos.ListResponse, len(result.Items))
+	entityPtrs := make([]*entities.List, len(result.Items))
+	for i := range result.Items {
+		entity := result.Items[i]
 		dto, _ := mapper.EntityToDto[entities.List, dtos.ListResponse](&entity)
 		dtoItems[i] = *dto
+		dtoPtrs[i] = &dtoItems[i]
+		entityPtrs[i] = &result.Items[i]
 	}
+	s.populateParentFields(c, dtoPtrs, entityPtrs)
 	return &model.PaginatedResult[dtos.ListResponse]{
 		Items:      dtoItems,
 		Pagination: result.Pagination,
 	}, nil
+}
+
+// populateParentFields resolves ParentName / ParentType on the supplied
+// response DTOs by issuing one batched FindByIds against the parents.
+//
+// The DTO slice and the entity slice MUST line up index-by-index: the DTOs
+// are mutated in place and the entities are read for their ParentId.
+// Top-level items (ParentId == nil) are left untouched.
+func (s *ListService) populateParentFields(c ctx.Context, responses []*dtos.ListResponse, items []*entities.List) {
+	parentIDStrs := make([]string, 0, len(items))
+	for _, item := range items {
+		if item == nil || item.ParentId == nil || item.ParentId.IsZero() {
+			continue
+		}
+		parentIDStrs = append(parentIDStrs, item.ParentId.Hex())
+	}
+	if len(parentIDStrs) == 0 {
+		return
+	}
+
+	parents, err := s.deps.Repo.FindByIds(c, parentIDStrs)
+	if err != nil || len(parents) == 0 {
+		return
+	}
+
+	parentByID := make(map[string]*entities.List, len(parents))
+	for _, p := range parents {
+		if p == nil {
+			continue
+		}
+		parentByID[p.ID.Hex()] = p
+	}
+
+	for i, item := range items {
+		if item == nil || item.ParentId == nil || item.ParentId.IsZero() {
+			continue
+		}
+		parent, ok := parentByID[item.ParentId.Hex()]
+		if !ok {
+			continue
+		}
+		name := parent.Name
+		parentType := parent.Type
+		responses[i].ParentName = &name
+		responses[i].ParentType = &parentType
+	}
 }

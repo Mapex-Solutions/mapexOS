@@ -13,7 +13,7 @@ export const DEFAULT_ITEMS_PER_PAGE = 15;
 export const COLUMN_VISIBILITY_DEFAULTS = {
 	organization: true,
 	description: true,
-	category: true,
+	parent: true,
 	type: true,
 	items: true,
 	isTemplate: true,
@@ -25,4 +25,4 @@ export const COLUMN_VISIBILITY_DEFAULTS = {
 /**
  * API projection fields for lists query
  */
-export const LISTS_PROJECTION = 'name,category,type,description,items,enabled,isSystem,isTemplate,created,orgId' as const;
+export const LISTS_PROJECTION = 'name,value,type,parentId,parentName,parentType,enabled,isSystem,isTemplate,created,orgId' as const;

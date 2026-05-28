@@ -53,8 +53,8 @@
       "all": "todos",
       "active": "ativo",
       "inactive": "inativo",
-      "enabled": "habilitado",
-      "disabled": "desabilitado"
+      "enabled": "ativo",
+      "disabled": "inativo"
     },
     "isSystemOptions": {
       "all": "todos",

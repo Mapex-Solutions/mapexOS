@@ -44,7 +44,7 @@
     "options": {
       "all": "todos",
       "enabled": "ativo",
-      "disabled": "desativado",
+      "disabled": "inativo",
       "yes": "sim",
       "no": "não",
       "valid": "válido",
@@ -73,7 +73,7 @@
   },
   "status": {
     "enabled": "ativo",
-    "disabled": "desativado"
+    "disabled": "inativo"
   },
   "empty": {
     "title": "nenhum workflow encontrado",
@@ -85,7 +85,7 @@
   },
   "badges": {
     "active": "ativo",
-    "disabled": "desativado"
+    "disabled": "inativo"
   },
   "messages": {
     "deletedSuccessfully": "workflow excluído com sucesso",
@@ -119,7 +119,7 @@
     },
     "values": {
       "enabled": "ativo",
-      "disabled": "desativado",
+      "disabled": "inativo",
       "yes": "sim",
       "no": "não",
       "noDescription": "sem descrição fornecida"

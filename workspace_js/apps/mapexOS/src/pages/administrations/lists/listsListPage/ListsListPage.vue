@@ -269,7 +269,7 @@ const hasActiveFilters = computed(() => {
 
 const menuColumns = computed(() => {
 	const cols: ListHeaderMenuColumn[] = [
-		{ key: 'category', label: t.menuColumns.category.value, visible: columnVisibilityState.value.category },
+		{ key: 'parent', label: t.menuColumns.parent.value, visible: columnVisibilityState.value.parent },
 		{ key: 'type', label: t.menuColumns.type.value, visible: columnVisibilityState.value.type },
 		{ key: 'source', label: t.menuColumns.source.value, visible: columnVisibilityState.value.source },
 		{ key: 'scope', label: t.menuColumns.scope.value, visible: columnVisibilityState.value.scope },
@@ -295,9 +295,9 @@ const visibleColumns = computed(() => {
 			return true;
 		}
 
-		// Category column (always visible)
-		if (col.key === 'category') {
-			return columnVisibilityState.value.category;
+		// Parent column (shows the parentName resolved by the backend)
+		if (col.key === 'parentName') {
+			return columnVisibilityState.value.parent;
 		}
 
 		// Type column
@@ -627,7 +627,7 @@ function handleItemsPerPageChange(newValue: number): void {
 function handleColumnsUpdate(columns: ListHeaderMenuColumn[]): void {
 	columns.forEach(col => {
 		if (col.key === 'organization') columnVisibilityState.value.organization = col.visible;
-		if (col.key === 'category') columnVisibilityState.value.category = col.visible;
+		if (col.key === 'parent') columnVisibilityState.value.parent = col.visible;
 		if (col.key === 'type') columnVisibilityState.value.type = col.visible;
 		if (col.key === 'source') columnVisibilityState.value.source = col.visible;
 		if (col.key === 'scope') columnVisibilityState.value.scope = col.visible;

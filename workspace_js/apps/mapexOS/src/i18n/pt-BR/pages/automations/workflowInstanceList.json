@@ -39,7 +39,7 @@
     "options": {
       "all": "todos",
       "enabled": "ativo",
-      "disabled": "desativado",
+      "disabled": "inativo",
       "yes": "sim",
       "no": "não"
     }
@@ -61,7 +61,7 @@
   },
   "status": {
     "enabled": "ativo",
-    "disabled": "desativado"
+    "disabled": "inativo"
   },
   "empty": {
     "title": "nenhuma instância encontrada",
@@ -73,7 +73,7 @@
   },
   "badges": {
     "active": "ativo",
-    "disabled": "desativado"
+    "disabled": "inativo"
   },
   "messages": {
     "deletedSuccessfully": "instância excluída com sucesso",
@@ -116,7 +116,7 @@
     },
     "values": {
       "enabled": "ativo",
-      "disabled": "desativado",
+      "disabled": "inativo",
       "unique": "único",
       "notApplicable": "N/A",
       "noDescription": "sem descrição fornecida"
