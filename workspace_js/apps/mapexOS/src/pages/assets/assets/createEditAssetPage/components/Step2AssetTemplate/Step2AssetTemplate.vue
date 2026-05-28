@@ -18,9 +18,9 @@
       readonly
       class="rounded-borders cursor-pointer"
       data-testid="asset-template-input"
-      label="Asset Template *"
-      placeholder="Click to select a template..."
-      :rules="[(val: any) => !!val || 'Asset template is required']"
+      :label="`${t.steps.step2.fields.assetTemplateId.label.value} *`"
+      :placeholder="t.steps.step2.fields.assetTemplateId.placeholder.value"
+      :rules="[(val: any) => !!val || t.steps.step2.fields.assetTemplateId.required.value]"
       @click="showTemplateDrawer = true"
     >
       <template #prepend>
@@ -34,14 +34,14 @@
           data-testid="asset-template-clear-btn"
           @click.stop="clearTemplate"
         >
-          <AppTooltip content="Clear selection" />
+          <AppTooltip :content="t.steps.step2.fields.assetTemplateId.clearTooltip.value" />
         </q-icon>
         <q-icon
           name="search"
           class="cursor-pointer"
           @click.stop="showTemplateDrawer = true"
         >
-          <AppTooltip content="Search templates" />
+          <AppTooltip :content="t.steps.step2.fields.assetTemplateId.searchTooltip.value" />
         </q-icon>
       </template>
     </q-input>
@@ -51,16 +51,16 @@
       <q-card-section class="q-pa-md">
         <div class="row items-center q-mb-sm">
           <q-icon name="description" color="primary" size="sm" class="q-mr-xs" />
-          <div class="text-subtitle2 text-weight-medium">Selected Template Details</div>
+          <div class="text-subtitle2 text-weight-medium">{{ t.steps.step2.preview.detailsTitle.value }}</div>
         </div>
         <div class="text-body2 q-mb-xs">
-          <strong>Name:</strong> {{ selectedTemplate.name }}
+          <strong>{{ t.steps.step2.preview.nameLabel.value }}:</strong> {{ selectedTemplate.name }}
         </div>
         <div v-if="selectedTemplate.description" class="text-body2 q-mb-xs">
-          <strong>Description:</strong> {{ selectedTemplate.description }}
+          <strong>{{ t.steps.step2.preview.descriptionLabel.value }}:</strong> {{ selectedTemplate.description }}
         </div>
         <div v-if="selectedTemplate.assetIdPath" class="text-body2 q-mb-sm">
-          <strong>UUID Path:</strong> <code class="path-code">{{ selectedTemplate.assetIdPath }}</code>
+          <strong>{{ t.steps.step2.preview.uuidPathLabel.value }}:</strong> <code class="path-code">{{ selectedTemplate.assetIdPath }}</code>
         </div>
 
         <!-- Chips Section -->
@@ -69,7 +69,7 @@
           <DetailChip
             :color="selectedTemplate.enabled ? 'positive' : 'grey'"
             size="sm"
-            :label="selectedTemplate.enabled ? 'ACTIVE' : 'INACTIVE'"
+            :label="selectedTemplate.enabled ? t.steps.step2.preview.statusActive.value : t.steps.step2.preview.statusInactive.value"
           />
 
           <!-- Assets IoT Chip (if template has this category indicator) -->

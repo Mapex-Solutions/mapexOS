@@ -320,9 +320,9 @@
             <q-input
               v-model="newGroupName"
               outlined
-              label="Group Name *"
-              placeholder="Enter group name"
-              :rules="[(v: string) => !!v || 'Group name is required', (v: string) => v.length >= 3 || 'Minimum 3 characters']"
+              :label="`${t.fields.newGroupName.value} *`"
+              :placeholder="t.placeholders.newGroupName.value"
+              :rules="[(v: string) => !!v || t.validation.newGroupNameRequired.value, (v: string) => v.length >= 3 || t.validation.newGroupNameMinLength.value]"
               lazy-rules
             >
               <template #prepend>
@@ -336,8 +336,8 @@
             <q-input
               v-model="newGroupDescription"
               outlined
-              label="Description"
-              placeholder="Optional description for the group"
+              :label="t.fields.newGroupDescription.value"
+              :placeholder="t.placeholders.newGroupDescription.value"
               type="textarea"
               rows="2"
             >
@@ -350,7 +350,7 @@
           <!-- Role Selection for New Group -->
           <div class="col-12">
             <div class="text-body2 text-weight-medium q-mb-xs">
-              Roles for the new group *
+              {{ t.fields.newGroupRoles.value }} *
             </div>
             <div
               class="selector-field rounded-borders cursor-pointer"

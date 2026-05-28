@@ -1,34 +1,34 @@
 {
-  "title": "lakehouse",
-  "description": "adicionar novo canal de lakehouse",
-  "backButton": "voltar para lakehouses",
+  "title": "Data Lake",
+  "description": "Adicione um novo canal de Data Lake",
+  "backButton": "Voltar para Data Lakes",
   "steps": {
     "general": "informações gerais",
-    "provider": "seleção de provedor",
+    "provider": "escolha do provedor",
     "credentials": "credenciais",
-    "pathConfig": "configuração de caminho",
+    "pathConfig": "configuração do caminho",
     "frequency": "frequência",
     "review": "revisão"
   },
   "stepDescriptions": {
-    "general": "informações básicas do lakehouse",
-    "provider": "selecione seu provedor de armazenamento em nuvem",
-    "credentials": "configurar credenciais de autenticação",
-    "pathConfig": "configurar configurações de caminho de armazenamento",
-    "frequency": "definir frequência de upload",
-    "review": "revisar e confirmar detalhes do lakehouse"
+    "general": "dados básicos do Data Lake",
+    "provider": "escolha o provedor de armazenamento em nuvem",
+    "credentials": "informe as credenciais de autenticação",
+    "pathConfig": "defina o caminho e o padrão dos arquivos",
+    "frequency": "defina a frequência de envio",
+    "review": "revise e confirme os dados do Data Lake"
   },
   "formDescriptions": {
-    "general": "insira as informações básicas do lakehouse",
-    "provider": "selecione seu provedor de armazenamento em nuvem preferido",
-    "credentials": "insira as credenciais de autenticação para seu provedor",
-    "pathConfig": "configure o caminho de armazenamento e configurações de arquivo",
-    "frequency": "defina a frequência e cronograma de upload",
-    "review": "revise e confirme os detalhes do lakehouse antes da criação"
+    "general": "preencha as informações básicas do Data Lake",
+    "provider": "selecione o provedor de armazenamento em nuvem",
+    "credentials": "informe as credenciais de acesso ao provedor",
+    "pathConfig": "configure o caminho de armazenamento e o padrão dos arquivos",
+    "frequency": "defina a frequência e o cronograma de envio",
+    "review": "revise e confirme os dados antes de criar o Data Lake"
   },
   "stepper": {
-    "title": "configurar lakehouse",
-    "subtitle": "complete todas as etapas para criar um novo lakehouse"
+    "title": "Configurar Data Lake",
+    "subtitle": "Complete todas as etapas para criar um novo Data Lake"
   },
   "fields": {
     "type": "tipo",

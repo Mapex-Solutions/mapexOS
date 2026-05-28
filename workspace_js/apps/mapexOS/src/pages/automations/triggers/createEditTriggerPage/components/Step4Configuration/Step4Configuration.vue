@@ -21,6 +21,7 @@ import TeamsConfig from './configs/TeamsConfig.vue';
 import SlackConfig from './configs/SlackConfig.vue';
 
 /** COMPOSABLES */
+import { useCreateEditTriggerTranslations } from '@composables/i18n/pages/automations/triggers/createEditTrigger';
 
 /** UTILS */
 
@@ -40,6 +41,10 @@ const emit = defineEmits<{
 }>();
 
 /** COMPOSABLES & STORES */
+const t = useCreateEditTriggerTranslations();
+
+/** CONSTANTS */
+const PLACEHOLDER_SAMPLE = '{{placeholderName}}';
 
 /** STATE */
 
@@ -130,8 +135,8 @@ defineExpose({
           <q-icon name="info" color="blue-7" />
         </template>
         <div class="text-body2">
-          <strong>Placeholder Syntax:</strong> Use <code v-text="'{{placeholderName}}'"></code> for dynamic values that will be resolved at runtime.
-          Example: <code v-text="'{{deviceId}}'"></code> or <code v-text="'{{threshold}}'"></code>
+          <strong>{{ t.steps.step4.placeholderSyntaxTitle.value }}</strong>
+          {{ t.steps.step4.placeholderSyntaxDescription(PLACEHOLDER_SAMPLE) }}
         </div>
       </q-banner>
     </q-form>

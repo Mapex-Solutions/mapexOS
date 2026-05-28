@@ -1,7 +1,7 @@
 {
-  "title": "lakehouse",
-  "description": "add new lakehouse channel",
-  "backButton": "back to lakehouses",
+  "title": "Data Lake",
+  "description": "Add a new Data Lake channel",
+  "backButton": "Back to Data Lakes",
   "steps": {
     "general": "general information",
     "provider": "provider selection",
@@ -11,24 +11,24 @@
     "review": "review"
   },
   "stepDescriptions": {
-    "general": "basic lakehouse information",
+    "general": "basic Data Lake information",
     "provider": "select your cloud storage provider",
     "credentials": "configure authentication credentials",
     "pathConfig": "configure storage path settings",
     "frequency": "set upload frequency",
-    "review": "review and confirm lakehouse details"
+    "review": "review and confirm Data Lake details"
   },
   "formDescriptions": {
-    "general": "enter the lakehouse's basic information",
+    "general": "enter the Data Lake's basic information",
     "provider": "select your preferred cloud storage provider",
     "credentials": "enter authentication credentials for your provider",
     "pathConfig": "configure storage path and file settings",
     "frequency": "set the upload frequency and schedule",
-    "review": "review and confirm lakehouse details before creation"
+    "review": "review and confirm Data Lake details before creation"
   },
   "stepper": {
-    "title": "configure lakehouse",
-    "subtitle": "complete all steps to create a new lakehouse"
+    "title": "Configure Data Lake",
+    "subtitle": "Complete all steps to create a new Data Lake"
   },
   "fields": {
     "type": "type",

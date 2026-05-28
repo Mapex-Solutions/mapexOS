@@ -51,9 +51,11 @@
       "fields": {
         "assetTemplateId": {
           "label": "asset template",
-          "placeholder": "select a template",
+          "placeholder": "click to select a template...",
           "hint": "template that defines manufacturer, model and handler",
-          "required": "asset template is required"
+          "required": "asset template is required",
+          "clearTooltip": "clear selection",
+          "searchTooltip": "search templates"
         }
       },
       "banner": {
@@ -62,10 +64,16 @@
       },
       "preview": {
         "title": "template preview",
+        "detailsTitle": "selected template details",
+        "nameLabel": "name",
+        "descriptionLabel": "description",
+        "uuidPathLabel": "UUID path",
         "manufacturer": "manufacturer",
         "model": "model",
         "version": "version",
         "status": "status",
+        "statusActive": "ACTIVE",
+        "statusInactive": "INACTIVE",
         "noTemplateSelected": "no template selected"
       }
     },
@@ -80,7 +88,17 @@
       },
       "labels": {
         "systemTemplate": "System Template",
-        "sharedTemplate": "Shared Template"
+        "sharedTemplate": "Shared Template",
+        "selectedHeader": "selected route groups",
+        "noneSelected": "no route groups selected yet",
+        "routersConfigured": "{count} routers configured",
+        "selectedCountSingular": "{count} route group selected",
+        "selectedCountPlural": "{count} route groups selected",
+        "routingExplanation": "asset data will be routed through these route groups to different destinations."
+      },
+      "buttons": {
+        "select": "select route groups",
+        "clearAll": "clear all"
       }
     },
     "step4": {
@@ -91,7 +109,15 @@
       "certificate": {
         "activeTitle": "Active certificate",
         "revokedTitle": "Revoked certificates",
-        "revokedEmpty": "No revoked certificates for this asset."
+        "revokedEmpty": "No revoked certificates for this asset.",
+        "noActiveCert": "No active certificate. Click Generate to issue a new one.",
+        "fieldSerial": "Serial",
+        "fieldFingerprint": "Fingerprint",
+        "fieldSubjectCN": "Subject CN",
+        "fieldIssued": "Issued",
+        "fieldExpires": "Expires",
+        "revokeButton": "Revoke",
+        "revokeConfirm": "Revoke this certificate?"
       },
       "fields": {
         "protocol": {

@@ -178,7 +178,8 @@
         }
       },
       "buttons": {
-        "loadExample": "LOAD EXAMPLE"
+        "loadExample": "LOAD EXAMPLE",
+        "loadExampleTooltip": "Load example test payload"
       },
       "banner": {
         "info": "This payload will be used to test all your scripts (preprocessor, validation, conversion, and test script)."

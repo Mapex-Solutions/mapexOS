@@ -111,6 +111,9 @@ export function useCreateEditTriggerTranslations() {
         description: computed(() => tsRaw('pages.automations.createEditTrigger.steps.step4.description')),
         comingSoon: computed(() => tsRaw('pages.automations.createEditTrigger.steps.step4.comingSoon')),
         comingSoonDetail: computed(() => tsRaw('pages.automations.createEditTrigger.steps.step4.comingSoonDetail')),
+        placeholderSyntaxTitle: computed(() => tsRaw('pages.automations.createEditTrigger.steps.step4.placeholderSyntaxTitle')),
+        placeholderSyntaxDescription: (syntax: string) =>
+          tsRaw('pages.automations.createEditTrigger.steps.step4.placeholderSyntaxDescription', { syntax }),
       },
 
       /**

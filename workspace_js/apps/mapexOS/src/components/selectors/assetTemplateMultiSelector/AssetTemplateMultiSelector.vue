@@ -18,9 +18,11 @@ import { apis } from '@services/mapex';
 
 /** COMPOSABLES */
 import { useAssetTemplates } from '@composables/assets/assetTemplates';
+import { useCommonPlaceholders } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 const logger = useLogger('AssetTemplateMultiSelector');
+const { placeholders } = useCommonPlaceholders();
 
 /** PROPS & EMITS */
 const props = withDefaults(defineProps<AssetTemplateMultiSelectorProps>(), {
@@ -364,7 +366,7 @@ onMounted(async () => {
                 dense
                 class="rounded-borders"
                 label="Search by name"
-                placeholder="Type to search..."
+                :placeholder="placeholders.typeToSearch.value"
                 clearable
                 @update:model-value="onFilterChange"
               >

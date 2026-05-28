@@ -63,6 +63,9 @@ export function useAddUserTranslations() {
       accessType: computed(() => ts('pages.administrations.addUser.fields.accessType')),
       selectGroup: computed(() => ts('pages.administrations.addUser.fields.selectGroup')),
       directMemberships: computed(() => ts('pages.administrations.addUser.fields.directMemberships')),
+      newGroupName: computed(() => ts('pages.administrations.addUser.fields.newGroupName')),
+      newGroupDescription: computed(() => ts('pages.administrations.addUser.fields.newGroupDescription')),
+      newGroupRoles: computed(() => ts('pages.administrations.addUser.fields.newGroupRoles')),
     },
 
     labels: {
@@ -80,6 +83,8 @@ export function useAddUserTranslations() {
       selectGroup: computed(() => ts('pages.administrations.addUser.placeholders.selectGroup')),
       noGroupsSelected: computed(() => ts('pages.administrations.addUser.placeholders.noGroupsSelected')),
       noMembershipsSelected: computed(() => ts('pages.administrations.addUser.placeholders.noMembershipsSelected')),
+      newGroupName: computed(() => ts('pages.administrations.addUser.placeholders.newGroupName')),
+      newGroupDescription: computed(() => ts('pages.administrations.addUser.placeholders.newGroupDescription')),
     },
 
     hints: {
@@ -203,6 +208,8 @@ export function useAddUserTranslations() {
       passwordMismatch: computed(() => ts('pages.administrations.addUser.validation.passwordMismatch')),
       organizationRequired: computed(() => ts('pages.administrations.addUser.validation.organizationRequired')),
       rolesRequired: computed(() => ts('pages.administrations.addUser.validation.rolesRequired')),
+      newGroupNameRequired: computed(() => ts('pages.administrations.addUser.validation.newGroupNameRequired')),
+      newGroupNameMinLength: computed(() => ts('pages.administrations.addUser.validation.newGroupNameMinLength')),
     },
 
     errors: {

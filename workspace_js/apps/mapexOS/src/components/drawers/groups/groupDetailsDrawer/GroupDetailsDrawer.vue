@@ -337,7 +337,7 @@ import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
-import { useGroupsTranslations } from '@composables/i18n';
+import { useGroupsTranslations, useCommonErrors } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** SERVICES */
@@ -355,6 +355,7 @@ const emit = defineEmits<GroupDetailsDrawerEmits>();
 
 /** COMPOSABLES & STORES */
 const t = useGroupsTranslations();
+const errors = useCommonErrors();
 const router = useRouter();
 const logger = useLogger('GroupDetailsDrawer');
 const orgStore = useOrganizationStore();
@@ -388,7 +389,7 @@ function handleEscKey(event: KeyboardEvent): void {
 async function fetchGroupDetails(groupId: string): Promise<void> {
   if (!apis.mapexOS?.groups) {
     error.value = true;
-    notifyFail({ message: 'Groups API not initialized' });
+    notifyFail({ message: errors.apiNotInitialized.value });
     return;
   }
 

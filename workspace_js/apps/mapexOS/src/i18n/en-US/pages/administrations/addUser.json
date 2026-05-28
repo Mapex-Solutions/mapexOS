@@ -41,7 +41,10 @@
     "scope": "access scope",
     "accessType": "access type",
     "selectGroup": "select group",
-    "directMemberships": "direct memberships"
+    "directMemberships": "direct memberships",
+    "newGroupName": "group name",
+    "newGroupDescription": "description",
+    "newGroupRoles": "roles for the new group"
   },
   "labels": {
     "optional": "optional",
@@ -56,7 +59,9 @@
     "selectRoles": "click to select roles...",
     "selectGroup": "click to select group (optional)...",
     "noGroupsSelected": "no groups selected",
-    "noMembershipsSelected": "no direct memberships configured"
+    "noMembershipsSelected": "no direct memberships configured",
+    "newGroupName": "enter group name",
+    "newGroupDescription": "optional description for the group"
   },
   "hints": {
     "phoneFormat": "phone number in E.164 format (e.g., +1234567890)",
@@ -166,7 +171,9 @@
     "passwordMaxLength": "password must be at most 72 characters",
     "passwordMismatch": "passwords do not match",
     "organizationRequired": "organization is required",
-    "rolesRequired": "at least one role is required"
+    "rolesRequired": "at least one role is required",
+    "newGroupNameRequired": "group name is required",
+    "newGroupNameMinLength": "group name must have at least 3 characters"
   },
   "errors": {
     "apiNotInitialized": "Users API is not available",

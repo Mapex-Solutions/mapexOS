@@ -381,7 +381,7 @@ import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
-import { useAssetTemplatesTranslations } from '@composables/i18n';
+import { useAssetTemplatesTranslations, useCommonErrors } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** UTILS */
@@ -397,6 +397,7 @@ const emit = defineEmits<AssetTemplateDetailsDrawerEmits>();
 
 /** COMPOSABLES & STORES */
 const t = useAssetTemplatesTranslations();
+const errors = useCommonErrors();
 const logger = useLogger('AssetTemplateDetailsDrawer');
 
 /** STATE */
@@ -440,7 +441,7 @@ watch(() => props.modelValue, (isOpen) => {
 async function fetchTemplateDetails(templateId: string): Promise<void> {
   if (!apis.assets) {
     error.value = true;
-    notifyFail({ message: 'Assets API not initialized' });
+    notifyFail({ message: errors.apiNotInitialized.value });
     return;
   }
 

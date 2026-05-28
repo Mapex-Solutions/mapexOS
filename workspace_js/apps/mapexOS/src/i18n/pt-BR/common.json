@@ -72,5 +72,11 @@
     "invalidPhone": "Número de telefone inválido",
     "minLength": "{field} deve ter pelo menos {min} caracteres",
     "maxLength": "{field} não deve exceder {max} caracteres"
+  },
+  "placeholders": {
+    "searchFields": "Buscar campos...",
+    "search": "Buscar...",
+    "typeToSearch": "Digite para buscar...",
+    "searchByName": "Buscar por nome..."
   }
 }

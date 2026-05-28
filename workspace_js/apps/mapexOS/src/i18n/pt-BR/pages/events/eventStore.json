@@ -1,6 +1,6 @@
 {
   "pageHeader": {
-    "title": "Armazenamento de Eventos",
+    "title": "Histórico de Eventos",
     "description": "Pesquise e navegue pelos eventos armazenados dos seus ativos"
   },
   "listHeader": {
@@ -56,7 +56,7 @@
   },
   "tour": {
     "header": {
-      "title": "Armazenamento de Eventos",
+      "title": "Histórico de Eventos",
       "description": "Esta página mostra todos os eventos processados dos seus ativos. Os eventos são armazenados com campos dinâmicos que você pode filtrar e explorar."
     },
     "searchInput": {

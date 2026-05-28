@@ -52,7 +52,7 @@
     "workflowExecutions": "Execuções de Workflow",
     "dlq": "Fila de Mensagens Mortas",
     "events": "Eventos",
-    "eventStore": "Armazém de Eventos",
+    "eventStore": "Histórico de Eventos",
     "administration": "Administração",
     "customers": "Clientes",
     "users": "Usuários",

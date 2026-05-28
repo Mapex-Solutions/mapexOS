@@ -347,7 +347,7 @@ import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
-import { useCustomersTranslations } from '@composables/i18n';
+import { useCustomersTranslations, useCommonErrors } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** SERVICES */
@@ -360,6 +360,7 @@ const props = defineProps<CustomerDetailsDrawerProps>();
 const emit = defineEmits<CustomerDetailsDrawerEmits>();
 
 const t = useCustomersTranslations();
+const errors = useCommonErrors();
 const logger = useLogger('CustomerDetailsDrawer');
 
 // Component state
@@ -388,7 +389,7 @@ onBeforeUnmount(() => {
 async function fetchCustomerDetails(customerId: string) {
   if (!apis.mapexOS?.organizations) {
     error.value = true;
-    notifyFail({ message: 'Organizations API not initialized' });
+    notifyFail({ message: errors.apiNotInitialized.value });
     return;
   }
 

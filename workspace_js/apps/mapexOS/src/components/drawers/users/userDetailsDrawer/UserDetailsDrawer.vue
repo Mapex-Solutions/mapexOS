@@ -396,7 +396,7 @@ import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
-import { useUsersTranslations } from '@composables/i18n';
+import { useUsersTranslations, useCommonErrors } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** SERVICES */
@@ -409,6 +409,7 @@ const props = defineProps<UserDetailsDrawerProps>();
 const emit = defineEmits<UserDetailsDrawerEmits>();
 
 const t = useUsersTranslations();
+const errors = useCommonErrors();
 const logger = useLogger('UserDetailsDrawer');
 
 // Component state
@@ -438,7 +439,7 @@ onBeforeUnmount(() => {
 async function fetchUserDetails(userId: string) {
   if (!apis.mapexOS?.users) {
     error.value = true;
-    notifyFail({ message: 'Users API not initialized' });
+    notifyFail({ message: errors.apiNotInitialized.value });
     return;
   }
 

@@ -3,19 +3,32 @@ defineOptions({
   name: 'MapexValidationHelpModal'
 });
 
-import { ref, computed } from 'vue';
-import { copyToClipboard } from 'quasar';
-import { AppTooltip } from '@components/tooltips';
-import { AppTabs } from '@components/tabs';
-import { notifySuccess, notifyFail } from '@utils/alert/notify';
+/** TYPE IMPORTS */
 import type {
   MapexValidationHelpProps,
   MapexValidationHelpEmits,
 } from './interfaces';
 
-// Props & Emits
+/** VUE IMPORTS */
+import { ref, computed } from 'vue';
+import { copyToClipboard } from 'quasar';
+
+/** COMPONENTS */
+import { AppTooltip } from '@components/tooltips';
+import { AppTabs } from '@components/tabs';
+
+/** COMPOSABLES */
+import { useCommonPlaceholders } from '@composables/i18n';
+
+/** UTILS */
+import { notifySuccess, notifyFail } from '@utils/alert/notify';
+
+/** PROPS & EMITS */
 const props = defineProps<MapexValidationHelpProps>();
 const emit = defineEmits<MapexValidationHelpEmits>();
+
+/** COMPOSABLES & STORES */
+const { placeholders } = useCommonPlaceholders();
 
 // State
 const activeTab = ref('overview');
@@ -1125,7 +1138,7 @@ const performSearch = () => {
           v-model="searchQuery"
           outlined
           dense
-          placeholder="Search methods, examples, or keywords..."
+          :placeholder="placeholders.search.value"
           clearable
           @update:model-value="performSearch"
         >

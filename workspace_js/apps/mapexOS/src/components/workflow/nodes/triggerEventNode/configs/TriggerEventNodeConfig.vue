@@ -22,6 +22,7 @@ import { EventFieldInput } from '@components/forms/eventFieldInput';
 
 /** COMPOSABLES */
 import { usePluginI18n } from '@src/composables/workflow';
+import { useCommonPlaceholders } from '@composables/i18n';
 
 /** UTILS */
 import { handleApiError } from '@utils/error';
@@ -39,6 +40,7 @@ const emit = defineEmits<NodeConfigComponentEmits>();
 
 /** COMPOSABLES & STORES */
 const { t } = usePluginI18n('core-triggers');
+const { placeholders } = useCommonPlaceholders();
 
 /** STATE */
 
@@ -584,7 +586,7 @@ onMounted(async () => {
       :multi-select="false"
       :selected-ids="selectedFieldIds"
       :loading="fetchingFields"
-      search-placeholder="Search fields..."
+      :search-placeholder="placeholders.searchFields.value"
       empty-text="No fields available from selected templates."
       empty-icon="inbox"
       results-icon="list_alt"

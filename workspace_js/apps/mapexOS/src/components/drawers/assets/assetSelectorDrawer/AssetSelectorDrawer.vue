@@ -15,6 +15,7 @@ import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
 import { useAssets } from '@composables/assets/assets';
+import { useCommonPlaceholders } from '@composables/i18n';
 
 /** PROPS & EMITS */
 const props = withDefaults(defineProps<AssetSelectorDrawerProps>(), {
@@ -42,6 +43,7 @@ const {
   handleCategoryChange,
   handleManufacturerChange,
 } = useAssets();
+const { placeholders } = useCommonPlaceholders();
 
 /** STATE */
 const selectedAsset = ref<AssetResponse | null>(null);
@@ -203,7 +205,7 @@ function handleCancel(): void {
               dense
               class="rounded-borders"
               label="Search by name"
-              placeholder="Type to search..."
+              :placeholder="placeholders.typeToSearch.value"
               clearable
               @update:model-value="onFilterChange"
             >

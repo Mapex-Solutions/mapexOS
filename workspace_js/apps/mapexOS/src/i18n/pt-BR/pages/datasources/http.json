@@ -192,7 +192,12 @@
 			},
 			"protocolConfig": {
 				"gatewayBannerTitle": "HTTP Gateway:",
-				"gatewayBannerBody": "Esta fonte de dados utiliza protocolo HTTP/HTTPS exclusivamente. Apenas o modo Push está disponível, no qual os dispositivos enviam dados para o endpoint do MapexOS."
+				"gatewayBannerBody": "Esta fonte de dados utiliza protocolo HTTP/HTTPS exclusivamente. Apenas o modo Push está disponível, no qual os dispositivos enviam dados para o endpoint do MapexOS.",
+				"modeLabel": "Modo",
+				"modeRequired": "Selecione um modo",
+				"pushModeHint": "Modo Push: os dispositivos enviam dados para este endpoint via requisições HTTP POST.",
+				"protocolLabel": "Protocolo",
+				"protocolFixedHint": "O protocolo HTTP/HTTPS é fixo para este tipo de gateway"
 			}
 		},
 		"navigation": {

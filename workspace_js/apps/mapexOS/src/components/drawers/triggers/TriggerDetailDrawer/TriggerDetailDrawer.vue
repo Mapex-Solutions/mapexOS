@@ -228,6 +228,7 @@ import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
+import { useCommonErrors } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** UTILS */
@@ -236,6 +237,7 @@ import { notifyFail } from '@utils/alert';
 /** SERVICES */
 import { apis } from '@services/mapex';
 
+const errors = useCommonErrors();
 const logger = useLogger('TriggerDetailDrawer');
 
 /** PROPS & EMITS */
@@ -301,7 +303,7 @@ watch(() => props.modelValue, (isOpen) => {
 async function fetchTriggerDetails(triggerId: string): Promise<void> {
   if (!apis.triggers) {
     error.value = true;
-    notifyFail({ message: 'Triggers API not initialized' });
+    notifyFail({ message: errors.apiNotInitialized.value });
     return;
   }
 
@@ -315,7 +317,7 @@ async function fetchTriggerDetails(triggerId: string): Promise<void> {
   } catch (err: unknown) {
     logger.error('Error fetching trigger details:', err);
     error.value = true;
-    notifyFail({ message: 'Failed to load trigger details' });
+    notifyFail({ message: errors.loadFailed.value });
   } finally {
     loading.value = false;
   }

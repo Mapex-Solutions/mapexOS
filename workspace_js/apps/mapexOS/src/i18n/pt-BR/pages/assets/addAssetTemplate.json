@@ -178,7 +178,8 @@
         }
       },
       "buttons": {
-        "loadExample": "CARREGAR EXEMPLO"
+        "loadExample": "CARREGAR EXEMPLO",
+        "loadExampleTooltip": "Carregar um payload de teste de exemplo"
       },
       "banner": {
         "info": "Este payload será usado para testar todos os seus scripts (pré-processador, validação, conversão e script de teste)."
@@ -412,7 +413,7 @@
     },
     "dynamicFields": {
       "title": "Campos Dinâmicos (Opcional)",
-      "description": "Como o MapexOS é genérico, você pode selecionar campos do seu payload para usar na busca e filtragem de eventos. Esses campos se tornam consultáveis no Event Store."
+      "description": "Como o MapexOS é genérico, você pode selecionar campos do seu payload para usar na busca e filtragem de eventos. Esses campos ficam consultáveis no Histórico de Eventos."
     },
     "review": {
       "title": "Revisão",

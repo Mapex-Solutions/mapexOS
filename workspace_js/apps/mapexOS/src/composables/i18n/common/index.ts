@@ -6,5 +6,7 @@
  */
 
 export { useCommonActions } from './useCommonActions';
+export { useCommonErrors } from './useCommonErrors';
 export { useCommonLabels } from './useCommonLabels';
 export { useCommonMessages } from './useCommonMessages';
+export { useCommonPlaceholders } from './useCommonPlaceholders';

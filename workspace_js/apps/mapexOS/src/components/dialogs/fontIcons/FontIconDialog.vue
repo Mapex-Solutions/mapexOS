@@ -9,6 +9,9 @@ import type { FontIconDialogProps, FontIconDialogEvents, FontIconData } from './
 /** VUE IMPORTS */
 import { ref, computed, onMounted, watch } from 'vue';
 
+/** COMPOSABLES */
+import { useCommonPlaceholders } from '@composables/i18n';
+
 /** LOCAL IMPORTS (constants and handlers ONLY) */
 import { CATEGORY_ICON_MAP, CATEGORY_DESCRIPTION_MAP } from './constants';
 import iconsData from './fonts/icons.json';
@@ -16,6 +19,9 @@ import iconsData from './fonts/icons.json';
 /** PROPS & EMITS */
 const props = defineProps<FontIconDialogProps>();
 const emit = defineEmits<FontIconDialogEvents>();
+
+/** COMPOSABLES & STORES */
+const { placeholders } = useCommonPlaceholders();
 
 /** STATE */
 
@@ -267,7 +273,7 @@ onMounted(() => {
                   outlined
                   dense
                   class="q-mb-md"
-                  placeholder="Search icons..."
+                  :placeholder="placeholders.search.value"
                 >
                   <template #prepend>
                     <q-icon name="search" color="primary" />

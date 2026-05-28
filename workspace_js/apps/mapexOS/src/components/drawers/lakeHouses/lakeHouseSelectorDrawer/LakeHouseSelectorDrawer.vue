@@ -13,9 +13,11 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { DetailChip } from '@components/chips';
 
 /** COMPOSABLES */
+import { useCommonPlaceholders } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 const logger = useLogger('LakeHouseSelectorDrawer');
+const { placeholders } = useCommonPlaceholders();
 
 /** PROPS & EMITS */
 const props = withDefaults(defineProps<LakeHouseSelectorDrawerProps>(), {
@@ -351,7 +353,7 @@ onBeforeUnmount(() => {
               outlined
               dense
               label="Search by name"
-              placeholder="Type to search..."
+              :placeholder="placeholders.typeToSearch.value"
               clearable
               class="rounded-borders"
             >

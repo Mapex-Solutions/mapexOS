@@ -41,7 +41,10 @@
     "scope": "escopo de acesso",
     "accessType": "tipo de acesso",
     "selectGroup": "selecionar grupo",
-    "directMemberships": "membros diretos"
+    "directMemberships": "membros diretos",
+    "newGroupName": "nome do grupo",
+    "newGroupDescription": "descrição",
+    "newGroupRoles": "funções do novo grupo"
   },
   "labels": {
     "optional": "opcional",
@@ -56,7 +59,9 @@
     "selectRoles": "clique para selecionar papéis...",
     "selectGroup": "clique para selecionar grupo (opcional)...",
     "noGroupsSelected": "nenhum grupo selecionado",
-    "noMembershipsSelected": "nenhuma associação direta configurada"
+    "noMembershipsSelected": "nenhuma associação direta configurada",
+    "newGroupName": "informe o nome do grupo",
+    "newGroupDescription": "descrição opcional do grupo"
   },
   "hints": {
     "phoneFormat": "número de telefone no formato E.164 (ex: +5511999999999)",
@@ -166,7 +171,9 @@
     "passwordMaxLength": "senha deve ter no máximo 72 caracteres",
     "passwordMismatch": "as senhas não coincidem",
     "organizationRequired": "organização é obrigatória",
-    "rolesRequired": "pelo menos um papel é obrigatório"
+    "rolesRequired": "pelo menos um papel é obrigatório",
+    "newGroupNameRequired": "informe o nome do grupo",
+    "newGroupNameMinLength": "o nome do grupo precisa ter pelo menos 3 caracteres"
   },
   "errors": {
     "apiNotInitialized": "API de usuários não está disponível",

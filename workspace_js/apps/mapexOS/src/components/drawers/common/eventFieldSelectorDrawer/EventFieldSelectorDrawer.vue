@@ -17,6 +17,7 @@ import { ref, computed, watch, onBeforeUnmount } from 'vue';
 import { GenericDrawer } from '@components/drawers/common/genericDrawer';
 
 /** COMPOSABLES */
+import { useCommonPlaceholders } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** Stub for removed rule page state — template field operations are no longer available */
@@ -37,6 +38,7 @@ const emit = defineEmits<EventFieldSelectorDrawerEmits>();
 
 /** COMPOSABLES & STORES */
 const { getTemplateFields, getTemplateName, removeTemplate } = useRuleAddPageState();
+const { placeholders } = useCommonPlaceholders();
 const logger = useLogger('EventFieldSelectorDrawer');
 
 /** STATE */
@@ -316,7 +318,7 @@ onBeforeUnmount(() => {
       outlined
       dense
       clearable
-      placeholder="Search fields..."
+      :placeholder="placeholders.searchFields.value"
       :model-value="searchQuery"
       class="q-mb-md"
       @update:model-value="handleSearch"

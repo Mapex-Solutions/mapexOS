@@ -11,6 +11,7 @@ import type { OrganizationTreeNode, OrganizationType } from '@stores/organizatio
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 
 /** COMPOSABLES */
+import { useCommonPlaceholders } from '@composables/i18n';
 import { useOrganizationTree } from '@composables/organizations/useOrganizationTree';
 
 /** UTILS */
@@ -25,6 +26,7 @@ const emit = defineEmits<OrganizationSelectorDrawerEmits>();
 
 /** COMPOSABLES */
 const { treeNodes, loading, filters } = useOrganizationTree();
+const { placeholders } = useCommonPlaceholders();
 
 /** STATE */
 const expanded = ref<string[]>([]);
@@ -235,7 +237,7 @@ onBeforeUnmount(() => {
               outlined
               dense
               label="Search by name"
-              placeholder="Type to search..."
+              :placeholder="placeholders.typeToSearch.value"
               clearable
               debounce="300"
               class="rounded-borders"

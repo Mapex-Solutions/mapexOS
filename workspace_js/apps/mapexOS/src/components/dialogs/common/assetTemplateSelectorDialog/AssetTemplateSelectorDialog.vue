@@ -15,6 +15,7 @@ import { GenericSelectorDialog } from '@components/dialogs/common/genericSelecto
 
 /** COMPOSABLES */
 import { useAssetTemplates } from '@composables/assets/assetTemplates';
+import { useCommonPlaceholders } from '@composables/i18n';
 
 /** PROPS & EMITS */
 const props = withDefaults(defineProps<AssetTemplateSelectorDialogProps>(), {
@@ -42,6 +43,7 @@ const {
   handleCategoryChange,
   handleManufacturerChange,
 } = useAssetTemplates();
+const { placeholders } = useCommonPlaceholders();
 
 /** COMPUTED */
 
@@ -169,7 +171,7 @@ function handleLoadMore(): void {
     :loading-more="isLoadingMore"
     :has-more-pages="hasMorePages"
     :total-items="totalTemplates"
-    search-placeholder="Search by name..."
+    :search-placeholder="placeholders.searchByName.value"
     :info-banner="{ text: bannerText }"
     empty-text="No templates found"
     empty-icon="inbox"

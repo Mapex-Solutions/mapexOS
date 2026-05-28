@@ -85,23 +85,37 @@ defineOptions({
   name: 'JsonAndEventDrawer'
 });
 
+/** TYPE IMPORTS */
 import type { JsonAndEventDrawerProps, JsonAndEventDrawerEmit } from './interfaces';
 
-import { isEmpty } from 'lodash';
+/** VUE IMPORTS */
 import { ref, watch, nextTick, onBeforeUnmount } from 'vue';
 import { useQuasar } from 'quasar';
 import * as monaco from 'monaco-editor';
-import { registerMapexMonacoThemes, getMapexMonacoTheme, applyMapexMonacoTheme } from '@utils/monaco-theme';
-import { notifyInfo, notifySuccess, notifyFail, notifyWarning } from '@utils/alert/notify';
+import { isEmpty } from 'lodash';
+
+/** COMPONENTS */
 import { AppTooltip } from '@components/tooltips';
 import { AppTabs } from '@components/tabs';
+
+/** COMPOSABLES */
+import { useCommonErrors } from '@composables/i18n';
+
+/** UTILS */
+import { registerMapexMonacoThemes, getMapexMonacoTheme, applyMapexMonacoTheme } from '@utils/monaco-theme';
+import { notifyInfo, notifySuccess, notifyFail, notifyWarning } from '@utils/alert/notify';
+
+/** STORES */
 import { useThemeStore } from '@stores/theme';
 
+/** PROPS & EMITS */
 const props = defineProps<JsonAndEventDrawerProps>();
 const emit = defineEmits<JsonAndEventDrawerEmit>();
 
+/** COMPOSABLES & STORES */
 const $q = useQuasar();
 const themeStore = useThemeStore();
+const errors = useCommonErrors();
 const localShow = ref<boolean>(props.show);
 const tab = ref<'json' | 'event'>('json');
 const loadingEvent = ref(false);
@@ -175,7 +189,7 @@ async function copyJson() {
     await navigator.clipboard.writeText(JSON.stringify(text));
     notifyInfo({ message: 'JSON copied' });
   } catch {
-    notifyFail({ message: 'Copy failed' });
+    notifyFail({ message: errors.copyFailed.value });
   }
 }
 

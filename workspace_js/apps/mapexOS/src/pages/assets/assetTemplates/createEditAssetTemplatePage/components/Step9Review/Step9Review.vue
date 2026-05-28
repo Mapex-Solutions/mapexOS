@@ -16,16 +16,19 @@ import { AvailableFieldsList } from '@components/lists/availableFieldsList';
 import { DetailChip } from '@components/chips';
 
 /** COMPOSABLES */
+import { useCommonActions } from '@composables/i18n';
 import { useAddAssetTemplateTranslations } from '@src/composables/i18n/pages/assets/addAssetTemplate/useAddAssetTemplateTranslations';
 
 /** LOCAL IMPORTS */
 import { DYNAMIC_FIELD_TYPE_OPTIONS } from '../../constants';
 
+/** PROPS & EMITS */
 const props = defineProps<Step9ReviewProps>();
 const emit = defineEmits<Step9ReviewEmits>();
 
-/** COMPOSABLES */
+/** COMPOSABLES & STORES */
 const t = useAddAssetTemplateTranslations();
+const { actions: commonActions } = useCommonActions();
 
 /** COMPUTED */
 const previewData = computed((): ReviewSectionDef[] => {
@@ -218,7 +221,7 @@ function handleEditSection(stepNumber: number): void {
 							size="sm"
 							icon="edit"
 							color="primary"
-							label="Edit"
+							:label="commonActions.edit.value"
 							@click="handleEditSection(7)"
 						/>
 					</div>
@@ -264,7 +267,7 @@ function handleEditSection(stepNumber: number): void {
 							size="sm"
 							icon="edit"
 							color="primary"
-							label="Edit"
+							:label="commonActions.edit.value"
 							@click="handleEditSection(8)"
 						/>
 					</div>

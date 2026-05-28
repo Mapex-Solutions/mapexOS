@@ -51,9 +51,11 @@
       "fields": {
         "assetTemplateId": {
           "label": "template de ativo",
-          "placeholder": "selecione um template",
+          "placeholder": "clique para selecionar um template...",
           "hint": "template que define fabricante, modelo e handler",
-          "required": "template de ativo é obrigatório"
+          "required": "selecione um template de ativo",
+          "clearTooltip": "limpar seleção",
+          "searchTooltip": "buscar templates"
         }
       },
       "banner": {
@@ -62,10 +64,16 @@
       },
       "preview": {
         "title": "visualização do template",
+        "detailsTitle": "detalhes do template selecionado",
+        "nameLabel": "nome",
+        "descriptionLabel": "descrição",
+        "uuidPathLabel": "caminho do UUID",
         "manufacturer": "fabricante",
         "model": "modelo",
         "version": "versão",
         "status": "status",
+        "statusActive": "ATIVO",
+        "statusInactive": "INATIVO",
         "noTemplateSelected": "nenhum template selecionado"
       }
     },
@@ -80,7 +88,17 @@
       },
       "labels": {
         "systemTemplate": "Template do Sistema",
-        "sharedTemplate": "Template Compartilhado"
+        "sharedTemplate": "Template Compartilhado",
+        "selectedHeader": "grupos de roteamento selecionados",
+        "noneSelected": "nenhum grupo de roteamento selecionado ainda",
+        "routersConfigured": "{count} roteadores configurados",
+        "selectedCountSingular": "{count} grupo de roteamento selecionado",
+        "selectedCountPlural": "{count} grupos de roteamento selecionados",
+        "routingExplanation": "os dados do ativo serão encaminhados por estes grupos de roteamento para diferentes destinos."
+      },
+      "buttons": {
+        "select": "selecionar grupos de roteamento",
+        "clearAll": "limpar tudo"
       }
     },
     "step4": {
@@ -91,7 +109,15 @@
       "certificate": {
         "activeTitle": "Certificado ativo",
         "revokedTitle": "Certificados revogados",
-        "revokedEmpty": "Nenhum certificado revogado para este ativo."
+        "revokedEmpty": "Nenhum certificado revogado para este ativo.",
+        "noActiveCert": "Nenhum certificado ativo. Clique em Gerar para emitir um novo.",
+        "fieldSerial": "Serial",
+        "fieldFingerprint": "Fingerprint",
+        "fieldSubjectCN": "Subject CN",
+        "fieldIssued": "Emitido",
+        "fieldExpires": "Expira",
+        "revokeButton": "Revogar",
+        "revokeConfirm": "Revogar este certificado?"
       },
       "fields": {
         "protocol": {

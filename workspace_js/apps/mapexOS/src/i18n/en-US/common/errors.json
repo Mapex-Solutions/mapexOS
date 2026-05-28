@@ -10,5 +10,10 @@
     "503": "Service temporarily unavailable. Please try again in a few moments.",
     "network": "Network error. Please check your connection and try again.",
     "unknown": "An unexpected error occurred. Please try again."
-  }
+  },
+  "apiNotInitialized": "Service is not available right now. Please reload the page.",
+  "copyFailed": "Could not copy to clipboard.",
+  "loadFailed": "Failed to load data.",
+  "saveFailed": "Failed to save changes.",
+  "deleteFailed": "Failed to delete the item."
 }

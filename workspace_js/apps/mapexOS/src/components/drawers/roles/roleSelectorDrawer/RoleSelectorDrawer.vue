@@ -9,11 +9,17 @@ import type { RoleSelectorDrawerProps, RoleSelectorDrawerEmits } from './interfa
 /** VUE IMPORTS */
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 
+/** COMPOSABLES */
+import { useCommonPlaceholders } from '@composables/i18n';
+
 /** SERVICES */
 import { apis } from '@services/mapex';
 
 /** UTILS */
 import { handleApiError } from '@utils/error';
+
+/** COMPOSABLES & STORES */
+const { placeholders } = useCommonPlaceholders();
 
 /** PROPS & EMITS */
 const props = withDefaults(defineProps<RoleSelectorDrawerProps>(), {
@@ -244,7 +250,7 @@ onBeforeUnmount(() => {
               outlined
               dense
               label="Search by name"
-              placeholder="Type to search..."
+              :placeholder="placeholders.typeToSearch.value"
               clearable
               class="rounded-borders"
               @update:model-value="onFilterChange"

@@ -57,7 +57,9 @@
       "label": "configuração",
       "description": "configure as opções e placeholders do trigger",
       "comingSoon": "Componente de configuração em breve",
-      "comingSoonDetail": "Este tipo de trigger será totalmente configurável em uma atualização futura."
+      "comingSoonDetail": "Este tipo de trigger será totalmente configurável em uma atualização futura.",
+      "placeholderSyntaxTitle": "Sintaxe de placeholders:",
+      "placeholderSyntaxDescription": "Use {syntax} para valores dinâmicos resolvidos em tempo de execução."
     },
     "step5": {
       "label": "revisão",

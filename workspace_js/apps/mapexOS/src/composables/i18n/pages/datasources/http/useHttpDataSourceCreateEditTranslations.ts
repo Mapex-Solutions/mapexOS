@@ -64,10 +64,15 @@ export function useHttpDataSourceCreateEditTranslations() {
 			completeAllSteps: computed(() => ts(`${basePath}.steps.progress.completeAllSteps`)),
 		},
 
-		/** Protocol config (Step 2) banner labels */
+		/** Protocol config (Step 2) banner + form labels */
 		protocolConfig: {
 			gatewayBannerTitle: computed(() => ts(`${basePath}.steps.protocolConfig.gatewayBannerTitle`)),
 			gatewayBannerBody: computed(() => ts(`${basePath}.steps.protocolConfig.gatewayBannerBody`)),
+			modeLabel: computed(() => ts(`${basePath}.steps.protocolConfig.modeLabel`)),
+			modeRequired: computed(() => ts(`${basePath}.steps.protocolConfig.modeRequired`)),
+			pushModeHint: computed(() => ts(`${basePath}.steps.protocolConfig.pushModeHint`)),
+			protocolLabel: computed(() => ts(`${basePath}.steps.protocolConfig.protocolLabel`)),
+			protocolFixedHint: computed(() => ts(`${basePath}.steps.protocolConfig.protocolFixedHint`)),
 		},
 
 		/** Navigation button labels */

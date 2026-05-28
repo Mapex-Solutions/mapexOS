@@ -89,6 +89,8 @@ export function useAddAssetTranslations() {
             placeholder: computed(() => tsRaw('pages.assets.addAsset.steps.step2.fields.assetTemplateId.placeholder')),
             hint: computed(() => tsRaw('pages.assets.addAsset.steps.step2.fields.assetTemplateId.hint')),
             required: computed(() => tsRaw('pages.assets.addAsset.steps.step2.fields.assetTemplateId.required')),
+            clearTooltip: computed(() => ts('pages.assets.addAsset.steps.step2.fields.assetTemplateId.clearTooltip')),
+            searchTooltip: computed(() => ts('pages.assets.addAsset.steps.step2.fields.assetTemplateId.searchTooltip')),
           },
         },
         banner: {
@@ -97,10 +99,16 @@ export function useAddAssetTranslations() {
         },
         preview: {
           title: computed(() => ts('pages.assets.addAsset.steps.step2.preview.title')),
+          detailsTitle: computed(() => ts('pages.assets.addAsset.steps.step2.preview.detailsTitle')),
+          nameLabel: computed(() => ts('pages.assets.addAsset.steps.step2.preview.nameLabel')),
+          descriptionLabel: computed(() => ts('pages.assets.addAsset.steps.step2.preview.descriptionLabel')),
+          uuidPathLabel: computed(() => tsRaw('pages.assets.addAsset.steps.step2.preview.uuidPathLabel')),
           manufacturer: computed(() => ts('pages.assets.addAsset.steps.step2.preview.manufacturer')),
           model: computed(() => ts('pages.assets.addAsset.steps.step2.preview.model')),
           version: computed(() => ts('pages.assets.addAsset.steps.step2.preview.version')),
           status: computed(() => ts('pages.assets.addAsset.steps.step2.preview.status')),
+          statusActive: computed(() => tsRaw('pages.assets.addAsset.steps.step2.preview.statusActive')),
+          statusInactive: computed(() => tsRaw('pages.assets.addAsset.steps.step2.preview.statusInactive')),
           noTemplateSelected: computed(() => tsRaw('pages.assets.addAsset.steps.step2.preview.noTemplateSelected')),
         },
       },
@@ -120,6 +128,21 @@ export function useAddAssetTranslations() {
         labels: {
           systemTemplate: computed(() => ts('pages.assets.addAsset.steps.step3.labels.systemTemplate')),
           sharedTemplate: computed(() => ts('pages.assets.addAsset.steps.step3.labels.sharedTemplate')),
+          selectedHeader: computed(() => ts('pages.assets.addAsset.steps.step3.labels.selectedHeader')),
+          noneSelected: computed(() => ts('pages.assets.addAsset.steps.step3.labels.noneSelected')),
+          routersConfigured: (count: number) => tsRaw('pages.assets.addAsset.steps.step3.labels.routersConfigured', { count }),
+          selectedCount: (count: number) =>
+            tsRaw(
+              count === 1
+                ? 'pages.assets.addAsset.steps.step3.labels.selectedCountSingular'
+                : 'pages.assets.addAsset.steps.step3.labels.selectedCountPlural',
+              { count },
+            ),
+          routingExplanation: computed(() => tsRaw('pages.assets.addAsset.steps.step3.labels.routingExplanation')),
+        },
+        buttons: {
+          select: computed(() => ts('pages.assets.addAsset.steps.step3.buttons.select')),
+          clearAll: computed(() => ts('pages.assets.addAsset.steps.step3.buttons.clearAll')),
         },
       },
 
@@ -227,6 +250,14 @@ export function useAddAssetTranslations() {
           activeTitle: computed(() => ts('pages.assets.addAsset.steps.step4.certificate.activeTitle')),
           revokedTitle: computed(() => ts('pages.assets.addAsset.steps.step4.certificate.revokedTitle')),
           revokedEmpty: computed(() => tsRaw('pages.assets.addAsset.steps.step4.certificate.revokedEmpty')),
+          noActiveCert: computed(() => tsRaw('pages.assets.addAsset.steps.step4.certificate.noActiveCert')),
+          fieldSerial: computed(() => ts('pages.assets.addAsset.steps.step4.certificate.fieldSerial')),
+          fieldFingerprint: computed(() => ts('pages.assets.addAsset.steps.step4.certificate.fieldFingerprint')),
+          fieldSubjectCN: computed(() => ts('pages.assets.addAsset.steps.step4.certificate.fieldSubjectCN')),
+          fieldIssued: computed(() => ts('pages.assets.addAsset.steps.step4.certificate.fieldIssued')),
+          fieldExpires: computed(() => ts('pages.assets.addAsset.steps.step4.certificate.fieldExpires')),
+          revokeButton: computed(() => ts('pages.assets.addAsset.steps.step4.certificate.revokeButton')),
+          revokeConfirm: computed(() => tsRaw('pages.assets.addAsset.steps.step4.certificate.revokeConfirm')),
         },
       },
 

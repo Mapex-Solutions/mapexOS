@@ -72,5 +72,11 @@
     "invalidPhone": "Invalid phone number",
     "minLength": "{field} must be at least {min} characters",
     "maxLength": "{field} must not exceed {max} characters"
+  },
+  "placeholders": {
+    "searchFields": "Search fields...",
+    "search": "Search...",
+    "typeToSearch": "Type to search...",
+    "searchByName": "Search by name..."
   }
 }

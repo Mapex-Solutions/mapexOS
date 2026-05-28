@@ -16,6 +16,7 @@ import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
 import { useAssetTemplates } from '@composables/assets/assetTemplates';
+import { useCommonPlaceholders } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** PROPS & EMITS */
@@ -46,6 +47,7 @@ const {
 } = useAssetTemplates();
 
 const logger = useLogger('AssetTemplateSelectorDrawer');
+const { placeholders } = useCommonPlaceholders();
 
 /** STATE */
 const selectedTemplates = ref<AssetTemplateResponse[]>([]);
@@ -208,7 +210,7 @@ function handleCancel(): void {
             outlined
             dense
             label="Search by name"
-            placeholder="Type to search..."
+            :placeholder="placeholders.typeToSearch.value"
             clearable
             @update:model-value="onFilterChange"
           >

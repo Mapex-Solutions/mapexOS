@@ -30,7 +30,7 @@ const hasCert = computed(() => props.asset.currentCert != null);
  */
 function onRevoke(): void {
 	if (!props.asset.currentCert) return;
-	if (window.confirm('Revoke this certificate?')) {
+	if (window.confirm(t.steps.step4.certificate.revokeConfirm.value)) {
 		revoking.value = true;
 		emit('revoked');
 		revoking.value = false;
@@ -45,19 +45,19 @@ function onRevoke(): void {
 		</q-card-section>
 
 		<q-card-section v-if="!hasCert" class="empty">
-			No active certificate. Click Generate to issue a new one.
+			{{ t.steps.step4.certificate.noActiveCert.value }}
 		</q-card-section>
 
 		<q-card-section v-else class="meta">
-			<div class="row"><span class="label">Serial</span><code>{{ asset.currentCert!.serial }}</code></div>
-			<div class="row"><span class="label">Fingerprint</span><code class="fp">{{ asset.currentCert!.fingerprint }}</code></div>
-			<div class="row"><span class="label">Subject CN</span><span>{{ asset.currentCert!.subjectCN }}</span></div>
-			<div class="row"><span class="label">Issued</span><span>{{ asset.currentCert!.issuedAt }}</span></div>
-			<div class="row"><span class="label">Expires</span><span>{{ asset.currentCert!.expiresAt }}</span></div>
+			<div class="row"><span class="label">{{ t.steps.step4.certificate.fieldSerial.value }}</span><code>{{ asset.currentCert!.serial }}</code></div>
+			<div class="row"><span class="label">{{ t.steps.step4.certificate.fieldFingerprint.value }}</span><code class="fp">{{ asset.currentCert!.fingerprint }}</code></div>
+			<div class="row"><span class="label">{{ t.steps.step4.certificate.fieldSubjectCN.value }}</span><span>{{ asset.currentCert!.subjectCN }}</span></div>
+			<div class="row"><span class="label">{{ t.steps.step4.certificate.fieldIssued.value }}</span><span>{{ asset.currentCert!.issuedAt }}</span></div>
+			<div class="row"><span class="label">{{ t.steps.step4.certificate.fieldExpires.value }}</span><span>{{ asset.currentCert!.expiresAt }}</span></div>
 		</q-card-section>
 
 		<q-card-actions v-if="hasCert" align="right">
-			<q-btn label="Revoke" color="negative" flat :loading="revoking" @click="onRevoke" />
+			<q-btn :label="t.steps.step4.certificate.revokeButton.value" color="negative" flat :loading="revoking" @click="onRevoke" />
 		</q-card-actions>
 	</q-card>
 </template>

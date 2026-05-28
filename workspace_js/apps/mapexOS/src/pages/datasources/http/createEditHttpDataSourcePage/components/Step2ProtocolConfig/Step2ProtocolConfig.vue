@@ -18,10 +18,10 @@
         v-model="localData.mode"
         outlined
         dense
-        label="Mode *"
+        :label="`${t.protocolConfig.modeLabel.value} *`"
         class="rounded-borders"
         :options="MODE_OPTIONS"
-        :rules="[(val) => !!val || 'Mode is required']"
+        :rules="[(val) => !!val || t.protocolConfig.modeRequired.value]"
         @update:model-value="updateValue"
       >
         <template v-slot:prepend>
@@ -30,7 +30,7 @@
       </q-select>
       <div class="text-caption text-grey-7 q-mt-xs">
         <q-icon name="info" size="xs" />
-        Push mode: Devices send data to this endpoint via HTTP POST requests.
+        {{ t.protocolConfig.pushModeHint.value }}
       </div>
     </div>
 
@@ -41,9 +41,9 @@
         outlined
         dense
         readonly
-        label="Protocol"
+        :label="t.protocolConfig.protocolLabel.value"
         class="rounded-borders"
-        hint="HTTP/HTTPS protocol is fixed for this gateway type"
+        :hint="t.protocolConfig.protocolFixedHint.value"
       >
         <template v-slot:prepend>
           <q-icon name="http" color="primary"/>
@@ -58,17 +58,23 @@ defineOptions({
   name: 'Step2ProtocolConfig'
 });
 
+/** TYPE IMPORTS */
 import type { StepEmits, StepProps } from '../../interfaces/httpDataSource.interface';
 
+/** VUE IMPORTS */
 import { reactive, watch } from 'vue';
 
+/** COMPOSABLES */
 import { useHttpDataSourceCreateEditTranslations } from '@composables/i18n/pages/datasources/http';
 
+/** LOCAL IMPORTS */
 import { MODE_OPTIONS } from '../../constants/httpDataSourceConstants';
 
+/** PROPS & EMITS */
 const props = defineProps<StepProps>();
 const emit = defineEmits<StepEmits>();
 
+/** COMPOSABLES & STORES */
 const t = useHttpDataSourceCreateEditTranslations();
 
 const localData = reactive({

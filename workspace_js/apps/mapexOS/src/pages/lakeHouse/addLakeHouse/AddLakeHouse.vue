@@ -7,6 +7,7 @@ import { STEPS } from './constants';
 import { buildLakeHousePreview } from './handlers';
 
 import { useStepperNavigation } from '@composables/shared/form';
+import { useAddLakeHouseTranslations } from '@composables/i18n/pages/lakeHouse/useAddLakeHouseTranslations';
 import { useLogger } from '@composables/useLogger';
 
 import { DEFAULT_AWS_DATA } from '@components/forms/lakeHouse/lakeHouseProviderSelection/constants';
@@ -32,6 +33,8 @@ import {
   LakeHouseFrequency,
   FormReview,
 } from '@components/forms';
+
+const t = useAddLakeHouseTranslations();
 
 const formRef = ref<QForm | null>(null);
 const currentStep = ref(1);
@@ -83,9 +86,9 @@ function submitForm() {
     <PageHeader
         icon="cloud_upload"
         iconColor="primary"
-        title="Data Lake"
-        description="Add new channel of lakeHouse"
-        :button="{ label: 'Back to lakeHouses', icon: 'arrow_back', flat: true, to: '/lakeHouses' }"
+        :title="t.page.title.value"
+        :description="t.page.description.value"
+        :button="{ label: t.page.backButton.value, icon: 'arrow_back', flat: true, to: '/lakeHouses' }"
     />
 
     <!-- Content -->
@@ -93,8 +96,8 @@ function submitForm() {
       <!-- Progress Stepper Vertical -->
       <div class="col-12 col-md-4">
         <StepperVertical
-            title="Configure Data Lake"
-            subtitle="Complete all steps to create a new data lake"
+            :title="t.stepper.title.value"
+            :subtitle="t.stepper.subtitle.value"
             :current-step="currentStep"
             :steps="STEPS"
             :mode="isEditMode ? 'editing' : 'creating'"

@@ -3,24 +3,35 @@ defineOptions({
   name: 'JsonDrawer'
 });
 
+/** TYPE IMPORTS */
 import type { JsonDrawerProps, JsonDrawerEmit } from './interfaces';
 
+/** VUE IMPORTS */
 import { ref, watch, nextTick, onBeforeUnmount } from 'vue';
 import { useQuasar } from 'quasar';
-
 import * as monaco from 'monaco-editor';
-import { registerMapexMonacoThemes, getMapexMonacoTheme, applyMapexMonacoTheme } from '@utils/monaco-theme';
-import { notifyInfo, notifySuccess, notifyFail, notifyWarning } from '@utils/alert/notify';
+
+/** COMPONENTS */
 import { AppTooltip } from '@components/tooltips';
 
+/** COMPOSABLES */
+import { useCommonErrors } from '@composables/i18n';
+
+/** UTILS */
+import { registerMapexMonacoThemes, getMapexMonacoTheme, applyMapexMonacoTheme } from '@utils/monaco-theme';
+import { notifyInfo, notifySuccess, notifyFail, notifyWarning } from '@utils/alert/notify';
+
+/** STORES */
 import { useThemeStore } from '@stores/theme';
 
-// --- Define Props & Emits ---
+/** PROPS & EMITS */
 const props = defineProps<JsonDrawerProps>();
 const emit = defineEmits<JsonDrawerEmit>();
 
+/** COMPOSABLES & STORES */
 const $q = useQuasar();
 const themeStore = useThemeStore();
+const errors = useCommonErrors();
 
 // Local copy of show for v-model
 const localShow = ref<boolean>(props.show);
@@ -84,7 +95,7 @@ async function copyJson() {
     await navigator.clipboard.writeText(text);
     notifyInfo({ message: 'JSON copied' });
   } catch {
-    notifyFail({ message: 'Copy failed' });
+    notifyFail({ message: errors.copyFailed.value });
   }
 }
 

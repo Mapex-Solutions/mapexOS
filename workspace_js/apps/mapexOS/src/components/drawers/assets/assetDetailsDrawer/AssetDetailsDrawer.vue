@@ -535,7 +535,7 @@ import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
-import { useAssetsTranslations } from '@composables/i18n';
+import { useAssetsTranslations, useCommonErrors } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** UTILS */
@@ -555,6 +555,7 @@ const emit = defineEmits<AssetDetailsDrawerEmits>();
 
 /** COMPOSABLES & STORES */
 const t = useAssetsTranslations();
+const errors = useCommonErrors();
 const logger = useLogger('AssetDetailsDrawer');
 const orgStore = useOrganizationStore();
 
@@ -637,7 +638,7 @@ watch(() => props.modelValue, (isOpen) => {
 async function fetchAssetDetails(assetId: string): Promise<void> {
   if (!apis.assets) {
     error.value = true;
-    notifyFail({ message: 'Assets API not initialized' });
+    notifyFail({ message: errors.apiNotInitialized.value });
     return;
   }
 

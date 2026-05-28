@@ -104,10 +104,10 @@ watch(() => props.modelValue.scriptTest, (newValue) => {
         size="sm"
         color="secondary"
         icon="file_copy"
-        label="LOAD EXAMPLE"
+        :label="t.steps.step6.buttons.loadExample.value"
         @click="loadExampleScriptTest"
       >
-        <AppTooltip content="Load example test payload" />
+        <AppTooltip :content="t.steps.step6.buttons.loadExampleTooltip.value" />
       </q-btn>
     </div>
     <q-card flat bordered>

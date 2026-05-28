@@ -235,6 +235,7 @@ export function useAddAssetTemplateTranslations() {
         },
         buttons: {
           loadExample: computed(() => ts('pages.assets.addAssetTemplate.steps.step6.buttons.loadExample')),
+          loadExampleTooltip: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step6.buttons.loadExampleTooltip')),
         },
         banner: {
           info: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step6.banner.info')),

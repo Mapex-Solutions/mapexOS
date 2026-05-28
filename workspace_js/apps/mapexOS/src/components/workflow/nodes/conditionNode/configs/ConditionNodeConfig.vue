@@ -23,6 +23,7 @@ import ConditionItemCard from './ConditionItemCard.vue';
 
 /** COMPOSABLES */
 import { useWorkflowContext, usePluginI18n } from '@src/composables/workflow';
+import { useCommonPlaceholders } from '@composables/i18n';
 
 /** SERVICES */
 import { apis } from '@services/mapex';
@@ -38,6 +39,7 @@ const emit = defineEmits<NodeConfigComponentEmits>();
 /** COMPOSABLES & STORES */
 const { states } = useWorkflowContext();
 const { t } = usePluginI18n('core-logic');
+const { placeholders } = useCommonPlaceholders();
 
 /** STATE */
 
@@ -628,7 +630,7 @@ onMounted(async () => {
       :multi-select="false"
       :selected-ids="selectedFieldIds"
       :loading="fetchingFields"
-      search-placeholder="Search fields..."
+      :search-placeholder="placeholders.searchFields.value"
       empty-text="No fields available from selected templates."
       empty-icon="inbox"
       results-icon="list_alt"

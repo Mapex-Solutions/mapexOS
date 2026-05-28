@@ -57,7 +57,9 @@
       "label": "configuration",
       "description": "configure trigger settings and placeholders",
       "comingSoon": "Configuration component coming soon",
-      "comingSoonDetail": "This trigger type will be fully configured in a future update."
+      "comingSoonDetail": "This trigger type will be fully configured in a future update.",
+      "placeholderSyntaxTitle": "Placeholder syntax:",
+      "placeholderSyntaxDescription": "Use {syntax} for dynamic values that will be resolved at runtime."
     },
     "step5": {
       "label": "review",

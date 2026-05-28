@@ -3,15 +3,28 @@ defineOptions({
   name: 'LakeHousePathConfig'
 });
 
+/** TYPE IMPORTS */
 import type { LakeHouseConfigProps } from '@components/forms/lakeHouse';
 
+/** VUE IMPORTS */
 import { computed } from 'vue';
+
+/** COMPONENTS */
 import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 import { VueDraggable } from 'vue-draggable-plus';
+
+/** COMPOSABLES */
+import { useCommonErrors } from '@composables/i18n';
+
+/** UTILS */
 import { notifySuccess, notifyFail } from '@utils/alert/notify';
 
+/** LOCAL IMPORTS */
 import { DEFAULT_PATH_CONFIG } from './constants';
+
+/** COMPOSABLES & STORES */
+const errors = useCommonErrors();
 
 // this ref is automatically tied to `modelValue` + `update:modelValue`
 const modelRef = defineModel<LakeHouseConfigProps>({
@@ -79,7 +92,7 @@ const copyPathToClipboard = async () => {
     await navigator.clipboard.writeText(fullPathPreview.value);
     notifySuccess({ message: 'Path copied to clipboard!' });
   } catch {
-    notifyFail({ message: 'Error copying path' });
+    notifyFail({ message: errors.copyFailed.value });
   }
 };
 

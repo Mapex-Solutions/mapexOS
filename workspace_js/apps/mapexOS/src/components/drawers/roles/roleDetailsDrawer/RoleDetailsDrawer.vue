@@ -327,7 +327,7 @@ import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
-import { useRolesTranslations } from '@composables/i18n';
+import { useRolesTranslations, useCommonErrors } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
 /** SERVICES */
@@ -340,6 +340,7 @@ const props = defineProps<RoleDetailsDrawerProps>();
 const emit = defineEmits<RoleDetailsDrawerEmits>();
 
 const t = useRolesTranslations();
+const errors = useCommonErrors();
 const logger = useLogger('RoleDetailsDrawer');
 
 // Component state
@@ -369,7 +370,7 @@ onBeforeUnmount(() => {
 async function fetchRoleDetails(roleId: string) {
   if (!apis.mapexOS?.roles) {
     error.value = true;
-    notifyFail({ message: 'Roles API not initialized' });
+    notifyFail({ message: errors.apiNotInitialized.value });
     return;
   }
 

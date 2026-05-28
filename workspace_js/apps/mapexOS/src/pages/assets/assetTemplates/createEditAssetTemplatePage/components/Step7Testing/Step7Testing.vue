@@ -131,7 +131,7 @@ function openHelpModal() {
               unelevated
               color="primary"
               icon="play_arrow"
-              label="Run Test"
+              :label="t.steps.step7.testSection.buttons.runTest.value"
               :loading="testing"
               @click="runTest"
             />

@@ -22,7 +22,7 @@
 
     <!-- Selected Route Groups Display -->
     <div class="q-mb-sm">
-      <div class="text-caption text-grey-7 q-mb-xs">Selected Route Groups</div>
+      <div class="text-caption text-grey-7 q-mb-xs">{{ t.steps.step3.labels.selectedHeader.value }}</div>
 
       <!-- Selected chips -->
       <div v-if="selectedRouteGroups.length > 0" class="row q-gutter-xs q-mb-md">
@@ -38,7 +38,7 @@
               <div class="text-caption">
                 <div v-if="routeGroup.isSystem"><strong>{{ t.steps.step3.labels.systemTemplate.value }}</strong></div>
                 <div v-if="routeGroup.isTemplate"><strong>{{ t.steps.step3.labels.sharedTemplate.value }}</strong></div>
-                <div>{{ routeGroup.routers?.length || 0 }} routers configured</div>
+                <div>{{ t.steps.step3.labels.routersConfigured(routeGroup.routers?.length || 0) }}</div>
               </div>
             </AppTooltip>
           </SelectableChip>
@@ -47,7 +47,7 @@
 
       <!-- Empty state -->
       <div v-else class="text-grey-6 text-caption q-mb-md">
-        No route groups selected yet
+        {{ t.steps.step3.labels.noneSelected.value }}
       </div>
 
       <!-- Action buttons -->
@@ -58,7 +58,7 @@
           class="rounded-borders"
           color="primary"
           icon="add"
-          label="Select Route Groups"
+          :label="t.steps.step3.buttons.select.value"
           size="sm"
           data-testid="asset-routegroup-select-btn"
           @click="showRouteGroupDrawer = true"
@@ -70,7 +70,7 @@
           class="rounded-borders"
           color="negative"
           icon="clear"
-          label="Clear All"
+          :label="t.steps.step3.buttons.clearAll.value"
           size="sm"
           data-testid="asset-routegroup-clear-btn"
           @click="clearAll"
@@ -84,11 +84,11 @@
         <div class="row items-center q-mb-sm">
           <q-icon name="alt_route" color="primary" size="sm" class="q-mr-xs" />
           <div class="text-subtitle2 text-weight-medium">
-            {{ selectedRouteGroups.length }} Route Group{{ selectedRouteGroups.length !== 1 ? 's' : '' }} Selected
+            {{ t.steps.step3.labels.selectedCount(selectedRouteGroups.length) }}
           </div>
         </div>
         <div class="text-caption text-grey-7">
-          Asset data will be routed through these route groups to different destinations.
+          {{ t.steps.step3.labels.routingExplanation.value }}
         </div>
       </q-card-section>
     </q-card>
