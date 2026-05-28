@@ -203,7 +203,7 @@ go install github.com/nats-io/natscli/nats@latest
 sudo apt install mongosh redis-tools jq bc
 
 # MinIO Client (optional — used by seed.sh for L2 cache population)
-mc alias set local http://localhost:9000 mapexos_admin mapexos_admin_secret_change_me
+mc alias set local http://localhost:9000 mapex_admin mapex_admin_secret_change_me
 ```
 
 ### Infrastructure requirements

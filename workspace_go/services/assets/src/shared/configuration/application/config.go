@@ -97,8 +97,8 @@ var DefaultConfiguration = []config.ConfigDefinition{
 
 	/** MinIO/S3 Configuration */
 	{Key: "minio_endpoint", Env: "MINIO_ENDPOINT", Type: "string", Default: "localhost:9000"},
-	{Key: "minio_access_key", Env: "MINIO_ACCESS_KEY", Type: "string", Default: "mapexos_admin", Sensitive: true},
-	{Key: "minio_secret_key", Env: "MINIO_SECRET_KEY", Type: "string", Default: "mapexos_admin_secret_change_me", Sensitive: true},
+	{Key: "minio_access_key", Env: "MINIO_ACCESS_KEY", Type: "string", Default: "mapex_admin", Sensitive: true},
+	{Key: "minio_secret_key", Env: "MINIO_SECRET_KEY", Type: "string", Default: "mapex_admin_secret_change_me", Sensitive: true},
 	{Key: "minio_use_ssl", Env: "MINIO_USE_SSL", Type: "bool", Default: false},
 	{Key: "minio_region", Env: "MINIO_REGION", Type: "string", Default: "us-east-1"},
 	{Key: "minio_templates_bucket", Env: "MINIO_TEMPLATES_BUCKET", Type: "string", Default: "mapex-templates"},

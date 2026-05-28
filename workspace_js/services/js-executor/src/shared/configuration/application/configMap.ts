@@ -64,8 +64,8 @@ export const defaultConfiguration: ConfigDefinition[] = [
 
 	/** MinIO/S3 Configuration */
 	{ key: 'minio_endpoint', env: 'MINIO_ENDPOINT', type: 'string', default: 'localhost:9000' },
-	{ key: 'minio_access_key', env: 'MINIO_ACCESS_KEY', type: 'string', default: 'mapexos_admin', sensitive: true },
-	{ key: 'minio_secret_key', env: 'MINIO_SECRET_KEY', type: 'string', default: 'mapexos_admin_secret_change_me', sensitive: true },
+	{ key: 'minio_access_key', env: 'MINIO_ACCESS_KEY', type: 'string', default: 'mapex_admin', sensitive: true },
+	{ key: 'minio_secret_key', env: 'MINIO_SECRET_KEY', type: 'string', default: 'mapex_admin_secret_change_me', sensitive: true },
 	{ key: 'minio_use_ssl', env: 'MINIO_USE_SSL', type: 'bool', default: false },
 	{ key: 'minio_region', env: 'MINIO_REGION', type: 'string', default: 'us-east-1' },
 	{ key: 'minio_assets_bucket', env: 'MINIO_ASSETS_BUCKET', type: 'string', default: 'mapex-assets' },

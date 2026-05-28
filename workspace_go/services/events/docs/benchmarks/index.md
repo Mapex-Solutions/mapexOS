@@ -307,7 +307,7 @@ sudo apt install mongosh redis-tools jq bc
 
 # MinIO Client (required for template cache seeding)
 # https://min.io/docs/minio/linux/reference/minio-mc.html
-mc alias set local http://localhost:9000 mapexos_admin mapexos_admin_secret_change_me
+mc alias set local http://localhost:9000 mapex_admin mapex_admin_secret_change_me
 ```
 
 ### Infrastructure

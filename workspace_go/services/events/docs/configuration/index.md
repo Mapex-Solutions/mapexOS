@@ -78,8 +78,8 @@ Configuration is provided via environment variables.
 | ENV | Default | Description |
 |---|---|---|
 | `MINIO_ENDPOINT` | `localhost:9000` | MinIO endpoint |
-| `MINIO_ACCESS_KEY` | `mapexos_admin` | Access key |
-| `MINIO_SECRET_KEY` | `mapexos_admin_secret_change_me` | Secret key |
+| `MINIO_ACCESS_KEY` | `mapex_admin` | Access key |
+| `MINIO_SECRET_KEY` | `mapex_admin_secret_change_me` | Secret key |
 | `MINIO_USE_SSL` | `false` | Use SSL |
 | `MINIO_REGION` | `us-east-1` | Region |
 | `MINIO_TEMPLATES_BUCKET` | `mapex-templates` | Templates bucket |
