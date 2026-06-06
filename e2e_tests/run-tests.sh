@@ -255,9 +255,30 @@ while [[ $# -gt 0 ]]; do
         all)
             check_services
             print_header "Running ALL E2E Tests"
-            go test ./... $VERBOSE -timeout $TIMEOUT -parallel $PARALLEL
-            print_success "All tests completed!"
-            exit 0
+
+            # Trigger journeys start an in-process sink on a FIXED port (SMTP
+            # 11025 / HTTP 11010 / WS 11026). Go runs packages concurrently by
+            # default (-p GOMAXPROCS), so two sink journeys racing for the same
+            # port fail with "address already in use". We split the run: every
+            # other package in parallel, then the sink journeys SERIALLY (-p 1),
+            # mirroring the `saga` command. One command, no eggshells.
+            serial_filter='journey/automations|journey/iot/connectivity_actions'
+            overall=0
+
+            print_info "Phase 1/2: all packages except trigger journeys (parallel)"
+            parallel_pkgs=$(go list ./... | grep -vE "$serial_filter")
+            go test $parallel_pkgs $VERBOSE -timeout $TIMEOUT -parallel $PARALLEL || overall=1
+
+            print_info "Phase 2/2: trigger journeys (serial, -p 1, shared sink ports)"
+            serial_pkgs=$(go list ./... | grep -E "$serial_filter")
+            go test $serial_pkgs $VERBOSE -count=1 -timeout $TIMEOUT -p 1 || overall=1
+
+            if [ "$overall" -eq 0 ]; then
+                print_success "All tests completed!"
+            else
+                print_error "Some tests failed (see output above)"
+            fi
+            exit $overall
             ;;
         saga)
             shift
