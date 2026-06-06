@@ -23,7 +23,6 @@ plugin's L1 (Pebble) tier.
 | `phase0_iam_bootstrap` | Seed admin login → JWT validity → org-context coverage                        |
 | `phase1_password_user` | Password auth full lifecycle (10 steps)                                       |
 | `phase2_cert_user`     | Cert (mTLS) auth full lifecycle (11 steps)                                    |
-| `phase3_cascade`       | _(skeleton — out of scope for this ticket)_                                   |
 
 ### `phase1_password_user` — step ordering
 

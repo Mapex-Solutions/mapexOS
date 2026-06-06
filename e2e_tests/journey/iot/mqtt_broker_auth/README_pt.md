@@ -23,7 +23,6 @@ FANOUT na camada L1 (Pebble) do plugin do broker.
 | `phase0_iam_bootstrap` | Login do admin seed → validade do JWT → coverage de org-context               |
 | `phase1_password_user` | Ciclo de vida completo da auth por senha (10 passos)                          |
 | `phase2_cert_user`     | Ciclo de vida completo da auth por cert / mTLS (11 passos)                    |
-| `phase3_cascade`       | Cascata TieredStore L1 -> L2 -> L3 + fanout invalidate                        |
 
 ### `phase1_password_user` — ordem dos passos
 
