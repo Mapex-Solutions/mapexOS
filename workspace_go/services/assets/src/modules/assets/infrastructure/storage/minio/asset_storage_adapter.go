@@ -169,6 +169,21 @@ func (a *AssetStorageAdapter) convertProtocol(p entities.ProtocolType) *assetsCo
 		}
 	}
 
+	if p.Lorawan != nil {
+		// Identity + profile only: the secret keys (entity Keys blob) are NEVER
+		// projected onto the read-model. The contract's plaintext key fields stay
+		// empty and are omitted by their json tags.
+		result.Lorawan = &assetsContract.LorawanConfig{
+			DevEUI:     p.Lorawan.DevEUI,
+			JoinEUI:    p.Lorawan.JoinEUI,
+			Region:     p.Lorawan.Region,
+			Class:      p.Lorawan.Class,
+			MacVersion: p.Lorawan.MacVersion,
+			PhyVersion: p.Lorawan.PhyVersion,
+			Activation: p.Lorawan.Activation,
+		}
+	}
+
 	return result
 }
 

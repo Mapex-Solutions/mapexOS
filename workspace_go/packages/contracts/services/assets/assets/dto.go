@@ -138,10 +138,37 @@ type CertTTLConfig struct {
 	Unit  string `json:"unit"  validate:"required,oneof=day week month year"`
 }
 
+// LorawanConfig carries the LoRaWAN device identity, profile, and (request-only)
+// secret key material for an asset. It mirrors MqttConfig's request/read-model
+// field asymmetry: the plaintext keys (AppKey/NwkKey for OTAA, DevAddr/NwkSKey/
+// AppSKey for ABP) are present ONLY on create/update request bodies. The
+// platform envelope-encrypts them with the LoRaWAN device-keys KEK before
+// persistence and the response path always omits them (one-shot delivery, never
+// retrievable). The read-model carries identity + profile only, never keys.
+type LorawanConfig struct {
+	DevEUI     string `json:"devEui" validate:"required,len=16,hexadecimal"`
+	JoinEUI    string `json:"joinEui,omitempty" validate:"required_if=Activation otaa,omitempty,len=16,hexadecimal"`
+	Region     string `json:"region" validate:"required"`
+	Class      string `json:"class" validate:"required,oneof=A B C"`
+	MacVersion string `json:"macVersion" validate:"required,oneof=1.0.2 1.0.3 1.0.4 1.1"`
+	PhyVersion string `json:"phyVersion" validate:"required"`
+	Activation string `json:"activation" validate:"required,oneof=otaa abp"`
+
+	// OTAA root keys (request only; NwkKey only for LoRaWAN 1.1).
+	AppKey string `json:"appKey,omitempty" validate:"required_if=Activation otaa,omitempty,len=32,hexadecimal"`
+	NwkKey string `json:"nwkKey,omitempty" validate:"omitempty,len=32,hexadecimal"`
+
+	// ABP fixed session (request only).
+	DevAddr string `json:"devAddr,omitempty" validate:"required_if=Activation abp,omitempty,len=8,hexadecimal"`
+	NwkSKey string `json:"nwkSKey,omitempty" validate:"required_if=Activation abp,omitempty,len=32,hexadecimal"`
+	AppSKey string `json:"appSKey,omitempty" validate:"required_if=Activation abp,omitempty,len=32,hexadecimal"`
+}
+
 type ProtocolType struct {
-	Type string      `json:"type" validate:"required,oneof=http mqtt lorawan"`
-	Http *NoneConfig `json:"http,omitempty"`
-	Mqtt *MqttConfig `json:"mqtt,omitempty"`
+	Type    string         `json:"type" validate:"required,oneof=http mqtt lorawan"`
+	Http    *NoneConfig    `json:"http,omitempty"`
+	Mqtt    *MqttConfig    `json:"mqtt,omitempty"`
+	Lorawan *LorawanConfig `json:"lorawan,omitempty"`
 }
 
 // HealthMonitorConfig represents health monitoring configuration for an asset.

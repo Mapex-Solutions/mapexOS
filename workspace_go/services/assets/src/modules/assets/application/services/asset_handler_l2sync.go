@@ -31,7 +31,8 @@ func (s *AssetService) syncAssetL2(ctx ctx.Context, asset *entities.Asset) strin
 	}
 
 	var authErr error
-	if asset.Protocol.Type == "mqtt" && asset.Protocol.Mqtt != nil {
+	if (asset.Protocol.Type == "mqtt" && asset.Protocol.Mqtt != nil) ||
+		(asset.Protocol.Type == "lorawan" && asset.Protocol.Lorawan != nil) {
 		projection := buildAuthProjection(asset)
 		authErr = s.deps.AssetStoragePort.WriteAssetAuth(ctx, projection)
 		if authErr != nil {
@@ -99,11 +100,33 @@ func buildAuthProjection(asset *entities.Asset) assetsAuthContract.AuthProjectio
 		Type:      "mqtt",
 	}
 	if asset.Protocol.Mqtt != nil {
-		proj.AuthType = asset.Protocol.Mqtt.AuthType
-		proj.PasswordHash = asset.Protocol.Mqtt.PasswordHash
+		mqtt := &assetsAuthContract.MqttAuth{
+			AuthType:     asset.Protocol.Mqtt.AuthType,
+			PasswordHash: asset.Protocol.Mqtt.PasswordHash,
+		}
+		if asset.CurrentCert != nil {
+			mqtt.CurrentCertSerial = asset.CurrentCert.Serial
+		}
+		proj.Mqtt = mqtt
 	}
-	if asset.CurrentCert != nil {
-		proj.CurrentCertSerial = asset.CurrentCert.Serial
+	if asset.Protocol.Lorawan != nil {
+		lw := asset.Protocol.Lorawan
+		proj.Type = "lorawan"
+		proj.Lorawan = &assetsAuthContract.LorawanAuth{
+			DevEUI:     lw.DevEUI,
+			JoinEUI:    lw.JoinEUI,
+			Region:     lw.Region,
+			Class:      lw.Class,
+			MacVersion: lw.MacVersion,
+			PhyVersion: lw.PhyVersion,
+			Activation: lw.Activation,
+			Keys: assetsAuthContract.EncryptedKeys{
+				EncryptedDEK: lw.Keys.EncryptedDEK,
+				DekNonce:     lw.Keys.DekNonce,
+				EncryptedKey: lw.Keys.EncryptedKey,
+				KeyNonce:     lw.Keys.KeyNonce,
+			},
+		}
 	}
 	return proj
 }

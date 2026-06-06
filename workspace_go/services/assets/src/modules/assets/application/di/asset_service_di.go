@@ -75,4 +75,11 @@ type AssetServiceDependenciesInjection struct {
 	// fallback consumer drains the stream and reconciles against
 	// current Mongo state, re-emitting FANOUT on success.
 	L2WritesPublisher ports.L2WritesPublisherPort
+
+	// LorawanKEKClient fetches the LoRaWAN device-keys KEK from mapexVault
+	// once at OnMount. LorawanKEKCipher holds it in RAM and performs the local
+	// envelope encryption applied to device keys in the CRUD, so the plaintext
+	// KEK never leaves this process and no per-create Vault call is made.
+	LorawanKEKClient ports.LorawanKEKClientPort
+	LorawanKEKCipher ports.LorawanKEKCipherPort
 }

@@ -9,14 +9,17 @@ import (
 	"assets/src/modules/assets/application/ports"
 	service "assets/src/modules/assets/application/services"
 	redisCache "assets/src/modules/assets/infrastructure/cache/redis"
+	mapexvaultProvider "assets/src/modules/assets/infrastructure/httpclient/mapexvault"
 	routerProvider "assets/src/modules/assets/infrastructure/httpclient/router"
 	natsProvider "assets/src/modules/assets/infrastructure/messaging/nats"
+	ramProvider "assets/src/modules/assets/infrastructure/ram"
 	minioProvider "assets/src/modules/assets/infrastructure/storage/minio"
 	collection "assets/src/modules/assets/infrastructure/persistence/mongo"
 	consumers "assets/src/modules/assets/interfaces/message/consumers"
 	routes "assets/src/modules/assets/interfaces/http/routes"
 
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
+	common "github.com/Mapex-Solutions/mapexGoKit/microservices/common"
 	configuration "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
 	apikeymw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/apiKey"
@@ -34,6 +37,8 @@ func InitRepositories() {
 	c.Provide(routerProvider.NewRouteGroupPort)         // Register RouteGroupPort for Router service communication
 	c.Provide(minioProvider.NewAssetStoragePort)        // Register AssetStoragePort for object storage operations
 	c.Provide(redisCache.NewCacheKeyBuilderAdapter)     // Register CacheKeyBuilderPort for Redis key construction
+	c.Provide(mapexvaultProvider.NewKEKClient)          // LoRaWAN device-keys KEK client (mapexVault)
+	c.Provide(ramProvider.NewInMemoryKEKCipher)         // in-RAM KEK cipher (envelope encryption, hot path)
 	// L2 writes retry publisher — feeds the durable fallback stream
 	// when synchronous MinIO writes fail; the in-module consumer
 	// drains it back against current Mongo state.
@@ -103,6 +108,12 @@ func InitInterfaces() {
 			apikeymw.ApiKeyAuthMiddleware(internalApiKey),
 		)
 		routes.RegisterAssetAuthInternalRoutes(assetAuthInternalRoutes, service)
+
+		// Fire the OnMount lifecycle hook: load the LoRaWAN device-keys KEK from
+		// mapexVault into RAM (sync attempt + retry goroutine on failure).
+		if m, ok := service.(common.Mountable); ok {
+			m.OnMount()
+		}
 
 	}); err != nil {
 		log.Fatalf("failed to invoke assets module: %v", err)

@@ -46,3 +46,10 @@ const (
 	MqttAuthTypePassword = "password"
 	MqttAuthTypeCert     = "cert"
 )
+
+// LoRaWAN activation modes. OTAA derives the session at join from root keys;
+// ABP carries a fixed DevAddr + session keys.
+const (
+	LorawanActivationOTAA = "otaa"
+	LorawanActivationABP  = "abp"
+)

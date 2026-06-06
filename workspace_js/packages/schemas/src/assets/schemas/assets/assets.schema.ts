@@ -49,10 +49,37 @@ const ZodMqttConfigSchema = z.object({
 	certTTL: ZodCertTTLConfigSchema.optional(),
 });
 
+// hexOfLen mirrors the Go `len=N,hexadecimal` validators: a fixed-length hex
+// string (EUIs, DevAddr, AES keys).
+const hexOfLen = (len: number) =>
+	z.string().length(len).regex(/^[0-9a-fA-F]+$/, 'must be hexadecimal');
+
+/**
+ * LoRaWAN device config. Mirrors Go LorawanConfig. The plaintext keys
+ * (appKey/nwkKey for OTAA, devAddr/nwkSKey/appSKey for ABP) are request-only;
+ * the platform envelope-encrypts them and never returns them. Per-activation
+ * requirements are enforced by the create/update refinements below.
+ */
+const ZodLorawanConfigSchema = z.object({
+	devEui: hexOfLen(16),
+	joinEui: hexOfLen(16).optional(),
+	region: StringAndNotBeEmpty,
+	class: z.enum(['A', 'B', 'C']),
+	macVersion: z.enum(['1.0.2', '1.0.3', '1.0.4', '1.1']),
+	phyVersion: StringAndNotBeEmpty,
+	activation: z.enum(['otaa', 'abp']),
+	appKey: hexOfLen(32).optional(),
+	nwkKey: hexOfLen(32).optional(),
+	devAddr: hexOfLen(8).optional(),
+	nwkSKey: hexOfLen(32).optional(),
+	appSKey: hexOfLen(32).optional(),
+});
+
 const ZodProtocolTypeSchema = z.object({
 	type: z.enum(['http', 'mqtt', 'lorawan']),
 	http: ZodNoneConfigSchema.optional(),
 	mqtt: ZodMqttConfigSchema.optional(),
+	lorawan: ZodLorawanConfigSchema.optional(),
 });
 
 /**
@@ -176,6 +203,35 @@ export const ZodAssetCreateSchema = z.object({
 	message: "MQTT configuration is required when protocol type is 'mqtt'",
 	path: ['protocol', 'mqtt'],
 }).refine((data) => {
+	// LoRaWAN config required when type is lorawan
+	if (data.protocol.type === 'lorawan' && !data.protocol.lorawan) {
+		return false;
+	}
+	return true;
+}, {
+	message: "LoRaWAN configuration is required when protocol type is 'lorawan'",
+	path: ['protocol', 'lorawan'],
+}).refine((data) => {
+	// OTAA requires appKey
+	const lw = data.protocol.lorawan;
+	if (lw?.activation === 'otaa' && !lw.appKey) {
+		return false;
+	}
+	return true;
+}, {
+	message: "appKey is required for OTAA activation",
+	path: ['protocol', 'lorawan', 'appKey'],
+}).refine((data) => {
+	// ABP requires devAddr + nwkSKey + appSKey
+	const lw = data.protocol.lorawan;
+	if (lw?.activation === 'abp' && (!lw.devAddr || !lw.nwkSKey || !lw.appSKey)) {
+		return false;
+	}
+	return true;
+}, {
+	message: "devAddr, nwkSKey and appSKey are required for ABP activation",
+	path: ['protocol', 'lorawan'],
+}).refine((data) => {
 	// Validate routeGroupIds uniqueness
 	const uniqueIds = new Set(data.routeGroupIds);
 	return uniqueIds.size === data.routeGroupIds.length;
@@ -215,6 +271,35 @@ export const ZodAssetUpdateSchema = z.object({
 }, {
 	message: "MQTT configuration is required when protocol type is 'mqtt'",
 	path: ['protocol', 'mqtt'],
+}).refine((data) => {
+	// LoRaWAN config required when type is lorawan
+	if (data.protocol?.type === 'lorawan' && !data.protocol.lorawan) {
+		return false;
+	}
+	return true;
+}, {
+	message: "LoRaWAN configuration is required when protocol type is 'lorawan'",
+	path: ['protocol', 'lorawan'],
+}).refine((data) => {
+	// OTAA requires appKey
+	const lw = data.protocol?.lorawan;
+	if (lw?.activation === 'otaa' && !lw.appKey) {
+		return false;
+	}
+	return true;
+}, {
+	message: "appKey is required for OTAA activation",
+	path: ['protocol', 'lorawan', 'appKey'],
+}).refine((data) => {
+	// ABP requires devAddr + nwkSKey + appSKey
+	const lw = data.protocol?.lorawan;
+	if (lw?.activation === 'abp' && (!lw.devAddr || !lw.nwkSKey || !lw.appSKey)) {
+		return false;
+	}
+	return true;
+}, {
+	message: "devAddr, nwkSKey and appSKey are required for ABP activation",
+	path: ['protocol', 'lorawan'],
 }).refine((data) => {
 	// Validate routeGroupIds uniqueness if provided
 	if (data.routeGroupIds) {

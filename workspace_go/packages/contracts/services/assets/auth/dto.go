@@ -22,16 +22,65 @@ package auth
 // of every CRUD that touches auth fields (password rotation, cert
 // issue/revoke, asset enable/disable).
 //
-// Type is intentionally open so future auth surfaces (http_api,
-// lorawan_key, etc.) can reuse the same projection shape and the same
-// bucket without breaking the broker. Today only "mqtt" is valid; the
-// validator enforces that until additional surfaces are added.
+// Type discriminates the auth surface: "mqtt" sets the Mqtt block, "lorawan"
+// sets the Lorawan block. Both are nested and symmetric — the broker reads
+// Mqtt, the LNS reads Lorawan. The shape is open so future surfaces (http_api,
+// etc.) add their own block without breaking existing readers.
 type AuthProjection struct {
-	AssetUUID         string `json:"assetUUID"         validate:"required,min=1"`
-	OrgId             string `json:"orgId"             validate:"required"`
-	Enabled           bool   `json:"enabled"`
-	Type              string `json:"type"              validate:"required,oneof=mqtt"`
-	AuthType          string `json:"authType"          validate:"required,oneof=password cert"`
+	AssetUUID string `json:"assetUUID" validate:"required,min=1"`
+	OrgId     string `json:"orgId"     validate:"required"`
+	Enabled   bool   `json:"enabled"`
+	Type      string `json:"type"      validate:"required,oneof=mqtt lorawan"`
+
+	// Mqtt is set when Type == "mqtt". It carries the broker's CONNECT-decision
+	// fields: the auth mode plus the password hash (password mode) or the
+	// current cert serial (cert mode).
+	Mqtt *MqttAuth `json:"mqtt,omitempty"`
+
+	// Lorawan is set when Type == "lorawan". It carries the device identity +
+	// profile and the envelope-encrypted key material the LNS decrypts at
+	// hydrate.
+	Lorawan *LorawanAuth `json:"lorawan,omitempty"`
+}
+
+// MqttAuth is the slim MQTT auth block in the projection. The broker plugin
+// decides every CONNECT from these fields alone: AuthType selects the mode,
+// PasswordHash backs password mode, CurrentCertSerial backs cert mode.
+type MqttAuth struct {
+	AuthType          string `json:"authType,omitempty" validate:"omitempty,oneof=password cert"`
 	PasswordHash      string `json:"passwordHash,omitempty"`
 	CurrentCertSerial string `json:"currentCertSerial,omitempty"`
+}
+
+// LorawanAuth is the slim LoRaWAN auth block in the projection. Identity +
+// profile are clear; the secret key material lives encrypted in Keys.
+type LorawanAuth struct {
+	DevEUI     string        `json:"devEui"`
+	JoinEUI    string        `json:"joinEui,omitempty"`
+	Region     string        `json:"region"`
+	Class      string        `json:"class"`
+	MacVersion string        `json:"macVersion"`
+	PhyVersion string        `json:"phyVersion"`
+	Activation string        `json:"activation"`
+	Keys       EncryptedKeys `json:"keys"`
+}
+
+// EncryptedKeys holds the four envelope fields produced by the goKit envelope
+// primitive. The plaintext sealed inside is a LorawanKeyMaterial JSON.
+type EncryptedKeys struct {
+	EncryptedDEK []byte `json:"encryptedDek"`
+	DekNonce     []byte `json:"dekNonce"`
+	EncryptedKey []byte `json:"encryptedKey"`
+	KeyNonce     []byte `json:"keyNonce"`
+}
+
+// LorawanKeyMaterial is the plaintext shape sealed inside EncryptedKeys. The
+// assets MS marshals it before encryption; the LNS unmarshals it after
+// decryption. Both sides MUST agree on these field names.
+type LorawanKeyMaterial struct {
+	AppKey  string `json:"appKey,omitempty"`
+	NwkKey  string `json:"nwkKey,omitempty"`
+	DevAddr string `json:"devAddr,omitempty"`
+	NwkSKey string `json:"nwkSKey,omitempty"`
+	AppSKey string `json:"appSKey,omitempty"`
 }

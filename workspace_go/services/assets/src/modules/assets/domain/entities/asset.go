@@ -40,9 +40,36 @@ type CertTTLConfig struct {
 }
 
 type ProtocolType struct {
-	Type string      `bson:"type"`
-	Http *NoneConfig `bson:"http,omitempty"`
-	Mqtt *MqttConfig `bson:"mqtt,omitempty"`
+	Type    string         `bson:"type"`
+	Http    *NoneConfig    `bson:"http,omitempty"`
+	Mqtt    *MqttConfig    `bson:"mqtt,omitempty"`
+	Lorawan *LorawanConfig `bson:"lorawan,omitempty"`
+}
+
+// LorawanConfig is the persistent LoRaWAN identity + profile for an asset. The
+// secret key material (OTAA root keys or ABP session keys) is NEVER persisted in
+// plaintext: it is envelope-encrypted with the LoRaWAN device-keys KEK and only
+// the four envelope fields are stored in Keys.
+type LorawanConfig struct {
+	DevEUI     string `bson:"devEui"`
+	JoinEUI    string `bson:"joinEui,omitempty"`
+	Region     string `bson:"region"`
+	Class      string `bson:"class"`
+	MacVersion string `bson:"macVersion"`
+	PhyVersion string `bson:"phyVersion"`
+	Activation string `bson:"activation"`
+
+	Keys EncryptedKeys `bson:"keys"`
+}
+
+// EncryptedKeys holds the envelope-encrypted device key material (the JSON of
+// the plaintext keys, sealed with the KEK). Mirrors the envelope primitive's
+// four fields one-for-one.
+type EncryptedKeys struct {
+	EncryptedDEK []byte `bson:"encryptedDEK"`
+	DekNonce     []byte `bson:"dekNonce"`
+	EncryptedKey []byte `bson:"encryptedKey"`
+	KeyNonce     []byte `bson:"keyNonce"`
 }
 
 // HealthMonitorConfig configures sensor inactivity monitoring for this asset.

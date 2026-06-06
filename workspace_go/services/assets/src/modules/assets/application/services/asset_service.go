@@ -11,6 +11,7 @@ import (
 	assetsContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/assets"
 	assetsAuthContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/auth"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
+	common "github.com/Mapex-Solutions/mapexGoKit/microservices/common"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	customErrors "github.com/Mapex-Solutions/mapexGoKit/microservices/http/customErrors"
 	httpStatus "github.com/Mapex-Solutions/mapexGoKit/microservices/http/status"
@@ -18,6 +19,10 @@ import (
 
 // Compile-time check to ensure AssetService implements AssetServicePort interface.
 var _ ports.AssetServicePort = (*AssetService)(nil)
+
+// Compile-time check: AssetService also runs the OnMount lifecycle hook to load
+// the LoRaWAN device-keys KEK from mapexVault into RAM.
+var _ common.Mountable = (*AssetService)(nil)
 
 // New creates and returns a new instance of AssetService.
 //
@@ -37,6 +42,17 @@ func New(deps di.AssetServiceDependenciesInjection) ports.AssetServicePort {
 	}
 }
 
+// OnMount runs during the DI lifecycle: one short attempt to fetch the LoRaWAN
+// device-keys KEK from mapexVault into the in-RAM cipher. On failure it spawns a
+// retry goroutine with exponential backoff (no max attempts), so encryption
+// becomes available as soon as the Vault is reachable.
+func (s *AssetService) OnMount() {
+	if s.tryLoadLorawanKEK() {
+		return
+	}
+	go s.retryLoadLorawanKEK(ctx.Background())
+}
+
 // CreateAsset orchestrates asset creation:
 // bind org context -> validate health-monitor invariants -> build entity
 // from DTO -> bcrypt the MQTT password (mqtt-protocol only) -> persist
@@ -53,6 +69,10 @@ func (s *AssetService) CreateAsset(c ctx.Context, requestContext *reqCtx.Request
 	}
 	entity := s.buildEntityFromDto(dto)
 	if err := s.hashMqttPasswordIfNeeded(entity, dto); err != nil {
+		s.recordAssetOp("create", "error", start)
+		return nil, err
+	}
+	if err := s.encryptLorawanKeysIfNeeded(entity, dto); err != nil {
 		s.recordAssetOp("create", "error", start)
 		return nil, err
 	}

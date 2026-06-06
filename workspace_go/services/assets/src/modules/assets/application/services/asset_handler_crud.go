@@ -2,6 +2,7 @@ package services
 
 import (
 	ctx "context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"assets/src/modules/assets/application/dtos"
 	"assets/src/modules/assets/domain/entities"
 
+	assetsAuthContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/auth"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
@@ -82,6 +84,49 @@ func (s *AssetService) hashMqttPasswordIfNeeded(asset *entities.Asset, dto *dtos
 	return nil
 }
 
+// encryptLorawanKeysIfNeeded envelope-encrypts the operator-supplied LoRaWAN
+// device keys onto the entity for lorawan-protocol assets, mirroring
+// hashMqttPasswordIfNeeded. The plaintext keys are never persisted; only the
+// four envelope fields land on Mongo. The KEK is loaded once at boot
+// (AssetService.OnMount); a not-yet-ready KEK fails the create.
+func (s *AssetService) encryptLorawanKeysIfNeeded(asset *entities.Asset, dto *dtos.AssetCreateDTO) error {
+	if asset.Protocol.Type != "lorawan" || asset.Protocol.Lorawan == nil || dto.Protocol.Lorawan == nil {
+		return nil
+	}
+	lw := dto.Protocol.Lorawan
+	sealed, err := s.sealLorawanKeys(lw.AppKey, lw.NwkKey, lw.DevAddr, lw.NwkSKey, lw.AppSKey)
+	if err != nil {
+		return err
+	}
+	asset.Protocol.Lorawan.Keys = sealed
+	return nil
+}
+
+// sealLorawanKeys marshals the plaintext key material and envelope-encrypts it
+// with the in-RAM KEK, returning the four envelope fields for persistence.
+func (s *AssetService) sealLorawanKeys(appKey, nwkKey, devAddr, nwkSKey, appSKey string) (entities.EncryptedKeys, error) {
+	plaintext, err := json.Marshal(assetsAuthContract.LorawanKeyMaterial{
+		AppKey:  appKey,
+		NwkKey:  nwkKey,
+		DevAddr: devAddr,
+		NwkSKey: nwkSKey,
+		AppSKey: appSKey,
+	})
+	if err != nil {
+		return entities.EncryptedKeys{}, fmt.Errorf("marshal lorawan keys: %w", err)
+	}
+	dek, dekNonce, encKey, keyNonce, err := s.deps.LorawanKEKCipher.Encrypt(plaintext)
+	if err != nil {
+		return entities.EncryptedKeys{}, fmt.Errorf("encrypt lorawan keys: %w", err)
+	}
+	return entities.EncryptedKeys{
+		EncryptedDEK: dek,
+		DekNonce:     dekNonce,
+		EncryptedKey: encKey,
+		KeyNonce:     keyNonce,
+	}, nil
+}
+
 // fanoutCreateSideEffects writes the AssetReadModel to MinIO (L2) and
 // invalidates the org counter cache. The read model includes
 // PasswordHash + CurrentCert, which the mapex-mqtt-broker plugin reads
@@ -116,6 +161,23 @@ func (s *AssetService) applyAssetPatch(c ctx.Context, assetId *string, dto *dtos
 		fields["protocol.mqtt.passwordHash"] = string(hash)
 	}
 	delete(fields, "protocol.mqtt.password")
+	// LoRaWAN: re-seal the keys when the patch supplies any, then strip the
+	// plaintext key fields so they never land in Mongo (mirrors the mqtt path).
+	if dto.Protocol != nil && dto.Protocol.Lorawan != nil {
+		lw := dto.Protocol.Lorawan
+		if lw.AppKey != "" || lw.NwkKey != "" || lw.DevAddr != "" || lw.NwkSKey != "" || lw.AppSKey != "" {
+			sealed, err := s.sealLorawanKeys(lw.AppKey, lw.NwkKey, lw.DevAddr, lw.NwkSKey, lw.AppSKey)
+			if err != nil {
+				return nil, err
+			}
+			fields["protocol.lorawan.keys"] = sealed
+		}
+	}
+	delete(fields, "protocol.lorawan.appKey")
+	delete(fields, "protocol.lorawan.nwkKey")
+	delete(fields, "protocol.lorawan.devAddr")
+	delete(fields, "protocol.lorawan.nwkSKey")
+	delete(fields, "protocol.lorawan.appSKey")
 	fields["updated"] = time.Now()
 	updated, _ := s.deps.AssetRepo.FindByIdAndUpdate(c, assetId, fields)
 	if updated.ID.IsZero() {

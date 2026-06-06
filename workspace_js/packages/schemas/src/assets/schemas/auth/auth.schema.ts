@@ -10,16 +10,46 @@ import { z, StringAndNotBeEmpty, IsBoolean } from '@mapexos/validations';
  * lookup. Also returned by the assets-service internal endpoint
  * GET /internal/asset-auth/:assetUUID as the broker's L3 fallback.
  *
- * `type` is intentionally open so future auth surfaces (http_api,
- * lorawan_key, etc.) can reuse the same projection shape without
- * breaking the broker. Today only `mqtt` is valid.
+ * `type` discriminates the auth surface and both blocks are nested and
+ * symmetric: the `mqtt` block is set when type=mqtt; the `lorawan` block is set
+ * when type=lorawan. The broker reads the mqtt block; the LNS reads the lorawan
+ * block.
  */
+
+// EncryptedKeys: the four envelope fields. Go []byte marshals to base64 JSON
+// strings, so these are plain strings on the wire.
+const ZodEncryptedKeysSchema = z.object({
+	encryptedDek: z.string(),
+	dekNonce: z.string(),
+	encryptedKey: z.string(),
+	keyNonce: z.string(),
+});
+
+// MqttAuth: the broker's CONNECT-decision fields. authType selects the mode,
+// passwordHash backs password mode, currentCertSerial backs cert mode.
+const ZodMqttAuthSchema = z.object({
+	authType: z.enum(['password', 'cert']).optional(),
+	passwordHash: z.string().optional(),
+	currentCertSerial: z.string().optional(),
+});
+
+// LorawanAuth: identity + profile in clear, key material encrypted in keys.
+const ZodLorawanAuthSchema = z.object({
+	devEui: StringAndNotBeEmpty,
+	joinEui: z.string().optional(),
+	region: StringAndNotBeEmpty,
+	class: z.enum(['A', 'B', 'C']),
+	macVersion: StringAndNotBeEmpty,
+	phyVersion: StringAndNotBeEmpty,
+	activation: z.enum(['otaa', 'abp']),
+	keys: ZodEncryptedKeysSchema,
+});
+
 export const ZodAuthProjectionSchema = z.object({
 	assetUUID: StringAndNotBeEmpty,
 	orgId: StringAndNotBeEmpty,
 	enabled: IsBoolean,
-	type: z.enum(['mqtt']),
-	authType: z.enum(['password', 'cert']),
-	passwordHash: z.string().optional(),
-	currentCertSerial: z.string().optional(),
+	type: z.enum(['mqtt', 'lorawan']),
+	mqtt: ZodMqttAuthSchema.optional(),
+	lorawan: ZodLorawanAuthSchema.optional(),
 });
