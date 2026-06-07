@@ -53,3 +53,19 @@ const (
 	LorawanActivationOTAA = "otaa"
 	LorawanActivationABP  = "abp"
 )
+
+// LoRaWAN asset kinds. A device is an end-device (identity + keys); a gateway is
+// radio infrastructure (frequency plan + connection auth), never bound to a
+// device.
+const (
+	LorawanKindDevice  = "device"
+	LorawanKindGateway = "gateway"
+)
+
+// LoRaWAN gateway connection auth modes. "eui" gates a UDP gateway by its
+// registered EUI (the Semtech UDP protocol allows nothing stronger); "cert" is
+// mTLS for a Basics Station gateway via the platform PKI.
+const (
+	LorawanGatewayAuthModeEUI  = "eui"
+	LorawanGatewayAuthModeCert = "cert"
+)

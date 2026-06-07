@@ -46,20 +46,42 @@ type ProtocolType struct {
 	Lorawan *LorawanConfig `bson:"lorawan,omitempty"`
 }
 
-// LorawanConfig is the persistent LoRaWAN identity + profile for an asset. The
-// secret key material (OTAA root keys or ABP session keys) is NEVER persisted in
-// plaintext: it is envelope-encrypted with the LoRaWAN device-keys KEK and only
-// the four envelope fields are stored in Keys.
+// LorawanConfig is the persistent LoRaWAN config for an asset. Kind discriminates
+// an end-device from a gateway: a device carries identity + profile + the
+// envelope-encrypted key material (Keys); a gateway carries the Gateway block
+// (frequency plan + auth mode) and no keys. A gateway is never linked to a device.
+//
+// Device secret key material (OTAA root keys or ABP session keys) is NEVER
+// persisted in plaintext: it is envelope-encrypted with the LoRaWAN device-keys
+// KEK and only the four envelope fields are stored in Keys.
 type LorawanConfig struct {
-	DevEUI     string `bson:"devEui"`
-	JoinEUI    string `bson:"joinEui,omitempty"`
-	Region     string `bson:"region"`
-	Class      string `bson:"class"`
-	MacVersion string `bson:"macVersion"`
-	PhyVersion string `bson:"phyVersion"`
-	Activation string `bson:"activation"`
+	Kind string `bson:"kind,omitempty"`
 
-	Keys EncryptedKeys `bson:"keys"`
+	// Device identity + profile (Kind == device).
+	DevEUI     string `bson:"devEui,omitempty"`
+	JoinEUI    string `bson:"joinEui,omitempty"`
+	Region     string `bson:"region,omitempty"`
+	Class      string `bson:"class,omitempty"`
+	MacVersion string `bson:"macVersion,omitempty"`
+	PhyVersion string `bson:"phyVersion,omitempty"`
+	Activation string `bson:"activation,omitempty"`
+
+	Keys EncryptedKeys `bson:"keys,omitempty"`
+
+	// Gateway profile + auth (Kind == gateway). Nil for devices.
+	Gateway *LorawanGatewayConfig `bson:"gateway,omitempty"`
+}
+
+// LorawanGatewayConfig is the persistent gateway block: per-gateway frequency
+// plan + connection auth mode. No device key material; never bound to a device.
+type LorawanGatewayConfig struct {
+	AuthMode         string         `bson:"authMode"`
+	CertTTL          *CertTTLConfig `bson:"certTTL,omitempty"`
+	FrequencyPlanID  string         `bson:"frequencyPlanId"`
+	FrequencyPlanIDs []string       `bson:"frequencyPlanIds,omitempty"`
+	Latitude         *float64       `bson:"latitude,omitempty"`
+	Longitude        *float64       `bson:"longitude,omitempty"`
+	Altitude         *float64       `bson:"altitude,omitempty"`
 }
 
 // EncryptedKeys holds the envelope-encrypted device key material (the JSON of

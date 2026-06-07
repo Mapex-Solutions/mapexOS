@@ -146,22 +146,65 @@ type CertTTLConfig struct {
 // persistence and the response path always omits them (one-shot delivery, never
 // retrievable). The read-model carries identity + profile only, never keys.
 type LorawanConfig struct {
-	DevEUI     string `json:"devEui" validate:"required,len=16,hexadecimal"`
-	JoinEUI    string `json:"joinEui,omitempty" validate:"required_if=Activation otaa,omitempty,len=16,hexadecimal"`
-	Region     string `json:"region" validate:"required"`
-	Class      string `json:"class" validate:"required,oneof=A B C"`
-	MacVersion string `json:"macVersion" validate:"required,oneof=1.0.2 1.0.3 1.0.4 1.1"`
-	PhyVersion string `json:"phyVersion" validate:"required"`
-	Activation string `json:"activation" validate:"required,oneof=otaa abp"`
+	// Kind discriminates a LoRaWAN end-device from a gateway. Both are lorawan
+	// assets: a device carries identity + key material, a gateway carries a
+	// frequency plan + connection auth mode. A gateway is NEVER linked to a
+	// device (LoRaWAN is star-of-stars; they are decoupled).
+	Kind string `json:"kind" validate:"required,oneof=device gateway"`
 
-	// OTAA root keys (request only; NwkKey only for LoRaWAN 1.1).
+	// Device identity + profile (Kind == device).
+	DevEUI     string `json:"devEui,omitempty" validate:"required_if=Kind device,omitempty,len=16,hexadecimal"`
+	JoinEUI    string `json:"joinEui,omitempty" validate:"required_if=Activation otaa,omitempty,len=16,hexadecimal"`
+	Region     string `json:"region,omitempty" validate:"required_if=Kind device"`
+	Class      string `json:"class,omitempty" validate:"required_if=Kind device,omitempty,oneof=A B C"`
+	MacVersion string `json:"macVersion,omitempty" validate:"required_if=Kind device,omitempty,oneof=1.0.2 1.0.3 1.0.4 1.1"`
+	PhyVersion string `json:"phyVersion,omitempty" validate:"required_if=Kind device"`
+	Activation string `json:"activation,omitempty" validate:"required_if=Kind device,omitempty,oneof=otaa abp"`
+
+	// OTAA root keys (device, request only; NwkKey only for LoRaWAN 1.1).
 	AppKey string `json:"appKey,omitempty" validate:"required_if=Activation otaa,omitempty,len=32,hexadecimal"`
 	NwkKey string `json:"nwkKey,omitempty" validate:"omitempty,len=32,hexadecimal"`
 
-	// ABP fixed session (request only).
+	// ABP fixed session (device, request only).
 	DevAddr string `json:"devAddr,omitempty" validate:"required_if=Activation abp,omitempty,len=8,hexadecimal"`
 	NwkSKey string `json:"nwkSKey,omitempty" validate:"required_if=Activation abp,omitempty,len=32,hexadecimal"`
 	AppSKey string `json:"appSKey,omitempty" validate:"required_if=Activation abp,omitempty,len=32,hexadecimal"`
+
+	// Gateway profile + auth (Kind == gateway). Required when Kind == gateway;
+	// nil for devices.
+	Gateway *LorawanGatewayConfig `json:"gateway,omitempty" validate:"required_if=Kind gateway"`
+}
+
+// LorawanGatewayConfig is the gateway-specific block of a LoRaWAN asset. It
+// carries the per-gateway frequency plan (so the Gateway Server configures THAT
+// gateway's radio at connect, enabling multi-region) and the connection auth
+// mode. A gateway has no device key material and is never bound to a device.
+//
+// Validation here is unconditional because the block only exists when the parent
+// Kind == gateway (the parent gates its presence with required_if).
+type LorawanGatewayConfig struct {
+	// AuthMode is the connection auth: "eui" (UDP, registered-EUI only - the
+	// Semtech UDP protocol allows nothing stronger) or "cert" (Basics Station,
+	// mTLS via the platform PKI). A gateway is always created with auth; there is
+	// no anonymous mode.
+	AuthMode string `json:"authMode" validate:"required,oneof=eui cert"`
+
+	// CertTTL is the validity window for the gateway's mTLS cert (authMode=cert),
+	// same shape the MQTT cert-mode devices use. Optional; the platform default
+	// applies when absent.
+	CertTTL *CertTTLConfig `json:"certTTL,omitempty" validate:"omitempty"`
+
+	// FrequencyPlanID is the gateway's primary frequency plan (e.g. EU_863_870).
+	// Must be a plan the LNS frequency-plans store knows.
+	FrequencyPlanID string `json:"frequencyPlanId" validate:"required"`
+
+	// FrequencyPlanIDs lists additional plans (same band) for multi-plan gateways.
+	FrequencyPlanIDs []string `json:"frequencyPlanIds,omitempty"`
+
+	// Optional antenna location, for downlink geolocation metadata.
+	Latitude  *float64 `json:"latitude,omitempty"`
+	Longitude *float64 `json:"longitude,omitempty"`
+	Altitude  *float64 `json:"altitude,omitempty"`
 }
 
 type ProtocolType struct {

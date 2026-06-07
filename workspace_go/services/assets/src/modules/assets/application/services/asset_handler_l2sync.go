@@ -7,6 +7,7 @@ import (
 
 	"assets/src/modules/assets/domain/entities"
 
+	assetsContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/assets"
 	assetsAuthContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/auth"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 )
@@ -109,24 +110,49 @@ func buildAuthProjection(asset *entities.Asset) assetsAuthContract.AuthProjectio
 		}
 		proj.Mqtt = mqtt
 	}
-	if asset.Protocol.Lorawan != nil {
-		lw := asset.Protocol.Lorawan
+	if lw := asset.Protocol.Lorawan; lw != nil {
 		proj.Type = "lorawan"
-		proj.Lorawan = &assetsAuthContract.LorawanAuth{
-			DevEUI:     lw.DevEUI,
-			JoinEUI:    lw.JoinEUI,
-			Region:     lw.Region,
-			Class:      lw.Class,
-			MacVersion: lw.MacVersion,
-			PhyVersion: lw.PhyVersion,
-			Activation: lw.Activation,
-			Keys: assetsAuthContract.EncryptedKeys{
+		auth := &assetsAuthContract.LorawanAuth{Kind: lw.Kind}
+		if lw.Kind == assetsContract.LorawanKindGateway {
+			certSerial := ""
+			if asset.CurrentCert != nil {
+				certSerial = asset.CurrentCert.Serial
+			}
+			auth.Gateway = buildLorawanGatewayAuth(lw.Gateway, certSerial)
+		} else {
+			auth.DevEUI = lw.DevEUI
+			auth.JoinEUI = lw.JoinEUI
+			auth.Region = lw.Region
+			auth.Class = lw.Class
+			auth.MacVersion = lw.MacVersion
+			auth.PhyVersion = lw.PhyVersion
+			auth.Activation = lw.Activation
+			auth.Keys = assetsAuthContract.EncryptedKeys{
 				EncryptedDEK: lw.Keys.EncryptedDEK,
 				DekNonce:     lw.Keys.DekNonce,
 				EncryptedKey: lw.Keys.EncryptedKey,
 				KeyNonce:     lw.Keys.KeyNonce,
-			},
+			}
 		}
+		proj.Lorawan = auth
 	}
 	return proj
+}
+
+// buildLorawanGatewayAuth maps the persisted gateway block to its slim
+// projection form. CurrentCertSerial is folded in (empty unless a cert was
+// issued) so the LNS can pin it on a cert-mode mTLS connect.
+func buildLorawanGatewayAuth(gw *entities.LorawanGatewayConfig, certSerial string) *assetsAuthContract.LorawanGatewayAuth {
+	if gw == nil {
+		return nil
+	}
+	return &assetsAuthContract.LorawanGatewayAuth{
+		AuthMode:          gw.AuthMode,
+		FrequencyPlanID:   gw.FrequencyPlanID,
+		FrequencyPlanIDs:  gw.FrequencyPlanIDs,
+		Latitude:          gw.Latitude,
+		Longitude:         gw.Longitude,
+		Altitude:          gw.Altitude,
+		CurrentCertSerial: certSerial,
+	}
 }

@@ -55,24 +55,42 @@ const hexOfLen = (len: number) =>
 	z.string().length(len).regex(/^[0-9a-fA-F]+$/, 'must be hexadecimal');
 
 /**
- * LoRaWAN device config. Mirrors Go LorawanConfig. The plaintext keys
- * (appKey/nwkKey for OTAA, devAddr/nwkSKey/appSKey for ABP) are request-only;
- * the platform envelope-encrypts them and never returns them. Per-activation
- * requirements are enforced by the create/update refinements below.
+ * LoRaWAN gateway config. Mirrors Go LorawanGatewayConfig. Per-gateway frequency
+ * plan + connection auth mode (`eui` for UDP registered-EUI, `cert` for Basics
+ * Station mTLS). A gateway has no device keys and is never linked to a device.
+ */
+const ZodLorawanGatewayConfigSchema = z.object({
+	authMode: z.enum(['eui', 'cert']),
+	certTTL: ZodCertTTLConfigSchema.optional(),
+	frequencyPlanId: StringAndNotBeEmpty,
+	frequencyPlanIds: z.array(z.string()).optional(),
+	latitude: z.number().optional(),
+	longitude: z.number().optional(),
+	altitude: z.number().optional(),
+});
+
+/**
+ * LoRaWAN config. Mirrors Go LorawanConfig. `kind` discriminates a device
+ * (identity + request-only plaintext keys, envelope-encrypted server-side and
+ * never returned) from a gateway (frequency plan + auth mode). Device fields are
+ * optional at the base level and enforced per-kind by the create/update
+ * refinements below.
  */
 const ZodLorawanConfigSchema = z.object({
-	devEui: hexOfLen(16),
+	kind: z.enum(['device', 'gateway']),
+	devEui: hexOfLen(16).optional(),
 	joinEui: hexOfLen(16).optional(),
-	region: StringAndNotBeEmpty,
-	class: z.enum(['A', 'B', 'C']),
-	macVersion: z.enum(['1.0.2', '1.0.3', '1.0.4', '1.1']),
-	phyVersion: StringAndNotBeEmpty,
-	activation: z.enum(['otaa', 'abp']),
+	region: StringAndNotBeEmpty.optional(),
+	class: z.enum(['A', 'B', 'C']).optional(),
+	macVersion: z.enum(['1.0.2', '1.0.3', '1.0.4', '1.1']).optional(),
+	phyVersion: StringAndNotBeEmpty.optional(),
+	activation: z.enum(['otaa', 'abp']).optional(),
 	appKey: hexOfLen(32).optional(),
 	nwkKey: hexOfLen(32).optional(),
 	devAddr: hexOfLen(8).optional(),
 	nwkSKey: hexOfLen(32).optional(),
 	appSKey: hexOfLen(32).optional(),
+	gateway: ZodLorawanGatewayConfigSchema.optional(),
 });
 
 const ZodProtocolTypeSchema = z.object({
@@ -232,6 +250,26 @@ export const ZodAssetCreateSchema = z.object({
 	message: "devAddr, nwkSKey and appSKey are required for ABP activation",
 	path: ['protocol', 'lorawan'],
 }).refine((data) => {
+	// Device kind requires identity + profile
+	const lw = data.protocol.lorawan;
+	if (lw?.kind === 'device' && (!lw.devEui || !lw.region || !lw.class || !lw.macVersion || !lw.phyVersion || !lw.activation)) {
+		return false;
+	}
+	return true;
+}, {
+	message: "devEui, region, class, macVersion, phyVersion and activation are required for a LoRaWAN device",
+	path: ['protocol', 'lorawan'],
+}).refine((data) => {
+	// Gateway kind requires the gateway block
+	const lw = data.protocol.lorawan;
+	if (lw?.kind === 'gateway' && !lw.gateway) {
+		return false;
+	}
+	return true;
+}, {
+	message: "gateway block (authMode, frequencyPlanId) is required for a LoRaWAN gateway",
+	path: ['protocol', 'lorawan', 'gateway'],
+}).refine((data) => {
 	// Validate routeGroupIds uniqueness
 	const uniqueIds = new Set(data.routeGroupIds);
 	return uniqueIds.size === data.routeGroupIds.length;
@@ -300,6 +338,26 @@ export const ZodAssetUpdateSchema = z.object({
 }, {
 	message: "devAddr, nwkSKey and appSKey are required for ABP activation",
 	path: ['protocol', 'lorawan'],
+}).refine((data) => {
+	// Device kind requires identity + profile
+	const lw = data.protocol?.lorawan;
+	if (lw?.kind === 'device' && (!lw.devEui || !lw.region || !lw.class || !lw.macVersion || !lw.phyVersion || !lw.activation)) {
+		return false;
+	}
+	return true;
+}, {
+	message: "devEui, region, class, macVersion, phyVersion and activation are required for a LoRaWAN device",
+	path: ['protocol', 'lorawan'],
+}).refine((data) => {
+	// Gateway kind requires the gateway block
+	const lw = data.protocol?.lorawan;
+	if (lw?.kind === 'gateway' && !lw.gateway) {
+		return false;
+	}
+	return true;
+}, {
+	message: "gateway block (authMode, frequencyPlanId) is required for a LoRaWAN gateway",
+	path: ['protocol', 'lorawan', 'gateway'],
 }).refine((data) => {
 	// Validate routeGroupIds uniqueness if provided
 	if (data.routeGroupIds) {

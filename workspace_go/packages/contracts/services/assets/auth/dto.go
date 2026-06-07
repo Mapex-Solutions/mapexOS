@@ -52,17 +52,39 @@ type MqttAuth struct {
 	CurrentCertSerial string `json:"currentCertSerial,omitempty"`
 }
 
-// LorawanAuth is the slim LoRaWAN auth block in the projection. Identity +
-// profile are clear; the secret key material lives encrypted in Keys.
+// LorawanAuth is the slim LoRaWAN auth block in the projection. Kind
+// discriminates a device (identity + profile + encrypted Keys, read by the LNS
+// NS/JS path) from a gateway (frequency plan + auth mode + cert serial, read by
+// the LNS Gateway Server path).
 type LorawanAuth struct {
-	DevEUI     string        `json:"devEui"`
+	Kind string `json:"kind,omitempty"`
+
+	// Device (Kind == device).
+	DevEUI     string        `json:"devEui,omitempty"`
 	JoinEUI    string        `json:"joinEui,omitempty"`
-	Region     string        `json:"region"`
-	Class      string        `json:"class"`
-	MacVersion string        `json:"macVersion"`
-	PhyVersion string        `json:"phyVersion"`
-	Activation string        `json:"activation"`
-	Keys       EncryptedKeys `json:"keys"`
+	Region     string        `json:"region,omitempty"`
+	Class      string        `json:"class,omitempty"`
+	MacVersion string        `json:"macVersion,omitempty"`
+	PhyVersion string        `json:"phyVersion,omitempty"`
+	Activation string        `json:"activation,omitempty"`
+	Keys       EncryptedKeys `json:"keys,omitempty"`
+
+	// Gateway (Kind == gateway).
+	Gateway *LorawanGatewayAuth `json:"gateway,omitempty"`
+}
+
+// LorawanGatewayAuth is the slim LoRaWAN gateway block in the projection. The
+// LNS Gateway Server builds the per-gateway frequency plan + connection auth
+// from it; there is no device key material. CurrentCertSerial is set when
+// AuthMode == cert (pinned by the LNS against the presented mTLS cert).
+type LorawanGatewayAuth struct {
+	AuthMode          string   `json:"authMode"`
+	FrequencyPlanID   string   `json:"frequencyPlanId"`
+	FrequencyPlanIDs  []string `json:"frequencyPlanIds,omitempty"`
+	Latitude          *float64 `json:"latitude,omitempty"`
+	Longitude         *float64 `json:"longitude,omitempty"`
+	Altitude          *float64 `json:"altitude,omitempty"`
+	CurrentCertSerial string   `json:"currentCertSerial,omitempty"`
 }
 
 // EncryptedKeys holds the four envelope fields produced by the goKit envelope

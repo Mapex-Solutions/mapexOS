@@ -33,16 +33,32 @@ const ZodMqttAuthSchema = z.object({
 	currentCertSerial: z.string().optional(),
 });
 
-// LorawanAuth: identity + profile in clear, key material encrypted in keys.
+// LorawanGatewayAuth: per-gateway frequency plan + auth mode + cert serial (no
+// keys). The LNS Gateway Server builds the radio config + auth from it.
+const ZodLorawanGatewayAuthSchema = z.object({
+	authMode: z.enum(['eui', 'cert']),
+	frequencyPlanId: StringAndNotBeEmpty,
+	frequencyPlanIds: z.array(z.string()).optional(),
+	latitude: z.number().optional(),
+	longitude: z.number().optional(),
+	altitude: z.number().optional(),
+	currentCertSerial: z.string().optional(),
+});
+
+// LorawanAuth: kind discriminates a device (identity + profile + encrypted keys,
+// read by the LNS NS/JS) from a gateway (frequency plan + auth, read by the LNS
+// Gateway Server). Device fields are optional because a gateway omits them.
 const ZodLorawanAuthSchema = z.object({
-	devEui: StringAndNotBeEmpty,
+	kind: z.enum(['device', 'gateway']).optional(),
+	devEui: z.string().optional(),
 	joinEui: z.string().optional(),
-	region: StringAndNotBeEmpty,
-	class: z.enum(['A', 'B', 'C']),
-	macVersion: StringAndNotBeEmpty,
-	phyVersion: StringAndNotBeEmpty,
-	activation: z.enum(['otaa', 'abp']),
-	keys: ZodEncryptedKeysSchema,
+	region: z.string().optional(),
+	class: z.enum(['A', 'B', 'C']).optional(),
+	macVersion: z.string().optional(),
+	phyVersion: z.string().optional(),
+	activation: z.enum(['otaa', 'abp']).optional(),
+	keys: ZodEncryptedKeysSchema.optional(),
+	gateway: ZodLorawanGatewayAuthSchema.optional(),
 });
 
 export const ZodAuthProjectionSchema = z.object({

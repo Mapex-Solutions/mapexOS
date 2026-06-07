@@ -169,16 +169,27 @@ func (s *AssetService) buildReadModel(asset *entities.Asset, templateOrgId strin
 				PasswordHash: asset.Protocol.Mqtt.PasswordHash,
 			}
 		}
-		if asset.Protocol.Lorawan != nil {
+		if lw := asset.Protocol.Lorawan; lw != nil {
 			// Identity + profile only: the secret keys never reach the read-model.
 			rm.Protocol.Lorawan = &assetsContract.LorawanConfig{
-				DevEUI:     asset.Protocol.Lorawan.DevEUI,
-				JoinEUI:    asset.Protocol.Lorawan.JoinEUI,
-				Region:     asset.Protocol.Lorawan.Region,
-				Class:      asset.Protocol.Lorawan.Class,
-				MacVersion: asset.Protocol.Lorawan.MacVersion,
-				PhyVersion: asset.Protocol.Lorawan.PhyVersion,
-				Activation: asset.Protocol.Lorawan.Activation,
+				Kind:       lw.Kind,
+				DevEUI:     lw.DevEUI,
+				JoinEUI:    lw.JoinEUI,
+				Region:     lw.Region,
+				Class:      lw.Class,
+				MacVersion: lw.MacVersion,
+				PhyVersion: lw.PhyVersion,
+				Activation: lw.Activation,
+			}
+			if gw := lw.Gateway; gw != nil {
+				rm.Protocol.Lorawan.Gateway = &assetsContract.LorawanGatewayConfig{
+					AuthMode:         gw.AuthMode,
+					FrequencyPlanID:  gw.FrequencyPlanID,
+					FrequencyPlanIDs: gw.FrequencyPlanIDs,
+					Latitude:         gw.Latitude,
+					Longitude:        gw.Longitude,
+					Altitude:         gw.Altitude,
+				}
 			}
 		}
 	}

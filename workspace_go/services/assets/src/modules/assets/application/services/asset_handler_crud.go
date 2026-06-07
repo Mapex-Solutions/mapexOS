@@ -10,6 +10,7 @@ import (
 	"assets/src/modules/assets/application/dtos"
 	"assets/src/modules/assets/domain/entities"
 
+	assetsContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/assets"
 	assetsAuthContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/auth"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
@@ -91,6 +92,11 @@ func (s *AssetService) hashMqttPasswordIfNeeded(asset *entities.Asset, dto *dtos
 // (AssetService.OnMount); a not-yet-ready KEK fails the create.
 func (s *AssetService) encryptLorawanKeysIfNeeded(asset *entities.Asset, dto *dtos.AssetCreateDTO) error {
 	if asset.Protocol.Type != "lorawan" || asset.Protocol.Lorawan == nil || dto.Protocol.Lorawan == nil {
+		return nil
+	}
+	// Gateways are radio infrastructure, not end-devices: they carry no device
+	// key material, so there is nothing to seal with the KEK.
+	if dto.Protocol.Lorawan.Kind == assetsContract.LorawanKindGateway {
 		return nil
 	}
 	lw := dto.Protocol.Lorawan
