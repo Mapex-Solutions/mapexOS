@@ -80,6 +80,31 @@ func (s *MqttCertsService) IssueCert(ctx context.Context, rc *reqCtx.RequestCont
 	return s.buildIssueResponse(bundle), nil
 }
 
+// IssueGatewayCert signs a cert for a LoRaWAN gateway asset (authMode=cert),
+// reusing the same machinery as IssueCert (CN=assetUUID, sign, reflect onto the
+// asset, return the bundle once). The only difference is the eligibility guard:
+// it refuses anything that is not a cert-mode gateway, keeping the gateway_certs
+// endpoint scoped while leaving the mqtt_certs path untouched.
+func (s *MqttCertsService) IssueGatewayCert(ctx context.Context, rc *reqCtx.RequestContext, req *dtos.IssueCertRequest) (*dtos.IssueCertResponse, error) {
+	if !s.IsCAReady() {
+		return nil, ErrCANotReady
+	}
+	if err := s.validateIssueRequest(req); err != nil {
+		return nil, err
+	}
+	if err := s.assertGatewayCertEligible(ctx, req.AssetUUID); err != nil {
+		return nil, err
+	}
+	bundle, err := s.signNewDeviceCert(ctx, req.AssetUUID, rc)
+	if err != nil {
+		return nil, fmt.Errorf("sign: %w", err)
+	}
+	if err := s.reflectIssuedCertOnAsset(ctx, req.AssetUUID, bundle); err != nil {
+		return nil, fmt.Errorf("reflect cert on asset: %w", err)
+	}
+	return s.buildIssueResponse(bundle), nil
+}
+
 // RevokeCert clears the asset's `currentCert` (so the broker plugin
 // drops the L1 entry on the next FANOUT-triggered invalidation), then
 // persists an audit row in mqttRevokedCertificates. The audit row

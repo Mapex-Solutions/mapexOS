@@ -53,6 +53,14 @@ func InitInterfaces() {
 		h := handlers.NewMqttCertsHandler(params.Service)
 		routes.RegisterRoutes(external, h, params.Service)
 
+		// Gateway cert issuance shares the same machinery under its own route.
+		gateway := params.App.Group(
+			"/api/v1/gateway_certs",
+			ctxInjector.ContextInjector(ctxTimeout),
+			authmw.AuthMiddleware(config.GetAuthConfig()),
+		)
+		routes.RegisterGatewayRoutes(gateway, h, params.Service)
+
 		// Fire OnMount lifecycle hook (sync attempt + retry goroutine on fail).
 		if m, ok := params.Service.(common.Mountable); ok {
 			m.OnMount()

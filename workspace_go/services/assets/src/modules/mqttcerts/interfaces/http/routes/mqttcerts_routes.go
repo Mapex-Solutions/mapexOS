@@ -18,3 +18,11 @@ func RegisterRoutes(router fiber.Router, h *handlers.MqttCertsHandler, svc mqttP
 	g.Delete("/:serial", h.RevokeCert)
 	g.Get("/", h.ListByAsset)
 }
+
+// RegisterGatewayRoutes mounts /api/v1/gateway_certs/* (issue only). Same
+// CA-ready gate; reuses the shared signer/CA machinery, scoped to lorawan
+// gateways by the service eligibility check.
+func RegisterGatewayRoutes(router fiber.Router, h *handlers.MqttCertsHandler, svc mqttPorts.MqttCertsServicePort) {
+	g := router.Group("/", localMw.RequireCAReady(svc))
+	g.Post("/", h.IssueGatewayCert)
+}

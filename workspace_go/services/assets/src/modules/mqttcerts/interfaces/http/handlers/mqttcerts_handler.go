@@ -24,6 +24,20 @@ func (h *MqttCertsHandler) IssueCert(c *fiber.Ctx) error {
 	return c.JSON(resp)
 }
 
+// IssueGatewayCert — POST /api/v1/gateway_certs
+func (h *MqttCertsHandler) IssueGatewayCert(c *fiber.Ctx) error {
+	var req dtos.IssueCertRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	rc, _ := c.Locals("requestContext").(*reqCtx.RequestContext)
+	resp, err := h.service.IssueGatewayCert(c.UserContext(), rc, &req)
+	if err != nil {
+		return c.Status(fiber.StatusConflict).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(resp)
+}
+
 // RevokeCert — DELETE /api/v1/mqtt_certs/:serial
 func (h *MqttCertsHandler) RevokeCert(c *fiber.Ctx) error {
 	serial := c.Params("serial")

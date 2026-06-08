@@ -14,6 +14,7 @@ type MqttCertsServicePort interface {
 	OnMount()
 	IsCAReady() bool
 	IssueCert(ctx context.Context, rc *reqCtx.RequestContext, req *dtos.IssueCertRequest) (*dtos.IssueCertResponse, error)
+	IssueGatewayCert(ctx context.Context, rc *reqCtx.RequestContext, req *dtos.IssueCertRequest) (*dtos.IssueCertResponse, error)
 	RevokeCert(ctx context.Context, rc *reqCtx.RequestContext, serial string, reason string) error
 	ListRevokedByAsset(ctx context.Context, rc *reqCtx.RequestContext, assetUUID string) ([]*dtos.RevokedCertResponse, error)
 	HardDeleteByAssetUUID(ctx context.Context, assetUUID string) error

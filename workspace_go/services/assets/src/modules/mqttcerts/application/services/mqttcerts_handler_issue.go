@@ -9,6 +9,7 @@ import (
 	appConsts "assets/src/modules/mqttcerts/application/constants"
 	dtos "assets/src/modules/mqttcerts/application/dtos"
 
+	assetsContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/assets"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 )
 
@@ -18,6 +19,24 @@ func (s *MqttCertsService) validateIssueRequest(req *dtos.IssueCertRequest) erro
 	}
 	if req.AssetUUID == "" {
 		return errors.New("assetUUID required")
+	}
+	return nil
+}
+
+// assertGatewayCertEligible rejects issuing a gateway cert unless the asset is a
+// LoRaWAN gateway in cert auth mode, so the gateway_certs endpoint can't mint a
+// cert for a device or an eui-mode gateway.
+func (s *MqttCertsService) assertGatewayCertEligible(ctx context.Context, assetUUID string) error {
+	asset, err := s.deps.AssetService.GetByUUID(ctx, assetUUID)
+	if err != nil {
+		return fmt.Errorf("load asset: %w", err)
+	}
+	lw := asset.Protocol.Lorawan
+	if lw == nil || lw.Kind != assetsContract.LorawanKindGateway || lw.Gateway == nil {
+		return errors.New("asset is not a lorawan gateway")
+	}
+	if lw.Gateway.AuthMode != assetsContract.LorawanGatewayAuthModeCert {
+		return errors.New("gateway authMode is not cert")
 	}
 	return nil
 }
@@ -66,18 +85,26 @@ func (s *MqttCertsService) resolveCertTTLDays(ctx context.Context, assetUUID str
 	if err != nil {
 		return 0, fmt.Errorf("load asset for cert TTL: %w", err)
 	}
-	if asset.Protocol.Mqtt == nil || asset.Protocol.Mqtt.CertTTL == nil {
+	// The certTTL override lives on the mqtt block (cert-mode device) or the
+	// lorawan gateway block. Either absent falls back to the platform default.
+	var value int
+	var unit string
+	switch {
+	case asset.Protocol.Mqtt != nil && asset.Protocol.Mqtt.CertTTL != nil:
+		value, unit = asset.Protocol.Mqtt.CertTTL.Value, asset.Protocol.Mqtt.CertTTL.Unit
+	case asset.Protocol.Lorawan != nil && asset.Protocol.Lorawan.Gateway != nil && asset.Protocol.Lorawan.Gateway.CertTTL != nil:
+		value, unit = asset.Protocol.Lorawan.Gateway.CertTTL.Value, asset.Protocol.Lorawan.Gateway.CertTTL.Unit
+	default:
 		return appConsts.DefaultDeviceCertTTLDays, nil
 	}
-	cfg := asset.Protocol.Mqtt.CertTTL
-	if cfg.Value <= 0 {
+	if value <= 0 {
 		return 0, errors.New("certTTL.value must be > 0")
 	}
-	mult := appConsts.CertTTLUnitToDays(cfg.Unit)
+	mult := appConsts.CertTTLUnitToDays(unit)
 	if mult == 0 {
-		return 0, fmt.Errorf("certTTL.unit invalid: %q", cfg.Unit)
+		return 0, fmt.Errorf("certTTL.unit invalid: %q", unit)
 	}
-	days := cfg.Value * mult
+	days := value * mult
 	if days < appConsts.MinDeviceCertTTLDays || days > appConsts.MaxDeviceCertTTLDays {
 		return 0, fmt.Errorf("certTTL out of range: %d days (allowed %d..%d)",
 			days, appConsts.MinDeviceCertTTLDays, appConsts.MaxDeviceCertTTLDays)
