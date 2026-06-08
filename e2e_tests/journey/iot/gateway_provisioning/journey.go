@@ -34,11 +34,12 @@ import (
 
 // Items is the ordered slice of saga Items the journey runs.
 //
-//	1. CreateRouteGroup               -> route group the asset requires
-//	2. CreateTemplate                 -> asset template the asset requires
-//	3. CreateAssetWith (gateway)      -> lorawan gateway asset persisted (no keys, KEK skipped)
-//	4. AssertAuthProjectionGateway    -> L3 source serves type=lorawan + kind=gateway + plan
-//	5. DeleteAsset                    -> teardown
+//  1. CreateRouteGroup               -> route group the asset requires
+//  2. CreateTemplate                 -> asset template the asset requires
+//  3. CreateAssetWith (gateway)      -> lorawan gateway asset persisted (no keys, KEK skipped)
+//  4. AssertAuthProjectionGateway    -> L3 source serves type=lorawan + kind=gateway + plan
+//  5. AssertGatewayCertRejected      -> eui-mode gateway cannot obtain an mTLS cert
+//  6. DeleteAsset                    -> teardown
 func Items() []saga.Item {
 	return []saga.Item{
 		// Route group bound to the asset (assets require at least one).
@@ -52,6 +53,9 @@ func Items() []saga.Item {
 
 		// The LNS Gateway Server's L3 source publishes it as a gateway in the right shape.
 		assetAsserts.AssertAuthProjectionGateway(assetPayloads.SagaGatewayFrequencyPlan),
+
+		// Eligibility guard: an eui-mode gateway must not be able to mint a cert.
+		assetAsserts.AssertGatewayCertRejected(),
 
 		// Tear the asset down explicitly.
 		assetSteps.DeleteAsset(),
