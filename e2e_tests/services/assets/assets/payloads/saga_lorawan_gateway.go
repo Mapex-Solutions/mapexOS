@@ -40,6 +40,37 @@ func SagaLorawanGateway(runID, templateID, routeGroupID string) *AssetCreateBuil
 	}
 }
 
+// SagaLorawanGatewayCert returns a LoRaWAN gateway asset payload in cert mode:
+// protocol=lorawan, kind=gateway, authMode=cert (Basics Station, mTLS via the
+// platform PKI). The mTLS cert is issued in a later step (POST
+// /api/v1/gateway_certs); CertTTL is short (1 day) so the journey does not lean
+// on the platform default and the cert metadata round-trip is exercised. Same EUI
+// derivation as the eui variant.
+func SagaLorawanGatewayCert(runID, templateID, routeGroupID string) *AssetCreateBuilder {
+	eui := euiFromRunID(runID)
+	return &AssetCreateBuilder{
+		spec: contracts.AssetCreate{
+			Name:            fmt.Sprintf("saga-lorawan-gateway-cert-%s", runID),
+			Enabled:         true,
+			DebugEnabled:    true,
+			AssetUUID:       eui,
+			AssetTemplateID: templateID,
+			RouteGroupIds:   []string{routeGroupID},
+			Protocol: contracts.ProtocolType{
+				Type: "lorawan",
+				Lorawan: &contracts.LorawanConfig{
+					Kind: contracts.LorawanKindGateway,
+					Gateway: &contracts.LorawanGatewayConfig{
+						AuthMode:        contracts.LorawanGatewayAuthModeCert,
+						FrequencyPlanID: SagaGatewayFrequencyPlan,
+						CertTTL:         &contracts.CertTTLConfig{Value: 1, Unit: "day"},
+					},
+				},
+			},
+		},
+	}
+}
+
 // euiFromRunID maps the runID to a stable uppercase 16-hex EUI (pad/truncate).
 func euiFromRunID(runID string) string {
 	h := strings.ToUpper(hex.EncodeToString([]byte(runID)))
