@@ -1,16 +1,18 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"triggers/src/modules/triggers/application/dtos"
 	"triggers/src/modules/triggers/application/ports"
 	"triggers/src/modules/triggers/interfaces/http/handlers"
 
+	contractsCommon "github.com/Mapex-Solutions/MapexOS/contracts/common"
+	permissions "github.com/Mapex-Solutions/MapexOS/permissions/triggers"
+	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	coverageMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/coverage"
 	permissionMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/permission"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
-	permissions "github.com/Mapex-Solutions/MapexOS/permissions/triggers"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
 // RegisterRoutes registers trigger HTTP routes.
@@ -21,76 +23,85 @@ import (
 // Base path: /api/v1/triggers
 //
 // HTTP Verbs follow REST conventions:
-//   GET    /                - List triggers (paginated, filtered)
-//   POST   /                - Create trigger
-//   GET    /:id             - Get trigger by ID
-//   PATCH  /:id             - Update trigger
-//   DELETE /:id             - Delete trigger
 //
-// Middleware chain:
-//   1. ValidationMiddleware - Validates and parses request body/query/params
-//   2. RequirePermission - Checks user has required permission (uses cache)
-//   3. InjectRequestContext - Injects RequestContext with org filtering (uses coverage cache)
-//   4. Handler - Executes business logic via service port
+//	GET    /         - List triggers (paginated, filtered)
+//	GET    /counter  - Count triggers (cached)
+//	POST   /         - Create trigger
+//	GET    /:id      - Get trigger by ID
+//	PATCH  /:id      - Update trigger
+//	DELETE /:id      - Delete trigger
 //
-// Parameters:
-//   - group: Fiber router group to register routes on
-//   - service: Trigger service port interface implementation
-func RegisterRoutes(group fiber.Router, service ports.TriggerServicePort) {
+// Routes are registered through the swagger wrapper: each NewValidation declares
+// the input contract once (used to both validate and document), the module tag is
+// declared once on Wrap, and each route's summary, description, and response type
+// are attached via the fluent builder.
+func RegisterRoutes(group web.Router, service ports.TriggerServicePort) {
 
-	/**
-	* List Routes
-	 */
+	r := swagger.Wrap(group).Tag("Triggers")
 
-	// Get triggers with filters, pagination, and projection
-	// Uses InjectRequestContext middleware for context-aware org filtering
-	// Includes hierarchical support via PathKey data from coverage cache
+	// List triggers with filters, pagination, and projection.
+	// coverage middleware injects context-aware org filtering (hierarchical via PathKey).
 	triggerQueryDto := validation.NewValidation(nil, &dtos.TriggerQueryDto{}, nil)
-	group.Get("/",
-		validation.ValidationMiddleware(triggerQueryDto),        // Validate DTO first (fail fast)
-		permissionMw.RequirePermission(permissions.TriggerList), // Check permission (cache)
-		coverageMw.InjectRequestContext(),                       // Inject context (cache)
-		handlers.GetTriggers(service),                           // Handler
-	)
+	r.Get("/", triggerQueryDto, swagger.Expose,
+		permissionMw.RequirePermission(permissions.TriggerList),
+		coverageMw.InjectRequestContext(),
+		handlers.GetTriggers(service),
+	).
+		Summary("List triggers").
+		Description("Returns a paginated, filterable list of triggers scoped to the caller's organization.").
+		Returns(&model.PaginatedResult[dtos.TriggerResponse]{})
 
-	// Count triggers (counter endpoint with cache)
-	group.Get("/counter",
+	// Count triggers (cached). No request contract to validate.
+	counterDto := validation.NewValidation(nil, nil, nil)
+	r.Get("/counter", counterDto, swagger.Expose,
 		permissionMw.RequirePermission(permissions.TriggerList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetTriggerCount(service),
-	)
+	).
+		Summary("Count triggers").
+		Description("Returns the total number of triggers for the caller's organization.").
+		Returns(&contractsCommon.CounterResponse{})
 
-	/**
-	* CRUD Routes
-	 */
-
-	// Create a new trigger
+	// Create a new trigger.
 	triggerCreateDto := validation.NewValidation(&dtos.CreateTriggerDto{}, nil, nil)
-	group.Post("/",
-		validation.ValidationMiddleware(triggerCreateDto),         // Validate DTO
-		permissionMw.RequirePermission(permissions.TriggerCreate), // Check permission
-		coverageMw.InjectRequestContext(),                         // Inject context
-		handlers.CreateTrigger(service),                           // Handler
-	)
+	r.Post("/", triggerCreateDto, swagger.Expose,
+		permissionMw.RequirePermission(permissions.TriggerCreate),
+		coverageMw.InjectRequestContext(),
+		handlers.CreateTrigger(service),
+	).
+		Summary("Create trigger").
+		Description("Creates a new trigger. Org scoping is applied from the request context.").
+		Returns(&dtos.TriggerResponse{})
 
-	// Get trigger by ID
-	group.Get("/:id",
+	// Get trigger by ID. The :id path param is read directly by the handler and
+	// is not validated as a contract, so no params DTO is declared here.
+	getTriggerById := validation.NewValidation(nil, nil, nil)
+	r.Get("/:id", getTriggerById, swagger.Expose,
 		permissionMw.RequirePermission(permissions.TriggerRead),
 		handlers.GetTriggerById(service),
-	)
+	).
+		Summary("Get trigger by ID").
+		Description("Retrieves a single trigger by its MongoDB ObjectId.").
+		Returns(&dtos.TriggerResponse{})
 
-	// Update trigger by ID
+	// Update trigger by ID.
 	triggerUpdateDto := validation.NewValidation(&dtos.UpdateTriggerDto{}, nil, nil)
-	group.Patch("/:id",
-		validation.ValidationMiddleware(triggerUpdateDto),          // Validate DTO first (fail fast)
-		permissionMw.RequirePermission(permissions.TriggerUpdate), // Check permission (cache)
-		coverageMw.InjectRequestContext(),                         // Need context for updatedBy
+	r.Patch("/:id", triggerUpdateDto, swagger.Expose,
+		permissionMw.RequirePermission(permissions.TriggerUpdate),
+		coverageMw.InjectRequestContext(),
 		handlers.UpdateTriggerById(service),
-	)
+	).
+		Summary("Update trigger").
+		Description("Partially updates an existing trigger. Only provided fields are changed.").
+		Returns(&dtos.TriggerResponse{})
 
-	// Delete trigger by ID
-	group.Delete("/:id",
+	// Delete trigger by ID.
+	deleteTriggerById := validation.NewValidation(nil, nil, nil)
+	r.Delete("/:id", deleteTriggerById, swagger.Expose,
 		permissionMw.RequirePermission(permissions.TriggerDelete),
 		handlers.DeleteTriggerById(service),
-	)
+	).
+		Summary("Delete trigger").
+		Description("Deletes a trigger by its MongoDB ObjectId.").
+		Returns(map[string]bool{})
 }

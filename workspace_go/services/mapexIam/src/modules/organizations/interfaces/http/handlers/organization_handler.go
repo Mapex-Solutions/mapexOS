@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/organizations/application/dtos"
 	"mapexIam/src/modules/organizations/application/ports"
@@ -22,8 +22,8 @@ import (
 //   - 201 Created with organization data
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func CreateOrganization(service ports.OrganizationServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateOrganization(service ports.OrganizationServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -54,8 +54,8 @@ func CreateOrganization(service ports.OrganizationServicePort) fiber.Handler {
 //   - 200 OK with organization data if found
 //   - 404 Not Found if organization doesn't exist
 //   - 500 Internal Server Error on service failure
-func GetOrganizationById(service ports.OrganizationServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetOrganizationById(service ports.OrganizationServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -84,8 +84,8 @@ func GetOrganizationById(service ports.OrganizationServicePort) fiber.Handler {
 //   - 404 Not Found if organization doesn't exist
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func UpdateOrganizationById(service ports.OrganizationServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateOrganizationById(service ports.OrganizationServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -117,8 +117,8 @@ func UpdateOrganizationById(service ports.OrganizationServicePort) fiber.Handler
 //   - 200 OK with success flag if deletion succeeds
 //   - 404 Not Found if organization doesn't exist
 //   - 500 Internal Server Error on service failure
-func DeleteOrganizationById(service ports.OrganizationServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteOrganizationById(service ports.OrganizationServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -160,8 +160,8 @@ func DeleteOrganizationById(service ports.OrganizationServicePort) fiber.Handler
 //   - 200 OK with paginated organization list
 //   - 400 Bad Request if query validation fails
 //   - 500 Internal Server Error on service failure or requestContext not found
-func GetOrganizations(service ports.OrganizationServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetOrganizations(service ports.OrganizationServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -186,8 +186,8 @@ func GetOrganizations(service ports.OrganizationServicePort) fiber.Handler {
 // GetOrganizationsTree returns a Fiber handler that retrieves organizations in a tree structure
 // with cursor-based pagination for hierarchical navigation in UI components.
 // Uses X-Org-Context header to determine the root organization for the tree.
-func GetOrganizationsTree(service ports.OrganizationServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetOrganizationsTree(service ports.OrganizationServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		ctx := c.UserContext()
 

@@ -1,148 +1,147 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"events/src/modules/events/application/dtos"
 	"events/src/modules/events/application/ports"
 	"events/src/modules/events/interfaces/http/handlers"
 
+	perms "github.com/Mapex-Solutions/MapexOS/permissions/events"
 	coverageMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/coverage"
 	permissionMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/permission"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
-	perms "github.com/Mapex-Solutions/MapexOS/permissions/events"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
-func RegisterRoutes(group fiber.Router, service ports.EventServicePort) {
+// RegisterRoutes registers the events read-side HTTP routes (ClickHouse history
+// queries). Base path: /api/v1/events.
+//
+// Routes are registered through the swagger wrapper: each NewValidation declares
+// the input contract once (used to both validate and document), the module tag is
+// declared once on Wrap, and each route's summary, description, and response type
+// are attached via the fluent builder.
+func RegisterRoutes(group web.Router, service ports.EventServicePort) {
 
-	/**
-	 * Events Raw Routes - ClickHouse raw events storage
-	 */
+	r := swagger.Wrap(group).Tag("Events")
 
-	// Get raw events with filters, pagination, and projection
-	// Uses InjectRequestContext middleware for context-aware org filtering
+	// Raw events (ClickHouse raw-events storage), cursor-paginated.
 	eventsRawQueryDto := validation.NewValidation(nil, &dtos.EventsRawQueryDto{}, nil)
-	group.Get("/raw",
-		validation.ValidationMiddleware(eventsRawQueryDto),
+	r.Get("/raw", eventsRawQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsRawList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsRaw(service),
-	)
+	).
+		Summary("List raw events").
+		Description("Returns cursor-paginated raw events from ClickHouse, filtered and scoped to the caller's organization.").
+		Returns(&dtos.EventsRawCursorResultDto{})
 
-	/**
-	 * Events JS Executor Routes - ClickHouse JS executor debug events
-	 */
-
-	// Get JS executor events with filters, cursor pagination
-	// Uses InjectRequestContext middleware for context-aware org filtering
+	// JS-executor debug events, cursor-paginated.
 	eventsJsExecQueryDto := validation.NewValidation(nil, &dtos.EventsJsExecQueryDto{}, nil)
-	group.Get("/jsexec",
-		validation.ValidationMiddleware(eventsJsExecQueryDto),
+	r.Get("/jsexec", eventsJsExecQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsJsExecutorList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsJsExec(service),
-	)
+	).
+		Summary("List JS-executor events").
+		Description("Returns cursor-paginated JS-executor debug events (decode/validate/transform script runs) from ClickHouse.").
+		Returns(&dtos.EventsJsExecCursorResultDto{})
 
-	/**
-	 * Events Router Routes - ClickHouse router execution history events
-	 */
-
-	// Get router events with filters, cursor pagination
-	// Uses InjectRequestContext middleware for context-aware org filtering
+	// Router execution history events, cursor-paginated.
 	eventsRouterQueryDto := validation.NewValidation(nil, &dtos.EventsRouterQueryDto{}, nil)
-	group.Get("/router",
-		validation.ValidationMiddleware(eventsRouterQueryDto),
+	r.Get("/router", eventsRouterQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsRouterList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsRouter(service),
-	)
+	).
+		Summary("List router events").
+		Description("Returns cursor-paginated router execution-history events (RouteGroup match + fan-out outcomes) from ClickHouse.").
+		Returns(&dtos.EventsRouterCursorResultDto{})
 
-	/**
-	 * Events Business Rule Routes - ClickHouse business rule execution history events
-	 */
-
-	// Get business rule events with filters, cursor pagination
-	// Uses InjectRequestContext middleware for context-aware org filtering
+	// Business-rule execution history events, cursor-paginated.
 	eventsBusinessRuleQueryDto := validation.NewValidation(nil, &dtos.EventsBusinessRuleQueryDto{}, nil)
-	group.Get("/businessrule",
-		validation.ValidationMiddleware(eventsBusinessRuleQueryDto),
+	r.Get("/businessrule", eventsBusinessRuleQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsBusinessRuleList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsBusinessRule(service),
-	)
+	).
+		Summary("List business-rule events").
+		Description("Returns cursor-paginated business-rule execution-history events from ClickHouse.").
+		Returns(&dtos.EventsBusinessRuleCursorResultDto{})
 
-	/**
-	 * Events Trigger Routes - ClickHouse trigger execution history events
-	 */
-
-	// Get trigger events with filters, cursor pagination
-	// Uses InjectRequestContext middleware for context-aware org filtering
+	// Trigger execution history events, cursor-paginated.
 	eventsTriggerQueryDto := validation.NewValidation(nil, &dtos.EventsTriggerQueryDto{}, nil)
-	group.Get("/trigger",
-		validation.ValidationMiddleware(eventsTriggerQueryDto),
+	r.Get("/trigger", eventsTriggerQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsTriggerList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsTrigger(service),
-	)
+	).
+		Summary("List trigger events").
+		Description("Returns cursor-paginated trigger execution-history events from ClickHouse.").
+		Returns(&dtos.EventsTriggerCursorResultDto{})
 
-	/**
-	 * Events Workflow Routes - ClickHouse workflow execution history events
-	 */
-
-	// Get workflow events with filters, cursor pagination
-	// Uses InjectRequestContext middleware for context-aware org filtering
+	// Workflow execution history events, cursor-paginated.
 	eventsWorkflowQueryDto := validation.NewValidation(nil, &dtos.EventsWorkflowQueryDto{}, nil)
-	group.Get("/workflow",
-		validation.ValidationMiddleware(eventsWorkflowQueryDto),
+	r.Get("/workflow", eventsWorkflowQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsWorkflowList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsWorkflow(service),
-	)
+	).
+		Summary("List workflow events").
+		Description("Returns cursor-paginated workflow execution-history events from ClickHouse.").
+		Returns(&dtos.EventsWorkflowCursorResultDto{})
 
-	// Get single workflow event by executionId (MongoDB _id hex)
+	// Single workflow event by executionId (MongoDB _id hex).
 	eventsWorkflowExecIdParam := validation.NewValidation(nil, nil, &dtos.EventsWorkflowExecutionIdParamDto{})
-	group.Get("/workflow/execution/:executionId",
-		validation.ValidationMiddleware(eventsWorkflowExecIdParam),
+	r.Get("/workflow/execution/:executionId", eventsWorkflowExecIdParam, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsWorkflowList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetWorkflowEventByExecutionId(service),
-	)
+	).
+		Summary("Get workflow event by execution ID").
+		Description("Returns a single workflow execution-history event by its executionId (MongoDB ObjectId hex).").
+		Returns(&dtos.EventsWorkflowResponseDto{})
 
-	// Events DLQ Routes - Dead Letter Queue events from all services
+	// DLQ entry counts grouped by service type.
 	eventsDLQCountsQueryDto := validation.NewValidation(nil, &dtos.EventsDLQCountsQueryDto{}, nil)
-	group.Get("/dlq/counts",
-		validation.ValidationMiddleware(eventsDLQCountsQueryDto),
+	r.Get("/dlq/counts", eventsDLQCountsQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsDLQList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsDLQCounts(service),
-	)
+	).
+		Summary("Count DLQ entries").
+		Description("Returns dead-letter-queue entry counts grouped by service type, for the caller's organization.").
+		Returns(&dtos.EventsDLQCountsResultDto{})
 
+	// DLQ events from all services, cursor-paginated.
 	eventsDLQQueryDto := validation.NewValidation(nil, &dtos.EventsDLQQueryDto{}, nil)
-	group.Get("/dlq",
-		validation.ValidationMiddleware(eventsDLQQueryDto),
+	r.Get("/dlq", eventsDLQQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsDLQList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsDLQ(service),
-	)
+	).
+		Summary("List DLQ events").
+		Description("Returns cursor-paginated dead-letter-queue events from all services, scoped to the caller's organization.").
+		Returns(&dtos.EventsDLQCursorResultDto{})
 
-	/**
-	 * Events Store Routes - ClickHouse processed events with EVA fields
-	 */
-
-	// Query processed events with optional EVA dynamic field filters
-	// Uses POST to support EvaFilters array in request body
+	// Processed events with EVA dynamic-field filters. POST to carry the
+	// EvaFilters array in the request body.
 	eventsStoreQueryDto := validation.NewValidation(&dtos.EventsStoreQueryDto{}, nil, nil)
-	group.Post("/store/query",
-		validation.ValidationMiddleware(eventsStoreQueryDto),
+	r.Post("/store/query", eventsStoreQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsProcessedList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetEventsStore(service),
-	)
+	).
+		Summary("Query processed events").
+		Description("Returns cursor-paginated processed events (with resolved EVA fields) from ClickHouse, supporting an EvaFilters array of dynamic-field conditions in the request body.").
+		Returns(&dtos.EventsStoreCursorResultDto{})
 
-	// Get single event detail with resolved EVA field names (advancedSearch)
-	// Resolves fieldIds to field names based on source: "asset"→AssetTemplate, "rule"→BusinessRule
-	group.Get("/store/:eventTrackerId",
+	// Single processed-event detail with resolved EVA field names.
+	eventsStoreDetailDto := validation.NewValidation(nil, nil, nil)
+	r.Get("/store/:eventTrackerId", eventsStoreDetailDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.EventsProcessedRead),
 		handlers.GetEventStoreDetail(service),
-	)
+	).
+		Summary("Get processed-event detail").
+		Description("Returns a single processed event by eventTrackerId, with EVA fieldIds resolved to human-readable field names based on their source (asset template or business rule).").
+		Returns(&dtos.EventsStoreDetailResponseDto{})
 }

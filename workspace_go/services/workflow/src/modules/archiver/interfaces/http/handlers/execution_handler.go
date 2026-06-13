@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/archiver/application/dtos"
 	"workflow/src/modules/archiver/application/ports"
@@ -13,8 +13,8 @@ import (
 
 // GetExecutions returns a Fiber handler that retrieves workflow executions with pagination.
 // Uses RequestContext from coverage middleware for context-aware org filtering.
-func GetExecutions(service ports.ArchiverServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetExecutions(service ports.ArchiverServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
@@ -32,8 +32,8 @@ func GetExecutions(service ports.ArchiverServicePort) fiber.Handler {
 }
 
 // GetExecutionById returns a Fiber handler that retrieves a single execution by ID.
-func GetExecutionById(service ports.ArchiverServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetExecutionById(service ports.ArchiverServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		paramsData, _ := requestValidation.GetDTO[*dtos.ExecutionIdDTO](c, "paramsDTO")

@@ -53,6 +53,11 @@ func main() {
 	fiberInstance := bootstrap.InitFiber(c)
 
 	/**
+	* Configure OpenAPI metadata before modules register their routes
+	 */
+	bootstrap.InitSwagger()
+
+	/**
 	* Initialize health check endpoint (before business modules, no auth required)
 	 */
 	bootstrap.InitHealth(c, fiberInstance)
@@ -67,6 +72,11 @@ func main() {
 	* Initialize all business modules (repositories, services, consumers, routes)
 	 */
 	appModule.InitModule(fiberInstance)
+
+	/**
+	* Assemble and serve the OpenAPI document at /swagger (after routes are registered)
+	 */
+	bootstrap.BuildSwagger(fiberInstance)
 
 	/*
 	 * Start the HTTP server (non-blocking)

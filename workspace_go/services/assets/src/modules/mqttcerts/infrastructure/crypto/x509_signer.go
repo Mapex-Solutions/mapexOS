@@ -64,8 +64,6 @@ func (s *X509Signer) SignDeviceCert(
 	return certPEM, keyPEM, serial, fmt.Sprintf("%x", sum[:]), nil
 }
 
-// ---- helpers ----
-
 func randomSerial() (*big.Int, error) {
 	limit := new(big.Int).Lsh(big.NewInt(1), 128)
 	return rand.Int(rand.Reader, limit)

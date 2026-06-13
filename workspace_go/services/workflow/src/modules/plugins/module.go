@@ -3,15 +3,15 @@ package plugins
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/plugins/application/ports"
 	service "workflow/src/modules/plugins/application/services"
 	"workflow/src/modules/plugins/domain/repositories"
 	cacheLoader "workflow/src/modules/plugins/infrastructure/cache"
 	collection "workflow/src/modules/plugins/infrastructure/persistence/mongo"
-	pluginFanout "workflow/src/modules/plugins/interfaces/message/consumers/plugin_fanout"
 	routes "workflow/src/modules/plugins/interfaces/http/routes"
+	pluginFanout "workflow/src/modules/plugins/interfaces/message/consumers/plugin_fanout"
 
 	common "github.com/Mapex-Solutions/mapexGoKit/infrastructure/common/ports"
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
@@ -34,7 +34,7 @@ func InitRepositories() {
 	// PluginLoader wraps TieredCache (L0→L1) + MongoDB fallback
 	c.Provide(func(params struct {
 		container.In
-		Cache common.TieredCache                    `name:"plugins"`
+		Cache common.TieredCache `name:"plugins"`
 		Repo  repositories.PluginManifestRepository
 	}) ports.PluginLoaderPort {
 		return cacheLoader.New(params.Cache, params.Repo)
@@ -56,7 +56,7 @@ func InitInterfaces() {
 
 	if err := c.Invoke(func(params struct {
 		container.In
-		App     *fiber.App
+		App     *web.App
 		Service ports.PluginServicePort
 		NatsBus natsModel.Fanout `name:"core"`
 	}) {

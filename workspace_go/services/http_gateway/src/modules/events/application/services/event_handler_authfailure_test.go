@@ -12,9 +12,9 @@ import (
 	"http_gateway/src/modules/events/application/di"
 	"http_gateway/src/modules/events/application/ports"
 
+	eventsDto "github.com/Mapex-Solutions/MapexOS/contracts/services/events/events"
 	dsContract "github.com/Mapex-Solutions/MapexOS/contracts/services/http_gateway/datasources"
 	eventsContract "github.com/Mapex-Solutions/MapexOS/contracts/services/http_gateway/events"
-	eventsDto "github.com/Mapex-Solutions/MapexOS/contracts/services/events/events"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 )
@@ -30,9 +30,9 @@ type mockEventBus struct {
 	mu sync.Mutex
 	wg sync.WaitGroup
 
-	publishCalls     int
-	lastPublishCfg   natsModel.PublishConfig
-	publishErr       error
+	publishCalls   int
+	lastPublishCfg natsModel.PublishConfig
+	publishErr     error
 
 	publishCoreCalls   int
 	lastPublishCoreCfg natsModel.PublishCoreConfig

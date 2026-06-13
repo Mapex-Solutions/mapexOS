@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/users/application/dtos"
 	"mapexIam/src/modules/users/application/ports"
@@ -18,8 +18,8 @@ import (
 // It expects a validated DTO of type dtos.UserCreateDTO to be stored
 // in the Fiber context under the key "bodyDTO" (usually populated by
 // requestValidation middleware).
-func CreateUser(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateUser(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -44,8 +44,8 @@ func CreateUser(service ports.UserServicePort) fiber.Handler {
 //   - 200 OK with user data if found
 //   - 404 Not Found if user doesn't exist
 //   - 500 Internal Server Error on service failure
-func GetUserById(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetUserById(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -74,8 +74,8 @@ func GetUserById(service ports.UserServicePort) fiber.Handler {
 //   - 404 Not Found if user doesn't exist
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func UpdateUserById(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateUserById(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -101,8 +101,8 @@ func UpdateUserById(service ports.UserServicePort) fiber.Handler {
 //   - 200 OK with success flag if deletion succeeds
 //   - 404 Not Found if user doesn't exist
 //   - 500 Internal Server Error on service failure
-func DeleteUserById(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteUserById(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -122,8 +122,8 @@ func DeleteUserById(service ports.UserServicePort) fiber.Handler {
 //
 // It extracts the user ID from the JWT claims stored in the Fiber context
 // (populated by auth middleware) and retrieves the user's data from the service layer.
-func Myself(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func Myself(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -156,8 +156,8 @@ func Myself(service ports.UserServicePort) fiber.Handler {
 //   - 401 Unauthorized if user ID cannot be extracted from token
 //   - 404 Not Found if user doesn't exist
 //   - 500 Internal Server Error on service failure
-func UpdateMyself(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateMyself(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -186,8 +186,8 @@ func UpdateMyself(service ports.UserServicePort) fiber.Handler {
 //   - 401 Unauthorized if user ID cannot be extracted from token
 //   - 404 Not Found if user doesn't exist
 //   - 500 Internal Server Error on service failure
-func DisableMyTour(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DisableMyTour(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		userId, ok := authmw.GetUserIdFromToken(c)
@@ -228,8 +228,8 @@ func DisableMyTour(service ports.UserServicePort) fiber.Handler {
 //   - 200 OK with paginated user list
 //   - 400 Bad Request if query validation fails
 //   - 500 Internal Server Error on service failure or requestContext not found
-func GetUsers(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetUsers(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -259,8 +259,8 @@ func GetUsers(service ports.UserServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the user count request
-func GetUserCount(service ports.UserServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetUserCount(service ports.UserServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)

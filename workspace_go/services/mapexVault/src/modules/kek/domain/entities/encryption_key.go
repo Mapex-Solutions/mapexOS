@@ -12,7 +12,7 @@ import (
 //
 // JSON tags ABSENT on purpose: domain entities round-trip Mongo only. Wire
 // format lives in packages/contracts; conversion happens at the application
-// boundary. Per /go-arch §6.
+// boundary.
 type EncryptionKey struct {
 	ID       model.ObjectId `bson:"_id,omitempty"`
 	Context  string         `bson:"context"`

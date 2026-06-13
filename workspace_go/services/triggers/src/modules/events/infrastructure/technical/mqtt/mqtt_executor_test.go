@@ -13,6 +13,26 @@ import (
  * MQTTExecutor Tests
  */
 
+// newTestExecutor returns an executor with short timeouts for deterministic tests.
+func newTestExecutor() *MQTTExecutor {
+	return &MQTTExecutor{
+		connectTimeout: 5 * time.Second,
+		publishTimeout: 5 * time.Second,
+	}
+}
+
+// awaitMessage blocks for a published message or fails the test on timeout.
+func awaitMessage(t *testing.T, messages <-chan mockmqtt.Message) mockmqtt.Message {
+	t.Helper()
+	select {
+	case msg := <-messages:
+		return msg
+	case <-time.After(5 * time.Second):
+		t.Fatal("Timeout waiting for MQTT message")
+		return mockmqtt.Message{}
+	}
+}
+
 func TestMQTTExecutor_GetType(t *testing.T) {
 	executor := NewMQTTExecutor()
 
@@ -126,90 +146,106 @@ func TestMQTTExecutor_Execute_ContextCancellation(t *testing.T) {
 }
 
 /**
- * Config Extraction Tests
+ * Config Extraction Tests (against a mock broker — verify the extracted values
+ * flow through to a successful publish, independent of any local broker).
  */
 
 func TestMQTTExecutor_Execute_PortExtraction_Float64(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
 
-	// JSON unmarshaling typically produces float64 for numbers
+	executor := newTestExecutor()
+
+	// JSON unmarshaling typically produces float64 for numbers.
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker": "localhost",
-			"port":   float64(1883),
-			"topic":  "test/topic",
+			"broker":  "127.0.0.1",
+			"port":    float64(port),
+			"topic":   "test/topic",
+			"message": "port float64",
 		},
 	}
 
-	// This will fail to connect (no broker), but should not fail on config extraction
-	err := executor.Execute(context.Background(), config)
-
-	// Error should be about connection, not config
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
 	}
-	// Should not contain config-related errors
-	if err.Error() == "MQTT trigger config missing required field 'broker'" {
-		t.Error("Port extraction failed - broker was wrongly reported as missing")
+
+	if msg := awaitMessage(t, messages); msg.Topic != "test/topic" {
+		t.Errorf("Topic = %q, want 'test/topic'", msg.Topic)
 	}
 }
 
 func TestMQTTExecutor_Execute_PortExtraction_Int(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
+
+	executor := newTestExecutor()
 
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker": "localhost",
-			"port":   1883,
-			"topic":  "test/topic",
+			"broker":  "127.0.0.1",
+			"port":    port,
+			"topic":   "test/topic",
+			"message": "port int",
 		},
 	}
 
-	err := executor.Execute(context.Background(), config)
-
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
 	}
-	// Should not be a config error
-	if err.Error() == "MQTT trigger config missing required field 'broker'" {
-		t.Error("Port extraction failed")
+
+	if msg := awaitMessage(t, messages); msg.Topic != "test/topic" {
+		t.Errorf("Topic = %q, want 'test/topic'", msg.Topic)
 	}
 }
 
 func TestMQTTExecutor_Execute_QoSExtraction_Float64(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
+
+	executor := newTestExecutor()
 
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker": "localhost",
-			"topic":  "test/topic",
-			"qos":    float64(2),
+			"broker":  "127.0.0.1",
+			"port":    port,
+			"topic":   "test/topic",
+			"qos":     float64(1),
+			"message": "qos float64",
 		},
 	}
 
-	err := executor.Execute(context.Background(), config)
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
+	}
 
-	// Should fail on connection, not config
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if msg := awaitMessage(t, messages); msg.QoS != 1 {
+		t.Errorf("QoS = %d, want 1", msg.QoS)
 	}
 }
 
 func TestMQTTExecutor_Execute_QoSExtraction_Int(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
+
+	executor := newTestExecutor()
 
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker": "localhost",
-			"topic":  "test/topic",
-			"qos":    1,
+			"broker":  "127.0.0.1",
+			"port":    port,
+			"topic":   "test/topic",
+			"qos":     1,
+			"message": "qos int",
 		},
 	}
 
-	err := executor.Execute(context.Background(), config)
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
+	}
 
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if msg := awaitMessage(t, messages); msg.QoS != 1 {
+		t.Errorf("QoS = %d, want 1", msg.QoS)
 	}
 }
 
@@ -226,7 +262,7 @@ func TestMQTTExecutor_Execute_UseTLS(t *testing.T) {
 
 	err := executor.Execute(context.Background(), config)
 
-	// Should fail on connection (ssl://), not config
+	// Should fail on connection (ssl:// to a non-TLS endpoint), not config.
 	if err == nil {
 		t.Fatal("Expected connection error, got nil")
 	}
@@ -321,54 +357,66 @@ func TestMQTTExecutor_extractMessage_OtherTypes(t *testing.T) {
 }
 
 /**
- * Optional Fields Tests
+ * Optional Fields Tests (against a mock broker)
  */
 
 func TestMQTTExecutor_Execute_WithCredentials(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
+
+	executor := newTestExecutor()
 
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker":   "localhost",
+			"broker":   "127.0.0.1",
+			"port":     port,
 			"topic":    "test/topic",
 			"username": "testuser",
 			"password": "testpass",
+			"message":  "with credentials",
 		},
 	}
 
-	err := executor.Execute(context.Background(), config)
-
-	// Should fail on connection, not config extraction
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
 	}
+
+	awaitMessage(t, messages)
 }
 
 func TestMQTTExecutor_Execute_WithClientId(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
+
+	executor := newTestExecutor()
 
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker":   "localhost",
+			"broker":   "127.0.0.1",
+			"port":     port,
 			"topic":    "test/topic",
 			"clientId": "my-custom-client-id",
+			"message":  "with client id",
 		},
 	}
 
-	err := executor.Execute(context.Background(), config)
-
-	// Should fail on connection, not config extraction
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
 	}
+
+	awaitMessage(t, messages)
 }
 
 func TestMQTTExecutor_Execute_WithMessage(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
+
+	executor := newTestExecutor()
 
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker": "localhost",
+			"broker": "127.0.0.1",
+			"port":   port,
 			"topic":  "test/topic",
 			"message": map[string]interface{}{
 				"sensor": "temp-001",
@@ -377,11 +425,12 @@ func TestMQTTExecutor_Execute_WithMessage(t *testing.T) {
 		},
 	}
 
-	err := executor.Execute(context.Background(), config)
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
+	}
 
-	// Should fail on connection, not config extraction
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if msg := awaitMessage(t, messages); len(msg.Payload) == 0 {
+		t.Error("Payload should not be empty")
 	}
 }
 
@@ -392,7 +441,7 @@ func TestMQTTExecutor_Execute_WithMessage(t *testing.T) {
 func TestMQTTExecutor_Execute_FullConfig(t *testing.T) {
 	executor := NewMQTTExecutor()
 
-	// Full config with all optional fields
+	// Full config with all optional fields, pointed at an unreachable TLS endpoint.
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
 			"broker":   "mqtt.example.com",
@@ -413,7 +462,7 @@ func TestMQTTExecutor_Execute_FullConfig(t *testing.T) {
 
 	err := executor.Execute(context.Background(), config)
 
-	// Should fail on connection (no real broker), not config
+	// Should fail on connection (no real broker), not config.
 	if err == nil {
 		t.Fatal("Expected connection error, got nil")
 	}
@@ -424,58 +473,74 @@ func TestMQTTExecutor_Execute_FullConfig(t *testing.T) {
  */
 
 func TestMQTTExecutor_Execute_DefaultPort(t *testing.T) {
-	executor := NewMQTTExecutor()
+	// No port specified — the executor must default to 1883. Pointed at a
+	// non-routable address (RFC 5737 TEST-NET-1) so the default-port connection
+	// attempt fails deterministically regardless of any local broker.
+	executor := &MQTTExecutor{
+		connectTimeout: 2 * time.Second,
+		publishTimeout: 2 * time.Second,
+	}
 
-	// No port specified - should use default 1883
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker": "localhost",
+			"broker": "192.0.2.1",
 			"topic":  "test/topic",
 		},
 	}
 
 	err := executor.Execute(context.Background(), config)
 
-	// Connection will fail, but should use default port internally
 	if err == nil {
 		t.Fatal("Expected connection error, got nil")
 	}
 }
 
 func TestMQTTExecutor_Execute_DefaultQoS(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
 
-	// No QoS specified - should use default 1
+	executor := newTestExecutor()
+
+	// No QoS specified — should default to 1.
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker": "localhost",
-			"topic":  "test/topic",
+			"broker":  "127.0.0.1",
+			"port":    port,
+			"topic":   "test/topic",
+			"message": "default qos",
 		},
 	}
 
-	err := executor.Execute(context.Background(), config)
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
+	}
 
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if msg := awaitMessage(t, messages); msg.QoS != 1 {
+		t.Errorf("QoS = %d, want default 1", msg.QoS)
 	}
 }
 
 func TestMQTTExecutor_Execute_AutoGeneratedClientId(t *testing.T) {
-	executor := NewMQTTExecutor()
+	port, messages, cleanup := mockmqtt.StartServer(t)
+	defer cleanup()
 
-	// No clientId specified - should auto-generate
+	executor := newTestExecutor()
+
+	// No clientId specified — should auto-generate and still publish.
 	config := map[string]interface{}{
 		"mqtt": map[string]interface{}{
-			"broker": "localhost",
-			"topic":  "test/topic",
+			"broker":  "127.0.0.1",
+			"port":    port,
+			"topic":   "test/topic",
+			"message": "auto client id",
 		},
 	}
 
-	err := executor.Execute(context.Background(), config)
-
-	if err == nil {
-		t.Fatal("Expected connection error, got nil")
+	if err := executor.Execute(context.Background(), config); err != nil {
+		t.Fatalf("Execute() unexpected error: %v", err)
 	}
+
+	awaitMessage(t, messages)
 }
 
 /**

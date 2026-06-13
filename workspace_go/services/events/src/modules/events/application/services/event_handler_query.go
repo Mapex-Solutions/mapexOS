@@ -16,15 +16,6 @@ import (
 	"github.com/Mapex-Solutions/mapexGoKit/utils/orgfilter"
 )
 
-// cursorQuery is the small structural interface implemented by every events
-// query DTO. It exposes the four cursor inputs needed to build TimeCursorOpts.
-type cursorQuery interface {
-	GetLimit() int
-	GetDirection() string
-	GetSortAsc() bool
-	GetCursor() *time.Time
-}
-
 // buildOrgFilterCH wraps orgfilter.BuildOrgFilterClickHouse so callers in
 // service.go can use a shorter named-step call.
 func (s *EventService) buildOrgFilterCH(rc *reqCtx.RequestContext, query interface{ GetIncludeChildren() bool }) (map[string]interface{}, error) {

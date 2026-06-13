@@ -14,19 +14,9 @@ import (
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 )
 
-// heartbeatPlan is the result of buildHeartbeatPayload: the subject to publish to,
-// the payload to publish, and the identifying tuple already extracted for logging.
-// Replaces the prior 4-tuple return that violated /go-arch §3 readability (Bug #6).
-type heartbeatPlan struct {
-	Subject   string
-	AssetUUID string
-	OrgId     string
-	Payload   map[string]any
-}
-
 // validateHeartbeat checks the resolved DataSource and the body assetUUID for
 // the minimum required fields. The legacy AssetBind.Type='fixedAssetId'
-// constraint was REMOVED in TKT-2026-0036 — the body now carries identification,
+// constraint was removed — the body now carries identification,
 // so any DataSource shape works.
 func (s *EventService) validateHeartbeat(start time.Time, dataSource *dsDto.DataSourceResponse, assetUUID string) error {
 	if dataSource == nil {

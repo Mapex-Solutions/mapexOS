@@ -8,7 +8,7 @@ import (
 
 // EnvelopeAdapter wraps the existing *envelope.EnvelopeService behind
 // the pki module's EnvelopePort. Hides the concrete driver type from
-// the application layer per /go-arch §6.
+// the application layer.
 type EnvelopeAdapter struct {
 	svc *envelopeUtil.EnvelopeService
 }

@@ -3,7 +3,7 @@ package bootstrap
 import (
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	"go.uber.org/dig"
 
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
@@ -19,14 +19,14 @@ import (
 )
 
 // InitHealth registers the /health endpoint with all infrastructure checkers.
-func InitHealth(c *dig.Container, app *fiber.App) {
+func InitHealth(c *dig.Container, app *web.App) {
 	c.Invoke(func(params struct {
 		container.In
 		MongoMgr    *mongoManager.MongoManager
-		RedisApp    *redisModel.RedisClient    `name:"app"`
-		RedisShared *redisModel.RedisClient    `name:"shared"`
+		RedisApp    *redisModel.RedisClient `name:"app"`
+		RedisShared *redisModel.RedisClient `name:"shared"`
 		NATSClient  *natsModel.Client
-		MinIOAssets *minioModel.MinIOClient     `name:"assets"`
+		MinIOAssets *minioModel.MinIOClient `name:"assets"`
 	}) {
 		serviceName, _ := config.GetStringValue("service_name")
 		serviceVersion, _ := config.GetStringValue("service_version")

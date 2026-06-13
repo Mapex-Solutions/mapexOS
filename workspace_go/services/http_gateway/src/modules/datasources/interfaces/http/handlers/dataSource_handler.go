@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"http_gateway/src/modules/datasources/application/dtos"
 	"http_gateway/src/modules/datasources/application/ports"
@@ -37,8 +37,8 @@ import (
 //   - 200 OK with paginated data source list
 //   - 400 Bad Request if query validation fails
 //   - 500 Internal Server Error on service failure or requestContext not found
-func GetDataSources(service ports.DataSourceServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetDataSources(service ports.DataSourceServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		// Retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
 
@@ -79,8 +79,8 @@ func GetDataSources(service ports.DataSourceServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the data source creation request
-func CreateDataSource(service ports.DataSourceServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateDataSource(service ports.DataSourceServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -115,8 +115,8 @@ func CreateDataSource(service ports.DataSourceServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the data source retrieval request
-func GetDataSourceById(service ports.DataSourceServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetDataSourceById(service ports.DataSourceServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		dataSource, _ := requestValidation.GetDTO[*dtos.DataSourceIdDto](c, "paramsDTO")
@@ -145,8 +145,8 @@ func GetDataSourceById(service ports.DataSourceServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the data source update request
-func UpdateDataSourceById(service ports.DataSourceServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateDataSourceById(service ports.DataSourceServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		dataSource, _ := requestValidation.GetDTO[*dtos.DataSourceIdDto](c, "paramsDTO")
@@ -174,8 +174,8 @@ func UpdateDataSourceById(service ports.DataSourceServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the data source deletion request
-func DeleteDataSourceById(service ports.DataSourceServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteDataSourceById(service ports.DataSourceServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		dataSource, _ := requestValidation.GetDTO[*dtos.DataSourceIdDto](c, "paramsDTO")

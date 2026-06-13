@@ -75,8 +75,8 @@ func (s *EventService) ProcessEvent(ctx context.Context, event map[string]any, d
 }
 
 // PublishAuthFailure publishes a raw event with success=false when authentication
-// fails (or when CustomAuthMiddleware rejects a disabled DataSource — see
-// TKT-2026-0036). This is called by the auth middleware on every rejection
+// fails (or when CustomAuthMiddleware rejects a disabled DataSource). This is
+// called by the auth middleware on every rejection
 // path for the security audit trail. Thin orchestration: build payload →
 // fire-and-forget publish (privates in event_handler_authfailure.go).
 func (s *EventService) PublishAuthFailure(dataSource *dsDto.DataSourceResponse, event map[string]any, eventTrackerId string, errorMsg string) {
@@ -91,7 +91,7 @@ func (s *EventService) PublishAuthFailure(dataSource *dsDto.DataSourceResponse, 
 // publishes a fire-and-forget heartbeat to mapexos.asset.heartbeat.{orgId}.
 // orgId and pathKey come from the resolved DataSource (server-side, c.Locals);
 // assetUUID comes from the request body — a compromised body cannot spoof a
-// different tenant because the authentication is per-DataSource (TKT-2026-0036).
+// different tenant because the authentication is per-DataSource.
 //
 // Steps: validate dataSource + assetUUID -> compose payload -> fire-and-forget
 // core publish -> emit success metric.
@@ -107,4 +107,3 @@ func (s *EventService) ProcessHeartbeat(ctx context.Context, dataSource *dsDto.D
 	s.recordHeartbeatResult(start, "success")
 	return nil
 }
-

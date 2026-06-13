@@ -49,6 +49,11 @@ func main() {
 	bootstrap.InitMiddlewares(c)
 
 	/**
+	* Configure OpenAPI metadata before modules register their routes
+	 */
+	bootstrap.InitSwagger()
+
+	/**
 	* Create Fiber instance with global middlewares
 	 */
 	fiberInstance := bootstrap.InitFiber(c)
@@ -68,6 +73,11 @@ func main() {
 	* Initialize all business modules (repositories, services, consumers, routes)
 	 */
 	appModule.InitModule(fiberInstance)
+
+	/**
+	* Assemble and serve the OpenAPI document at /swagger (after routes are registered)
+	 */
+	bootstrap.BuildSwagger(fiberInstance)
 
 	/*
 	 * Start the HTTP server (non-blocking)

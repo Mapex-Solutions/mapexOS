@@ -3,7 +3,7 @@ package routegroups
 import (
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"router/src/modules/routegroups/application/ports"
 	service "router/src/modules/routegroups/application/services"
@@ -15,8 +15,8 @@ import (
 	ctxInjector "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/contextInjector"
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 
-	authmw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/auth"
 	apikeymw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/apiKey"
+	authmw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/auth"
 )
 
 // InitRepositories registers the routegroups repositories in the DIG container
@@ -37,7 +37,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.RouteGroupServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.RouteGroupServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")
@@ -55,7 +55,7 @@ func InitInterfaces() {
 		// Internal routes (API Key authentication for MS-to-MS communication)
 		apiKey, _ := config.GetStringValue("internal_api_key")
 		internalRoutesV1 := app.Group(
-			"/api/internal/v1/routegroups",
+			"/internal/route_groups",
 			ctxInjector.ContextInjector(ctxTimeout),
 			apikeymw.ApiKeyAuthMiddleware(apiKey),
 		)

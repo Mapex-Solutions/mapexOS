@@ -13,6 +13,13 @@ import (
  * SlackExecutor Tests
  */
 
+// slackConfig wraps the slack-specific fields in the union-shaped trigger config
+// the executor expects: the slack fields live under config["slack"], the same
+// shape the router forwards (mirrors HTTP / MQTT / Email).
+func slackConfig(fields map[string]interface{}) map[string]interface{} {
+	return map[string]interface{}{"slack": fields}
+}
+
 func TestSlackExecutor_GetType(t *testing.T) {
 	executor := NewSlackExecutor()
 
@@ -21,12 +28,26 @@ func TestSlackExecutor_GetType(t *testing.T) {
 	}
 }
 
-func TestSlackExecutor_Execute_MissingWebhookUrl(t *testing.T) {
+func TestSlackExecutor_Execute_MissingSlackField(t *testing.T) {
 	executor := NewSlackExecutor()
 
 	config := map[string]interface{}{
-		"text": "Test message",
+		"message": "Test message",
 	}
+
+	err := executor.Execute(context.Background(), config)
+
+	if err == nil {
+		t.Fatal("Execute() expected error for missing 'slack' field, got nil")
+	}
+}
+
+func TestSlackExecutor_Execute_MissingWebhookUrl(t *testing.T) {
+	executor := NewSlackExecutor()
+
+	config := slackConfig(map[string]interface{}{
+		"message": "Test message",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -38,10 +59,10 @@ func TestSlackExecutor_Execute_MissingWebhookUrl(t *testing.T) {
 func TestSlackExecutor_Execute_EmptyWebhookUrl(t *testing.T) {
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": "",
-		"text":       "Test message",
-	}
+		"message":    "Test message",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -50,17 +71,17 @@ func TestSlackExecutor_Execute_EmptyWebhookUrl(t *testing.T) {
 	}
 }
 
-func TestSlackExecutor_Execute_MissingText(t *testing.T) {
+func TestSlackExecutor_Execute_MissingMessage(t *testing.T) {
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": "https://hooks.slack.com/test",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
 	if err == nil {
-		t.Fatal("Execute() expected error for missing 'text', got nil")
+		t.Fatal("Execute() expected error for missing 'message', got nil")
 	}
 }
 
@@ -77,10 +98,10 @@ func TestSlackExecutor_Execute_Success(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Hello from test!",
-	}
+		"message":    "Hello from test!",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -106,11 +127,11 @@ func TestSlackExecutor_Execute_WithUsername(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Test message",
+		"message":    "Test message",
 		"username":   "Alert Bot",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -136,11 +157,11 @@ func TestSlackExecutor_Execute_WithIconEmoji(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Test message",
-		"icon_emoji": ":warning:",
-	}
+		"message":    "Test message",
+		"iconEmoji":  ":warning:",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -166,11 +187,11 @@ func TestSlackExecutor_Execute_WithChannel(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Test message",
+		"message":    "Test message",
 		"channel":    "#alerts",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -206,11 +227,11 @@ func TestSlackExecutor_Execute_WithBlocks(t *testing.T) {
 		},
 	}
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Fallback text",
+		"message":    "Fallback text",
 		"blocks":     blocks,
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -245,11 +266,11 @@ func TestSlackExecutor_Execute_WithAttachments(t *testing.T) {
 		},
 	}
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl":  server.URL,
-		"text":        "Alert",
+		"message":     "Alert",
 		"attachments": attachments,
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -274,10 +295,10 @@ func TestSlackExecutor_Execute_ContentType(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Test",
-	}
+		"message":    "Test",
+	})
 
 	executor.Execute(context.Background(), config)
 
@@ -299,10 +320,10 @@ func TestSlackExecutor_Execute_NotOkResponse(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Test",
-	}
+		"message":    "Test",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -320,10 +341,10 @@ func TestSlackExecutor_Execute_Non200Status(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Test",
-	}
+		"message":    "Test",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -340,10 +361,10 @@ func TestSlackExecutor_Execute_ServerError(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Test",
-	}
+		"message":    "Test",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -355,10 +376,10 @@ func TestSlackExecutor_Execute_ServerError(t *testing.T) {
 func TestSlackExecutor_Execute_InvalidUrl(t *testing.T) {
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": "http://invalid.nonexistent.host.test/webhook",
-		"text":       "Test",
-	}
+		"message":    "Test",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -369,19 +390,16 @@ func TestSlackExecutor_Execute_InvalidUrl(t *testing.T) {
 
 func TestSlackExecutor_Execute_ContextCancellation(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		select {
-		case <-r.Context().Done():
-			return
-		}
+		<-r.Context().Done()
 	}))
 	defer server.Close()
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Test",
-	}
+		"message":    "Test",
+	})
 
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
@@ -410,11 +428,11 @@ func TestSlackExecutor_Execute_FullConfig(t *testing.T) {
 
 	executor := NewSlackExecutor()
 
-	config := map[string]interface{}{
+	config := slackConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
-		"text":       "Critical: Server down",
+		"message":    "Critical: Server down",
 		"username":   "Alert Bot",
-		"icon_emoji": ":rotating_light:",
+		"iconEmoji":  ":rotating_light:",
 		"channel":    "#incidents",
 		"blocks": []interface{}{
 			map[string]interface{}{
@@ -425,7 +443,7 @@ func TestSlackExecutor_Execute_FullConfig(t *testing.T) {
 				},
 			},
 		},
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -481,10 +499,10 @@ func TestSlackExecutor_Execute_SlackErrorResponses(t *testing.T) {
 
 			executor := NewSlackExecutor()
 
-			config := map[string]interface{}{
+			config := slackConfig(map[string]interface{}{
 				"webhookUrl": server.URL,
-				"text":       "Test",
-			}
+				"message":    "Test",
+			})
 
 			err := executor.Execute(context.Background(), config)
 

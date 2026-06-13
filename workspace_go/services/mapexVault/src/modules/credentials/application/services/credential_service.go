@@ -54,7 +54,10 @@ func (s *CredentialService) CreateCredential(ctx context.Context, requestContext
 // UpdateCredentialById applies a partial update to a credential, re-running
 // envelope encryption only when the patch carries new secret data.
 // Returns the public response DTO.
-func (s *CredentialService) UpdateCredentialById(ctx context.Context, id string, dto *dtos.UpdateCredentialDTO) (*dtos.CredentialResponse, error) {
+func (s *CredentialService) UpdateCredentialById(ctx context.Context, requestContext *reqCtx.RequestContext, id string, dto *dtos.UpdateCredentialDTO) (*dtos.CredentialResponse, error) {
+	if _, err := s.findOwnedNonTemplate(ctx, requestContext, id); err != nil {
+		return nil, err
+	}
 	update, err := s.buildCredentialUpdateMap(dto)
 	if err != nil {
 		return nil, err
@@ -70,13 +73,10 @@ func (s *CredentialService) UpdateCredentialById(ctx context.Context, id string,
 // GetCredentialById fetches a credential by id and shapes the public
 // response DTO (without the encrypted blobs). Returns a wrapped error
 // when the repository layer fails or the id is unknown.
-func (s *CredentialService) GetCredentialById(ctx context.Context, id string) (*dtos.CredentialResponse, error) {
-	cred, err := s.deps.CredentialRepo.FindById(ctx, &id)
+func (s *CredentialService) GetCredentialById(ctx context.Context, requestContext *reqCtx.RequestContext, id string) (*dtos.CredentialResponse, error) {
+	cred, err := s.findOwnedNonTemplate(ctx, requestContext, id)
 	if err != nil {
-		return nil, fmt.Errorf("[SERVICE:Credential] Not found: %w", err)
-	}
-	if cred == nil {
-		return nil, fmt.Errorf("[SERVICE:Credential] Credential %s not found", id)
+		return nil, err
 	}
 	return toCredentialResponse(cred), nil
 }
@@ -84,7 +84,10 @@ func (s *CredentialService) GetCredentialById(ctx context.Context, id string) (*
 // GetCredentials returns the paginated, org-scoped credential list.
 // Orchestration: filter -> paginate -> query -> map.
 func (s *CredentialService) GetCredentials(ctx context.Context, requestContext *reqCtx.RequestContext, query *dtos.CredentialQueryDTO) (*model.PaginatedResult[dtos.CredentialResponse], error) {
-	filters := s.buildCredentialListFilters(requestContext, query)
+	filters, err := s.buildCredentialListFilters(requestContext, query)
+	if err != nil {
+		return nil, err
+	}
 	pagination := s.buildCredentialListPagination(query)
 	result, err := s.deps.CredentialRepo.FindWithFilters(ctx, filters, pagination, model.Map{"created": -1})
 	if err != nil {
@@ -96,7 +99,10 @@ func (s *CredentialService) GetCredentials(ctx context.Context, requestContext *
 // DeleteCredentialById orchestrates removal: purge any pending refresh
 // schedule first (best-effort) -> delete the row in Mongo. The schedule
 // purge runs first so a still-pending timer cannot fire after deletion.
-func (s *CredentialService) DeleteCredentialById(ctx context.Context, id string) (map[string]bool, error) {
+func (s *CredentialService) DeleteCredentialById(ctx context.Context, requestContext *reqCtx.RequestContext, id string) (map[string]bool, error) {
+	if _, err := s.findOwnedNonTemplate(ctx, requestContext, id); err != nil {
+		return nil, err
+	}
 	subject := fmt.Sprintf("%s.%s", constants.VaultScheduleSubjectPrefix, id)
 	if err := s.deps.ScheduleManager.PurgeStreamSubject(constants.VaultScheduleStreamName, subject); err != nil {
 		logger.Warn(fmt.Sprintf("[SERVICE:Credential] Failed to purge schedule for %s: %v", id, err))
@@ -128,8 +134,14 @@ func (s *CredentialService) DecryptCredential(ctx context.Context, id string) (m
 // envelope. The decrypt itself is the implicit test — if envelope
 // decryption fails the credential is considered broken regardless of the
 // underlying reason.
-func (s *CredentialService) TestCredential(ctx context.Context, id string) (map[string]bool, error) {
-	if _, err := s.DecryptCredential(ctx, id); err != nil {
+func (s *CredentialService) TestCredential(ctx context.Context, requestContext *reqCtx.RequestContext, id string) (map[string]bool, error) {
+	// Scope to the caller's org and exclude templates before decrypting — must
+	// not route through the unscoped internal DecryptCredential path.
+	cred, err := s.findOwnedNonTemplate(ctx, requestContext, id)
+	if err != nil {
+		return map[string]bool{"success": false}, err
+	}
+	if _, err := decryptData(s.deps.Encryption, cred); err != nil {
 		return map[string]bool{"success": false}, err
 	}
 	return map[string]bool{"success": true}, nil

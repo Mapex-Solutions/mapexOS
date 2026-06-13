@@ -3,7 +3,7 @@ package assets
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assets/application/di"
 	"assets/src/modules/assets/application/ports"
@@ -39,6 +39,7 @@ func InitRepositories() {
 	c.Provide(redisCache.NewCacheKeyBuilderAdapter)     // Register CacheKeyBuilderPort for Redis key construction
 	c.Provide(mapexvaultProvider.NewKEKClient)          // LoRaWAN device-keys KEK client (mapexVault)
 	c.Provide(ramProvider.NewInMemoryKEKCipher)         // in-RAM KEK cipher (envelope encryption, hot path)
+	
 	// L2 writes retry publisher — feeds the durable fallback stream
 	// when synchronous MinIO writes fail; the in-module consumer
 	// drains it back against current Mongo state.
@@ -69,7 +70,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.AssetServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.AssetServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := configuration.GetIntValue("ctx_timeout")
@@ -100,10 +101,10 @@ func InitInterfaces() {
 
 		// Internal asset-auth routes (API Key auth) — broker plugin L3
 		// fallback. Mounted on a sibling group so the broker reads
-		// /internal/asset-auth/:uuid without colliding with the read-model
+		// /internal/asset_auth/:uuid without colliding with the read-model
 		// endpoint at /internal/assets/:uuid.
 		assetAuthInternalRoutes := app.Group(
-			"/internal/asset-auth",
+			"/internal/asset_auth",
 			ctxInjector.ContextInjector(ctxTimeout),
 			apikeymw.ApiKeyAuthMiddleware(internalApiKey),
 		)

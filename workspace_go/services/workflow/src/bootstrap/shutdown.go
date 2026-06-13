@@ -3,14 +3,14 @@ package bootstrap
 import (
 	"context"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	"go.uber.org/dig"
 
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/shutdown"
 
-	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	mongoManager "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/manager"
+	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	redisModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/redis"
 )
 
@@ -45,7 +45,7 @@ type WalkerDrainer interface {
 //	P1 — Consumers (stop receiving new messages)
 //	P2 — Walker drain (wait for active walkers to finish current step)
 //	P5 — Connections: MongoDB, Redis, NATS (concurrent)
-func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *fiber.App, registry *ConsumerRegistry, drainer WalkerDrainer) {
+func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *web.App, registry *ConsumerRegistry, drainer WalkerDrainer) {
 	c.Invoke(func(params struct {
 		container.In
 		Mongo *mongoManager.MongoManager

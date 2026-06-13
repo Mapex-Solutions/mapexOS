@@ -50,7 +50,7 @@ func (a *RouteGroupAdapter) GetNamesByIds(ctx context.Context, ids []string) ([]
 
 	// Call Router service internal API
 	var apiResponse RouterAPIResponse
-	endpoint := "/api/internal/v1/routegroups?ids=" + idsParam
+	endpoint := "/internal/route_groups?ids=" + idsParam
 	err := a.client.Get(ctx, endpoint, &apiResponse)
 
 	// If API call fails, return empty array (non-critical operation)
@@ -91,7 +91,7 @@ func (a *RouteGroupAdapter) GetRouterKindsByIds(ctx context.Context, ids []strin
 	idsParam := strings.Join(ids, ",")
 
 	var apiResponse RouterAPIResponse
-	endpoint := "/api/internal/v1/routegroups?ids=" + idsParam
+	endpoint := "/internal/route_groups?ids=" + idsParam
 	err := a.client.Get(ctx, endpoint, &apiResponse)
 	if err != nil {
 		logger.Warn(fmt.Sprintf("[INFRA:HTTPClient] Failed to fetch route group kinds: %v", err))

@@ -9,6 +9,21 @@ import (
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 )
 
+// AssetScriptsResponse is the internal scripts projection for an asset: its
+// identity fields plus the transform scripts sourced from the asset's
+// template. Served by GET /internal/assets/scripts/:assetUUID and consumed
+// by the Rule Test Runner UI. Mirrors ZodAssetScriptsResponseSchema in
+// workspace_js/packages/schemas.
+type AssetScriptsResponse struct {
+	ID               string `json:"id"`
+	Name             string `json:"name"`
+	AssetUUID        string `json:"assetUUID"`
+	AssetTemplateID  string `json:"assetTemplateId"`
+	ScriptProcessor  string `json:"scriptProcessor,omitempty"`
+	ScriptValidator  string `json:"scriptValidator"`
+	ScriptConversion string `json:"scriptConversion"`
+}
+
 /**
  * SHARED READ MODEL (CQRS Pattern)
  *

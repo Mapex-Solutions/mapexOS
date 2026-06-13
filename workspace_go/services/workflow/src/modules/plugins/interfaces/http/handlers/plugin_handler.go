@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/plugins/application/dtos"
 	"workflow/src/modules/plugins/application/ports"
@@ -14,8 +14,8 @@ import (
 // CreatePlugin returns a Fiber handler that creates a new plugin manifest.
 // Expects a validated bodyDTO of type *dtos.PluginManifestResponse from ValidationMiddleware.
 // Uses RequestContext from coverage middleware for multi-tenant org population.
-func CreatePlugin(service ports.PluginServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreatePlugin(service ports.PluginServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
@@ -35,8 +35,8 @@ func CreatePlugin(service ports.PluginServicePort) fiber.Handler {
 
 // GetPluginById returns a Fiber handler that retrieves a plugin manifest by its MongoDB ObjectId.
 // Expects a validated paramsDTO of type *dtos.PluginIdDTO from ValidationMiddleware.
-func GetPluginById(service ports.PluginServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetPluginById(service ports.PluginServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.PluginIdDTO](c, "paramsDTO")
@@ -52,8 +52,8 @@ func GetPluginById(service ports.PluginServicePort) fiber.Handler {
 // UpdatePlugin returns a Fiber handler that updates a plugin manifest.
 // Expects a validated bodyDTO of type *dtos.PluginManifestUpdate and
 // paramsDTO of type *dtos.PluginIdDTO from ValidationMiddleware.
-func UpdatePlugin(service ports.PluginServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdatePlugin(service ports.PluginServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.PluginIdDTO](c, "paramsDTO")
@@ -69,8 +69,8 @@ func UpdatePlugin(service ports.PluginServicePort) fiber.Handler {
 
 // DeletePlugin returns a Fiber handler that deletes a plugin manifest.
 // Expects a validated paramsDTO of type *dtos.PluginIdDTO from ValidationMiddleware.
-func DeletePlugin(service ports.PluginServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeletePlugin(service ports.PluginServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.PluginIdDTO](c, "paramsDTO")
@@ -87,8 +87,8 @@ func DeletePlugin(service ports.PluginServicePort) fiber.Handler {
 // Respects multi-tenant visibility: system + template (ancestor) + local (org).
 // Expects a validated queryDTO of type *dtos.PluginQueryDTO from ValidationMiddleware.
 // Uses RequestContext from coverage middleware for org filtering.
-func GetPlugins(service ports.PluginServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetPlugins(service ports.PluginServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
@@ -108,8 +108,8 @@ func GetPlugins(service ports.PluginServicePort) fiber.Handler {
 
 // GetEnabledPlugins returns a Fiber handler that retrieves all enabled plugins.
 // Used by the frontend editor boot sequence. No validation needed.
-func GetEnabledPlugins(service ports.PluginServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEnabledPlugins(service ports.PluginServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		retData, err := service.GetEnabledPlugins(ctx)

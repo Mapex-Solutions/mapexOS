@@ -12,7 +12,7 @@ import (
 	orgCreatedConsumer "events/src/modules/retention/interfaces/message/consumers/org_created"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	redisModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/redis"
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
@@ -68,7 +68,7 @@ func InitInterfaces() {
 	c := container.GetContainer()
 
 	// Register HTTP routes
-	if err := c.Invoke(func(app *fiber.App, service ports.RetentionServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.RetentionServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

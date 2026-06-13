@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/instances/application/dtos"
 	"workflow/src/modules/instances/application/ports"
@@ -16,8 +16,8 @@ import (
 )
 
 // GetInstances returns a Fiber handler that retrieves a paginated list of workflow instance configs.
-func GetInstances(service ports.InstancesServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetInstances(service ports.InstancesServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
@@ -35,8 +35,8 @@ func GetInstances(service ports.InstancesServicePort) fiber.Handler {
 }
 
 // GetInstanceById returns a Fiber handler that retrieves a workflow instance config by its ID.
-func GetInstanceById(service ports.InstancesServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetInstanceById(service ports.InstancesServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.InstanceIdDTO](c, "paramsDTO")
@@ -49,8 +49,8 @@ func GetInstanceById(service ports.InstancesServicePort) fiber.Handler {
 }
 
 // CreateInstance returns a Fiber handler that creates a new workflow instance config.
-func CreateInstance(service ports.InstancesServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateInstance(service ports.InstancesServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
@@ -68,8 +68,8 @@ func CreateInstance(service ports.InstancesServicePort) fiber.Handler {
 }
 
 // UpdateInstanceById returns a Fiber handler that updates a workflow instance config.
-func UpdateInstanceById(service ports.InstancesServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateInstanceById(service ports.InstancesServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.InstanceIdDTO](c, "paramsDTO")
@@ -83,8 +83,8 @@ func UpdateInstanceById(service ports.InstancesServicePort) fiber.Handler {
 }
 
 // DeleteInstanceById returns a Fiber handler that deletes a workflow instance config.
-func DeleteInstanceById(service ports.InstancesServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteInstanceById(service ports.InstancesServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.InstanceIdDTO](c, "paramsDTO")
@@ -97,8 +97,8 @@ func DeleteInstanceById(service ports.InstancesServicePort) fiber.Handler {
 }
 
 // ExecuteInstance returns a Fiber handler that executes a workflow instance.
-func ExecuteInstance(service ports.InstancesServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func ExecuteInstance(service ports.InstancesServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.InstanceIdDTO](c, "paramsDTO")

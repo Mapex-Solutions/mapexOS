@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assettemplates/application/ports"
 
@@ -22,8 +22,8 @@ import (
 //
 // Returns:
 //   - A Fiber handler function that processes the cache fallback request
-func GetTemplateForCacheFallback(service ports.AssetTemplateServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetTemplateForCacheFallback(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		templateId := c.Params("templateId")

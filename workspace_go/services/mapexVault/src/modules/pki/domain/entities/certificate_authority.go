@@ -15,7 +15,7 @@ import (
 //
 // JSON tags ABSENT on purpose: domain entities round-trip Mongo only.
 // Wire format lives in packages/contracts; conversion happens at the
-// application boundary via a mapper. Per /go-arch §6 strictly.
+// application boundary via a mapper.
 type CertificateAuthority struct {
 	ID          model.ObjectId   `bson:"_id,omitempty"`
 	Kind        constants.CAKind `bson:"kind"`

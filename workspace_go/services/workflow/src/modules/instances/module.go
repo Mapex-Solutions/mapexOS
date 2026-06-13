@@ -3,12 +3,12 @@ package instances
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/instances/application/ports"
 	service "workflow/src/modules/instances/application/services"
-	cacheLoader "workflow/src/modules/instances/infrastructure/cache"
 	"workflow/src/modules/instances/domain/repositories"
+	cacheLoader "workflow/src/modules/instances/infrastructure/cache"
 	collection "workflow/src/modules/instances/infrastructure/persistence/mongo"
 	routes "workflow/src/modules/instances/interfaces/http/routes"
 
@@ -32,7 +32,7 @@ func InitRepositories() {
 	// InstanceLoader wraps TieredCache (L0→L1) + MongoDB fallback
 	c.Provide(func(params struct {
 		container.In
-		Cache common.TieredCache              `name:"instances"`
+		Cache common.TieredCache `name:"instances"`
 		Repo  repositories.InstanceRepository
 	}) ports.InstanceLoaderPort {
 		return cacheLoader.New(params.Cache, params.Repo)
@@ -53,7 +53,7 @@ func InitInterfaces() {
 	c := container.GetContainer()
 
 	// HTTP Routes
-	if err := c.Invoke(func(app *fiber.App, service ports.InstancesServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.InstancesServicePort) {
 		ctxTimeout, _ := configuration.GetIntValue("ctx_timeout")
 
 		routesV1 := app.Group(

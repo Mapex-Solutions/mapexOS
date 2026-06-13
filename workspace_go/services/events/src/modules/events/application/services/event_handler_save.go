@@ -16,17 +16,6 @@ import (
 	"github.com/Mapex-Solutions/mapexGoKit/utils/mapper"
 )
 
-// legacyEventFields holds the required+optional projection of the raw legacy
-// event body used by ProcessEvent. assetId is required; the others are
-// optional and default to empty strings when absent.
-type legacyEventFields struct {
-	assetId   string
-	orgId     string
-	pathKey   string
-	eventType string
-	source    string
-}
-
 // parseLegacyEvent unmarshals the raw NATS body and extracts the required
 // and optional fields in one step. Returns wrapped errors so the public
 // caller surfaces stable parse / missing-field messages.

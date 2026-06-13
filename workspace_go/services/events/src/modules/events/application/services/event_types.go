@@ -1,6 +1,8 @@
 package services
 
 import (
+	"time"
+
 	"events/src/modules/events/application/di"
 
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
@@ -39,4 +41,24 @@ type messageResult[T any] struct {
 	entity       *T
 	action       string // "reject", "pending", "ack_skip"
 	rejectReason string
+}
+
+// legacyEventFields holds the parsed fields of the legacy NATS event body used by
+// ProcessEvent. assetId is required; the others are optional and default to empty
+// strings when absent.
+type legacyEventFields struct {
+	assetId   string
+	orgId     string
+	pathKey   string
+	eventType string
+	source    string
+}
+
+// cursorQuery is the small structural interface implemented by every events query
+// DTO. It exposes the four cursor inputs needed to build TimeCursorOpts.
+type cursorQuery interface {
+	GetLimit() int
+	GetDirection() string
+	GetSortAsc() bool
+	GetCursor() *time.Time
 }

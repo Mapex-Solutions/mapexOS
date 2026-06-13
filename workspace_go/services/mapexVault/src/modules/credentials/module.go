@@ -10,7 +10,7 @@ import (
 	reconcileConsumer "mapexVault/src/modules/credentials/interfaces/message/consumers/reconcile"
 	refreshConsumer "mapexVault/src/modules/credentials/interfaces/message/consumers/refresh"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	common "github.com/Mapex-Solutions/mapexGoKit/microservices/common"
@@ -43,7 +43,7 @@ func InitInterfaces() {
 
 	if err := c.Invoke(func(params struct {
 		container.In
-		App     *fiber.App
+		App     *web.App
 		Service ports.CredentialServicePort
 	}) {
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

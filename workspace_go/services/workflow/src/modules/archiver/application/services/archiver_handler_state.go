@@ -16,17 +16,6 @@ import (
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 )
 
-// classifiedState carries the per-bucket payload that ProcessStateBatch
-// produces during classification and consumes during the write phase.
-type classifiedState struct {
-	createdStubs       []repositories.LightweightExecution
-	waitingUpdates     []repositories.WaitingUpdate
-	resumedIDs         []string
-	terminalExecutions []*runtimePorts.WorkflowExecution
-	terminalKVKeys     []string
-	refs               []archiverTypes.MsgRef
-}
-
 // applyArchiverBackpressure pauses or warns based on MongoDB write P99 so
 // the consumer respects the BackpressureMode set by the manager. Backoff
 // mode sleeps the configured pause; throttled mode logs but proceeds.

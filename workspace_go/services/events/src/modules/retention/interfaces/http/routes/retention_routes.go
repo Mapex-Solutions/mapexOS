@@ -1,70 +1,71 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"events/src/modules/retention/application/dtos"
 	"events/src/modules/retention/application/ports"
 	"events/src/modules/retention/interfaces/http/handlers"
 
+	perms "github.com/Mapex-Solutions/MapexOS/permissions/events"
+	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	coverageMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/coverage"
 	permissionMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/permission"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
-	perms "github.com/Mapex-Solutions/MapexOS/permissions/events"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
-// RegisterRoutes registers retention policy HTTP routes.
+// RegisterRoutes registers retention policy HTTP routes. Base path: /api/v1/retention.
 //
 // Following Hexagonal Architecture, this function accepts the service port interface
-// rather than a concrete service implementation.
-//
-// Base path: /api/v1/retention
-//
-// HTTP Verbs follow REST conventions:
-//
-//	GET    /                       - List retention policies (paginated, filtered)
-//	GET    /:retentionPolicyId     - Get retention policy by ID
-//	PUT    /                       - Upsert retention policy (by org + type)
-//	DELETE /:retentionPolicyId     - Delete retention policy
-//
-// Parameters:
-//   - group: Fiber router group to register routes on
-//   - service: Retention policy service port interface implementation
-func RegisterRoutes(group fiber.Router, service ports.RetentionServicePort) {
+// rather than a concrete service implementation. Routes are registered through the
+// swagger wrapper: each NewValidation declares the input contract once (used to both
+// validate and document), the module tag is declared once on Wrap, and each route's
+// summary, description, and response type are attached via the fluent builder.
+func RegisterRoutes(group web.Router, service ports.RetentionServicePort) {
 
-	// List Routes — get retention policies with filters, pagination, and projection
+	r := swagger.Wrap(group).Tag("Retention")
+
+	// List retention policies (paginated, filtered).
 	retentionQueryDto := validation.NewValidation(nil, &dtos.RetentionPolicyQueryDTO{}, nil)
-	group.Get("/",
-		validation.ValidationMiddleware(retentionQueryDto),     // 1. Validate DTO first (fail fast)
-		permissionMw.RequirePermission(perms.RetentionList),    // 2. Check permission (cache)
-		coverageMw.InjectRequestContext(),                      // 3. Inject context (cache)
-		handlers.GetRetentionPolicies(service),                 // 4. Handler
-	)
+	r.Get("/", retentionQueryDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.RetentionList),
+		coverageMw.InjectRequestContext(),
+		handlers.GetRetentionPolicies(service),
+	).
+		Summary("List retention policies").
+		Description("Returns a paginated, filterable list of retention policies scoped to the caller's organization.").
+		Returns(&model.PaginatedResult[dtos.RetentionPolicyResponse]{})
 
-	// CRUD Routes — upsert retention policy (create or update by org + type)
+	// Upsert a retention policy (create or update by org + type).
 	upsertDto := validation.NewValidation(&dtos.RetentionPolicyUpsertDTO{}, nil, nil)
-	group.Put("/",
-		validation.ValidationMiddleware(upsertDto),             // 1. Validate DTO
-		permissionMw.RequirePermission(perms.RetentionUpdate),  // 2. Check permission
-		coverageMw.InjectRequestContext(),                      // 3. Inject context
-		handlers.UpsertRetentionPolicy(service),                // 4. Handler
-	)
+	r.Put("/", upsertDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.RetentionUpdate),
+		coverageMw.InjectRequestContext(),
+		handlers.UpsertRetentionPolicy(service),
+	).
+		Summary("Upsert retention policy").
+		Description("Creates or updates the retention policy for the caller's organization and the given event type (one policy per org+type).").
+		Returns(&dtos.RetentionPolicyResponse{})
 
-	// Get retention policy by ID
+	// Get retention policy by ID.
 	getByIdDto := validation.NewValidation(nil, nil, &dtos.RetentionPolicyParamsDTO{})
-	group.Get("/:retentionPolicyId",
-		validation.ValidationMiddleware(getByIdDto),            // 1. Validate DTO first (fail fast)
-		permissionMw.RequirePermission(perms.RetentionRead),    // 2. Check permission (cache)
-		coverageMw.InjectRequestContext(),                      // 3. Inject context (cache)
-		handlers.GetRetentionPolicyById(service),               // 4. Handler
-	)
+	r.Get("/:retentionPolicyId", getByIdDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.RetentionRead),
+		coverageMw.InjectRequestContext(),
+		handlers.GetRetentionPolicyById(service),
+	).
+		Summary("Get retention policy by ID").
+		Description("Retrieves a single retention policy by its MongoDB ObjectId.").
+		Returns(&dtos.RetentionPolicyResponse{})
 
-	// Delete retention policy by ID
+	// Delete retention policy by ID.
 	deleteByIdDto := validation.NewValidation(nil, nil, &dtos.RetentionPolicyParamsDTO{})
-	group.Delete("/:retentionPolicyId",
-		validation.ValidationMiddleware(deleteByIdDto),         // 1. Validate DTO first (fail fast)
-		permissionMw.RequirePermission(perms.RetentionUpdate),  // 2. Check permission (cache)
-		coverageMw.InjectRequestContext(),                      // 3. Inject context (cache)
-		handlers.DeleteRetentionPolicyById(service),            // 4. Handler
-	)
+	r.Delete("/:retentionPolicyId", deleteByIdDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.RetentionUpdate),
+		coverageMw.InjectRequestContext(),
+		handlers.DeleteRetentionPolicyById(service),
+	).
+		Summary("Delete retention policy").
+		Description("Deletes a retention policy by its MongoDB ObjectId.").
+		Returns(map[string]bool{})
 }

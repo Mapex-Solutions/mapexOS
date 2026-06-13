@@ -1,64 +1,72 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"mapexIam/src/modules/lists/application/dtos"
 	"mapexIam/src/modules/lists/application/ports"
 	"mapexIam/src/modules/lists/interfaces/http/handlers"
 
+	perms "github.com/Mapex-Solutions/MapexOS/permissions/mapexos"
+	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	coverageMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/coverage"
 	permissionMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/permission"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
-	perms "github.com/Mapex-Solutions/MapexOS/permissions/mapexos"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
-func RegisterRoutes(group fiber.Router, service ports.ListServicePort) {
+// RegisterRoutes registers list HTTP routes. Base path: /api/v1/lists.
+//
+// Following Hexagonal Architecture, this function accepts the service port interface
+// rather than a concrete service implementation. Routes are registered through the
+// swagger wrapper.
+func RegisterRoutes(group web.Router, service ports.ListServicePort) {
 
-	/**
-	* CRUD Routes
-	 */
+	r := swagger.Wrap(group).Tag("Lists")
 
-	// Get lists with filters, pagination, and projection
-	// Uses InjectRequestContext middleware for context-aware org filtering
 	listQueryDto := validation.NewValidation(nil, &dtos.ListQueryDTO{}, nil)
-	group.Get("/",
-		validation.ValidationMiddleware(listQueryDto),  // 1. Validate DTO first (fail fast)
-		permissionMw.RequirePermission(perms.ListList), // 2. Check permission (cache)
-		coverageMw.InjectRequestContext(),              // 3. Inject context (cache)
-		handlers.GetLists(service),                     // 4. Handler
-	)
+	r.Get("/", listQueryDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.ListList),
+		coverageMw.InjectRequestContext(),
+		handlers.GetLists(service),
+	).
+		Summary("List lists").
+		Description("Returns a paginated, filterable list of reusable lists scoped to the caller's organization.").
+		Returns(&model.PaginatedResult[dtos.ListResponse]{})
 
-	// Create a new list
 	listCreateDto := validation.NewValidation(&dtos.ListCreateDTO{}, nil, nil)
-	group.Post("/",
-		validation.ValidationMiddleware(listCreateDto),   // 1. Validate DTO first (fail fast)
-		permissionMw.RequirePermission(perms.ListCreate), // 2. Check permission (cache)
-		coverageMw.InjectRequestContext(),                // 3. Inject context (cache)
-		handlers.CreateList(service),                     // 4. Handler
-	)
+	r.Post("/", listCreateDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.ListCreate),
+		coverageMw.InjectRequestContext(),
+		handlers.CreateList(service),
+	).
+		Summary("Create list").
+		Description("Creates a new reusable list (key/value option set).").
+		Returns(&dtos.ListResponse{})
 
-	// Get list by ID
 	getListById := validation.NewValidation(nil, nil, &dtos.ListIdDTO{})
-	group.Get("/:listId",
-		validation.ValidationMiddleware(getListById),
+	r.Get("/:listId", getListById, swagger.Expose,
 		permissionMw.RequirePermission(perms.ListRead),
 		handlers.GetListById(service),
-	)
+	).
+		Summary("Get list by ID").
+		Description("Retrieves a single list by its MongoDB ObjectId.").
+		Returns(&dtos.ListResponse{})
 
-	// Update list by ID
 	updateListById := validation.NewValidation(&dtos.ListUpdateDTO{}, nil, &dtos.ListIdDTO{})
-	group.Patch("/:listId",
-		validation.ValidationMiddleware(updateListById),
+	r.Patch("/:listId", updateListById, swagger.Expose,
 		permissionMw.RequirePermission(perms.ListUpdate),
 		handlers.UpdateListById(service),
-	)
+	).
+		Summary("Update list").
+		Description("Partially updates an existing list. All body fields are optional.").
+		Returns(&dtos.ListResponse{})
 
-	// Delete list by ID
 	deleteListById := validation.NewValidation(nil, nil, &dtos.ListIdDTO{})
-	group.Delete("/:listId",
-		validation.ValidationMiddleware(deleteListById),
+	r.Delete("/:listId", deleteListById, swagger.Expose,
 		permissionMw.RequirePermission(perms.ListDelete),
 		handlers.DeleteListById(service),
-	)
+	).
+		Summary("Delete list").
+		Description("Deletes a list by its MongoDB ObjectId.").
+		Returns(map[string]bool{})
 }

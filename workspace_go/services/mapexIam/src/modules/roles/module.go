@@ -3,7 +3,7 @@ package roles
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	mongoManager "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/manager"
 	ports "mapexIam/src/modules/roles/application/ports"
@@ -50,7 +50,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.RoleServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.RoleServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

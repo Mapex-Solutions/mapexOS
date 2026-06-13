@@ -7,7 +7,7 @@ import (
 	"workflow/src/modules/fetch_options/application/services"
 	"workflow/src/modules/fetch_options/interfaces/http/routes"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	authmw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/auth"
 	ctxInjector "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/contextInjector"
@@ -30,7 +30,7 @@ func InitInterfaces() {
 
 	if err := c.Invoke(func(params struct {
 		container.In
-		App     *fiber.App
+		App     *web.App
 		Service fetchPorts.FetchOptionsServicePort
 	}) {
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

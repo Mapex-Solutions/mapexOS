@@ -1,58 +1,72 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"mapexIam/src/modules/memberships/application/dtos"
 	"mapexIam/src/modules/memberships/application/ports"
 	"mapexIam/src/modules/memberships/interfaces/http/handlers"
 
+	perms "github.com/Mapex-Solutions/MapexOS/permissions/mapexos"
+	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	coverageMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/coverage"
 	permissionMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/permission"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
-	perms "github.com/Mapex-Solutions/MapexOS/permissions/mapexos"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
-func RegisterRoutes(group fiber.Router, service ports.MembershipServicePort) {
+// RegisterRoutes registers membership HTTP routes. Base path: /api/v1/memberships.
+//
+// Following Hexagonal Architecture, this function accepts the service port interface
+// rather than a concrete service implementation. Routes are registered through the
+// swagger wrapper.
+func RegisterRoutes(group web.Router, service ports.MembershipServicePort) {
 
-	/**
-	* CRUD Routes
-	 */
+	r := swagger.Wrap(group).Tag("Memberships")
 
-	// Get memberships with filters, pagination, and projection
-	// Uses InjectRequestContext middleware for context-aware org filtering
-	// Supports hierarchical filtering via includeChildren parameter and X-Org-Context header
 	membershipQueryDto := validation.NewValidation(nil, &dtos.MembershipQueryDto{}, nil)
-	group.Get("/",
-		validation.ValidationMiddleware(membershipQueryDto),    // 1. Validate DTO first (fail fast)
-		permissionMw.RequirePermission(perms.MembershipList),   // 2. Check permission (cache)
-		coverageMw.InjectRequestContext(),                      // 3. Inject context (cache)
-		handlers.GetMemberships(service),                       // 4. Handler
-	)
+	r.Get("/", membershipQueryDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.MembershipList),
+		coverageMw.InjectRequestContext(),
+		handlers.GetMemberships(service),
+	).
+		Summary("List memberships").
+		Description("Returns a paginated, filterable list of memberships (the user↔organization relation) scoped to the caller's organization.").
+		Returns(&model.PaginatedResult[dtos.MembershipResponse]{})
 
-	// Create a new membership
 	membershipCreateDto := validation.NewValidation(&dtos.CreateMembershipDto{}, nil, nil)
-	group.Post("/", validation.ValidationMiddleware(membershipCreateDto), handlers.CreateMembership(service))
+	r.Post("/", membershipCreateDto, swagger.Expose, handlers.CreateMembership(service)).
+		Summary("Create membership").
+		Description("Creates a membership binding a user to an organization with one or more roles.").
+		Returns(&dtos.MembershipResponse{})
 
-	// Get membership by ID
 	getMembershipById := validation.NewValidation(nil, nil, &dtos.MembershipIdDto{})
-	group.Get("/:membershipId", validation.ValidationMiddleware(getMembershipById), handlers.GetMembershipById(service))
+	r.Get("/:membershipId", getMembershipById, swagger.Expose, handlers.GetMembershipById(service)).
+		Summary("Get membership by ID").
+		Description("Retrieves a single membership by its MongoDB ObjectId.").
+		Returns(&dtos.MembershipResponse{})
 
-	// Update membership by ID
 	updateMembershipById := validation.NewValidation(&dtos.UpdateMembershipDto{}, nil, &dtos.MembershipIdDto{})
-	group.Patch("/:membershipId", validation.ValidationMiddleware(updateMembershipById), handlers.UpdateMembershipById(service))
+	r.Patch("/:membershipId", updateMembershipById, swagger.Expose, handlers.UpdateMembershipById(service)).
+		Summary("Update membership").
+		Description("Partially updates an existing membership (e.g. its role set). All body fields are optional.").
+		Returns(&dtos.MembershipResponse{})
 
-	// Delete membership by ID
 	deleteMembershipById := validation.NewValidation(nil, nil, &dtos.MembershipIdDto{})
-	group.Delete("/:membershipId", validation.ValidationMiddleware(deleteMembershipById), handlers.DeleteMembershipById(service))
+	r.Delete("/:membershipId", deleteMembershipById, swagger.Expose, handlers.DeleteMembershipById(service)).
+		Summary("Delete membership").
+		Description("Deletes a membership by its MongoDB ObjectId.").
+		Returns(map[string]bool{})
 }
 
-func RegisterMeRoutes(group fiber.Router, service ports.MembershipServicePort) {
+// RegisterMeRoutes registers the authenticated caller's own context routes.
+// Base path: /api/v1/me.
+func RegisterMeRoutes(group web.Router, service ports.MembershipServicePort) {
 
-	/**
-	* /me Routes - User coverage and context
-	 */
+	r := swagger.Wrap(group).Tag("Me")
 
-	// Get user coverage (customers/organizations accessible by the authenticated user)
-	group.Get("/coverage", handlers.GetMeCoverage(service))
+	noContract := validation.NewValidation(nil, nil, nil)
+	r.Get("/coverage", noContract, swagger.Expose, handlers.GetMeCoverage(service)).
+		Summary("Get my coverage").
+		Description("Returns the authenticated caller's authorization coverage — the organizations and scopes the caller can act on.").
+		Returns(&dtos.MeCoverageResponse{})
 }

@@ -13,6 +13,13 @@ import (
  * TeamsExecutor Tests
  */
 
+// teamsConfig wraps the teams-specific fields in the union-shaped trigger config
+// the executor expects: the teams fields live under config["teams"], the same
+// shape the router forwards (mirrors HTTP / MQTT / Email).
+func teamsConfig(fields map[string]interface{}) map[string]interface{} {
+	return map[string]interface{}{"teams": fields}
+}
+
 func TestTeamsExecutor_GetType(t *testing.T) {
 	executor := NewTeamsExecutor()
 
@@ -21,13 +28,28 @@ func TestTeamsExecutor_GetType(t *testing.T) {
 	}
 }
 
-func TestTeamsExecutor_Execute_MissingWebhookUrl(t *testing.T) {
+func TestTeamsExecutor_Execute_MissingTeamsField(t *testing.T) {
 	executor := NewTeamsExecutor()
 
 	config := map[string]interface{}{
 		"title": "Test Title",
 		"text":  "Test Text",
 	}
+
+	err := executor.Execute(context.Background(), config)
+
+	if err == nil {
+		t.Fatal("Execute() expected error for missing 'teams' field, got nil")
+	}
+}
+
+func TestTeamsExecutor_Execute_MissingWebhookUrl(t *testing.T) {
+	executor := NewTeamsExecutor()
+
+	config := teamsConfig(map[string]interface{}{
+		"title": "Test Title",
+		"text":  "Test Text",
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -39,11 +61,11 @@ func TestTeamsExecutor_Execute_MissingWebhookUrl(t *testing.T) {
 func TestTeamsExecutor_Execute_EmptyWebhookUrl(t *testing.T) {
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": "",
 		"title":      "Test Title",
 		"text":       "Test Text",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -64,11 +86,11 @@ func TestTeamsExecutor_Execute_Success(t *testing.T) {
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Test Alert",
 		"text":       "This is a test message",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -103,12 +125,12 @@ func TestTeamsExecutor_Execute_WithThemeColor(t *testing.T) {
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Alert",
 		"text":       "Error occurred",
 		"themeColor": "FF0000",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -143,12 +165,12 @@ func TestTeamsExecutor_Execute_WithSections(t *testing.T) {
 		},
 	}
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Alert",
 		"text":       "Server alert",
 		"sections":   sections,
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -172,11 +194,11 @@ func TestTeamsExecutor_Execute_ContentType(t *testing.T) {
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Test",
 		"text":       "Test",
-	}
+	})
 
 	executor.Execute(context.Background(), config)
 
@@ -198,11 +220,11 @@ func TestTeamsExecutor_Execute_Non2xxStatus(t *testing.T) {
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Test",
 		"text":       "Test",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -219,11 +241,11 @@ func TestTeamsExecutor_Execute_ServerError(t *testing.T) {
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Test",
 		"text":       "Test",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -235,11 +257,11 @@ func TestTeamsExecutor_Execute_ServerError(t *testing.T) {
 func TestTeamsExecutor_Execute_InvalidUrl(t *testing.T) {
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": "http://invalid.nonexistent.host.test/webhook",
 		"title":      "Test",
 		"text":       "Test",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -250,21 +272,17 @@ func TestTeamsExecutor_Execute_InvalidUrl(t *testing.T) {
 
 func TestTeamsExecutor_Execute_ContextCancellation(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Slow response
-		select {
-		case <-r.Context().Done():
-			return
-		}
+		<-r.Context().Done()
 	}))
 	defer server.Close()
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Test",
 		"text":       "Test",
-	}
+	})
 
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
@@ -306,11 +324,11 @@ func TestTeamsExecutor_Execute_StatusCodes(t *testing.T) {
 
 			executor := NewTeamsExecutor()
 
-			config := map[string]interface{}{
+			config := teamsConfig(map[string]interface{}{
 				"webhookUrl": server.URL,
 				"title":      "Test",
 				"text":       "Test",
-			}
+			})
 
 			err := executor.Execute(context.Background(), config)
 
@@ -340,7 +358,7 @@ func TestTeamsExecutor_Execute_FullConfig(t *testing.T) {
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Critical Alert",
 		"text":       "Server CPU usage exceeded 90%",
@@ -355,7 +373,7 @@ func TestTeamsExecutor_Execute_FullConfig(t *testing.T) {
 				},
 			},
 		},
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -397,10 +415,10 @@ func TestTeamsExecutor_Execute_TitleOnly(t *testing.T) {
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"title":      "Just a title",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 
@@ -428,10 +446,10 @@ func TestTeamsExecutor_Execute_TextOnly(t *testing.T) {
 
 	executor := NewTeamsExecutor()
 
-	config := map[string]interface{}{
+	config := teamsConfig(map[string]interface{}{
 		"webhookUrl": server.URL,
 		"text":       "Just some text",
-	}
+	})
 
 	err := executor.Execute(context.Background(), config)
 

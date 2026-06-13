@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/definitions/application/ports"
 	"workflow/src/modules/definitions/interfaces/http/handlers"
@@ -18,6 +18,6 @@ import (
 // Endpoints:
 //
 //	GET /:definitionId/scripts/:nodeId - Fetch code node script source
-func RegisterInternalRoutes(group fiber.Router, service ports.DefinitionServicePort) {
+func RegisterInternalRoutes(group web.Router, service ports.DefinitionServicePort) {
 	group.Get("/:definitionId/scripts/:nodeId", handlers.GetNodeScript(service))
 }

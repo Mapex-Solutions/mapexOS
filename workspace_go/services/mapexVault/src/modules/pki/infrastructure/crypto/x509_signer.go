@@ -133,8 +133,6 @@ func CertFingerprintSHA256(certPEM []byte) string {
 	return fmt.Sprintf("%x", sum[:])
 }
 
-// ---- helpers ----
-
 func randomSerial() (*big.Int, error) {
 	limit := new(big.Int).Lsh(big.NewInt(1), 128)
 	return rand.Int(rand.Reader, limit)

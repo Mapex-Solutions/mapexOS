@@ -62,10 +62,14 @@ func (m *MapexVaultClient) FetchIntermediateCABundle(ctx context.Context) (*enti
 		body, _ := io.ReadAll(resp.Body)
 		return nil, fmt.Errorf("unexpected status=%d body=%s", resp.StatusCode, string(body))
 	}
-	var wire intermediateCABundleWire
-	if err := json.NewDecoder(resp.Body).Decode(&wire); err != nil {
+	// mapexVault wraps the payload in the standard {status, errors, data} envelope.
+	var env struct {
+		Data intermediateCABundleWire `json:"data"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&env); err != nil {
 		return nil, fmt.Errorf("decode: %w", err)
 	}
+	wire := env.Data
 	logger.Info(fmt.Sprintf("[INFRA:MapexVaultClient] CA bundle fetched subjectCN=%s notAfter=%s",
 		wire.SubjectCN, wire.NotAfter.Format(time.RFC3339)))
 	return &entities.CertificateAuthorityRAM{

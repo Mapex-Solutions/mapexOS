@@ -3,12 +3,12 @@ package definitions
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/definitions/application/ports"
 	service "workflow/src/modules/definitions/application/services"
-	minioProvider "workflow/src/modules/definitions/infrastructure/storage/minio"
 	collection "workflow/src/modules/definitions/infrastructure/persistence/mongo"
+	minioProvider "workflow/src/modules/definitions/infrastructure/storage/minio"
 	routes "workflow/src/modules/definitions/interfaces/http/routes"
 
 	configuration "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
@@ -40,7 +40,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.DefinitionServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.DefinitionServicePort) {
 		// Set default timeout for this router
 		ctxTimeout, _ := configuration.GetIntValue("ctx_timeout")
 
@@ -59,7 +59,7 @@ func InitInterfaces() {
 		// Used by: js-workflow-executor when L2 (MinIO) cache miss occurs
 		internalApiKey, _ := configuration.GetStringValue("internal_api_key")
 		internalRoutes := app.Group(
-			"/internal/workflow-scripts",
+			"/internal/workflow_scripts",
 			ctxInjector.ContextInjector(ctxTimeout),
 			apikeymw.ApiKeyAuthMiddleware(internalApiKey),
 		)

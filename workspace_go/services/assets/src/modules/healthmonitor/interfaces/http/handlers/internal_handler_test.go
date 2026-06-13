@@ -34,11 +34,11 @@ func (m *mockHealthAdmin) ForceOfflineByAssetUUID(_ context.Context, assetUUID, 
 }
 
 // newAppWithRoute builds a minimal Fiber app with the route under test
-// registered at /:assetUUID/force-offline. The 'app.Test' driver
+// registered at /:assetUUID/force_offline. The 'app.Test' driver
 // short-circuits the real server, so each subtest stays isolated.
 func newAppWithRoute(svc ports.HealthAdminPort) *fiber.App {
 	app := fiber.New()
-	app.Post("/:assetUUID/force-offline", ForceOffline(svc))
+	app.Post("/:assetUUID/force_offline", ForceOffline(svc))
 	return app
 }
 
@@ -48,7 +48,7 @@ func TestForceOffline_HappyPath_NoBody(t *testing.T) {
 	svc := &mockHealthAdmin{}
 	app := newAppWithRoute(svc)
 
-	req := httptest.NewRequest(http.MethodPost, "/asset-abc/force-offline", nil)
+	req := httptest.NewRequest(http.MethodPost, "/asset-abc/force_offline", nil)
 	resp, err := app.Test(req, -1)
 	if err != nil {
 		t.Fatalf("app.Test: unexpected err: %v", err)
@@ -75,7 +75,7 @@ func TestForceOffline_HappyPath_WithReason(t *testing.T) {
 	app := newAppWithRoute(svc)
 
 	body := strings.NewReader(`{"reason":"ci-saga-mqtt-trigger"}`)
-	req := httptest.NewRequest(http.MethodPost, "/uuid-1/force-offline", body)
+	req := httptest.NewRequest(http.MethodPost, "/uuid-1/force_offline", body)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := app.Test(req, -1)
@@ -99,7 +99,7 @@ func TestForceOffline_InvalidJSON_BadRequest(t *testing.T) {
 	app := newAppWithRoute(svc)
 
 	body := bytes.NewReader([]byte(`{not-json`))
-	req := httptest.NewRequest(http.MethodPost, "/uuid-1/force-offline", body)
+	req := httptest.NewRequest(http.MethodPost, "/uuid-1/force_offline", body)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := app.Test(req, -1)
@@ -123,7 +123,7 @@ func TestForceOffline_ServiceError_PropagatesToFiber(t *testing.T) {
 	svc := &mockHealthAdmin{returnErr: errors.New("redis down")}
 	app := newAppWithRoute(svc)
 
-	req := httptest.NewRequest(http.MethodPost, "/uuid-1/force-offline", nil)
+	req := httptest.NewRequest(http.MethodPost, "/uuid-1/force_offline", nil)
 	resp, err := app.Test(req, -1)
 	if err != nil {
 		t.Fatalf("app.Test: unexpected err: %v", err)

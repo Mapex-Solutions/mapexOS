@@ -7,7 +7,7 @@ import (
 	kekPorts "mapexVault/src/modules/kek/application/ports"
 	service "mapexVault/src/modules/kek/application/services"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
 // KekInternalHandler bundles the service port for the internal endpoints.
@@ -25,17 +25,17 @@ func NewKekInternalHandler(s kekPorts.KekServicePort) *KekInternalHandler {
 // yet, keep retrying"; 500 = "real failure, surface it".
 func mapServiceErrToStatus(err error) int {
 	if err == nil {
-		return fiber.StatusOK
+		return web.StatusOK
 	}
 	if errors.Is(err, service.ErrKEKNotSeeded) {
-		return fiber.StatusServiceUnavailable
+		return web.StatusServiceUnavailable
 	}
 	// The repository may wrap mongo's "no documents" as a plain error chain that
 	// does not implement Is/As for the sentinel; sniff the message so the boot
 	// race maps to 503 instead of leaking as 500.
 	msg := err.Error()
 	if strings.Contains(msg, "document not found") || strings.Contains(msg, "no documents") {
-		return fiber.StatusServiceUnavailable
+		return web.StatusServiceUnavailable
 	}
-	return fiber.StatusInternalServerError
+	return web.StatusInternalServerError
 }

@@ -12,7 +12,7 @@ import (
 	"assets/src/modules/mqttcerts/interfaces/http/handlers"
 	"assets/src/modules/mqttcerts/interfaces/http/routes"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	common "github.com/Mapex-Solutions/mapexGoKit/microservices/common"
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
@@ -41,7 +41,7 @@ func InitInterfaces() {
 	c := container.GetContainer()
 	if err := c.Invoke(func(params struct {
 		container.In
-		App     *fiber.App
+		App     *web.App
 		Service mqttPorts.MqttCertsServicePort
 	}) {
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

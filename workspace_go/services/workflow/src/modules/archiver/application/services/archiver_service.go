@@ -7,8 +7,8 @@ import (
 	"workflow/src/modules/archiver/application/dtos"
 	"workflow/src/modules/archiver/application/ports"
 
-	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
+	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 )
 

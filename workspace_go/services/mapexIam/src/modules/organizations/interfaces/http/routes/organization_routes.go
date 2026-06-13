@@ -1,79 +1,85 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"mapexIam/src/modules/organizations/application/dtos"
 	"mapexIam/src/modules/organizations/application/ports"
 	"mapexIam/src/modules/organizations/interfaces/http/handlers"
 
+	perms "github.com/Mapex-Solutions/MapexOS/permissions/mapexos"
+	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	coverageMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/coverage"
 	orgHierarchyMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/orghierarchy"
 	permissionMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/permission"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
-	perms "github.com/Mapex-Solutions/MapexOS/permissions/mapexos"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
-// RegisterRoutes registers all HTTP routes for the organizations module.
-// Accepts OrganizationServicePort interface (Hexagonal Architecture) for loose coupling.
-func RegisterRoutes(group fiber.Router, service ports.OrganizationServicePort) {
+// RegisterRoutes registers organization HTTP routes. Base path: /api/v1/organizations.
+//
+// Following Hexagonal Architecture, this function accepts the service port interface
+// rather than a concrete service implementation. Routes are registered through the
+// swagger wrapper.
+func RegisterRoutes(group web.Router, service ports.OrganizationServicePort) {
 
-	/**
-	* CRUD Routes
-	 */
+	r := swagger.Wrap(group).Tag("Organizations")
 
-	// Get organizations with filters, pagination, and projection
-	// Uses coverage middleware to inject RequestContext for context-aware org filtering
 	organizationQueryDto := validation.NewValidation(nil, &dtos.OrganizationQueryDto{}, nil)
-	group.Get("/",
-		validation.ValidationMiddleware(organizationQueryDto),
+	r.Get("/", organizationQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.OrganizationList),
 		coverageMw.InjectRequestContext(),
 		handlers.GetOrganizations(service),
-	)
+	).
+		Summary("List organizations").
+		Description("Returns a paginated, filterable list of organizations scoped to the caller's organization context.").
+		Returns(&model.PaginatedResult[dtos.OrganizationResponse]{})
 
-	// Get organizations tree with cursor pagination (for UI navigation)
 	treeQueryDto := validation.NewValidation(nil, &dtos.TreeQueryDto{}, nil)
-	group.Get("/tree",
-		validation.ValidationMiddleware(treeQueryDto),
+	r.Get("/tree", treeQueryDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.OrganizationList),
 		handlers.GetOrganizationsTree(service),
-	)
+	).
+		Summary("Get organization tree").
+		Description("Returns the hierarchical organization tree rooted at the caller's organization context.").
+		Returns(&dtos.TreeResponseDto{})
 
-	// Create a new organization
-	// Chain: Validation → Permission → Coverage → Hierarchy Validation → Handler
 	organizationCreateDto := validation.NewValidation(&dtos.CreateOrganizationDto{}, nil, nil)
-	group.Post("/",
-		validation.ValidationMiddleware(organizationCreateDto),
+	r.Post("/", organizationCreateDto, swagger.Expose,
 		permissionMw.RequirePermission(perms.OrganizationCreate),
 		coverageMw.InjectRequestContext(),
-		orgHierarchyMw.ValidateOrgHierarchy(func(c *fiber.Ctx) (orgHierarchyMw.OrganizationCreateContract, error) {
+		orgHierarchyMw.ValidateOrgHierarchy(func(c *web.Ctx) (orgHierarchyMw.OrganizationCreateContract, error) {
 			return validation.GetDTO[*dtos.CreateOrganizationDto](c, "bodyDTO")
 		}),
 		handlers.CreateOrganization(service),
-	)
+	).
+		Summary("Create organization").
+		Description("Creates a new organization. The org-hierarchy middleware validates the parent placement before creation.").
+		Returns(&dtos.OrganizationResponse{})
 
-	// Get organization by ID
 	getOrganizationById := validation.NewValidation(nil, nil, &dtos.OrganizationIdDto{})
-	group.Get("/:organizationId",
-		validation.ValidationMiddleware(getOrganizationById),
+	r.Get("/:organizationId", getOrganizationById, swagger.Expose,
 		permissionMw.RequirePermission(perms.OrganizationRead),
 		handlers.GetOrganizationById(service),
-	)
+	).
+		Summary("Get organization by ID").
+		Description("Retrieves a single organization by its MongoDB ObjectId.").
+		Returns(&dtos.OrganizationResponse{})
 
-	// Update organization by ID
 	updateOrganizationById := validation.NewValidation(&dtos.UpdateOrganizationDto{}, nil, &dtos.OrganizationIdDto{})
-	group.Patch("/:organizationId",
-		validation.ValidationMiddleware(updateOrganizationById),
+	r.Patch("/:organizationId", updateOrganizationById, swagger.Expose,
 		permissionMw.RequirePermission(perms.OrganizationUpdate),
 		handlers.UpdateOrganizationById(service),
-	)
+	).
+		Summary("Update organization").
+		Description("Partially updates an existing organization. All body fields are optional.").
+		Returns(&dtos.OrganizationResponse{})
 
-	// Delete organization by ID
 	deleteOrganizationById := validation.NewValidation(nil, nil, &dtos.OrganizationIdDto{})
-	group.Delete("/:organizationId",
-		validation.ValidationMiddleware(deleteOrganizationById),
+	r.Delete("/:organizationId", deleteOrganizationById, swagger.Expose,
 		permissionMw.RequirePermission(perms.OrganizationDelete),
 		handlers.DeleteOrganizationById(service),
-	)
+	).
+		Summary("Delete organization").
+		Description("Deletes an organization by its MongoDB ObjectId.").
+		Returns(map[string]bool{})
 }

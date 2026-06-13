@@ -29,7 +29,7 @@ None. This module does not consume messages. It is invoked exactly once from `ma
 
 ## Driving Ports (what can call this module)
 
-- `InitModule(c *fiber.App)` — called from `main.go` during service startup.
+- `InitModule(c *web.App)` — called from `main.go` during service startup.
 
 ## Driven Ports (what this module requires)
 

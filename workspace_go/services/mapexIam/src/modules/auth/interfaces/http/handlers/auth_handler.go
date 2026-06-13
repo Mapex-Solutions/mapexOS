@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/auth/application/dtos"
 	"mapexIam/src/modules/auth/application/ports"
@@ -22,8 +22,8 @@ import (
 //   - 200: { "accessToken": "...", "refreshToken": "...", "user": {...} }
 //   - 400: Invalid credentials or validation error
 //   - 401: Authentication failed
-func Login(service ports.AuthServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func Login(service ports.AuthServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -48,8 +48,8 @@ func Login(service ports.AuthServicePort) fiber.Handler {
 //   - 200: { "success": true }
 //   - 401: Missing or invalid token
 //   - 500: Failed to logout
-func Logout(service ports.AuthServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func Logout(service ports.AuthServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// Retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -80,8 +80,8 @@ func Logout(service ports.AuthServicePort) fiber.Handler {
 //   - 200: { "accessToken": "...", "refreshToken": "..." }
 //   - 401: Invalid or expired refresh token
 //   - 500: Failed to refresh token
-func RefreshToken(service ports.AuthServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func RefreshToken(service ports.AuthServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -112,8 +112,8 @@ func RefreshToken(service ports.AuthServicePort) fiber.Handler {
 //   - 200: { "organizations": [...], "lastUpdated": "..." }
 //   - 401: Missing or invalid userId in token
 //   - 500: Failed to fetch coverage
-func GetMyCoverage(service ports.AuthServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetMyCoverage(service ports.AuthServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -145,8 +145,8 @@ func GetMyCoverage(service ports.AuthServicePort) fiber.Handler {
 //   - 200: { "permissions": ["assets.list", "assets.create", ...], "version": 42 }
 //   - 401: Missing or invalid userId in token
 //   - 500: Failed to fetch permissions
-func GetMyPermissions(service ports.AuthServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetMyPermissions(service ports.AuthServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()

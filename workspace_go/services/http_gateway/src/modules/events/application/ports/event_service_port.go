@@ -46,7 +46,7 @@ type EventServicePort interface {
 	// ProcessHeartbeat publishes a fire-and-forget heartbeat to
 	// mapexos.asset.heartbeat.{orgId} for the asset whose UUID is carried
 	// in the request body. Used by POST /api/v1/heartbeat?ds={dataSourceId}
-	// (HTTP path of the explicit-mode heartbeat — TKT-2026-0036 reformulation).
+	// (HTTP path of the explicit-mode heartbeat).
 	//
 	// The published payload mirrors the shape js-executor publishes today
 	// ({orgId, assetUUID, pathKey, ts}) so the assets/healthmonitor consumer

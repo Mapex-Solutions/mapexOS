@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assets/application/dtos"
 	"assets/src/modules/assets/application/ports"
@@ -33,8 +33,8 @@ import (
 //
 // Returns:
 //   - A Fiber handler function that processes the asset creation request
-func CreateAsset(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateAsset(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -69,8 +69,8 @@ func CreateAsset(service ports.AssetServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the asset retrieval request
-func GetAssetById(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAssetById(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		asset, _ := requestValidation.GetDTO[*dtos.AssetIdDto](c, "paramsDTO")
@@ -99,8 +99,8 @@ func GetAssetById(service ports.AssetServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the asset update request
-func UpdateAssetById(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateAssetById(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		// Retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
 
@@ -120,8 +120,8 @@ func UpdateAssetById(service ports.AssetServicePort) fiber.Handler {
 // asset form. Stateless — the endpoint reads no asset and writes no
 // state. The operator remains free to type a custom password instead;
 // the platform validates only at create / change-password time.
-func GenerateMqttPassword(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GenerateMqttPassword(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 		retData, err := service.GenerateMqttPassword(ctx)
 		if err != nil {
@@ -145,8 +145,8 @@ func GenerateMqttPassword(service ports.AssetServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the asset deletion request
-func DeleteAssetById(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteAssetById(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		asset, _ := requestValidation.GetDTO[*dtos.AssetIdDto](c, "paramsDTO")
@@ -185,8 +185,8 @@ func DeleteAssetById(service ports.AssetServicePort) fiber.Handler {
 //   - 200 OK with paginated asset list
 //   - 400 Bad Request if query validation fails
 //   - 500 Internal Server Error on service failure or requestContext not found
-func GetAssets(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAssets(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		// Retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
 
@@ -214,8 +214,8 @@ func GetAssets(service ports.AssetServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the asset count request
-func GetAssetCount(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAssetCount(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)

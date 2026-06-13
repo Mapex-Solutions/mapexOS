@@ -12,10 +12,10 @@ import (
 	"router/src/modules/routegroups/application/dtos"
 	"router/src/modules/routegroups/application/services/mocks"
 
-	"github.com/gofiber/fiber/v2"
-	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
+	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/response"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 )
 
@@ -41,8 +41,8 @@ func parseResponseBody(t *testing.T, resp *http.Response) response.Response {
 }
 
 // injectLocals creates a middleware that injects key-value pairs into c.Locals().
-func injectLocals(locals map[string]interface{}) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func injectLocals(locals map[string]interface{}) web.Handler {
+	return func(c *web.Ctx) error {
 		for k, v := range locals {
 			c.Locals(k, v)
 		}
@@ -82,7 +82,7 @@ func TestCreateRouteGroup_Success(t *testing.T) {
 		Enabled: ptrBool(true),
 	}
 
-	app := fiber.New()
+	app := web.New()
 	app.Post("/test", injectLocals(map[string]interface{}{
 		"requestContext": createTestRequestContext(),
 		"bodyDTO": &dtos.RouteGroupCreateDTO{
@@ -117,8 +117,8 @@ func TestCreateRouteGroup_ServiceError(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 	svc.CreateError = errors.New("service error")
 
-	app := fiber.New(fiber.Config{
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
+	app := web.New(web.Config{
+		ErrorHandler: func(c *web.Ctx, err error) error {
 			return c.Status(500).JSON(response.Response{
 				Status: 500,
 				Errors: []string{err.Error()},
@@ -152,7 +152,7 @@ func TestCreateRouteGroup_ServiceError(t *testing.T) {
 func TestCreateRouteGroup_MissingRequestContext(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 
-	app := fiber.New()
+	app := web.New()
 	// No requestContext injected
 	app.Post("/test", injectLocals(map[string]interface{}{
 		"bodyDTO": &dtos.RouteGroupCreateDTO{
@@ -186,7 +186,7 @@ func TestGetRouteGroupById_Success(t *testing.T) {
 		Name:    ptrString("Found Group"),
 	}
 
-	app := fiber.New()
+	app := web.New()
 	app.Get("/test", injectLocals(map[string]interface{}{
 		"paramsDTO": &dtos.RouteGroupIdDTO{RouteGroupId: "507f1f77bcf86cd799439011"},
 	}), GetRouteGroupById(svc))
@@ -214,8 +214,8 @@ func TestGetRouteGroupById_ServiceError(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 	svc.GetByIdError = errors.New("not found")
 
-	app := fiber.New(fiber.Config{
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
+	app := web.New(web.Config{
+		ErrorHandler: func(c *web.Ctx, err error) error {
 			return c.Status(500).JSON(response.Response{
 				Status: 500,
 				Errors: []string{err.Error()},
@@ -243,7 +243,7 @@ func TestGetRouteGroupById_CallsServiceWithCorrectId(t *testing.T) {
 
 	expectedId := "507f1f77bcf86cd799439099"
 
-	app := fiber.New()
+	app := web.New()
 	app.Get("/test", injectLocals(map[string]interface{}{
 		"paramsDTO": &dtos.RouteGroupIdDTO{RouteGroupId: expectedId},
 	}), GetRouteGroupById(svc))
@@ -271,7 +271,7 @@ func TestUpdateRouteGroupById_Success(t *testing.T) {
 		Name:    ptrString("Updated Group"),
 	}
 
-	app := fiber.New()
+	app := web.New()
 	app.Put("/test", injectLocals(map[string]interface{}{
 		"requestContext": createTestRequestContext(),
 		"paramsDTO":      &dtos.RouteGroupIdDTO{RouteGroupId: "507f1f77bcf86cd799439011"},
@@ -303,8 +303,8 @@ func TestUpdateRouteGroupById_ServiceError(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 	svc.UpdateError = errors.New("update failed")
 
-	app := fiber.New(fiber.Config{
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
+	app := web.New(web.Config{
+		ErrorHandler: func(c *web.Ctx, err error) error {
 			return c.Status(500).JSON(response.Response{
 				Status: 500,
 				Errors: []string{err.Error()},
@@ -348,7 +348,7 @@ func TestUpdateRouteGroupById_OverridesOrgIdFromRequestContext(t *testing.T) {
 		UserId: "user-1",
 	}
 
-	app := fiber.New()
+	app := web.New()
 	app.Put("/test", injectLocals(map[string]interface{}{
 		"requestContext": requestContext,
 		"paramsDTO":      &dtos.RouteGroupIdDTO{RouteGroupId: "507f1f77bcf86cd799439011"},
@@ -398,7 +398,7 @@ func TestGetRouteGroups_Success(t *testing.T) {
 		},
 	}
 
-	app := fiber.New()
+	app := web.New()
 	app.Get("/test", injectLocals(map[string]interface{}{
 		"requestContext": createTestRequestContext(),
 		"queryDTO":       &dtos.RouteGroupQueryDTO{},
@@ -426,7 +426,7 @@ func TestGetRouteGroups_Success(t *testing.T) {
 func TestGetRouteGroups_MissingRequestContext(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 
-	app := fiber.New()
+	app := web.New()
 	// No requestContext injected
 	app.Get("/test", injectLocals(map[string]interface{}{
 		"queryDTO": &dtos.RouteGroupQueryDTO{},
@@ -454,7 +454,7 @@ func TestDeleteRouteGroupById_Success(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 	svc.DeleteResponse = map[string]bool{"deleted": true}
 
-	app := fiber.New()
+	app := web.New()
 	app.Delete("/test", injectLocals(map[string]interface{}{
 		"paramsDTO": &dtos.RouteGroupIdDTO{RouteGroupId: "507f1f77bcf86cd799439011"},
 	}), DeleteRouteGroupById(svc))
@@ -482,8 +482,8 @@ func TestDeleteRouteGroupById_ServiceError(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 	svc.DeleteError = errors.New("delete failed")
 
-	app := fiber.New(fiber.Config{
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
+	app := web.New(web.Config{
+		ErrorHandler: func(c *web.Ctx, err error) error {
 			return c.Status(500).JSON(response.Response{
 				Status: 500,
 				Errors: []string{err.Error()},
@@ -511,7 +511,7 @@ func TestGetRouteGroupCount_Success(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 	svc.CountResponse = 42
 
-	app := fiber.New()
+	app := web.New()
 	app.Get("/test", injectLocals(map[string]interface{}{
 		"requestContext": createTestRequestContext(),
 	}), GetRouteGroupCount(svc))
@@ -553,8 +553,8 @@ func TestGetRouteGroupCount_ServiceError(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 	svc.CountError = errors.New("count failed")
 
-	app := fiber.New(fiber.Config{
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
+	app := web.New(web.Config{
+		ErrorHandler: func(c *web.Ctx, err error) error {
 			return c.Status(500).JSON(response.Response{
 				Status: 500,
 				Errors: []string{err.Error()},
@@ -579,7 +579,7 @@ func TestGetRouteGroupCount_ServiceError(t *testing.T) {
 func TestGetRouteGroupCount_MissingRequestContext(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 
-	app := fiber.New()
+	app := web.New()
 	// No requestContext injected
 	app.Get("/test", GetRouteGroupCount(svc))
 

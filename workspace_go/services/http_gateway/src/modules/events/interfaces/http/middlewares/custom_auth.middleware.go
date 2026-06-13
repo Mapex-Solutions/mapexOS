@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	"github.com/google/uuid"
 
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/auth"
@@ -38,9 +38,9 @@ import (
 //
 // Returns:
 //   - A Fiber handler function that validates authentication before allowing access
-func CustomAuthMiddleware(dsService dsPort.DataSourceServicePort, eventService eventsPort.EventServicePort, m *bootstrap.HttpGatewayMetrics) fiber.Handler {
+func CustomAuthMiddleware(dsService dsPort.DataSourceServicePort, eventService eventsPort.EventServicePort, m *bootstrap.HttpGatewayMetrics) web.Handler {
 
-	return func(c *fiber.Ctx) error {
+	return func(c *web.Ctx) error {
 		start := time.Now()
 
 		// The data already validated by the validation middleware
@@ -50,7 +50,7 @@ func CustomAuthMiddleware(dsService dsPort.DataSourceServicePort, eventService e
 			return err
 		}
 
-		// Runtime gate (TKT-2026-0036): disabled DataSources reject all traffic
+		// Runtime gate: disabled DataSources reject all traffic
 		// before any auth cost. Covers both /events and /heartbeat (single change
 		// point). The "disabled" metric label is added to the existing 3 auth
 		// metrics — no new metric definitions.
@@ -116,13 +116,13 @@ func CustomAuthMiddleware(dsService dsPort.DataSourceServicePort, eventService e
 
 // parseEventBody parses the request body for inclusion in auth failure events.
 // Called lazily only when auth fails to avoid unnecessary parsing on the happy path.
-func parseEventBody(c *fiber.Ctx) map[string]any {
+func parseEventBody(c *web.Ctx) map[string]any {
 	var event map[string]any
 	_ = c.BodyParser(&event)
 	return event
 }
 
-func getDataSource(c *fiber.Ctx, dsService dsPort.DataSourceServicePort) (*dsDto.DataSourceResponse, error) {
+func getDataSource(c *web.Ctx, dsService dsPort.DataSourceServicePort) (*dsDto.DataSourceResponse, error) {
 	// retrieve the timeout‐aware Context you set in ContextInjector
 	ctx := c.UserContext()
 
@@ -137,12 +137,12 @@ func getDataSource(c *fiber.Ctx, dsService dsPort.DataSourceServicePort) (*dsDto
 	return dataSource, nil
 }
 
-func none(c *fiber.Ctx, dataSource *dsDto.DataSourceResponse) error {
+func none(c *web.Ctx, dataSource *dsDto.DataSourceResponse) error {
 	c.Locals("dataSource", dataSource)
 	return c.Next()
 }
 
-func checkIPWhiteList(c *fiber.Ctx, dataSource *dsDto.DataSourceResponse, eventService eventsPort.EventServicePort) error {
+func checkIPWhiteList(c *web.Ctx, dataSource *dsDto.DataSourceResponse, eventService eventsPort.EventServicePort) error {
 	canAccess := auth.ValidateIPWhitelist(c, dataSource.Auth.IPWhitelist.CIDRs)
 
 	if !canAccess {
@@ -169,7 +169,7 @@ func checkIPWhiteList(c *fiber.Ctx, dataSource *dsDto.DataSourceResponse, eventS
 // Returns:
 //   - nil if the token is valid and not expired.
 //   - customErrors.ServerCustomError with status.UNAUTHORIZED if the token is missing, invalid, or expired.
-func checkJWKS(c *fiber.Ctx, dataSource *dsDto.DataSourceResponse, eventService eventsPort.EventServicePort) error {
+func checkJWKS(c *web.Ctx, dataSource *dsDto.DataSourceResponse, eventService eventsPort.EventServicePort) error {
 	authHeader := c.Get("Authorization")
 	if authHeader == "" {
 		errMsg := "missing Authorization header"
@@ -206,7 +206,7 @@ func checkJWKS(c *fiber.Ctx, dataSource *dsDto.DataSourceResponse, eventService 
 // Returns:
 //   - nil if the token is valid and not expired.
 //   - customErrors.ServerCustomError with status.UNAUTHORIZED if the token is missing, invalid, or expired.
-func checkJWT(c *fiber.Ctx, dataSource *dsDto.DataSourceResponse, eventService eventsPort.EventServicePort) error {
+func checkJWT(c *web.Ctx, dataSource *dsDto.DataSourceResponse, eventService eventsPort.EventServicePort) error {
 
 	// Determine header name - use configured or default to "Authorization"
 	headerName := "Authorization"
@@ -266,7 +266,7 @@ func checkJWT(c *fiber.Ctx, dataSource *dsDto.DataSourceResponse, eventService e
 //
 //   - error from the next handler on success, or an Unauthorized error if the
 //     API key is missing/invalid.
-func checkApiKey(c *fiber.Ctx, dataSource *dsDto.DataSourceResponse, eventService eventsPort.EventServicePort) error {
+func checkApiKey(c *web.Ctx, dataSource *dsDto.DataSourceResponse, eventService eventsPort.EventServicePort) error {
 	canAccess := auth.ValidateAPIKey(
 		c,
 		dataSource.Auth.APIKey.Key,

@@ -16,7 +16,7 @@ import (
 	ctxInjector "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/contextInjector"
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
 // InitRepositories registers the kek repository + envelope adapter.
@@ -40,7 +40,7 @@ func InitInterfaces() {
 	c := container.GetContainer()
 	if err := c.Invoke(func(params struct {
 		container.In
-		App     *fiber.App
+		App     *web.App
 		Service kekPorts.KekServicePort
 	}) {
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

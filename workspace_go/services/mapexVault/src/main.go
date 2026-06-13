@@ -9,8 +9,8 @@ import (
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/shutdown"
 
-	appModule "mapexVault/src/modules/app"
 	"mapexVault/src/bootstrap"
+	appModule "mapexVault/src/modules/app"
 )
 
 func main() {
@@ -32,12 +32,18 @@ func main() {
 
 	fiberInstance := bootstrap.InitFiber(c)
 
+	// Configure OpenAPI metadata before modules register their routes.
+	bootstrap.InitSwagger()
+
 	bootstrap.InitHealth(c, fiberInstance)
 
 	sm := shutdown.New()
 	bootstrap.InitShutdown(c, sm, fiberInstance)
 
 	appModule.InitModule(fiberInstance)
+
+	// Assemble and serve the OpenAPI document at /swagger (after routes register).
+	bootstrap.BuildSwagger(fiberInstance)
 
 	httpPort, _ := config.GetIntValue("http_port")
 	httpAddress, _ := config.GetStringValue("http_address")

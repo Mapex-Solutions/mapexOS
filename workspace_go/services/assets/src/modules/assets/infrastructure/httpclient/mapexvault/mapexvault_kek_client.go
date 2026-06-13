@@ -55,10 +55,14 @@ func (c *KEKClient) FetchKEK(ctx context.Context, keyContext string) (string, er
 		body, _ := io.ReadAll(resp.Body)
 		return "", fmt.Errorf("unexpected status=%d body=%s", resp.StatusCode, string(body))
 	}
-	var wire kekWire
-	if err := json.NewDecoder(resp.Body).Decode(&wire); err != nil {
+	// mapexVault wraps the payload in the standard {status, errors, data} envelope.
+	var env struct {
+		Data kekWire `json:"data"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&env); err != nil {
 		return "", fmt.Errorf("decode: %w", err)
 	}
+	wire := env.Data
 	logger.Info("[INFRA:MapexVault] KEK fetched context=" + wire.Context)
 	return wire.Kek, nil
 }

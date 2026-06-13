@@ -12,18 +12,20 @@ import (
 
 // CredentialServicePort defines the business operations for vault credential management.
 type CredentialServicePort interface {
-	// Credential CRUD
+	// Credential CRUD. The by-id operations take the request context so they are
+	// scoped to the caller's organization and exclude internal/seed templates.
 	CreateCredential(ctx context.Context, requestContext *reqCtx.RequestContext, dto *dtos.CreateCredentialDTO) (*dtos.CredentialResponse, error)
-	GetCredentialById(ctx context.Context, id string) (*dtos.CredentialResponse, error)
-	UpdateCredentialById(ctx context.Context, id string, dto *dtos.UpdateCredentialDTO) (*dtos.CredentialResponse, error)
-	DeleteCredentialById(ctx context.Context, id string) (map[string]bool, error)
+	GetCredentialById(ctx context.Context, requestContext *reqCtx.RequestContext, id string) (*dtos.CredentialResponse, error)
+	UpdateCredentialById(ctx context.Context, requestContext *reqCtx.RequestContext, id string, dto *dtos.UpdateCredentialDTO) (*dtos.CredentialResponse, error)
+	DeleteCredentialById(ctx context.Context, requestContext *reqCtx.RequestContext, id string) (map[string]bool, error)
 	GetCredentials(ctx context.Context, requestContext *reqCtx.RequestContext, query *dtos.CredentialQueryDTO) (*model.PaginatedResult[dtos.CredentialResponse], error)
 
-	// Internal (for service-to-service)
+	// Internal (for service-to-service). Not org-scoped: internal callers
+	// authenticate by API key and may decrypt any credential by id.
 	DecryptCredential(ctx context.Context, id string) (map[string]interface{}, error)
 
 	// Test
-	TestCredential(ctx context.Context, id string) (map[string]bool, error)
+	TestCredential(ctx context.Context, requestContext *reqCtx.RequestContext, id string) (map[string]bool, error)
 
 	// OAuth2
 	HandleOAuthCallback(ctx context.Context, requestContext *reqCtx.RequestContext, dto *dtos.OAuthCallbackDTO) (*dtos.CredentialResponse, error)

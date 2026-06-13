@@ -9,7 +9,7 @@ import (
 	consumers "events/src/modules/asset_status/interfaces/message/consumers"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
 	authmw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/auth"
@@ -39,7 +39,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, svc ports.AssetStatusServicePort) {
+	if err := c.Invoke(func(app *web.App, svc ports.AssetStatusServicePort) {
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")
 		routesV1 := app.Group(
 			"/api/v1/events",

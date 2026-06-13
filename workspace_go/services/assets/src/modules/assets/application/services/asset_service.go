@@ -135,6 +135,17 @@ func (s *AssetService) GetByUUID(c ctx.Context, assetUUID string) (*ports.Asset,
 	return asset, nil
 }
 
+// GetAssetScriptsByUUID resolves the asset by UUID and projects its identity
+// together with the transform scripts read from its template. 404 when the
+// UUID is unknown; a deleted template yields empty script fields.
+func (s *AssetService) GetAssetScriptsByUUID(c ctx.Context, assetUUID string) (*assetsContract.AssetScriptsResponse, error) {
+	asset, err := s.GetByUUID(c, assetUUID)
+	if err != nil {
+		return nil, err
+	}
+	return s.buildAssetScriptsResponse(c, asset), nil
+}
+
 // UpdateAssetById orchestrates a partial update:
 // load the prior entity -> validate health-monitor invariants -> apply the
 // patch in Mongo -> fan out side effects (auth cache, MinIO write, FANOUT

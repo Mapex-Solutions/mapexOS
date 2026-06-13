@@ -3,7 +3,7 @@ package bootstrap
 import (
 	"context"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	"go.uber.org/dig"
 
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
@@ -15,7 +15,7 @@ import (
 )
 
 // InitShutdown registers graceful shutdown hooks for all infrastructure.
-func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *fiber.App) {
+func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *web.App) {
 	c.Invoke(func(params struct {
 		container.In
 		Mongo *mongoManager.MongoManager

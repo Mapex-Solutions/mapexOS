@@ -10,7 +10,7 @@ import (
 	routes "events/src/modules/events/interfaces/http/routes"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	common "github.com/Mapex-Solutions/mapexGoKit/infrastructure/common/ports"
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
@@ -54,7 +54,7 @@ func InitInterfaces() {
 	c := container.GetContainer()
 
 	// Register HTTP routes
-	if err := c.Invoke(func(app *fiber.App, service ports.EventServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.EventServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

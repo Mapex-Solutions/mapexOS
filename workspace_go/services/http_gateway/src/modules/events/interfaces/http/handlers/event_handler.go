@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"http_gateway/src/bootstrap"
 	dsDto "http_gateway/src/modules/datasources/application/dtos"
@@ -20,8 +20,8 @@ import (
 //   - Event data in the request body (parsed as map[string]any).
 //   - DataSource resolved by CustomAuthMiddleware and stored under
 //     "dataSource" in the Fiber locals.
-func ProcessEvent(service ports.EventServicePort, m *bootstrap.HttpGatewayMetrics) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func ProcessEvent(service ports.EventServicePort, m *bootstrap.HttpGatewayMetrics) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		m.EventPayloadSize.Observe(float64(len(c.Body())))
@@ -54,8 +54,8 @@ func ProcessEvent(service ports.EventServicePort, m *bootstrap.HttpGatewayMetric
 // resolved DataSource — never from the body — so a compromised body cannot
 // spoof a different tenant. The metrics arg is kept for signature symmetry
 // with ProcessEvent; heartbeat metrics are emitted from the service layer.
-func ProcessHeartbeat(service ports.EventServicePort, _ *bootstrap.HttpGatewayMetrics) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func ProcessHeartbeat(service ports.EventServicePort, _ *bootstrap.HttpGatewayMetrics) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		body, errBody := requestValidation.GetDTO[*dtos.HeartbeatRequestDTO](c, "bodyDTO")
@@ -71,6 +71,6 @@ func ProcessHeartbeat(service ports.EventServicePort, _ *bootstrap.HttpGatewayMe
 		if err := service.ProcessHeartbeat(ctx, dataSource, body.AssetUUID); err != nil {
 			return err
 		}
-		return c.SendStatus(fiber.StatusNoContent)
+		return response.Success(c, map[string]bool{"success": true})
 	}
 }

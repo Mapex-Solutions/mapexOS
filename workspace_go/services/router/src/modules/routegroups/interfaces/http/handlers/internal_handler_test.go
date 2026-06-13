@@ -9,7 +9,7 @@ import (
 	"router/src/modules/routegroups/application/dtos"
 	"router/src/modules/routegroups/application/services/mocks"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
 /** GetRouteGroupsByIds */
@@ -21,7 +21,7 @@ func TestGetRouteGroupsByIds_Success(t *testing.T) {
 		{Version: ptrString("2.0.0"), Name: ptrString("Group 2")},
 	}
 
-	app := fiber.New()
+	app := web.New()
 	app.Get("/test", injectLocals(map[string]interface{}{
 		"queryDTO": &dtos.RouteGroupInternalIdsQuery{
 			Ids: "507f1f77bcf86cd799439011,507f1f77bcf86cd799439012",
@@ -57,7 +57,7 @@ func TestGetRouteGroupsByIds_Success(t *testing.T) {
 func TestGetRouteGroupsByIds_EmptyIds(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 
-	app := fiber.New()
+	app := web.New()
 	app.Get("/test", injectLocals(map[string]interface{}{
 		"queryDTO": &dtos.RouteGroupInternalIdsQuery{
 			Ids: "",
@@ -87,7 +87,7 @@ func TestGetRouteGroupsByIds_ServiceError(t *testing.T) {
 	svc := mocks.NewMockRouteGroupService()
 	svc.GetByIdsError = errors.New("service failure")
 
-	app := fiber.New()
+	app := web.New()
 	app.Get("/test", injectLocals(map[string]interface{}{
 		"queryDTO": &dtos.RouteGroupInternalIdsQuery{
 			Ids: "507f1f77bcf86cd799439011",

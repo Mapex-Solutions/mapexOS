@@ -3,10 +3,10 @@
 **Service:** assets
 **Module path:** `src/modules/assets/`
 **Owner:** @thiagoanselmo
-**Last reviewed:** 2026-05-11
+**Last reviewed:** 2026-06-11
 
 ## Purpose
-Owns the lifecycle of IoT Assets — the physical/logical devices that emit events in MapexOS. MongoDB is the source of truth for asset configuration (protocol, MQTT credentials, current X.509 cert metadata, route groups, health-monitor config, geo). The module exposes CRUD over HTTP for the frontend and a single internal read-model endpoint (`GET /internal/assets/:assetUUID`) that downstream consumers — Router, JS-Executor, Events, the mapex-mqtt-broker plugin — hit as the L3 fallback of their TieredCaches. It publishes a denormalized `AssetReadModel` to MinIO (L2) carrying everything every consumer needs, including `Protocol.Mqtt.PasswordHash` and `CurrentCert.Serial` for the broker plugin's local CONNECT decisions. Cache invalidation rides NATS FANOUT.
+Owns the lifecycle of IoT Assets — the physical/logical devices that emit events in MapexOS. MongoDB is the source of truth for asset configuration (protocol, MQTT credentials, current X.509 cert metadata, route groups, health-monitor config, geo). The module exposes CRUD over HTTP for the frontend and internal read endpoints — `GET /internal/assets/:assetUUID` (the read-model L3 fallback) and `GET /internal/assets/scripts/:assetUUID` (transform scripts for the Rule Test Runner UI) — where the read-model is hit by downstream consumers — Router, JS-Executor, Events, the mapex-mqtt-broker plugin — as the L3 fallback of their TieredCaches. It publishes a denormalized `AssetReadModel` to MinIO (L2) carrying everything every consumer needs, including `Protocol.Mqtt.PasswordHash` and `CurrentCert.Serial` for the broker plugin's local CONNECT decisions. Cache invalidation rides NATS FANOUT.
 
 ## Ubiquitous Language
 | Term | Meaning in this context | Not to be confused with |
@@ -32,6 +32,7 @@ Owns the lifecycle of IoT Assets — the physical/logical devices that emit even
 ## Driving Ports (inbound — who calls this module)
 - HTTP `/api/v1/assets` (JWT auth): `GET /`, `POST /`, `GET /counter`, `GET /:assetId`, `PATCH /:assetId`, `DELETE /:assetId` — frontend/API clients
 - HTTP `GET /internal/assets/:assetUUID` (API-Key auth): the L3 read-model fallback for every consumer's TieredCache (Router, JS-Executor, Events, mapex-mqtt-broker plugin). On hit, the handler also repopulates the L2 MinIO entry inline so the next reader hits the cache.
+- HTTP `GET /internal/assets/scripts/:assetUUID` (API-Key auth): returns the asset's transform scripts (sourced from its template) for the Rule Test Runner UI.
 - Go port `AssetServicePort` consumed in-process by `mqttcerts` (for `GetByUUID` on issue/revoke) and `healthmonitor` (for asset enrichment on heartbeat/presence handling)
 
 ## Driven Ports (outbound — what this module requires)

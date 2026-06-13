@@ -4,15 +4,15 @@ import (
 	"mapexVault/src/modules/credentials/application/dtos"
 	"mapexVault/src/modules/credentials/application/ports"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/response"
 )
 
-func CreateCredential(service ports.CredentialServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateCredential(service ports.CredentialServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 		rc, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
@@ -27,10 +27,14 @@ func CreateCredential(service ports.CredentialServicePort) fiber.Handler {
 	}
 }
 
-func GetCredentialById(service ports.CredentialServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetCredentialById(service ports.CredentialServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		rc, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found", nil)
+		}
 		id := c.Params("credentialId")
-		result, err := service.GetCredentialById(c.UserContext(), id)
+		result, err := service.GetCredentialById(c.UserContext(), rc, id)
 		if err != nil {
 			return err
 		}
@@ -38,11 +42,15 @@ func GetCredentialById(service ports.CredentialServicePort) fiber.Handler {
 	}
 }
 
-func UpdateCredentialById(service ports.CredentialServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateCredentialById(service ports.CredentialServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		rc, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found", nil)
+		}
 		id := c.Params("credentialId")
 		dto, _ := requestValidation.GetDTO[*dtos.UpdateCredentialDTO](c, "bodyDTO")
-		result, err := service.UpdateCredentialById(c.UserContext(), id, dto)
+		result, err := service.UpdateCredentialById(c.UserContext(), rc, id, dto)
 		if err != nil {
 			return err
 		}
@@ -50,10 +58,14 @@ func UpdateCredentialById(service ports.CredentialServicePort) fiber.Handler {
 	}
 }
 
-func DeleteCredentialById(service ports.CredentialServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteCredentialById(service ports.CredentialServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		rc, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found", nil)
+		}
 		id := c.Params("credentialId")
-		result, err := service.DeleteCredentialById(c.UserContext(), id)
+		result, err := service.DeleteCredentialById(c.UserContext(), rc, id)
 		if err != nil {
 			return err
 		}
@@ -61,8 +73,8 @@ func DeleteCredentialById(service ports.CredentialServicePort) fiber.Handler {
 	}
 }
 
-func GetCredentials(service ports.CredentialServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetCredentials(service ports.CredentialServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		rc, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
 			return response.InternalServerError(c, "requestContext not found", nil)
@@ -76,10 +88,14 @@ func GetCredentials(service ports.CredentialServicePort) fiber.Handler {
 	}
 }
 
-func TestCredential(service ports.CredentialServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func TestCredential(service ports.CredentialServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		rc, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found", nil)
+		}
 		id := c.Params("credentialId")
-		result, err := service.TestCredential(c.UserContext(), id)
+		result, err := service.TestCredential(c.UserContext(), rc, id)
 		if err != nil {
 			return err
 		}

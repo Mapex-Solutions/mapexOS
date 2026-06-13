@@ -15,3 +15,12 @@ import (
 type EventService struct {
 	deps di.EventServiceDependenciesInjection
 }
+
+// heartbeatPlan is the result of buildHeartbeatPayload: the subject to publish to,
+// the payload to publish, and the identifying tuple already extracted for logging.
+type heartbeatPlan struct {
+	Subject   string
+	AssetUUID string
+	OrgId     string
+	Payload   map[string]any
+}

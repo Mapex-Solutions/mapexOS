@@ -3,15 +3,15 @@ package archiver
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
+	"workflow/src/bootstrap"
 	"workflow/src/modules/archiver/application/ports"
 	service "workflow/src/modules/archiver/application/services"
 	collection "workflow/src/modules/archiver/infrastructure/persistence/mongo/collection"
 	mongoMgrAdapter "workflow/src/modules/archiver/infrastructure/persistence/mongo/manager"
-	"workflow/src/bootstrap"
-	"workflow/src/modules/archiver/interfaces/message/consumers"
 	routes "workflow/src/modules/archiver/interfaces/http/routes"
+	"workflow/src/modules/archiver/interfaces/message/consumers"
 
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
@@ -42,7 +42,7 @@ func InitInterfaces() {
 	c := container.GetContainer()
 
 	// HTTP Routes
-	if err := c.Invoke(func(app *fiber.App, service ports.ArchiverServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.ArchiverServicePort) {
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")
 
 		routesV1 := app.Group(
@@ -60,7 +60,7 @@ func InitInterfaces() {
 	// NATS Consumers
 	if err := c.Invoke(func(params struct {
 		container.In
-		Bus      *natsModel.Bus             `name:"core"`
+		Bus      *natsModel.Bus `name:"core"`
 		Service  ports.ArchiverServicePort
 		Registry *bootstrap.ConsumerRegistry
 	}) {

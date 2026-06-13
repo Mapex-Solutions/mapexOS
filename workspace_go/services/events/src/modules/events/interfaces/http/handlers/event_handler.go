@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"events/src/modules/events/application/dtos"
 	"events/src/modules/events/application/ports"
@@ -38,8 +38,8 @@ import (
 //   - 400 Bad Request if validation fails
 //   - 403 Forbidden if user doesn't have access to org
 //   - 500 Internal Server Error on service failure
-func GetEventsRaw(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsRaw(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -47,7 +47,7 @@ func GetEventsRaw(service ports.EventServicePort) fiber.Handler {
 		// Get RequestContext from coverage middleware
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		// Get validated query DTO
@@ -92,8 +92,8 @@ func GetEventsRaw(service ports.EventServicePort) fiber.Handler {
 //   - 400 Bad Request if validation fails
 //   - 403 Forbidden if user doesn't have access to org
 //   - 500 Internal Server Error on service failure
-func GetEventsJsExec(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsJsExec(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -101,7 +101,7 @@ func GetEventsJsExec(service ports.EventServicePort) fiber.Handler {
 		// Get RequestContext from coverage middleware
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		// Get validated query DTO
@@ -148,8 +148,8 @@ func GetEventsJsExec(service ports.EventServicePort) fiber.Handler {
 //   - 400 Bad Request if validation fails
 //   - 403 Forbidden if user doesn't have access to org
 //   - 500 Internal Server Error on service failure
-func GetEventsRouter(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsRouter(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -157,7 +157,7 @@ func GetEventsRouter(service ports.EventServicePort) fiber.Handler {
 		// Get RequestContext from coverage middleware
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		// Get validated query DTO
@@ -203,8 +203,8 @@ func GetEventsRouter(service ports.EventServicePort) fiber.Handler {
 //   - 400 Bad Request if validation fails
 //   - 403 Forbidden if user doesn't have access to org
 //   - 500 Internal Server Error on service failure
-func GetEventsBusinessRule(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsBusinessRule(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -212,7 +212,7 @@ func GetEventsBusinessRule(service ports.EventServicePort) fiber.Handler {
 		// Get RequestContext from coverage middleware
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		// Get validated query DTO
@@ -259,8 +259,8 @@ func GetEventsBusinessRule(service ports.EventServicePort) fiber.Handler {
 //   - 400 Bad Request if validation fails
 //   - 403 Forbidden if user doesn't have access to org
 //   - 500 Internal Server Error on service failure
-func GetEventsTrigger(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsTrigger(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -268,7 +268,7 @@ func GetEventsTrigger(service ports.EventServicePort) fiber.Handler {
 		// Get RequestContext from coverage middleware
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		// Get validated query DTO
@@ -308,13 +308,13 @@ func GetEventsTrigger(service ports.EventServicePort) fiber.Handler {
 //   - 400 Bad Request if validation fails
 //   - 403 Forbidden if user doesn't have access to org
 //   - 500 Internal Server Error on service failure
-func GetEventsWorkflow(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsWorkflow(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		queryData, _ := requestValidation.GetDTO[*dtos.EventsWorkflowQueryDto](c, "queryDTO")
@@ -328,13 +328,13 @@ func GetEventsWorkflow(service ports.EventServicePort) fiber.Handler {
 }
 
 // GetWorkflowEventByExecutionId returns a Fiber handler that retrieves a single workflow event by executionId.
-func GetWorkflowEventByExecutionId(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetWorkflowEventByExecutionId(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		paramsData, _ := requestValidation.GetDTO[*dtos.EventsWorkflowExecutionIdParamDto](c, "paramsDTO")
@@ -349,18 +349,18 @@ func GetWorkflowEventByExecutionId(service ports.EventServicePort) fiber.Handler
 // GetEventStoreDetail returns a Fiber handler that retrieves a single event by eventTrackerId.
 // Resolves EVA fieldIds to field names using the appropriate template (based on source).
 // Returns the event with an advancedSearch map containing resolved field names.
-func GetEventStoreDetail(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventStoreDetail(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		eventTrackerId := c.Params("eventTrackerId")
 		if eventTrackerId == "" {
-			return fiber.NewError(fiber.StatusBadRequest, "eventTrackerId is required")
+			return web.NewError(web.StatusBadRequest, "eventTrackerId is required")
 		}
 
 		result, err := service.GetEventStoreDetail(ctx, eventTrackerId)
 		if err != nil {
-			return fiber.NewError(fiber.StatusNotFound, err.Error())
+			return web.NewError(web.StatusNotFound, err.Error())
 		}
 
 		return response.Success(c, result)
@@ -399,8 +399,8 @@ func GetEventStoreDetail(service ports.EventServicePort) fiber.Handler {
 //   - 400 Bad Request if validation fails
 //   - 403 Forbidden if user doesn't have access to org
 //   - 500 Internal Server Error on service failure
-func GetEventsStore(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsStore(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -408,7 +408,7 @@ func GetEventsStore(service ports.EventServicePort) fiber.Handler {
 		// Get RequestContext from coverage middleware
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		// Get validated body DTO (POST with EvaFilters support)
@@ -426,13 +426,13 @@ func GetEventsStore(service ports.EventServicePort) fiber.Handler {
 }
 
 // GetEventsDLQCounts returns a Fiber handler that retrieves DLQ entry counts grouped by service type.
-func GetEventsDLQCounts(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsDLQCounts(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		queryData, _ := requestValidation.GetDTO[*dtos.EventsDLQCountsQueryDto](c, "queryDTO")
@@ -447,13 +447,13 @@ func GetEventsDLQCounts(service ports.EventServicePort) fiber.Handler {
 
 // GetEventsDLQ returns a Fiber handler that retrieves DLQ events using cursor-based pagination.
 // Uses RequestContext from coverage middleware for context-aware org filtering.
-func GetEventsDLQ(service ports.EventServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetEventsDLQ(service ports.EventServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		queryData, _ := requestValidation.GetDTO[*dtos.EventsDLQQueryDto](c, "queryDTO")

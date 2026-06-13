@@ -3,7 +3,7 @@ package triggers
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"triggers/src/modules/triggers/application/ports"
 	service "triggers/src/modules/triggers/application/services"
@@ -39,7 +39,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.TriggerServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.TriggerServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := configuration.GetIntValue("ctx_timeout")

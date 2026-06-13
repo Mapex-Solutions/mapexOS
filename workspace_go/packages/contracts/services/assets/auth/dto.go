@@ -3,7 +3,7 @@
 // by the assets service after every CRUD that affects auth fields and
 // is read from MinIO bucket `mapex-asset-auth` (key {assetUUID}.json)
 // or fetched via the assets service internal endpoint
-// GET /internal/asset-auth/:assetUUID as the L3 fallback.
+// GET /internal/asset_auth/:assetUUID as the L3 fallback.
 //
 // The projection is intentionally slimmer than AssetReadModel (defined
 // in services/assets/assets/dto.go): it carries only the fields the

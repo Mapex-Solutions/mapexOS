@@ -46,7 +46,7 @@ type HttpGatewayMetrics struct {
 	// Data source cache hit/miss counter
 	DsCacheTotal *prometheus.CounterVec
 
-	// --- Heartbeat (POST /api/v1/heartbeat — TKT-2026-0034 explicit mode) ---
+	// --- Heartbeat (POST /api/v1/heartbeat — explicit mode) ---
 
 	// POST /api/v1/heartbeat outcomes labeled by status (success|error)
 	HeartbeatsTotal *prometheus.CounterVec
@@ -142,7 +142,7 @@ func InitMetrics(c *dig.Container) {
 				Help:      "Data source cache lookups by result (hit/miss)",
 			}, []string{"result"}),
 
-			// --- Heartbeat (TKT-2026-0034 explicit mode) ---
+			// --- Heartbeat (explicit mode) ---
 			HeartbeatsTotal: reg.NewCounterVec(metrics.CounterOpts{
 				Subsystem: "heartbeat",
 				Name:      "total",

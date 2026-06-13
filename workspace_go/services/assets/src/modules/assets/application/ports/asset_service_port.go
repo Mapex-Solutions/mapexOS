@@ -128,6 +128,20 @@ type AssetServicePort interface {
 	//   - error: If asset not found
 	GetAssetReadModelByUUID(ctx ctx.Context, assetUUID string) (*assetsContract.AssetReadModel, error)
 
+	// GetAssetScriptsByUUID returns the asset's transform scripts, sourced
+	// from its template, plus identity fields. Served by the internal
+	// GET /internal/assets/scripts/:assetUUID endpoint (Rule Test Runner UI).
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - assetUUID: The device UUID (not MongoDB ID)
+	//
+	// Returns:
+	//   - AssetScriptsResponse: asset identity + template scripts (empty
+	//     script fields when the template was deleted)
+	//   - error: NOT_FOUND when the UUID is unknown
+	GetAssetScriptsByUUID(ctx ctx.Context, assetUUID string) (*assetsContract.AssetScriptsResponse, error)
+
 	// GetAuthProjectionByUUID returns the slim auth-only projection
 	// consumed by the broker plugin as the L3 fallback when L1+L2 both
 	// miss. Spawns an async goroutine to warm the mapex-asset-auth

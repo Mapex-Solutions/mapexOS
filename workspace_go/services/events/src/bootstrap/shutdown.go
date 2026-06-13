@@ -3,8 +3,9 @@ package bootstrap
 import (
 	"context"
 
-	"github.com/gofiber/fiber/v2"
 	"go.uber.org/dig"
+
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/shutdown"
@@ -20,7 +21,7 @@ import (
 //
 //	P0 — Fiber HTTP (stop accepting, drain in-flight requests)
 //	P5 — Connections: ClickHouse, MongoDB, Redis, NATS (concurrent)
-func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *fiber.App) {
+func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *web.App) {
 	c.Invoke(func(params struct {
 		container.In
 		ClickHouse *chManager.ClickHouseManager

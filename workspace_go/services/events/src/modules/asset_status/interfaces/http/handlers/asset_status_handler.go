@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"events/src/modules/asset_status/application/dtos"
 	"events/src/modules/asset_status/application/ports"
@@ -23,13 +23,13 @@ import (
 //   - 400 Bad Request if validation fails
 //   - 403 Forbidden if request context missing
 //   - 500 Internal Server Error on service failure
-func GetConnectivityHistory(service ports.AssetStatusServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetConnectivityHistory(service ports.AssetStatusServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		queryData, _ := requestValidation.GetDTO[*dtos.AssetConnectivityHistoryQuery](c, "queryDTO")
@@ -53,13 +53,13 @@ func GetConnectivityHistory(service ports.AssetStatusServicePort) fiber.Handler 
 // asset-scoped variant — the query's AssetUUID field is optional here.
 //
 // Returns: same shape as GetConnectivityHistory.
-func ListConnectivityHistory(service ports.AssetStatusServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func ListConnectivityHistory(service ports.AssetStatusServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {
-			return fiber.NewError(fiber.StatusForbidden, "Request context not found")
+			return web.NewError(web.StatusForbidden, "Request context not found")
 		}
 
 		queryData, _ := requestValidation.GetDTO[*dtos.AssetConnectivityHistoryQuery](c, "queryDTO")

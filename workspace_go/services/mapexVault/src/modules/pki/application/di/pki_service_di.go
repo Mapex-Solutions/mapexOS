@@ -9,7 +9,7 @@ import (
 
 // PkiServiceDI is the DI struct for the PKI bounded context.
 // Every field is a port interface (or constructor-resolved dependency)
-// — never a concrete driver, per /go-arch §6.
+// — never a concrete driver.
 //
 // Logging happens via the mapexGoKit logger package (function calls,
 // not an injected type) — matching the project convention.

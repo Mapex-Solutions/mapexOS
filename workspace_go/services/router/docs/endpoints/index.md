@@ -67,15 +67,15 @@ Path params:
 
 ### Internal API (API Key Authentication)
 
-Base path: `/api/internal/v1/routegroups`
+Base path: `/internal/route_groups`
 
 Authentication: `X-API-Key` header (configured via `INTERNAL_API_KEY`).
 
 | Method | Path | Description |
 |---|---|---|
-| `GET` | `/api/internal/v1/routegroups` | Get multiple route groups by IDs |
+| `GET` | `/internal/route_groups` | Get multiple route groups by IDs |
 
-#### GET /api/internal/v1/routegroups
+#### GET /internal/route_groups
 
 Query parameters:
 
@@ -84,7 +84,7 @@ Query parameters:
 | `ids` | string | yes | Comma-separated list of route group IDs |
 | `projection` | string | no | Comma-separated fields to return |
 
-Example: `GET /api/internal/v1/routegroups?ids=id1,id2,id3&projection=name,enabled`
+Example: `GET /internal/route_groups?ids=id1,id2,id3&projection=name,enabled`
 
 ## NATS
 

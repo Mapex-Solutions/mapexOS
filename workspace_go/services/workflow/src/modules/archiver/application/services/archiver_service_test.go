@@ -32,15 +32,15 @@ func stateSubject(status string) string {
  */
 
 type mockArchiveRepo struct {
-	mu                     sync.Mutex
-	insertedStubs          []repositories.LightweightExecution
-	upsertedFull           []*runtimePorts.WorkflowExecution
-	waitingUpdates         []repositories.WaitingUpdate
-	resumedIDs             []string
-	bulkInsertErr          error
-	bulkUpsertErr          error
-	bulkUpdateWaitingErr   error
-	bulkUpdateResumedErr   error
+	mu                   sync.Mutex
+	insertedStubs        []repositories.LightweightExecution
+	upsertedFull         []*runtimePorts.WorkflowExecution
+	waitingUpdates       []repositories.WaitingUpdate
+	resumedIDs           []string
+	bulkInsertErr        error
+	bulkUpsertErr        error
+	bulkUpdateWaitingErr error
+	bulkUpdateResumedErr error
 }
 
 func (m *mockArchiveRepo) BulkInsertLightweight(_ context.Context, stubs []repositories.LightweightExecution) error {
@@ -99,9 +99,9 @@ func (m *archiverMockKV) Delete(key string) error {
 	m.deleted = append(m.deleted, key)
 	return nil
 }
-func (m *archiverMockKV) Purge(_ string) error                             { return nil }
-func (m *archiverMockKV) Keys() ([]string, error)                          { return nil, nil }
-func (m *archiverMockKV) Bucket() string                                   { return "test" }
+func (m *archiverMockKV) Purge(_ string) error    { return nil }
+func (m *archiverMockKV) Keys() ([]string, error) { return nil, nil }
+func (m *archiverMockKV) Bucket() string          { return "test" }
 
 type archiverMockPublisher struct {
 	published []natsModel.PublishConfig
@@ -118,9 +118,11 @@ func (m *archiverMockPublisher) Publish(config natsModel.PublishConfig) error {
 
 type mockMongoManager struct{}
 
-func (m *mockMongoManager) GetBackpressureMode() ports.BackpressureMode { return ports.BackpressureNormal }
-func (m *mockMongoManager) WriteP99() int64                             { return 0 }
-func (m *mockMongoManager) RecordWriteLatency(_ time.Duration)          {}
+func (m *mockMongoManager) GetBackpressureMode() ports.BackpressureMode {
+	return ports.BackpressureNormal
+}
+func (m *mockMongoManager) WriteP99() int64                    { return 0 }
+func (m *mockMongoManager) RecordWriteLatency(_ time.Duration) {}
 
 var testMongoManager ports.MongoManagerPort = &mockMongoManager{}
 
@@ -150,10 +152,10 @@ func makeTestMessage(subject string, event sharedTypes.StateEvent) *natsModel.Me
 
 func TestEventClassification(t *testing.T) {
 	tests := []struct {
-		subject   string
-		isCreated bool
-		isWaiting bool
-		isResumed bool
+		subject    string
+		isCreated  bool
+		isWaiting  bool
+		isResumed  bool
 		isTerminal bool
 	}{
 		{stateSubject("created"), true, false, false, false},

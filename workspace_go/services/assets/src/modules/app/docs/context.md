@@ -34,12 +34,12 @@ or any other outbound messages.
 ## Consumed Events (driving — inbound)
 
 None. The orchestrator is invoked exactly once at process start via
-`InitModule(c *fiber.App)` from the service's `main.go`. It does not subscribe
+`InitModule(c *web.App)` from the service's `main.go`. It does not subscribe
 to NATS, listen on HTTP, or react to external signals.
 
 ## Driving Ports (what can call this module)
 
-- `InitModule(*fiber.App)` — called once from `main.go` during service startup.
+- `InitModule(*web.App)` — called once from `main.go` during service startup.
 
 ## Driven Ports (what this module requires)
 

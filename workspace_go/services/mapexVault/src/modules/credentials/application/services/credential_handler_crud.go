@@ -11,6 +11,7 @@ import (
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	"github.com/Mapex-Solutions/mapexGoKit/utils/envelope"
+	"github.com/Mapex-Solutions/mapexGoKit/utils/orgfilter"
 )
 
 // buildCredentialEntity assembles the Credential entity for Create from the
@@ -22,15 +23,16 @@ func (s *CredentialService) buildCredentialEntity(rc *reqCtx.RequestContext, dto
 		Type:            dto.Type,
 		PluginId:        dto.PluginId,
 		CredentialDefId: dto.CredentialDefId,
-		IsTemplate:      dto.IsTemplate,
-		Status:          entities.CredentialStatusActive,
-		EncryptedDEK:    env.EncryptedDEK,
-		DEKNonce:        env.DEKNonce,
-		EncryptedData:   env.EncryptedData,
-		DataNonce:       env.DataNonce,
-		ProviderConfig:  dto.ProviderConfig,
-		Created:         time.Now(),
-		Updated:         time.Now(),
+		// Templates are internal/seed-only; the external API never creates them.
+		IsTemplate:     false,
+		Status:         entities.CredentialStatusActive,
+		EncryptedDEK:   env.EncryptedDEK,
+		DEKNonce:       env.DEKNonce,
+		EncryptedData:  env.EncryptedData,
+		DataNonce:      env.DataNonce,
+		ProviderConfig: dto.ProviderConfig,
+		Created:        time.Now(),
+		Updated:        time.Now(),
 	}
 	if rc.OrgContext != nil && *rc.OrgContext != "" {
 		if orgObjectId, err := model.ToObjectID(*rc.OrgContext); err == nil {
@@ -50,9 +52,8 @@ func (s *CredentialService) buildCredentialUpdateMap(dto *dtos.UpdateCredentialD
 	if dto.Name != nil {
 		update["name"] = *dto.Name
 	}
-	if dto.IsTemplate != nil {
-		update["isTemplate"] = *dto.IsTemplate
-	}
+	// isTemplate is intentionally NOT honored here: the external API cannot flip a
+	// credential into/out of a template. Templates are internal/seed-only.
 	if dto.ProviderConfig != nil {
 		update["providerConfig"] = dto.ProviderConfig
 	}
@@ -70,15 +71,24 @@ func (s *CredentialService) buildCredentialUpdateMap(dto *dtos.UpdateCredentialD
 }
 
 // buildCredentialListFilters builds the Mongo filter for GetCredentials.
-// Org scope comes from the request context; pluginId/type/status come from
-// the query DTO.
-func (s *CredentialService) buildCredentialListFilters(rc *reqCtx.RequestContext, query *dtos.CredentialQueryDTO) model.Map {
-	filters := model.Map{}
-	if rc.OrgContext != nil && *rc.OrgContext != "" {
-		if orgId, err := model.ToObjectID(*rc.OrgContext); err == nil {
-			filters["orgId"] = orgId
-		}
+// Org scope comes from the shared org filter (selected org, or all accessible
+// orgs when none is selected); pluginId/type/status come from the query DTO.
+// Internal/seed templates are always excluded from the external list.
+func (s *CredentialService) buildCredentialListFilters(rc *reqCtx.RequestContext, query *dtos.CredentialQueryDTO) (model.Map, error) {
+	filters := model.Map{
+		"isTemplate": false,
 	}
+
+	// Multi-tenant scoping. Without this a caller could read credentials outside
+	// their organization (a missing org context previously yielded no filter).
+	orgFilter, err := orgfilter.BuildOrgFilter(orgfilter.BuildFilterParams{ReqContext: rc})
+	if err != nil {
+		return nil, err
+	}
+	for k, v := range orgFilter {
+		filters[k] = v
+	}
+
 	if query.PluginId != nil {
 		filters["pluginId"] = *query.PluginId
 	}
@@ -88,7 +98,36 @@ func (s *CredentialService) buildCredentialListFilters(rc *reqCtx.RequestContext
 	if query.Status != nil {
 		filters["status"] = *query.Status
 	}
-	return filters
+	return filters, nil
+}
+
+// findOwnedNonTemplate loads a credential by id, scoped to the caller's
+// organization and excluding internal/seed templates. A miss (wrong org, a
+// template, or an unknown id) returns a not-found error so existence never
+// leaks across tenants.
+func (s *CredentialService) findOwnedNonTemplate(ctx context.Context, rc *reqCtx.RequestContext, id string) (*entities.Credential, error) {
+	objId, err := model.ToObjectID(id)
+	if err != nil {
+		return nil, fmt.Errorf("[SERVICE:Credential] Credential %s not found", id)
+	}
+
+	filters := model.Map{"_id": objId, "isTemplate": false}
+	orgFilter, err := orgfilter.BuildOrgFilter(orgfilter.BuildFilterParams{ReqContext: rc})
+	if err != nil {
+		return nil, err
+	}
+	for k, v := range orgFilter {
+		filters[k] = v
+	}
+
+	result, err := s.deps.CredentialRepo.FindWithFilters(ctx, filters, &model.PaginationOpts{Page: 1, PerPage: 1}, nil)
+	if err != nil {
+		return nil, fmt.Errorf("[SERVICE:Credential] Failed to load %s: %w", id, err)
+	}
+	if len(result.Items) == 0 {
+		return nil, fmt.Errorf("[SERVICE:Credential] Credential %s not found", id)
+	}
+	return &result.Items[0], nil
 }
 
 // buildCredentialListPagination derives the Mongo pagination opts from the

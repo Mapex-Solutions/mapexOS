@@ -13,7 +13,7 @@ import (
 
 // buildAuthFailurePayload composes the RawEventDTO documented as the events.raw
 // shape for failed authentication attempts. Field extraction was previously
-// inlined in PublishAuthFailure (55-LOC method, /go-arch §3 anti-pattern A);
+// inlined in PublishAuthFailure (was a 55-LOC method);
 // extracting here keeps the public method as a thin orchestration skeleton.
 func (s *EventService) buildAuthFailurePayload(dataSource *dsDto.DataSourceResponse, event map[string]any, eventTrackerId string, errorMsg string) eventsDto.RawEventDTO {
 	now := time.Now().UTC()

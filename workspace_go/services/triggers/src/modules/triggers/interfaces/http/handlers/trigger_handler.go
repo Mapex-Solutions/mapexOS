@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"triggers/src/modules/triggers/application/dtos"
 	"triggers/src/modules/triggers/application/ports"
@@ -33,8 +33,8 @@ import (
 //
 // Returns:
 //   - A Fiber handler function that processes the trigger creation request
-func CreateTrigger(service ports.TriggerServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateTrigger(service ports.TriggerServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -66,8 +66,8 @@ func CreateTrigger(service ports.TriggerServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the trigger retrieval request
-func GetTriggerById(service ports.TriggerServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetTriggerById(service ports.TriggerServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get trigger ID from URL params
@@ -92,8 +92,8 @@ func GetTriggerById(service ports.TriggerServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the trigger update request
-func UpdateTriggerById(service ports.TriggerServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateTriggerById(service ports.TriggerServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext for updatedBy field
@@ -127,8 +127,8 @@ func UpdateTriggerById(service ports.TriggerServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the trigger deletion request
-func DeleteTriggerById(service ports.TriggerServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteTriggerById(service ports.TriggerServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get trigger ID from URL params
@@ -155,8 +155,8 @@ func DeleteTriggerById(service ports.TriggerServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the trigger list request
-func GetTriggers(service ports.TriggerServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetTriggers(service ports.TriggerServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -185,8 +185,8 @@ func GetTriggers(service ports.TriggerServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the trigger count request
-func GetTriggerCount(service ports.TriggerServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetTriggerCount(service ports.TriggerServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)

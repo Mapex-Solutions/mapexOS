@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/auth/application/dtos"
 	"mapexIam/src/modules/auth/domain/repositories"
@@ -20,7 +20,7 @@ import (
 //
 // All routes require X-API-Key header with valid API key.
 func RegisterInternalRoutes(
-	group fiber.Router,
+	group web.Router,
 	authCacheRepo repositories.AuthorizationCacheRepository,
 	coverageCacheRepo repositories.CoverageCacheRepository,
 ) {

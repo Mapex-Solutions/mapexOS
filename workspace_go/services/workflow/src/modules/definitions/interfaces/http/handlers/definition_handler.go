@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/definitions/application/dtos"
 	"workflow/src/modules/definitions/application/ports"
@@ -21,8 +21,8 @@ import (
 //
 // The handler passes the full RequestContext to the service layer, which extracts
 // the needed fields (orgId, pathKey) for multi-tenant support.
-func CreateDefinition(service ports.DefinitionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateDefinition(service ports.DefinitionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -41,8 +41,8 @@ func CreateDefinition(service ports.DefinitionServicePort) fiber.Handler {
 }
 
 // GetDefinitionById returns a Fiber handler that retrieves a workflow definition by its ID.
-func GetDefinitionById(service ports.DefinitionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetDefinitionById(service ports.DefinitionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.DefinitionIdDTO](c, "paramsDTO")
@@ -55,8 +55,8 @@ func GetDefinitionById(service ports.DefinitionServicePort) fiber.Handler {
 }
 
 // UpdateDefinitionById returns a Fiber handler that updates a workflow definition.
-func UpdateDefinitionById(service ports.DefinitionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateDefinitionById(service ports.DefinitionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.DefinitionIdDTO](c, "paramsDTO")
@@ -70,8 +70,8 @@ func UpdateDefinitionById(service ports.DefinitionServicePort) fiber.Handler {
 }
 
 // DeleteDefinitionById returns a Fiber handler that deletes a workflow definition.
-func DeleteDefinitionById(service ports.DefinitionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteDefinitionById(service ports.DefinitionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.DefinitionIdDTO](c, "paramsDTO")
@@ -84,8 +84,8 @@ func DeleteDefinitionById(service ports.DefinitionServicePort) fiber.Handler {
 }
 
 // GetDefinitionCount returns a Fiber handler that returns the total count of workflow definitions.
-func GetDefinitionCount(service ports.DefinitionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetDefinitionCount(service ports.DefinitionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
@@ -104,8 +104,8 @@ func GetDefinitionCount(service ports.DefinitionServicePort) fiber.Handler {
 
 // GetDefinitions returns a Fiber handler that retrieves a paginated list of workflow definitions.
 // Uses RequestContext from coverage middleware for org filtering with hierarchical support.
-func GetDefinitions(service ports.DefinitionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetDefinitions(service ports.DefinitionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware

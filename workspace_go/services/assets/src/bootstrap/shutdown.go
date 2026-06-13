@@ -3,8 +3,9 @@ package bootstrap
 import (
 	"context"
 
-	"github.com/gofiber/fiber/v2"
 	"go.uber.org/dig"
+
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/shutdown"
@@ -21,7 +22,7 @@ import (
 //	P5 — Connections: MongoDB, Redis, NATS Core (concurrent)
 //
 // Single NATS connection (core) — see bootstrap/nats.go for the rationale.
-func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *fiber.App) {
+func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *web.App) {
 	c.Invoke(func(params struct {
 		container.In
 		Mongo    *mongoManager.MongoManager

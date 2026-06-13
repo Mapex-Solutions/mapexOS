@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/instances/application/ports"
 
@@ -11,8 +11,8 @@ import (
 )
 
 // GetInstanceCount returns a Fiber handler that returns the total count of workflow instances.
-func GetInstanceCount(service ports.InstancesServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetInstanceCount(service ports.InstancesServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)

@@ -10,6 +10,33 @@ import (
 	"github.com/Mapex-Solutions/mapexGoKit/utils/mapper"
 )
 
+// buildAssetScriptsResponse assembles the internal scripts projection: the
+// asset's identity fields plus the transform scripts read from its template.
+// A missing template (deleted) leaves the script fields empty rather than
+// failing, so the caller still receives the asset identity.
+func (s *AssetService) buildAssetScriptsResponse(c ctx.Context, asset *entities.Asset) *assetsContract.AssetScriptsResponse {
+	resp := &assetsContract.AssetScriptsResponse{
+		ID:              asset.ID.Hex(),
+		Name:            asset.Name,
+		AssetUUID:       asset.AssetUUID,
+		AssetTemplateID: asset.AssetTemplateID.Hex(),
+	}
+	if asset.AssetTemplateID.IsZero() {
+		return resp
+	}
+	templateIdStr := asset.AssetTemplateID.Hex()
+	template, err := s.deps.AssetTemplateRepo.FindById(c, &templateIdStr)
+	if err != nil || template == nil || template.ID.IsZero() {
+		return resp
+	}
+	if template.ScriptProcessor != nil {
+		resp.ScriptProcessor = *template.ScriptProcessor
+	}
+	resp.ScriptValidator = template.ScriptValidator
+	resp.ScriptConversion = template.ScriptConversion
+	return resp
+}
+
 // buildSimpleResponse maps an entity to the API response shape with no
 // enrichment. Used by paths that don't need template/route-group data
 // (e.g. the auth lookup by MQTT username).

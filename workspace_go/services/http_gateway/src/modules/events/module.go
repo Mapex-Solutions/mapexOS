@@ -3,7 +3,7 @@ package events
 import (
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"http_gateway/src/bootstrap"
 	dsPort "http_gateway/src/modules/datasources/application/ports"
@@ -32,7 +32,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service port.EventServicePort, dsService dsPort.DataSourceServicePort, m *bootstrap.HttpGatewayMetrics) {
+	if err := c.Invoke(func(app *web.App, service port.EventServicePort, dsService dsPort.DataSourceServicePort, m *bootstrap.HttpGatewayMetrics) {
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")
 		routes.RegisterRoutes(app, ctxTimeout, service, dsService, m)
 	}); err != nil {

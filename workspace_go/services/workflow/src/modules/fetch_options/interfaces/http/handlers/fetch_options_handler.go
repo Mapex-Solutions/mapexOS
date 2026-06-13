@@ -3,15 +3,15 @@ package handlers
 import (
 	"workflow/src/modules/fetch_options/application/ports"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/response"
 )
 
 // FetchOptions returns a Fiber handler for the fetchOptions proxy endpoint.
-func FetchOptions(service ports.FetchOptionsServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func FetchOptions(service ports.FetchOptionsServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 		_, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
 		if !ok {

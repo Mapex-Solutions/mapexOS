@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assets/application/ports"
 
@@ -26,8 +26,8 @@ import (
 //
 // Returns:
 //   - A Fiber handler function that processes the asset read model request
-func GetAssetReadModel(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAssetReadModel(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get assetUUID from URL path parameter
@@ -43,5 +43,34 @@ func GetAssetReadModel(service ports.AssetServicePort) fiber.Handler {
 		}
 
 		return response.Success(c, readModel)
+	}
+}
+
+// GetAssetScripts returns a Fiber handler that retrieves an asset's transform
+// scripts (sourced from its template) by UUID. Internal, API-Key protected;
+// consumed by the Rule Test Runner UI.
+//
+// Security: Protected by API Key authentication (X-API-Key header)
+//
+// Parameters:
+//   - service: The AssetServicePort interface for asset business operations
+//
+// Returns:
+//   - A Fiber handler function that processes the asset scripts request
+func GetAssetScripts(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		assetUUID := c.Params("assetUUID")
+		if assetUUID == "" {
+			return response.BadRequest(c, []string{"assetUUID is required"})
+		}
+
+		scripts, err := service.GetAssetScriptsByUUID(ctx, assetUUID)
+		if err != nil {
+			return err
+		}
+
+		return response.Success(c, scripts)
 	}
 }

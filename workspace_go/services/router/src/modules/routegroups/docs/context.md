@@ -40,7 +40,7 @@ No NATS consumers — this module is HTTP-driven and in-process (called by the `
 
 - HTTP routes under `/api/v1/route_groups` (Auth middleware + per-verb permissions from `permissions/router`): `GET /`, `GET /counter`, `POST /`, `GET /:routeGroupId`, `PATCH /:routeGroupId`, `DELETE /:routeGroupId`.
 - GET `/api/v1/route-groups` accepts an optional `kinds` query parameter (repeatable; valid values: `lake_house|notification|trigger|save_event|workflow`). When present, the result set is restricted to RouteGroups whose every router.kind is in the requested set AND that have at least one router. Empty/omitted = no filter (backward-compatible).
-- Internal HTTP routes under `/api/internal/v1/routegroups` (API-Key middleware): `GET /?ids=a,b,c&projection=...` for bulk MS-to-MS lookup.
+- Internal HTTP routes under `/internal/route_groups` (API-Key middleware): `GET /?ids=a,b,c&projection=...` for bulk MS-to-MS lookup.
 - In-process: the `events` module calls `RouteGroupServicePort.GetRouteGroupEntityById` during route dispatch.
 
 ## Driven Ports (what this module requires)
@@ -66,6 +66,6 @@ No NATS consumers — this module is HTTP-driven and in-process (called by the `
 ## Known Cross-Context Interactions
 
 - Consumed in-process by the sibling **events** module via `RouteGroupServicePort.GetRouteGroupEntityById` to resolve router definitions during dispatch (cache-aside benefits both).
-- Exposes bulk retrieval to other microservices through `/api/internal/v1/routegroups` (API-Key authenticated) — callers are expected to be MS peers (inferred; exact consumers not enumerated here).
+- Exposes bulk retrieval to other microservices through `/internal/route_groups` (API-Key authenticated) — callers are expected to be MS peers (inferred; exact consumers not enumerated here).
 - Relies on shared coverage/permission/auth middlewares from `packages/microservices` and on `orgfilter` for the tenant hierarchy rules that also govern assets and other tenant-scoped aggregates.
 - Does not emit cross-service contracts — all payloads are local DTOs; no reciprocity with `workspace_js/packages/schemas/` is required from this module today (inferred).

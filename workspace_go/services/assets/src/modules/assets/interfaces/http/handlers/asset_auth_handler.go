@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assets/application/ports"
 
@@ -22,8 +22,8 @@ import (
 //
 // Returns:
 //   - A Fiber handler that returns AuthProjection JSON or 404.
-func GetAssetAuth(service ports.AssetServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAssetAuth(service ports.AssetServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		assetUUID := c.Params("assetUUID")

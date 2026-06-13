@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/healthmonitor/application/ports"
 	"assets/src/modules/healthmonitor/interfaces/http/handlers"
@@ -17,7 +17,7 @@ import (
 // configured scan interval.
 //
 // Endpoints:
-//   - POST /:assetUUID/force-offline — Force-transition asset to offline.
-func RegisterInternalRoutes(group fiber.Router, service ports.HealthAdminPort) {
-	group.Post("/:assetUUID/force-offline", handlers.ForceOffline(service))
+//   - POST /:assetUUID/force_offline — Force-transition asset to offline.
+func RegisterInternalRoutes(group web.Router, service ports.HealthAdminPort) {
+	group.Post("/:assetUUID/force_offline", handlers.ForceOffline(service))
 }

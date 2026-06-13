@@ -3,7 +3,7 @@ package appModule
 import (
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 
@@ -14,7 +14,7 @@ import (
 // InitRepositories - Registers all repositories in DIG container
 // InitServices - Registers all services in DIG container
 // InitInterfaces - Registers HTTP routes and consumers
-func InitModule(c *fiber.App) {
+func InitModule(c *web.App) {
 
 	logger.Info("[MODULE:App] Initializing Modules")
 

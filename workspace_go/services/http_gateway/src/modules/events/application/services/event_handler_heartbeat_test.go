@@ -11,9 +11,9 @@ import (
 	dsDto "http_gateway/src/modules/datasources/application/dtos"
 	"http_gateway/src/modules/events/application/di"
 
+	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/customErrors"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/status"
-	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 )
 
 // newTestService builds an EventService with a minimal Metrics struct using
@@ -38,9 +38,8 @@ func newTestService() *EventService {
 // needed. Happy-path publish is exercised by the e2e scripts in
 // scripts/heartbeat_e2e/ against a running stack.
 //
-// TKT-2026-0036 reformulation: the legacy AssetBind.Type='fixedAssetId'
-// constraint is REMOVED — body now carries the assetUUID, so any DataSource
-// shape works.
+// The legacy AssetBind.Type='fixedAssetId' constraint was removed — the body
+// now carries the assetUUID, so any DataSource shape works.
 
 // stringPtr returns a pointer to the given string (test helper).
 func stringPtr(s string) *string { return &s }

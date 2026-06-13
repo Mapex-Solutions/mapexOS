@@ -82,7 +82,10 @@ type ProviderConfig struct {
  * Credential DTOs
  */
 
-// CreateCredentialDTO is the API contract for creating a credential.
+// CreateCredentialDTO is the external API contract for creating a credential.
+// It intentionally omits isTemplate: templates are internal/seed-only and are
+// never created through the external API. The persisted entity still carries the
+// flag for internal/service-to-service use.
 type CreateCredentialDTO struct {
 	Name            string                 `json:"name" validate:"required"`
 	Type            CredentialType         `json:"type" validate:"required,oneof=manual oauth2 userAndPass"`
@@ -90,15 +93,15 @@ type CreateCredentialDTO struct {
 	CredentialDefId string                 `json:"credentialDefId"`
 	Data            map[string]interface{} `json:"data" validate:"required"`
 	ProviderConfig  *ProviderConfig        `json:"providerConfig,omitempty"`
-	IsTemplate      bool                   `json:"isTemplate"`
 }
 
-// UpdateCredentialDTO is the API contract for updating a credential.
+// UpdateCredentialDTO is the external API contract for updating a credential.
+// It intentionally omits isTemplate (see CreateCredentialDTO): the external API
+// cannot flip a credential into or out of a template.
 type UpdateCredentialDTO struct {
 	Name           *string                `json:"name,omitempty"`
 	Data           map[string]interface{} `json:"data,omitempty"`
 	ProviderConfig *ProviderConfig        `json:"providerConfig,omitempty"`
-	IsTemplate     *bool                  `json:"isTemplate,omitempty"`
 }
 
 // CredentialResponse is the API response for a credential (no encrypted fields).

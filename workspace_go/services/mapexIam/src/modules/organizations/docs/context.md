@@ -30,7 +30,7 @@ None.
 
 ## Driving Ports (inbound)
 - HTTP routes under `/api/v1/organizations/` (list, tree, create, get, update, delete).
-- HTTP internal routes under `/api/internal/v1/organizations/` — currently a no-op group; the previous retention-policies endpoint has been moved to the Events service (confirmed by route file).
+- No internal (MS-to-MS) HTTP routes. The previous retention-policies endpoint has been moved to the Events service (`/api/v1/retention`).
 - `ports.OrganizationServicePort` — consumed by `memberships`, `groups`, `onboarding_orchestrator`, `roles`, `users`.
 
 ## Driven Ports (outbound)

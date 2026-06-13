@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"workflow/src/modules/definitions/application/ports"
 
@@ -15,8 +15,8 @@ import (
 // from MongoDB, extracts the script, repopulates L2, and returns the script source.
 //
 // Security: Protected by API Key authentication (X-API-Key header)
-func GetNodeScript(service ports.DefinitionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetNodeScript(service ports.DefinitionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		definitionId := c.Params("definitionId")

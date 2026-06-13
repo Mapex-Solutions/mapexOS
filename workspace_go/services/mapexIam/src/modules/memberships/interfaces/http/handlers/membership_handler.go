@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/memberships/application/dtos"
 	"mapexIam/src/modules/memberships/application/ports"
@@ -31,8 +31,8 @@ import (
 //   - 201 Created with membership data
 //   - 400 Bad Request if validation fails or assignee/org/roles don't exist
 //   - 500 Internal Server Error on service failure
-func CreateMembership(service ports.MembershipServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateMembership(service ports.MembershipServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -57,8 +57,8 @@ func CreateMembership(service ports.MembershipServicePort) fiber.Handler {
 //   - 200 OK with membership data if found
 //   - 404 Not Found if membership doesn't exist
 //   - 500 Internal Server Error on service failure
-func GetMembershipById(service ports.MembershipServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetMembershipById(service ports.MembershipServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -87,8 +87,8 @@ func GetMembershipById(service ports.MembershipServicePort) fiber.Handler {
 //   - 404 Not Found if membership doesn't exist
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func UpdateMembershipById(service ports.MembershipServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateMembershipById(service ports.MembershipServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -114,8 +114,8 @@ func UpdateMembershipById(service ports.MembershipServicePort) fiber.Handler {
 //   - 200 OK with success flag if deletion succeeds
 //   - 404 Not Found if membership doesn't exist
 //   - 500 Internal Server Error on service failure
-func DeleteMembershipById(service ports.MembershipServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteMembershipById(service ports.MembershipServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -153,8 +153,8 @@ func DeleteMembershipById(service ports.MembershipServicePort) fiber.Handler {
 //   - 200 OK with paginated membership list
 //   - 400 Bad Request if query validation fails
 //   - 500 Internal Server Error on service failure
-func GetMemberships(service ports.MembershipServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetMemberships(service ports.MembershipServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -178,8 +178,8 @@ func GetMemberships(service ports.MembershipServicePort) fiber.Handler {
 
 // GetMeCoverage returns a Fiber handler that retrieves all customers/organizations the authenticated user has access to.
 // It extracts the user ID from the JWT token using the standard auth middleware helper and returns the cached coverage data.
-func GetMeCoverage(service ports.MembershipServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetMeCoverage(service ports.MembershipServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()

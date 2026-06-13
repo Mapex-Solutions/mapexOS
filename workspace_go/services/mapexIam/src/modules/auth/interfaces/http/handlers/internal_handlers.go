@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/auth/application/dtos"
 	"mapexIam/src/modules/auth/domain/repositories"
@@ -20,8 +20,8 @@ import (
 //   - 200: { "permissions": [...], "version": 42 }
 //   - 400: Invalid request
 //   - 500: Build failed
-func BuildAuthorizationCache(authCacheRepo repositories.AuthorizationCacheRepository) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func BuildAuthorizationCache(authCacheRepo repositories.AuthorizationCacheRepository) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		bodyData, _ := requestValidation.GetDTO[*dtos.BuildAuthorizationCacheRequest](c, "bodyDTO")
@@ -49,8 +49,8 @@ func BuildAuthorizationCache(authCacheRepo repositories.AuthorizationCacheReposi
 //   - 200: { "organizations": [...] }
 //   - 400: Invalid request
 //   - 500: Build failed
-func BuildCoverageCache(coverageCacheRepo repositories.CoverageCacheRepository) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func BuildCoverageCache(coverageCacheRepo repositories.CoverageCacheRepository) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		bodyData, _ := requestValidation.GetDTO[*dtos.BuildCoverageCacheRequest](c, "bodyDTO")

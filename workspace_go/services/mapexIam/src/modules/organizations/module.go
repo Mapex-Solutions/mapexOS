@@ -3,7 +3,7 @@ package organizations
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	mongoManager "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/manager"
 	ports "mapexIam/src/modules/organizations/application/ports"
@@ -11,7 +11,6 @@ import (
 	repositories "mapexIam/src/modules/organizations/domain/repositories"
 	collection "mapexIam/src/modules/organizations/infrastructure/persistence/mongo"
 	routes "mapexIam/src/modules/organizations/interfaces/http/routes"
-	internalRoutes "mapexIam/src/modules/organizations/interfaces/http/routes"
 
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
@@ -51,7 +50,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.OrganizationServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.OrganizationServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")
@@ -64,10 +63,7 @@ func InitInterfaces() {
 		)
 		routes.RegisterRoutes(routesV1, service)
 
-		// Register internal routes (for inter-service communication)
-		internalRoutes.RegisterInternalRoutes(app, service)
-
-		logger.Info("[MODULE:Organizations] Routes registered (public + internal)")
+		logger.Info("[MODULE:Organizations] Routes registered (public)")
 
 	}); err != nil {
 		log.Fatalf("failed to invoke organizations module interfaces: %v", err)

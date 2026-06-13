@@ -10,8 +10,8 @@ import (
 	"mapexVault/src/modules/credentials/domain/entities"
 	"mapexVault/src/modules/credentials/domain/repositories"
 
-	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
+	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 )
 
 /**

@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"http_gateway/src/bootstrap"
 	dsPort "http_gateway/src/modules/datasources/application/ports"
 	"http_gateway/src/modules/events/application/dtos"
@@ -12,28 +10,32 @@ import (
 
 	ctxInjector "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/contextInjector"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
-// RegisterRoutes registers all event-related HTTP routes under their
-// respective base paths. Hexagonal: accepts service port interfaces, not
-// concrete implementations.
+// RegisterRoutes registers the inbound ingestion routes under their respective
+// base paths. Hexagonal: accepts service port interfaces, not concrete
+// implementations.
 //
 // Routes registered:
 //
-//	POST /api/v1/events     - Webhook receiver (publishes to processor.js.execute).
-//	                          Body is arbitrary device telemetry; only the query
-//	                          (?ds={dataSourceId}) is validated upstream.
+//	POST /api/v1/events     - Telemetry webhook receiver (publishes to
+//	                          processor.js.execute). Body is arbitrary device
+//	                          telemetry; only the query (?ds={dataSourceId}) is
+//	                          validated.
 //	POST /api/v1/heartbeat  - Explicit-mode HTTP heartbeat (publishes to
 //	                          mapexos.asset.heartbeat.{orgId}). Body is required:
-//	                          { "assetUUID": "<v>" } — TKT-2026-0036 reformulation
-//	                          dropped the legacy AssetBind.Type='fixedAssetId'
-//	                          constraint, so any DataSource shape works as long
-//	                          as the auth chain accepts it.
+//	                          { "assetUUID": "<v>" }.
 //
 // Both routes share the same auth middleware chain (CustomAuthMiddleware) so
 // DataSource resolution + per-DS auth (apiKey/jwt/oauth2/ip_whitelist) works
-// identically. The middleware also rejects requests on disabled DataSources
-// (403 — TKT-2026-0036).
+// identically. The middleware also rejects requests on disabled DataSources (403).
+//
+// Routes are registered through the swagger wrapper: each NewValidation declares
+// the input contract once (used to both validate and document); the module tag is
+// declared once on Wrap; summary, description, and response type are attached via
+// the fluent builder.
 //
 // Parameters:
 //   - app: Fiber app used to mount the per-path groups
@@ -41,9 +43,19 @@ import (
 //   - service: Event service port interface
 //   - dtService: Data source service port (used by CustomAuthMiddleware)
 //   - m: Service-specific metrics for instrumentation
-func RegisterRoutes(app *fiber.App, ctxTimeout int, service ports.EventServicePort, dtService dsPort.DataSourceServicePort, m *bootstrap.HttpGatewayMetrics) {
-	// /events — query-only validation (body is arbitrary).
+func RegisterRoutes(app *web.App, ctxTimeout int, service ports.EventServicePort, dtService dsPort.DataSourceServicePort, m *bootstrap.HttpGatewayMetrics) {
+
+	// /events — query-only validation (body is arbitrary device telemetry).
 	eventIdentificationDto := validation.NewValidation(nil, &dtos.EvenIdentificationDto{}, nil)
+	eventsV1 := app.Group("/api/v1/events", ctxInjector.ContextInjector(ctxTimeout))
+	swagger.Wrap(eventsV1).Tag("Ingestion").
+		Post("/", eventIdentificationDto, swagger.Expose,
+			middlewares.CustomAuthMiddleware(dtService, service, m),
+			handlers.ProcessEvent(service, m),
+		).
+		Summary("Ingest telemetry event").
+		Description("Webhook receiver for device telemetry. Authenticated per-DataSource via the ?ds={dataSourceId} query parameter; the body is arbitrary device telemetry. Accepted events are published to NATS for downstream processing.").
+		Returns(map[string]bool{})
 
 	// /heartbeat — body { assetUUID } + query (?ds={dataSourceId}) in one validator.
 	// mapexGoKit signature: NewValidation(bodyDTO, queryDTO, paramsDTO).
@@ -52,20 +64,13 @@ func RegisterRoutes(app *fiber.App, ctxTimeout int, service ports.EventServicePo
 		&dtos.EvenIdentificationDto{},
 		nil,
 	)
-
-	eventsV1 := app.Group("/api/v1/events", ctxInjector.ContextInjector(ctxTimeout))
-	eventsV1.Post(
-		"/",
-		validation.ValidationMiddleware(eventIdentificationDto),
-		middlewares.CustomAuthMiddleware(dtService, service, m),
-		handlers.ProcessEvent(service, m),
-	)
-
 	heartbeatV1 := app.Group("/api/v1/heartbeat", ctxInjector.ContextInjector(ctxTimeout))
-	heartbeatV1.Post(
-		"/",
-		validation.ValidationMiddleware(heartbeatValidation),
-		middlewares.CustomAuthMiddleware(dtService, service, m),
-		handlers.ProcessHeartbeat(service, m),
-	)
+	swagger.Wrap(heartbeatV1).Tag("Ingestion").
+		Post("/", heartbeatValidation, swagger.Expose,
+			middlewares.CustomAuthMiddleware(dtService, service, m),
+			handlers.ProcessHeartbeat(service, m),
+		).
+		Summary("Send asset heartbeat").
+		Description("Explicit-mode HTTP heartbeat for an asset. Authenticated per-DataSource via the ?ds={dataSourceId} query parameter; the body carries { assetUUID }. Publishes a fire-and-forget heartbeat to NATS to drive the asset's online state.").
+		Returns(map[string]bool{})
 }

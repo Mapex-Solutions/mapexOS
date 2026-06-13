@@ -3,7 +3,7 @@ package dataSources
 import (
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"http_gateway/src/modules/datasources/application/ports"
 	service "http_gateway/src/modules/datasources/application/services"
@@ -49,7 +49,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.DataSourceServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.DataSourceServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

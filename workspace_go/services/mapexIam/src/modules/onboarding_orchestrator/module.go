@@ -3,7 +3,7 @@ package onboarding_orchestrator
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	ports "mapexIam/src/modules/onboarding_orchestrator/application/ports"
 	service "mapexIam/src/modules/onboarding_orchestrator/application/services"
@@ -35,7 +35,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.UserOnboardingServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.UserOnboardingServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

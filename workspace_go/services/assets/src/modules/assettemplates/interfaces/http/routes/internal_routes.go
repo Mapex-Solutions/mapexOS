@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assettemplates/application/ports"
 	"assets/src/modules/assettemplates/interfaces/http/handlers"
@@ -18,6 +18,6 @@ import (
 // Parameters:
 //   - group: The Fiber router group for internal routes (e.g., /internal/templates)
 //   - service: The AssetTemplateServicePort interface for business operations
-func RegisterInternalRoutes(group fiber.Router, service ports.AssetTemplateServicePort) {
+func RegisterInternalRoutes(group web.Router, service ports.AssetTemplateServicePort) {
 	group.Get("/:templateId", handlers.GetTemplateForCacheFallback(service))
 }

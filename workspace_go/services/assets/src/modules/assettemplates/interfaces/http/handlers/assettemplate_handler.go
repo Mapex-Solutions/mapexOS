@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assettemplates/application/dtos"
 	"assets/src/modules/assettemplates/application/ports"
@@ -33,8 +33,8 @@ import (
 //
 // Returns:
 //   - A Fiber handler function that processes the asset template creation request
-func CreateAssetTemplate(service ports.AssetTemplateServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateAssetTemplate(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -69,8 +69,8 @@ func CreateAssetTemplate(service ports.AssetTemplateServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the asset template retrieval request
-func GetAssetTemplateById(service ports.AssetTemplateServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAssetTemplateById(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -101,8 +101,8 @@ func GetAssetTemplateById(service ports.AssetTemplateServicePort) fiber.Handler 
 //
 // Returns:
 //   - A Fiber handler function that processes the asset template update request
-func UpdateAssetTemplateById(service ports.AssetTemplateServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateAssetTemplateById(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -132,8 +132,8 @@ func UpdateAssetTemplateById(service ports.AssetTemplateServicePort) fiber.Handl
 //
 // Returns:
 //   - A Fiber handler function that processes the asset template deletion request
-func DeleteAssetTemplateById(service ports.AssetTemplateServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteAssetTemplateById(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -159,8 +159,8 @@ func DeleteAssetTemplateById(service ports.AssetTemplateServicePort) fiber.Handl
 //
 // Returns:
 //   - A Fiber handler function that processes the asset template listing request
-func GetAssetTemplates(service ports.AssetTemplateServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAssetTemplates(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		// Retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
 
@@ -201,8 +201,8 @@ func GetAssetTemplates(service ports.AssetTemplateServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the available fields retrieval request
-func GetAvailableFields(service ports.AssetTemplateServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAvailableFields(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware (for future multi-tenant validation)
@@ -233,8 +233,8 @@ func GetAvailableFields(service ports.AssetTemplateServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the asset template count request
-func GetAssetTemplateCount(service ports.AssetTemplateServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetAssetTemplateCount(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)

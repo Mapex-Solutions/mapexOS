@@ -7,8 +7,8 @@ import (
 )
 
 // EnvelopeAdapter wraps the shared *envelope.EnvelopeService behind the kek
-// module's EnvelopePort. Hides the concrete driver from the application layer
-// per /go-arch §6. The kek module only decrypts: KEKs are envelope-encrypted at
+// module's EnvelopePort. Hides the concrete driver from the application
+// layer. The kek module only decrypts: KEKs are envelope-encrypted at
 // seed time by the mongodb-init container.
 type EnvelopeAdapter struct {
 	svc *envelopeUtil.EnvelopeService

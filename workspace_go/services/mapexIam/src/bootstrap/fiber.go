@@ -1,7 +1,7 @@
 package bootstrap
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
 	"go.uber.org/dig"
@@ -11,16 +11,16 @@ import (
 )
 
 // InitFiber creates and registers the Fiber instance with global middlewares.
-func InitFiber(c *dig.Container) *fiber.App {
+func InitFiber(c *dig.Container) *web.App {
 	serviceName, _ := config.GetStringValue("service_name")
 	serviceVersion, _ := config.GetStringValue("service_version")
 
-	fiberInstance := fiber.New(fiber.Config{
+	fiberInstance := web.New(web.Config{
 		AppName:      serviceName + " " + serviceVersion,
 		ErrorHandler: customErrors.FiberErrorHandler,
 	})
 
-	c.Provide(func() *fiber.App {
+	c.Provide(func() *web.App {
 		return fiberInstance
 	})
 

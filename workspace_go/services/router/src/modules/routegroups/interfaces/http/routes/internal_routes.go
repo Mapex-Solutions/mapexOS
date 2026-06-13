@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"router/src/modules/routegroups/application/dtos"
 	"router/src/modules/routegroups/application/ports"
@@ -16,20 +16,22 @@ import (
 // Following Hexagonal Architecture, this function accepts the service port interface
 // rather than a concrete service implementation.
 //
-// Base path: /api/internal/v1/routegroups
+// Base path: /internal/route_groups
 //
 // Internal Routes:
-//   GET / - Get multiple route groups by IDs (comma-separated in query)
+//
+//	GET / - Get multiple route groups by IDs (comma-separated in query)
 //
 // Authentication: API Key (X-API-Key header)
 //
 // Example:
-//   GET /api/internal/v1/routegroups?ids=id1,id2,id3&projection=name,enabled
+//
+//	GET /internal/route_groups?ids=id1,id2,id3&projection=name,enabled
 //
 // Parameters:
 //   - group: Fiber router group to register routes on
 //   - service: RouteGroup service port interface implementation
-func RegisterInternalRoutes(group fiber.Router, service ports.RouteGroupServicePort) {
+func RegisterInternalRoutes(group web.Router, service ports.RouteGroupServicePort) {
 
 	/**
 	 * INTERNAL Routes - MS-to-MS communication

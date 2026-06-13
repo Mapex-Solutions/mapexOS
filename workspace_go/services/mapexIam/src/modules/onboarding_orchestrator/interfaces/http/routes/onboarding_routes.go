@@ -1,50 +1,45 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"mapexIam/src/modules/onboarding_orchestrator/application/dtos"
 	"mapexIam/src/modules/onboarding_orchestrator/application/ports"
 	"mapexIam/src/modules/onboarding_orchestrator/interfaces/http/handlers"
 
+	perms "github.com/Mapex-Solutions/MapexOS/permissions/mapexos"
 	coverageMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/coverage"
 	permissionMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/permission"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
-	perms "github.com/Mapex-Solutions/MapexOS/permissions/mapexos"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
-// RegisterRoutes registers all onboarding routes in the provided Fiber router group.
-// Includes user creation and update with memberships endpoints.
-// Accepts UserOnboardingServicePort interface (Hexagonal Architecture) for loose coupling.
+// RegisterRoutes registers user-onboarding orchestration routes. Base path:
+// /api/v1/onboarding.
 //
-// Middleware order (important):
-//  1. ValidationMiddleware - Validate DTO first (fail fast)
-//  2. RequirePermission - Check user has permission (uses auth cache)
-//  3. InjectRequestContext - Inject org context (uses coverage cache)
-//  4. Handler - Process request
-func RegisterRoutes(group fiber.Router, service ports.UserOnboardingServicePort) {
+// Following Hexagonal Architecture, this function accepts the service port interface
+// rather than a concrete service implementation. Routes are registered through the
+// swagger wrapper.
+func RegisterRoutes(group web.Router, service ports.UserOnboardingServicePort) {
 
-	/**
-	* User Onboarding Routes
-	*/
+	r := swagger.Wrap(group).Tag("Onboarding")
 
-	// Create user with multiple memberships
-	// POST /api/v1/onboarding/users
 	createUserWithMemberships := validation.NewValidation(&dtos.CreateUserWithMembershipsDto{}, nil, nil)
-	group.Post("/users",
-		validation.ValidationMiddleware(createUserWithMemberships),
+	r.Post("/users", createUserWithMemberships, swagger.Expose,
 		permissionMw.RequirePermission(perms.UserCreate),
 		coverageMw.InjectRequestContext(),
 		handlers.CreateUserWithMemberships(service),
-	)
+	).
+		Summary("Onboard user with memberships").
+		Description("Provisions a user together with one or more organization memberships (and roles) in a single orchestrated call.").
+		Returns(&dtos.UserOnboardingResponse{})
 
-	// Update user with access configuration
-	// PATCH /api/v1/onboarding/users/:userId
 	updateUserWithAccess := validation.NewValidation(&dtos.UpdateUserWithAccessDto{}, nil, &dtos.UpdateUserWithAccessParamsDto{})
-	group.Patch("/users/:userId",
-		validation.ValidationMiddleware(updateUserWithAccess),
+	r.Patch("/users/:userId", updateUserWithAccess, swagger.Expose,
 		permissionMw.RequirePermission(perms.UserUpdate),
 		coverageMw.InjectRequestContext(),
 		handlers.UpdateUserWithAccess(service),
-	)
+	).
+		Summary("Update user with access").
+		Description("Updates a user along with their organization access (memberships and roles) in a single orchestrated call.").
+		Returns(&dtos.UserOnboardingResponse{})
 }

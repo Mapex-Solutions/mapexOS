@@ -1,87 +1,80 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-
 	"http_gateway/src/modules/datasources/application/dtos"
 	"http_gateway/src/modules/datasources/application/ports"
 	"http_gateway/src/modules/datasources/interfaces/http/handlers"
 
+	perms "github.com/Mapex-Solutions/MapexOS/permissions/http_gateway"
+	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	coverageMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/coverage"
 	permissionMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/permission"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
-	perms "github.com/Mapex-Solutions/MapexOS/permissions/http_gateway"
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 )
 
-// RegisterRoutes registers data source HTTP routes.
+// RegisterRoutes registers data source HTTP routes. Base path: /api/v1/data_sources.
 //
 // Following Hexagonal Architecture, this function accepts the service port interface
-// rather than a concrete service implementation.
-//
-// Base path: /api/v1/data_sources
-//
-// HTTP Verbs follow REST conventions:
-//
-//	GET    /                     - List data sources (paginated, filtered)
-//	POST   /                     - Create data source
-//	GET    /:dataSourceId        - Get data source by ID
-//	PATCH  /:dataSourceId        - Update data source
-//	DELETE /:dataSourceId        - Delete data source
-//
-// Parameters:
-//   - group: Fiber router group to register routes on
-//   - service: Data source service port interface implementation
-func RegisterRoutes(group fiber.Router, service ports.DataSourceServicePort) {
+// rather than a concrete service implementation. Routes are registered through the
+// swagger wrapper: each NewValidation declares the input contract once (used to both
+// validate and document), the module tag is declared once on Wrap, and each route's
+// summary, description, and response type are attached via the fluent builder.
+func RegisterRoutes(group web.Router, service ports.DataSourceServicePort) {
 
-	/**
-	* List Routes
-	 */
+	r := swagger.Wrap(group).Tag("Data Sources")
 
-	// Get data sources with filters, pagination, and projection
-	// Uses InjectRequestContext middleware for context-aware org filtering
-	// Includes hierarchical support via PathKey data from coverage cache
+	// List data sources with filters, pagination, and projection. coverage
+	// middleware injects context-aware org filtering (hierarchical via PathKey).
 	dataSourceQueryDto := validation.NewValidation(nil, &dtos.DataSourceQueryDTO{}, nil)
-	group.Get("/",
-		validation.ValidationMiddleware(dataSourceQueryDto),  // 1. Validate DTO first (fail fast)
-		permissionMw.RequirePermission(perms.DatasourceList), // 2. Check permission (cache)
-		coverageMw.InjectRequestContext(),                    // 3. Inject context (cache)
-		handlers.GetDataSources(service),                     // 4. Handler
-	)
+	r.Get("/", dataSourceQueryDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.DatasourceList),
+		coverageMw.InjectRequestContext(),
+		handlers.GetDataSources(service),
+	).
+		Summary("List data sources").
+		Description("Returns a paginated, filterable list of data sources scoped to the caller's organization. Supports hierarchical queries via includeChildren.").
+		Returns(&model.PaginatedResult[dtos.DataSourceResponse]{})
 
-	/**
-	* CRUD Routes
-	 */
-
-	// Create a new dataSource
+	// Create a new data source.
 	dataSourceCreateDto := validation.NewValidation(&dtos.DataSourceCreateDTO{}, nil, nil)
-	group.Post("/",
-		validation.ValidationMiddleware(dataSourceCreateDto),   // 1. Validate DTO
-		permissionMw.RequirePermission(perms.DatasourceCreate), // 2. Check permission
-		coverageMw.InjectRequestContext(),                      // 3. Inject context
-		handlers.CreateDataSource(service),                     // 4. Handler
-	)
+	r.Post("/", dataSourceCreateDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.DatasourceCreate),
+		coverageMw.InjectRequestContext(),
+		handlers.CreateDataSource(service),
+	).
+		Summary("Create data source").
+		Description("Creates a new data source (ingestion endpoint with its auth method and asset binding). Organization scoping is applied automatically from the request context.").
+		Returns(&dtos.DataSourceResponse{})
 
-	// Get dataSource by ID
+	// Get data source by ID.
 	getDataSourceById := validation.NewValidation(nil, nil, &dtos.DataSourceIdDto{})
-	group.Get("/:dataSourceId",
+	r.Get("/:dataSourceId", getDataSourceById, swagger.Expose,
 		permissionMw.RequirePermission(perms.DatasourceRead),
-		validation.ValidationMiddleware(getDataSourceById),
 		handlers.GetDataSourceById(service),
-	)
+	).
+		Summary("Get data source by ID").
+		Description("Retrieves a single data source by its MongoDB ObjectId.").
+		Returns(&dtos.DataSourceResponse{})
 
-	// Update dataSource by ID
+	// Update data source by ID.
 	updateDataSourceById := validation.NewValidation(&dtos.DataSourceUpdateDTO{}, nil, &dtos.DataSourceIdDto{})
-	group.Patch("/:dataSourceId",
+	r.Patch("/:dataSourceId", updateDataSourceById, swagger.Expose,
 		permissionMw.RequirePermission(perms.DatasourceUpdate),
-		validation.ValidationMiddleware(updateDataSourceById),
 		handlers.UpdateDataSourceById(service),
-	)
+	).
+		Summary("Update data source").
+		Description("Partially updates an existing data source. All body fields are optional; only provided fields are changed.").
+		Returns(&dtos.DataSourceResponse{})
 
-	// Delete dataSource by ID
+	// Delete data source by ID.
 	deleteDataSourceById := validation.NewValidation(nil, nil, &dtos.DataSourceIdDto{})
-	group.Delete("/:dataSourceId",
+	r.Delete("/:dataSourceId", deleteDataSourceById, swagger.Expose,
 		permissionMw.RequirePermission(perms.DatasourceDelete),
-		validation.ValidationMiddleware(deleteDataSourceById),
 		handlers.DeleteDataSourceById(service),
-	)
+	).
+		Summary("Delete data source").
+		Description("Deletes a data source by its MongoDB ObjectId.").
+		Returns(map[string]bool{})
 }

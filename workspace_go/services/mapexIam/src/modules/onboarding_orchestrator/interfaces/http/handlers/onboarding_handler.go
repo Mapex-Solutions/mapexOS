@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/onboarding_orchestrator/application/dtos"
 	"mapexIam/src/modules/onboarding_orchestrator/application/ports"
@@ -28,10 +28,10 @@ import (
 //   - Scope comes from Organization.AccessPolicy.DefaultScope (centralized config)
 //
 // Orchestration Flow:
-//   1. Gets OrgID from context and Scope from org config
-//   2. Creates user in Users service
-//   3. Creates membership (direct) or adds to group
-//   4. Returns complete user data with created membership IDs
+//  1. Gets OrgID from context and Scope from org config
+//  2. Creates user in Users service
+//  3. Creates membership (direct) or adds to group
+//  4. Returns complete user data with created membership IDs
 //
 // Atomic Transaction:
 //   - All operations run in a MongoDB transaction
@@ -41,8 +41,8 @@ import (
 //   - 201 Created with user data and membership IDs
 //   - 400 Bad Request if validation fails, user already exists, or no org context
 //   - 500 Internal Server Error on service failure
-func CreateUserWithMemberships(service ports.UserOnboardingServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateUserWithMemberships(service ports.UserOnboardingServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// Retrieve the timeout-aware Context set in ContextInjector
 		ctx := c.UserContext()
@@ -109,8 +109,8 @@ func CreateUserWithMemberships(service ports.UserOnboardingServicePort) fiber.Ha
 //   - 200 OK with updated user data and new membership IDs
 //   - 400 Bad Request if validation fails, user not found, or no org context
 //   - 500 Internal Server Error on service failure
-func UpdateUserWithAccess(service ports.UserOnboardingServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateUserWithAccess(service ports.UserOnboardingServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// Retrieve the timeout-aware Context set in ContextInjector
 		ctx := c.UserContext()

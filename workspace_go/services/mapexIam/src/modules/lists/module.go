@@ -3,7 +3,7 @@ package lists
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	ports "mapexIam/src/modules/lists/application/ports"
 	services "mapexIam/src/modules/lists/application/services"
@@ -11,11 +11,11 @@ import (
 	collection "mapexIam/src/modules/lists/infrastructure/persistence/mongo"
 	routes "mapexIam/src/modules/lists/interfaces/http/routes"
 
+	mongoManager "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/manager"
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
 	authmw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/auth"
 	ctxInjector "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/contextInjector"
-	mongoManager "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/manager"
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 )
 
@@ -50,7 +50,7 @@ func InitServices() {
 func InitInterfaces() {
 	c := container.GetContainer()
 
-	if err := c.Invoke(func(app *fiber.App, service ports.ListServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.ListServicePort) {
 
 		// Set default timeout for this router
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")

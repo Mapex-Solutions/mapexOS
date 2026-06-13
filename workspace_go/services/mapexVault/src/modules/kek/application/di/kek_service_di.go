@@ -8,7 +8,7 @@ import (
 )
 
 // KekServiceDI is the DI struct for the KEK bounded context. Every field is a
-// port interface, never a concrete driver, per /go-arch §6.
+// port interface, never a concrete driver.
 type KekServiceDI struct {
 	dig.In
 	Repository domainRepos.EncryptionKeyRepository

@@ -23,7 +23,7 @@ import (
 )
 
 /*
- * Inline port mocks — per /go-arch §14, tests use stdlib + inline mocks of
+ * Inline port mocks — tests use stdlib + inline mocks of
  * port interfaces. Each fake exposes function fields for the methods the
  * tests configure; unused ports are stubbed with no-op methods so the DI
  * struct stays fully wired without dragging in testify.

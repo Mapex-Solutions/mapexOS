@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
-	"mapexIam/src/modules/groups/application/dtos"
-	"mapexIam/src/modules/groups/application/ports"
 	contractsCommon "github.com/Mapex-Solutions/MapexOS/contracts/common"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
+	"mapexIam/src/modules/groups/application/dtos"
+	"mapexIam/src/modules/groups/application/ports"
 
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/response"
@@ -35,8 +35,8 @@ import (
 //   - 201 Created with group data
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func CreateGroup(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateGroup(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -67,8 +67,8 @@ func CreateGroup(service ports.GroupServicePort) fiber.Handler {
 //   - 200 OK with group data if found
 //   - 404 Not Found if group doesn't exist
 //   - 500 Internal Server Error on service failure
-func GetGroupById(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetGroupById(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -97,8 +97,8 @@ func GetGroupById(service ports.GroupServicePort) fiber.Handler {
 //   - 404 Not Found if group doesn't exist
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func UpdateGroupById(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateGroupById(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -124,8 +124,8 @@ func UpdateGroupById(service ports.GroupServicePort) fiber.Handler {
 //   - 200 OK with success flag if deletion succeeds
 //   - 404 Not Found if group doesn't exist
 //   - 500 Internal Server Error on service failure
-func DeleteGroupById(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteGroupById(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -143,8 +143,8 @@ func DeleteGroupById(service ports.GroupServicePort) fiber.Handler {
 
 // GetGroups returns a Fiber handler that retrieves a paginated and filtered list of groups.
 // Uses RequestContext from coverage middleware for context-aware org filtering.
-func GetGroups(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetGroups(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -176,8 +176,8 @@ func GetGroups(service ports.GroupServicePort) fiber.Handler {
 //   - 200 OK with paginated member list
 //   - 404 Not Found if group doesn't exist
 //   - 500 Internal Server Error on service failure
-func GetGroupMembers(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetGroupMembers(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.GroupIdDto](c, "paramsDTO")
@@ -202,8 +202,8 @@ func GetGroupMembers(service ports.GroupServicePort) fiber.Handler {
 //   - 201 Created on success
 //   - 404 Not Found if group doesn't exist
 //   - 500 Internal Server Error on service failure
-func AddGroupMember(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func AddGroupMember(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.GroupIdDto](c, "paramsDTO")
@@ -226,8 +226,8 @@ func AddGroupMember(service ports.GroupServicePort) fiber.Handler {
 //   - 200 OK on success
 //   - 404 Not Found if group doesn't exist
 //   - 500 Internal Server Error on service failure
-func RemoveGroupMember(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func RemoveGroupMember(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, _ := requestValidation.GetDTO[*dtos.GroupMemberIdDto](c, "paramsDTO")
@@ -248,8 +248,8 @@ func RemoveGroupMember(service ports.GroupServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the group count request
-func GetGroupCount(service ports.GroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetGroupCount(service ports.GroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)

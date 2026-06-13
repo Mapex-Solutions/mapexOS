@@ -30,7 +30,7 @@ _None._ (No NATS consumers.)
 ## Driving Ports (what can call this module)
 
 - External HTTP routes under `/api/v1/workflow_definitions` (JWT): list, count, create, get-by-id, update, delete.
-- Internal HTTP routes under `/internal/workflow-scripts` (API-key): `GetNodeScript` — used by js-workflow-executor when its TieredCache L2 (MinIO) misses.
+- Internal HTTP routes under `/internal/workflow_scripts` (API-key): `GetNodeScript` — used by js-workflow-executor when its TieredCache L2 (MinIO) misses.
 - Cross-module Go API: `ports.DefinitionLoaderPort` (in runtime) aliases this module's `DefinitionRepository` via a TieredCache wrapper — runtime never imports this module's `domain/entities` directly.
 
 ## Driven Ports (what this module requires)
@@ -50,6 +50,6 @@ _None._ (No NATS consumers.)
 ## Known Cross-Context Interactions
 
 - Consumed by the **runtime** module via `DefinitionLoaderPort` (TieredCache L0→L1→Mongo) before each DAG walk.
-- Consumed by **js-workflow-executor** (internal `/internal/workflow-scripts` endpoint) for L2 fallback when its in-process script cache misses.
+- Consumed by **js-workflow-executor** (internal `/internal/workflow_scripts` endpoint) for L2 fallback when its in-process script cache misses.
 - Consumed by the frontend editor for CRUD and validation feedback.
 - Plugin references validated against the **plugins** module's manifests at save time.

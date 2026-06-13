@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"router/src/modules/routegroups/application/dtos"
 	"router/src/modules/routegroups/application/ports"
@@ -33,8 +33,8 @@ import (
 //
 // Returns:
 //   - A Fiber handler function that processes the route group creation request
-func CreateRouteGroup(service ports.RouteGroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateRouteGroup(service ports.RouteGroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -69,8 +69,8 @@ func CreateRouteGroup(service ports.RouteGroupServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the route group retrieval request
-func GetRouteGroupById(service ports.RouteGroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetRouteGroupById(service ports.RouteGroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		ctx := c.UserContext()
 
@@ -100,8 +100,8 @@ func GetRouteGroupById(service ports.RouteGroupServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the route group update request
-func UpdateRouteGroupById(service ports.RouteGroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateRouteGroupById(service ports.RouteGroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -153,8 +153,8 @@ func UpdateRouteGroupById(service ports.RouteGroupServicePort) fiber.Handler {
 //   - 200 OK with paginated route group list
 //   - 400 Bad Request if query validation fails
 //   - 500 Internal Server Error on service failure or requestContext not found
-func GetRouteGroups(service ports.RouteGroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetRouteGroups(service ports.RouteGroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		// Retrieve the timeout-aware Context you set in ContextInjector
 		ctx := c.UserContext()
 
@@ -190,8 +190,8 @@ func GetRouteGroups(service ports.RouteGroupServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the route group deletion request
-func DeleteRouteGroupById(service ports.RouteGroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteRouteGroupById(service ports.RouteGroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -214,8 +214,8 @@ func DeleteRouteGroupById(service ports.RouteGroupServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the route group count request
-func GetRouteGroupCount(service ports.RouteGroupServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetRouteGroupCount(service ports.RouteGroupServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)

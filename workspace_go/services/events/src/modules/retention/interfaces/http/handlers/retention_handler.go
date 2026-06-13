@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"events/src/modules/retention/application/dtos"
 	"events/src/modules/retention/application/ports"
@@ -19,8 +19,8 @@ import (
 //
 // Returns:
 //   - A Fiber handler function that processes the retention policy list request
-func GetRetentionPolicies(service ports.RetentionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetRetentionPolicies(service ports.RetentionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -49,8 +49,8 @@ func GetRetentionPolicies(service ports.RetentionServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the retention policy retrieval request
-func GetRetentionPolicyById(service ports.RetentionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetRetentionPolicyById(service ports.RetentionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, dtoErr := requestValidation.GetDTO[*dtos.RetentionPolicyParamsDTO](c, "paramsDTO")
@@ -74,8 +74,8 @@ func GetRetentionPolicyById(service ports.RetentionServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the retention policy upsert request
-func UpsertRetentionPolicy(service ports.RetentionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpsertRetentionPolicy(service ports.RetentionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -104,8 +104,8 @@ func UpsertRetentionPolicy(service ports.RetentionServicePort) fiber.Handler {
 //
 // Returns:
 //   - A Fiber handler function that processes the retention policy deletion request
-func DeleteRetentionPolicyById(service ports.RetentionServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteRetentionPolicyById(service ports.RetentionServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		params, dtoErr := requestValidation.GetDTO[*dtos.RetentionPolicyParamsDTO](c, "paramsDTO")

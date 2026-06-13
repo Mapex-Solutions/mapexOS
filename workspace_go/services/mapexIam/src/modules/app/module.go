@@ -3,7 +3,7 @@ package appModule
 import (
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	configMod "mapexIam/src/shared/configuration/modules"
 
@@ -15,7 +15,7 @@ import (
 // 2. InitServices - Registers all services in DIG container
 // 3. InitInterfaces - Registers HTTP routes and consumers
 // 4. InitListeners - Registers NATS event listeners
-func InitModule(c *fiber.App) {
+func InitModule(c *web.App) {
 
 	logger.Info("[MODULE:Bootstrap] Initializing Modules")
 

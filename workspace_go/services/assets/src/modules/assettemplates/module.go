@@ -3,7 +3,7 @@ package assettemplates
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assettemplates/application/di"
 	"assets/src/modules/assettemplates/application/ports"
@@ -45,7 +45,7 @@ func InitInterfaces() {
 	c := container.GetContainer()
 
 	// Register HTTP routes
-	if err := c.Invoke(func(app *fiber.App, service ports.AssetTemplateServicePort) {
+	if err := c.Invoke(func(app *web.App, service ports.AssetTemplateServicePort) {
 
 		// Set default timeot for this router
 		ctxTimeout, _ := configuration.GetIntValue("ctx_timeout")

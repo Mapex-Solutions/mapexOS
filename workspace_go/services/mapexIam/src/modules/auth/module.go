@@ -3,7 +3,7 @@ package auth
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	common "github.com/Mapex-Solutions/mapexGoKit/infrastructure/common/ports"
 	mongoManager "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/manager"
@@ -67,7 +67,7 @@ func InitInterfaces() {
 	c := container.GetContainer()
 
 	if err := c.Invoke(func(
-		app *fiber.App,
+		app *web.App,
 		service ports.AuthServicePort,
 		authCacheRepo repositories.AuthorizationCacheRepository,
 		coverageCacheRepo repositories.CoverageCacheRepository,

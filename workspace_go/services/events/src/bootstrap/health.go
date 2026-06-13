@@ -3,8 +3,9 @@ package bootstrap
 import (
 	"time"
 
-	"github.com/gofiber/fiber/v2"
 	"go.uber.org/dig"
+
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
@@ -20,7 +21,7 @@ import (
 )
 
 // InitHealth registers the /health endpoint with all infrastructure checkers.
-func InitHealth(c *dig.Container, app *fiber.App) {
+func InitHealth(c *dig.Container, app *web.App) {
 	c.Invoke(func(params struct {
 		container.In
 		MongoMgr       *mongoManager.MongoManager

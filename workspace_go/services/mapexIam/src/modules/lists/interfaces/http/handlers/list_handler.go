@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/lists/application/dtos"
 	"mapexIam/src/modules/lists/application/ports"
@@ -36,8 +36,8 @@ import (
 //   - 201 Created with list data
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func CreateList(service ports.ListServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateList(service ports.ListServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -68,8 +68,8 @@ func CreateList(service ports.ListServicePort) fiber.Handler {
 //   - 200 OK with list data if found
 //   - 404 Not Found if list doesn't exist
 //   - 500 Internal Server Error on service failure
-func GetListById(service ports.ListServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetListById(service ports.ListServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -98,8 +98,8 @@ func GetListById(service ports.ListServicePort) fiber.Handler {
 //   - 404 Not Found if list doesn't exist
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func UpdateListById(service ports.ListServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateListById(service ports.ListServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -125,8 +125,8 @@ func UpdateListById(service ports.ListServicePort) fiber.Handler {
 //   - 200 OK with success flag if deletion succeeds
 //   - 404 Not Found if list doesn't exist
 //   - 500 Internal Server Error on service failure
-func DeleteListById(service ports.ListServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteListById(service ports.ListServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -152,8 +152,8 @@ func DeleteListById(service ports.ListServicePort) fiber.Handler {
 //
 // The handler extracts RequestContext from c.Locals() which was set by the InjectRequestContext middleware.
 // This ensures users can only query lists within their accessible organizations with zero extra queries.
-func GetLists(service ports.ListServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetLists(service ports.ListServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()

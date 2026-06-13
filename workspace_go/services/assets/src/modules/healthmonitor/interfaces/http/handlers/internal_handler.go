@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/healthmonitor/application/dtos"
 	"assets/src/modules/healthmonitor/application/ports"
@@ -21,8 +21,8 @@ import (
 // without waiting the configured scan interval (default 600s on prod
 // runtimes). Protected by the internal API key middleware applied on
 // the parent route group.
-func ForceOffline(service ports.HealthAdminPort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func ForceOffline(service ports.HealthAdminPort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		var params dtos.AdminAssetUUIDDto
@@ -43,6 +43,6 @@ func ForceOffline(service ports.HealthAdminPort) fiber.Handler {
 		if err := service.ForceOfflineByAssetUUID(ctx, params.AssetUUID, body.Reason); err != nil {
 			return err
 		}
-		return c.SendStatus(fiber.StatusNoContent)
+		return response.Success(c, map[string]bool{"success": true})
 	}
 }

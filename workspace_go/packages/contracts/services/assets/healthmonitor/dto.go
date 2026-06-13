@@ -1,7 +1,7 @@
 package healthmonitor
 
 // AdminAssetUUID is the URL params DTO for admin endpoints addressed by
-// the asset device id (e.g. POST /internal/health-monitor/:assetUUID/force-offline).
+// the asset device id (e.g. POST /internal/health_monitor/:assetUUID/force_offline).
 type AdminAssetUUID struct {
 	AssetUUID string `params:"assetUUID" validate:"required,min=1"`
 }

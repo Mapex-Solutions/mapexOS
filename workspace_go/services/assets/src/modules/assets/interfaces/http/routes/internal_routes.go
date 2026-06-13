@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/assets/application/ports"
 	"assets/src/modules/assets/interfaces/http/handlers"
@@ -25,11 +25,15 @@ import (
 // (X-API-Key header), applied by the caller on the parent group.
 //
 // Endpoints:
-//   - GET /internal/assets/:assetUUID - Fetch asset read model by UUID
+//   - GET /internal/assets/:assetUUID         - Fetch asset read model by UUID
+//   - GET /internal/assets/scripts/:assetUUID - Fetch asset transform scripts by UUID
 //
 // Parameters:
 //   - group: Fiber router group to register routes on (should have apiKey middleware applied)
 //   - service: Asset service port interface implementation
-func RegisterInternalRoutes(group fiber.Router, service ports.AssetServicePort) {
+func RegisterInternalRoutes(group web.Router, service ports.AssetServicePort) {
+	// The two-segment route is registered before the catch-all :assetUUID so
+	// the scripts projection is not shadowed by the read-model handler.
+	group.Get("/scripts/:assetUUID", handlers.GetAssetScripts(service))
 	group.Get("/:assetUUID", handlers.GetAssetReadModel(service))
 }

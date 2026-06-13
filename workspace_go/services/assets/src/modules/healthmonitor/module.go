@@ -3,7 +3,7 @@ package healthmonitor
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"assets/src/modules/healthmonitor/application/di"
 	"assets/src/modules/healthmonitor/application/ports"
@@ -92,11 +92,11 @@ func InitInterfaces() {
 		log.Fatalf("failed to invoke healthmonitor consumers: %v", err)
 	}
 
-	if err := c.Invoke(func(app *fiber.App, adminSvc ports.HealthAdminPort) {
+	if err := c.Invoke(func(app *web.App, adminSvc ports.HealthAdminPort) {
 		ctxTimeout, _ := config.GetIntValue("ctx_timeout")
 		internalApiKey, _ := config.GetStringValue("internal_api_key")
 		internalRoutes := app.Group(
-			"/internal/health-monitor",
+			"/internal/health_monitor",
 			ctxInjector.ContextInjector(ctxTimeout),
 			apikeymw.ApiKeyAuthMiddleware(internalApiKey),
 		)

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	"mapexIam/src/modules/roles/application/dtos"
 	"mapexIam/src/modules/roles/application/ports"
@@ -23,8 +23,8 @@ import (
 // It expects a validated DTO of type dtos.CreateRoleDto to be stored
 // in the Fiber context under the key "bodyDTO" (usually populated by
 // requestValidation middleware).
-func CreateRole(service ports.RoleServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func CreateRole(service ports.RoleServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 		ctx := c.UserContext()
 
 		// Get RequestContext from coverage middleware
@@ -55,8 +55,8 @@ func CreateRole(service ports.RoleServicePort) fiber.Handler {
 //   - 200 OK with role data if found
 //   - 404 Not Found if role doesn't exist
 //   - 500 Internal Server Error on service failure
-func GetRoleById(service ports.RoleServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetRoleById(service ports.RoleServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -85,8 +85,8 @@ func GetRoleById(service ports.RoleServicePort) fiber.Handler {
 //   - 404 Not Found if role doesn't exist
 //   - 400 Bad Request if validation fails
 //   - 500 Internal Server Error on service failure
-func UpdateRoleById(service ports.RoleServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func UpdateRoleById(service ports.RoleServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -112,8 +112,8 @@ func UpdateRoleById(service ports.RoleServicePort) fiber.Handler {
 //   - 200 OK with success flag if deletion succeeds
 //   - 404 Not Found if role doesn't exist
 //   - 500 Internal Server Error on service failure
-func DeleteRoleById(service ports.RoleServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func DeleteRoleById(service ports.RoleServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
@@ -140,8 +140,8 @@ func DeleteRoleById(service ports.RoleServicePort) fiber.Handler {
 //   - 200 OK with paginated role list
 //   - 400 Bad Request if query validation fails
 //   - 500 Internal Server Error on service failure or requestContext not found
-func GetRoles(service ports.RoleServicePort) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func GetRoles(service ports.RoleServicePort) web.Handler {
+	return func(c *web.Ctx) error {
 
 		// retrieve the timeout‐aware Context you set in ContextInjector
 		ctx := c.UserContext()
