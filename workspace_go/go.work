@@ -3,7 +3,6 @@ go 1.25.3
 use (
 	// MapexOS business-specific packages
 	./packages/contracts
-	./packages/e2eTests
 	./packages/permissions
 
 	// Services
