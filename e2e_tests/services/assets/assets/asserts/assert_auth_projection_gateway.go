@@ -27,7 +27,7 @@ type gatewayAuthEnvelope struct {
 }
 
 // AssertAuthProjectionGateway fetches the LNS Gateway Server's L3 source
-// (GET /internal/asset-auth/:assetUUID) and asserts the asset is published as a
+// (GET /internal/asset_auth/:assetUUID) and asserts the asset is published as a
 // LoRaWAN gateway: type=lorawan, lorawan.kind=gateway, with the gateway block
 // carrying the expected frequency plan. This proves the assets service projects a
 // gateway asset in the exact shape the LNS reads on connect.
@@ -40,7 +40,7 @@ func AssertAuthProjectionGateway(wantFrequencyPlanID string) saga.Assert {
 		Check: func(c *saga.Context) error {
 			uuid := c.MustGetString(assetSteps.BagKeyAssetUUID)
 			headers := map[string]string{"X-API-Key": constants.InternalApiKey}
-			resp, err := c.Clients.Assets.RawWithHeaders(c.Stdctx, http.MethodGet, "/internal/asset-auth/"+uuid, nil, headers)
+			resp, err := c.Clients.Assets.RawWithHeaders(c.Stdctx, http.MethodGet, "/internal/asset_auth/"+uuid, nil, headers)
 			if err != nil {
 				return fmt.Errorf("get asset-auth %s: %w", uuid, err)
 			}
@@ -87,7 +87,7 @@ func AssertAuthProjectionGatewayCert(wantFrequencyPlanID string) saga.Assert {
 			uuid := c.MustGetString(assetSteps.BagKeyAssetUUID)
 			wantSerial := c.MustGetString(assetSteps.BagKeyAssetCertSerial)
 			headers := map[string]string{"X-API-Key": constants.InternalApiKey}
-			resp, err := c.Clients.Assets.RawWithHeaders(c.Stdctx, http.MethodGet, "/internal/asset-auth/"+uuid, nil, headers)
+			resp, err := c.Clients.Assets.RawWithHeaders(c.Stdctx, http.MethodGet, "/internal/asset_auth/"+uuid, nil, headers)
 			if err != nil {
 				return fmt.Errorf("get asset-auth %s: %w", uuid, err)
 			}

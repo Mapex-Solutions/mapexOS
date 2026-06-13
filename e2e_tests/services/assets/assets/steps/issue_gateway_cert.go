@@ -50,16 +50,16 @@ func IssueGatewayCert() saga.Step {
 			if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
 				return fmt.Errorf("decode issue-gateway-cert response: %w", err)
 			}
-			if len(out.CertPEM) == 0 || len(out.KeyPEM) == 0 {
+			if len(out.Data.CertPEM) == 0 || len(out.Data.KeyPEM) == 0 {
 				return fmt.Errorf("issue gateway cert for %s: empty cert or key in response", uuid)
 			}
-			if out.Serial == "" {
+			if out.Data.Serial == "" {
 				return fmt.Errorf("issue gateway cert for %s: empty serial in response", uuid)
 			}
-			c.Set(BagKeyAssetCertPEM, out.CertPEM)
-			c.Set(BagKeyAssetKeyPEM, out.KeyPEM)
-			c.Set(BagKeyAssetCAChainPEM, out.CAChainPEM)
-			c.Set(BagKeyAssetCertSerial, out.Serial)
+			c.Set(BagKeyAssetCertPEM, out.Data.CertPEM)
+			c.Set(BagKeyAssetKeyPEM, out.Data.KeyPEM)
+			c.Set(BagKeyAssetCAChainPEM, out.Data.CAChainPEM)
+			c.Set(BagKeyAssetCertSerial, out.Data.Serial)
 			return nil
 		},
 		Compensate: func(_ *saga.Context) error {

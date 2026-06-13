@@ -15,17 +15,23 @@ type issueCertRequest struct {
 	Force     bool   `json:"force"`
 }
 
-// issueCertResponse mirrors the platform's HTTP envelope wrapping
-// the cert payload. CertPEM/KeyPEM/CAChainPEM are `[]byte` on the Go
-// contract; the wire JSON carries them as base64 strings, and Go's
-// stdlib json decoder un-base64s automatically into the byte slices.
-type issueCertResponse struct {
+// issueCertPayload is the cert payload returned by the issue endpoints.
+// CertPEM/KeyPEM/CAChainPEM are `[]byte` on the Go contract; the wire JSON
+// carries them as base64 strings, and Go's stdlib json decoder un-base64s
+// automatically into the byte slices.
+type issueCertPayload struct {
 	Serial      string `json:"serial"`
 	Fingerprint string `json:"fingerprint"`
 	SubjectCN   string `json:"subjectCN"`
 	CertPEM     []byte `json:"certPEM"`
 	KeyPEM      []byte `json:"keyPEM"`
 	CAChainPEM  []byte `json:"caChainPEM"`
+}
+
+// issueCertResponse mirrors the platform's HTTP envelope wrapping the cert
+// payload under `data`. Shared by IssueCert and IssueGatewayCert.
+type issueCertResponse struct {
+	Data issueCertPayload `json:"data"`
 }
 
 // IssueCert calls POST /api/v1/mqtt_certs for the saga's asset and
@@ -64,13 +70,13 @@ func IssueCert() saga.Step {
 			if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
 				return fmt.Errorf("decode issue-cert response: %w", err)
 			}
-			if len(out.CertPEM) == 0 || len(out.KeyPEM) == 0 {
+			if len(out.Data.CertPEM) == 0 || len(out.Data.KeyPEM) == 0 {
 				return fmt.Errorf("issue cert for %s: empty cert or key in response", uuid)
 			}
-			c.Set(BagKeyAssetCertPEM, out.CertPEM)
-			c.Set(BagKeyAssetKeyPEM, out.KeyPEM)
-			c.Set(BagKeyAssetCAChainPEM, out.CAChainPEM)
-			c.Set(BagKeyAssetCertSerial, out.Serial)
+			c.Set(BagKeyAssetCertPEM, out.Data.CertPEM)
+			c.Set(BagKeyAssetKeyPEM, out.Data.KeyPEM)
+			c.Set(BagKeyAssetCAChainPEM, out.Data.CAChainPEM)
+			c.Set(BagKeyAssetCertSerial, out.Data.Serial)
 			return nil
 		},
 		Compensate: func(_ *saga.Context) error {

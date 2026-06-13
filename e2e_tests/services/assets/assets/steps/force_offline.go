@@ -40,7 +40,7 @@ func ForceOfflineByAdmin(reason string) saga.Step {
 			sentAt := time.Now().UTC()
 			resp, err := c.Clients.Assets.RawWithHeaders(
 				c.Stdctx, http.MethodPost,
-				"/internal/health-monitor/"+uuid+"/force-offline", payload, headers,
+				"/internal/health_monitor/"+uuid+"/force_offline", payload, headers,
 			)
 			if err != nil {
 				return fmt.Errorf("force offline: %w", err)
