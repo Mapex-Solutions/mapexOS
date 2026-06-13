@@ -29,6 +29,8 @@ export const ZodProviderConfigSchema = z.object({
 
 /**
  * Credential Create schema — mirror of Go CreateCredentialDTO.
+ * isTemplate is intentionally absent: templates are internal/seed-only and are
+ * never created through the external API.
  */
 export const ZodCredentialCreateSchema = z.object({
   name: StringAndNotBeEmpty,
@@ -37,17 +39,17 @@ export const ZodCredentialCreateSchema = z.object({
   credentialDefId: IsString.optional().default(''),
   data: z.record(IsString, z.any()),
   providerConfig: ZodProviderConfigSchema.optional(),
-  isTemplate: IsBoolean.optional().default(false),
 });
 
 /**
  * Credential Update schema — mirror of Go UpdateCredentialDTO.
+ * isTemplate is intentionally absent (see create): the external API cannot flip
+ * a credential into or out of a template.
  */
 export const ZodCredentialUpdateSchema = z.object({
   name: IsString.optional(),
   data: z.record(IsString, z.any()).optional(),
   providerConfig: ZodProviderConfigSchema.optional(),
-  isTemplate: IsBoolean.optional(),
 });
 
 /**

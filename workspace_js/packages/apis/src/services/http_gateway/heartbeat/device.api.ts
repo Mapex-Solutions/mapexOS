@@ -26,8 +26,8 @@ export function deviceApi(http: AxiosInstance) {
 		 * POST /api/v1/heartbeat?ds={dataSourceId}
 		 *
 		 * Body { assetUUID } is validated client-side against ZodHeartbeatRequestSchema
-		 * before sending. Server returns 204 on success, 422 on validation, 403 on
-		 * disabled DataSource, 401 on auth failure.
+		 * before sending. Server returns 200 (standard envelope) on success, 422 on
+		 * validation, 403 on disabled DataSource, 401 on auth failure.
 		 */
 		async post(
 			dataSourceId: string,

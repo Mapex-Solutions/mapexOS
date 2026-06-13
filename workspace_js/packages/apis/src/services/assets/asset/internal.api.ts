@@ -14,7 +14,7 @@ export function internalApi(http: AxiosInstance) {
 	const factory = createApiFactory(http);
 
 	return factory({
-		basePath: '/api/internal/v1/assets',
+		basePath: '/internal/assets',
 		useAuthJWT: false, // API Key authentication
 		methods: {
 			// GET SCRIPTS BY ASSET UUID - GET /scripts/:assetUUID

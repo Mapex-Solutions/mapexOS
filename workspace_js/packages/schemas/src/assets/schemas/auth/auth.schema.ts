@@ -8,7 +8,7 @@ import { z, StringAndNotBeEmpty, IsBoolean } from '@mapexos/validations';
  * (flat layout — assetUUID is globally unique via Mongo
  * idx_asset_uuid_unique). The broker plugin reads it on every CONNECT
  * lookup. Also returned by the assets-service internal endpoint
- * GET /internal/asset-auth/:assetUUID as the broker's L3 fallback.
+ * GET /internal/asset_auth/:assetUUID as the broker's L3 fallback.
  *
  * `type` discriminates the auth surface and both blocks are nested and
  * symmetric: the `mqtt` block is set when type=mqtt; the `lorawan` block is set

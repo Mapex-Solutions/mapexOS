@@ -80,7 +80,7 @@ export async function initCache(configModule: ConfigModule, logger: Logger) {
 		// Fallback: call Workflow Service HTTP endpoint
 		FallbackBaseURL: workflowServiceURL,
 		FallbackAPIKey: internalAPIKey,
-		FallbackEndpoint: '/internal/workflow-scripts',
+		FallbackEndpoint: '/internal/workflow_scripts',
 		FallbackTimeout: fallbackTimeout,
 		
 		FallbackKeyTransformer: (key: string) => {

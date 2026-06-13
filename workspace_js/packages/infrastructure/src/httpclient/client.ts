@@ -18,7 +18,7 @@
  *     timeout: 5000,
  *   });
  *
- *   const result = await client.get<RouteGroupResponse[]>('/api/internal/v1/routegroups?ids=id1,id2');
+ *   const result = await client.get<RouteGroupResponse[]>('/internal/route_groups?ids=id1,id2');
  */
 
 import type { HTTPClientConfig } from './types';
@@ -40,7 +40,7 @@ export class HTTPClient {
 	/**
 	 * Get performs a GET request to the specified endpoint.
 	 *
-	 * @param endpoint - API endpoint path (e.g., "/api/internal/v1/routegroups?ids=id1,id2")
+	 * @param endpoint - API endpoint path (e.g., "/internal/route_groups?ids=id1,id2")
 	 * @returns The response data parsed as type T
 	 */
 	async get<T>(endpoint: string): Promise<T> {
