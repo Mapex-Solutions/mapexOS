@@ -7,4 +7,5 @@ export * from './router';
 export * from './triggers';
 export * from './workflows';
 export * from './http_gateway';
+export * from './plugin-marketplace';
 

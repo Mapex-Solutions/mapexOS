@@ -1,12 +1,19 @@
 import type { PluginCategory } from '@src/components/workflow/interfaces';
 
 /**
- * Single entry from the plugin marketplace API (`GET /api/v1/plugins`).
- * Represents a plugin available for installation/enabling.
+ * Single entry from the workflow plugins marketplace API
+ * (`GET /api/v1/workflow_plugins`). Represents a plugin available for
+ * installation/enabling.
  */
 export interface RegistryEntry {
   /** Unique plugin identifier (maps from API `pluginId`) */
   id: string;
+
+  /** Vendor key — first segment of the vendor/slug manifest key */
+  vendor: string;
+
+  /** Plugin slug — second segment of the vendor/slug manifest key */
+  slug: string;
 
   /** Display name */
   name: string;
@@ -20,7 +27,7 @@ export interface RegistryEntry {
   /** Material icon name (fallback) */
   icon: string;
 
-  /** Relative path to brand SVG icon on CDN */
+  /** Asset path of the brand SVG icon under the plugin (e.g. `icon.svg`) */
   brandIcon: string;
 
   /** Brand color (hex) */
@@ -35,7 +42,7 @@ export interface RegistryEntry {
   /** Search/filter tags */
   tags: string[];
 
-  /** Relative path to full manifest.json (CDN) or null if API-only */
+  /** Manifest key in `vendor/slug` form — split to fetch the raw manifest */
   manifestUrl: string;
 
   /** Link to plugin documentation */

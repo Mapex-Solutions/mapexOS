@@ -86,8 +86,10 @@ export default defineConfig((ctx: any) => {
 				// JS Services
 				JS_EXECUTOR_API_BASE_URL: process.env.JS_EXECUTOR_API_BASE_URL || 'http://localhost:8000',
 
-				// Plugin CDN / Marketplace
-				PLUGIN_CDN_BASE_URL: process.env.PLUGIN_CDN_BASE_URL || '__PLUGIN_CDN_BASE_URL__',
+				// Workflow Plugins Marketplace — online-only catalog, always the
+				// cloud service by default; an env override only redirects dev builds.
+				WORKFLOW_PLUGINS_MARKETPLACE_URL:
+					process.env.WORKFLOW_PLUGINS_MARKETPLACE_URL || 'https://marketplace.mapexos.io/api/v1/workflow_plugins',
 			},
 			// rawDefine: {}
 			// ignorePublicFolder: true,

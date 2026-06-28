@@ -2,10 +2,10 @@
 /**
  * Mapex APIs module
 */
-import type { MapexOSApi, AssetsApi, EventsApi, RouterApi, TriggersApi, HttpGatewayApi, JsExecutorApi, WorkflowsApi, VaultApiMethods } from './services'
+import type { MapexOSApi, AssetsApi, EventsApi, RouterApi, TriggersApi, HttpGatewayApi, JsExecutorApi, WorkflowsApi, VaultApiMethods, WorkflowPluginsMarketplaceApiMethods } from './services'
 
 import { ApiInitConfig, SessionsConfig } from './common'
-import { createMapexOSApi, createAssetsApi, createEventsApi, createRouterApi, createTriggersApi, createHttpGatewayApi, createJsExecutorApi, createWorkflowsApi, createVaultApi } from './services'
+import { createMapexOSApi, createAssetsApi, createEventsApi, createRouterApi, createTriggersApi, createHttpGatewayApi, createJsExecutorApi, createWorkflowsApi, createVaultApi, createWorkflowPluginsMarketplaceApi } from './services'
 
 /**
  * Export all interfaces from the module.
@@ -43,6 +43,7 @@ export function initializeApis(params: ApiInitConfig) {
     jsExecutor?: JsExecutorApi,
     workflows?: WorkflowsApi,
     vault?: VaultApiMethods,
+    workflowPluginsMarketplace?: WorkflowPluginsMarketplaceApiMethods,
     /** @deprecated Rule engine removed - stub for compilation */
     rules?: any,
     /** @deprecated Rule engine removed - stub for compilation */
@@ -59,6 +60,7 @@ export function initializeApis(params: ApiInitConfig) {
   if (params.jsExecutor) apis.jsExecutor = createJsExecutorApi(params.jsExecutor, sessionParams)
   if (params.workflows) apis.workflows = createWorkflowsApi(params.workflows, sessionParams)
   if (params.vault) apis.vault = createVaultApi(params.vault, sessionParams)
+  if (params.workflowPluginsMarketplace) apis.workflowPluginsMarketplace = createWorkflowPluginsMarketplaceApi(params.workflowPluginsMarketplace, sessionParams)
 
   return apis
 }

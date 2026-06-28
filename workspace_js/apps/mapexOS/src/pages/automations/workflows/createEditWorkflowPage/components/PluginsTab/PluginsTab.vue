@@ -8,6 +8,7 @@ import type {
 } from './interfaces';
 import type { PluginNodeTypeSummary } from '@components/dialogs/pluginDetailDialog/interfaces';
 import type { PluginCategory, PluginCredentialDefinition } from '@src/components/workflow/interfaces';
+import type { PluginCatalogItem, PluginCatalogQuery, PluginResponse } from '@mapexos/schemas';
 /** VUE IMPORTS */
 import { ref, computed, watch, onMounted } from 'vue';
 
@@ -32,8 +33,8 @@ import { useWorkflowEditorState } from '../../composables';
 import { apis } from '@services/mapex';
 
 /** LOCAL IMPORTS (constants and handlers ONLY) */
-import { PLUGIN_CDN_BASE_URL, MARKETPLACE_PAGE_SIZE } from './constants';
-import { loadManifest, convertManifestToPlugin } from '../../utils/manifestLoader';
+import { MARKETPLACE_PAGE_SIZE } from './constants';
+import { convertManifestToPlugin } from '../../utils/manifestLoader';
 
 /** COMPOSABLES & STORES */
 const pluginRegistry = usePluginRegistryStore();
@@ -56,6 +57,12 @@ const registryEntries = ref<RegistryEntry[]>([]);
  * Loading state for registry fetch
  */
 const loading = ref(false);
+
+/**
+ * Whether the last marketplace fetch failed (the marketplace is a live
+ * dependency now — surface a real error state instead of failing silently)
+ */
+const marketplaceError = ref(false);
 
 /**
  * Plugin ID currently being installed
@@ -301,13 +308,18 @@ function isInstalled(pluginId: string): boolean {
 }
 
 /**
- * Get the brand icon URL for a registry entry
+ * Get the brand icon URL for a MARKETPLACE registry entry, served by the
+ * marketplace asset endpoint (vendor/slug-scoped).
  *
- * @param {string} brandIcon - Relative brand icon path
- * @returns {string} Full URL to the brand icon
+ * @param {RegistryEntry} entry - Marketplace registry entry
+ * @returns {string} Absolute URL to the plugin's brand icon
  */
-function getBrandIconUrl(brandIcon: string): string {
-  return `${PLUGIN_CDN_BASE_URL}/${brandIcon}`;
+function getMarketplaceIconUrl(entry: RegistryEntry): string {
+  return apis.workflowPluginsMarketplace.marketplace.assetUrl(
+    entry.vendor,
+    entry.slug,
+    entry.brandIcon || 'icon.svg',
+  );
 }
 
 /**
@@ -332,31 +344,36 @@ function getCategoryLabel(category: PluginCategory): string {
 }
 
 /**
- * Convert a CDN registry entry to a UI RegistryEntry
+ * Convert a flat marketplace catalog item to a UI RegistryEntry.
  *
- * @param {Record<string, unknown>} raw - Raw entry from registry.json
+ * The item is already flat — `name`/`description` are resolved strings
+ * (no localization pick). The manifest key is stored as `vendor/slug`;
+ * `vendor`/`slug` are kept for the manifest fetch and asset URLs.
+ *
+ * @param {PluginCatalogItem} item - Flat list item from the marketplace API
  * @returns {RegistryEntry} UI-friendly registry entry
  */
-function convertCdnEntryToRegistryEntry(raw: Record<string, unknown>): RegistryEntry {
-  const metadata = raw.metadata as Record<string, string> | undefined;
+function convertCdnEntryToRegistryEntry(item: PluginCatalogItem): RegistryEntry {
   return {
-    id: (raw.pluginId as string) ?? (raw.id as string) ?? '',
-    name: (raw.name as string) ?? '',
-    version: (raw.version as string) ?? '0.0.0',
-    category: ((raw.category as string) ?? 'integrations'),
-    icon: (raw.icon as string) ?? 'extension',
-    brandIcon: metadata?.brandIcon ?? '',
-    color: metadata?.color ?? (raw.color as string) ?? '#666',
-    description: (raw.description as string) ?? '',
-    author: (raw.author as string) ?? '',
-    tags: (raw.tags as string[]) ?? [],
-    manifestUrl: (raw.manifestUrl as string) ?? '',
-    docsUrl: metadata?.docs ?? '',
-    requiresCredentials: raw.requiresCredentials === true || raw.credentials !== undefined,
-    nodeCount: (raw.nodeCount as number) ?? 0,
-    triggerCount: (raw.triggerCount as number) ?? 0,
-    enabled: (raw.enabled as boolean) ?? false,
-    isSystem: (raw.isSystem as boolean) ?? false,
+    id: item.pluginId || item.id,
+    vendor: item.vendor,
+    slug: item.slug,
+    name: item.name,
+    version: '',
+    category: item.category || 'integrations',
+    icon: item.icon || 'extension',
+    brandIcon: item.image || 'icon.svg',
+    color: item.color || '#666',
+    description: item.description,
+    author: item.vendorName,
+    tags: item.tags,
+    manifestUrl: `${item.vendor}/${item.slug}`,
+    docsUrl: '',
+    requiresCredentials: item.requiresCredentials,
+    nodeCount: item.nodeCount,
+    triggerCount: item.triggerCount,
+    enabled: false,
+    isSystem: false,
   };
 }
 
@@ -373,7 +390,7 @@ function openDetailDialog(entry: RegistryEntry): void {
     author: entry.author,
     version: entry.version,
     description: entry.description,
-    brandIconUrl: getBrandIconUrl(entry.brandIcon),
+    brandIconUrl: getMarketplaceIconUrl(entry),
     icon: entry.icon,
     color: entry.color,
     category: entry.category,
@@ -443,7 +460,7 @@ function openInstalledPluginDetail(plugin: InstalledPlugin): void {
     author: plugin.author,
     version: plugin.version,
     description: plugin.description,
-    brandIconUrl: plugin.brandIcon ? getBrandIconUrl(plugin.brandIcon) : '',
+    brandIconUrl: plugin.brandIcon,
     icon: plugin.icon,
     color: plugin.color,
     category: plugin.category,
@@ -482,8 +499,12 @@ function openInstalledPluginDetail(plugin: InstalledPlugin): void {
  */
 async function fetchDetailNodeTypes(entry: RegistryEntry): Promise<void> {
   try {
-    // Fetch full manifest from CDN
-    const plugin = await loadManifest(entry.manifestUrl);
+    // Fetch the wrapped manifest from the marketplace, unwrap .data, convert
+    const wrapped = await apis.workflowPluginsMarketplace.marketplace.get({
+      vendor: entry.vendor,
+      slug: entry.slug,
+    });
+    const plugin = convertManifestToPlugin(wrapped.data as unknown as PluginResponse);
 
     detailNodeTypes.value = plugin.nodeTypes.map((nt) => ({
       type: nt.type,
@@ -541,51 +562,39 @@ async function fetchInstalledPlugins(): Promise<void> {
 }
 
 /**
- * Fetch marketplace plugins from CDN registry
+ * Fetch marketplace plugins from the live marketplace API.
+ * Filtering and pagination are server-side now.
  *
  * @returns {Promise<void>}
  */
 async function fetchPlugins(): Promise<void> {
   loading.value = true;
+  marketplaceError.value = false;
   try {
-    const response = await fetch(`${PLUGIN_CDN_BASE_URL}/registry.json`);
+    const query: PluginCatalogQuery = {
+      page: marketplacePage.value,
+      perPage: MARKETPLACE_PAGE_SIZE,
+    };
+    if (searchQuery.value) query.search = searchQuery.value;
+    if (marketplaceCategoryFilter.value) query.category = marketplaceCategoryFilter.value;
 
-    if (!response.ok) {
-      throw new Error(`CDN returned ${response.status}`);
-    }
+    const res = await apis.workflowPluginsMarketplace.marketplace.list(query);
 
-    const data = await response.json() as { plugins?: Record<string, unknown>[] };
-    const allEntries = (data.plugins ?? []).map(convertCdnEntryToRegistryEntry);
-
-    // Client-side filtering (CDN is static, no server-side filtering)
-    let filtered = allEntries;
-
-    if (searchQuery.value) {
-      const q = searchQuery.value.toLowerCase();
-      filtered = filtered.filter(
-        (e) => e.name.toLowerCase().includes(q) || e.description.toLowerCase().includes(q),
-      );
-    }
-
-    if (marketplaceCategoryFilter.value) {
-      filtered = filtered.filter((e) => e.category === marketplaceCategoryFilter.value);
-    }
-
-    // Client-side pagination
-    marketplaceTotal.value = filtered.length;
-    const start = (marketplacePage.value - 1) * MARKETPLACE_PAGE_SIZE;
-    registryEntries.value = filtered.slice(start, start + MARKETPLACE_PAGE_SIZE);
+    registryEntries.value = res.data.items.map(convertCdnEntryToRegistryEntry);
+    marketplaceTotal.value = res.data.total;
   } catch (error) {
-    console.error('[PluginsTab] Failed to fetch plugins from CDN:', error);
+    console.error('[PluginsTab] Failed to fetch plugins from marketplace:', error);
     registryEntries.value = [];
     marketplaceTotal.value = 0;
+    marketplaceError.value = true;
   } finally {
     loading.value = false;
   }
 }
 
 /**
- * Install a plugin: fetch manifest from CDN → persist via API → register locally.
+ * Install a plugin: fetch the manifest from the marketplace → persist via
+ * the workflow API → register locally.
  * If the API call fails, no local registration happens (rollback).
  *
  * @param {RegistryEntry} entry - Plugin to install
@@ -594,13 +603,20 @@ async function fetchPlugins(): Promise<void> {
 async function enablePlugin(entry: RegistryEntry): Promise<void> {
   installingId.value = entry.id;
   try {
-    // 1. Fetch raw manifest JSON from CDN
-    const cdnUrl = `${PLUGIN_CDN_BASE_URL}/${entry.manifestUrl}`;
-    const cdnResponse = await fetch(cdnUrl);
-    if (!cdnResponse.ok) {
-      throw new Error(`CDN returned ${cdnResponse.status}`);
-    }
-    const rawManifest = await cdnResponse.json() as Record<string, unknown>;
+    // 1. Fetch the wrapped manifest from the marketplace and unwrap .data
+    const wrapped = await apis.workflowPluginsMarketplace.marketplace.get({
+      vendor: entry.vendor,
+      slug: entry.slug,
+    });
+    const rawManifest = wrapped.data as Record<string, unknown>;
+
+    // Persist the brand icon as an absolute marketplace asset URL so the
+    // installed plugin renders its icon straight from the marketplace API —
+    // no asset-host base to concatenate on the client.
+    rawManifest.metadata = {
+      ...(rawManifest.metadata as Record<string, unknown> | undefined),
+      brandIcon: getMarketplaceIconUrl(entry),
+    };
 
     // 2. Persist to backend — POST /api/v1/plugins
     const saved = await apis.workflows.plugin.create(
@@ -859,7 +875,7 @@ onMounted(() => {
                   :description="plugin.description"
                   :author="plugin.author"
                   :version="plugin.version"
-                  :brand-icon-url="plugin.brandIcon ? getBrandIconUrl(plugin.brandIcon) : ''"
+                  :brand-icon-url="plugin.brandIcon"
                   :icon="plugin.icon"
                   :color="plugin.color"
                   :category-label="getCategoryLabel(plugin.category)"
@@ -948,6 +964,21 @@ onMounted(() => {
         <q-spinner color="primary" size="40px" />
       </div>
 
+      <!-- Error -->
+      <div v-else-if="marketplaceError" class="text-center q-pa-xl">
+        <q-icon name="cloud_off" size="48px" color="negative" />
+        <div class="text-subtitle1 text-grey-7 q-mt-sm">{{ t.pluginsTab.marketplaceLoadError.value }}</div>
+        <div class="text-body2 text-grey-6 q-mt-xs">{{ t.pluginsTab.marketplaceLoadErrorDesc.value }}</div>
+        <q-btn
+          class="q-mt-md"
+          color="primary"
+          unelevated
+          icon="refresh"
+          :label="t.pluginsTab.retry.value"
+          @click="fetchPlugins()"
+        />
+      </div>
+
       <!-- Empty -->
       <div v-else-if="registryEntries.length === 0" class="text-center q-pa-xl">
         <q-icon name="extension_off" size="48px" color="grey-5" />
@@ -967,7 +998,7 @@ onMounted(() => {
               :description="entry.description"
               :author="entry.author"
               :version="entry.version"
-              :brand-icon-url="getBrandIconUrl(entry.brandIcon)"
+              :brand-icon-url="getMarketplaceIconUrl(entry)"
               :icon="entry.icon"
               :color="entry.color"
               :category-label="getCategoryLabel(entry.category)"

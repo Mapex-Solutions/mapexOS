@@ -64,6 +64,7 @@ function createApis(): ApiWrappers {
   const triggersBaseURL = process.env.TRIGGERS_API_BASE_URL as string;
   const workflowBaseURL = process.env.WORKFLOW_API_BASE_URL as string;
   const vaultBaseURL = process.env.VAULT_API_BASE_URL as string;
+  const workflowPluginsMarketplaceURL = process.env.WORKFLOW_PLUGINS_MARKETPLACE_URL as string;
 
   if (!mapexBaseURL) logger.warn('MAPEXOS_API_BASE_URL is empty');
   if (!httpGatewayBaseURL) logger.warn('HTTP_GATEWAY_API_BASE_URL is empty');
@@ -74,6 +75,7 @@ function createApis(): ApiWrappers {
   if (!triggersBaseURL) logger.warn('TRIGGERS_API_BASE_URL is empty');
   if (!workflowBaseURL) logger.warn('WORKFLOW_API_BASE_URL is empty');
   if (!vaultBaseURL) logger.warn('VAULT_API_BASE_URL is empty');
+  if (!workflowPluginsMarketplaceURL) logger.warn('WORKFLOW_PLUGINS_MARKETPLACE_URL is empty');
 
   return initializeApis({
     mapexOS: { baseURL: mapexBaseURL },
@@ -85,6 +87,7 @@ function createApis(): ApiWrappers {
     triggers: { baseURL: triggersBaseURL },
     workflows: { baseURL: workflowBaseURL },
     vault: { baseURL: vaultBaseURL },
+    workflowPluginsMarketplace: { baseURL: workflowPluginsMarketplaceURL },
 
     // All interceptors and session config
     interceptors: {

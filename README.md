@@ -77,8 +77,7 @@ mapexOS/
 ├── workspace_js/                # Node services + the frontend
 │   ├── services/
 │   │   ├── js-executor/             # V8 isolates for IoT event scripts
-│   │   ├── js-workflow-executor/    # V8 isolates for workflow code nodes
-│   │   └── plugin-marketplace-mock/ # static plugin manifest CDN (dev)
+│   │   └── js-workflow-executor/    # V8 isolates for workflow code nodes
 │   ├── apps/
 │   │   └── mapexOS/             # Vue 3 + Quasar SPA
 │   └── packages/                # Zod schemas, typed API wrappers, infrastructure clients

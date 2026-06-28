@@ -9,7 +9,6 @@ import type {
 } from '@src/components/workflow/interfaces';
 import type { PluginResponse } from '@mapexos/schemas';
 import { markRaw } from 'vue';
-import { PLUGIN_CDN_BASE_URL } from '../components/PluginsTab/constants';
 import { apis } from '@services/mapex';
 
 /** Raw handle shape from Zod — wider than HandleDefinition (extra fields, `color?: string | undefined`) */
@@ -70,31 +69,6 @@ export function convertManifestToPlugin(manifest: PluginResponse): WorkflowPlugi
   if (manifest.metadata !== undefined) plugin.metadata = manifest.metadata as unknown as PluginMetadata;
   if (manifest.credentials !== undefined) plugin.credentials = manifest.credentials as unknown as PluginCredentialDefinition[];
   return plugin;
-}
-
-// ────────────────────────────────────────────────────────────────────────────
-// Fetch + Convert (for CDN / URL-based loading)
-// ────────────────────────────────────────────────────────────────────────────
-
-/**
- * Fetch a plugin manifest from CDN and convert to a WorkflowPlugin
- * ready for registration in the pluginRegistryStore.
- *
- * For direct API responses (already parsed JSON), use convertManifestToPlugin() instead.
- *
- * @param {string} manifestUrl - Relative manifest URL (e.g., 'telegram/manifest.json')
- * @returns {Promise<WorkflowPlugin>} Converted plugin object
- */
-export async function loadManifest(manifestUrl: string): Promise<WorkflowPlugin> {
-  const fullUrl = `${PLUGIN_CDN_BASE_URL}/${manifestUrl}`;
-  const response = await fetch(fullUrl);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch manifest: ${response.status} ${response.statusText}`);
-  }
-
-  const manifest: PluginResponse = await response.json();
-  return convertManifestToPlugin(manifest);
 }
 
 // ────────────────────────────────────────────────────────────────────────────
