@@ -354,21 +354,41 @@ export function useAddAssetTemplateTranslations() {
           title: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.banner.title')),
           description: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.banner.description')),
         },
+        progress: {
+          count: (current: number, max: number) => tsRaw('pages.assets.addAssetTemplate.steps.step8.progress.count', { current, max }),
+          remaining: (remaining: number) => tsRaw('pages.assets.addAssetTemplate.steps.step8.progress.remaining', { remaining }),
+        },
+        limitReached: {
+          title: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.limitReached.title')),
+          description: (max: number) => tsRaw('pages.assets.addAssetTemplate.steps.step8.limitReached.description', { max }),
+          tooltip: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.limitReached.tooltip')),
+        },
+        nearLimit: {
+          title: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.nearLimit.title')),
+          description: (current: number, max: number, remaining: number) => tsRaw('pages.assets.addAssetTemplate.steps.step8.nearLimit.description', { current, max, remaining }),
+        },
         noFieldsWarning: {
           title: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.noFieldsWarning.title')),
           description: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.noFieldsWarning.description')),
         },
         addField: {
           title: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.addField.title')),
+          helper: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.addField.helper')),
+          disabledReason: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.addField.disabledReason')),
           fieldName: {
             label: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.addField.fieldName.label')),
             placeholder: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.addField.fieldName.placeholder')),
+            customHint: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.addField.fieldName.customHint')),
+            createCustomPrefix: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.addField.fieldName.createCustomPrefix')),
+            suggestedType: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.addField.fieldName.suggestedType')),
+            unitLabel: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.addField.fieldName.unitLabel')),
           },
           fieldType: {
             label: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.addField.fieldType.label')),
           },
           valuePath: {
             label: computed(() => ts('pages.assets.addAssetTemplate.steps.step8.addField.valuePath.label')),
+            helper: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.addField.valuePath.helper')),
             placeholder: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.addField.valuePath.placeholder')),
             noOptions: computed(() => tsRaw('pages.assets.addAssetTemplate.steps.step8.addField.valuePath.noOptions')),
           },

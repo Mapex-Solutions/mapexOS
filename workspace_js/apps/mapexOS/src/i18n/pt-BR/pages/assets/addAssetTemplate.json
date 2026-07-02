@@ -285,26 +285,46 @@
       "label": "Campos Dinâmicos",
       "description": "Configure campos customizados para busca de eventos",
       "title": "Mapeamento de Campos Dinâmicos",
-      "subtitle": "Configure campos customizados que podem ser usados para buscar e filtrar eventos deste template de ativo.",
+      "subtitle": "Defina os campos que você vai usar para consultar e filtrar os eventos deste template.",
       "banner": {
         "title": "Campos Pesquisáveis Customizados",
         "description": "Campos adicionados aqui serão indexados e estarão disponíveis para filtrar e buscar eventos. Mapeie campos do payload para nomes e tipos customizados para facilitar consultas."
+      },
+      "progress": {
+        "count": "{current} / {max} campos",
+        "remaining": "{remaining} restantes"
+      },
+      "limitReached": {
+        "title": "Limite de campos atingido",
+        "description": "Você atingiu o máximo de {max} campos dinâmicos. Remova campos existentes para adicionar novos.",
+        "tooltip": "Limite máximo de campos atingido"
+      },
+      "nearLimit": {
+        "title": "Próximo do limite de campos",
+        "description": "Você tem {current} campos. O máximo é {max}. Você ainda pode adicionar {remaining}."
       },
       "noFieldsWarning": {
         "title": "Nenhum Campo Disponível",
         "description": "Execute os testes na Etapa 7 primeiro para extrair campos disponíveis do seu payload."
       },
       "addField": {
-        "title": "Adicionar Novo Mapeamento de Campo",
+        "title": "Adicionar campo",
+        "helper": "Um campo liga um valor do payload do evento a um nome que você usa para filtrar e consultar.",
+        "disabledReason": "Informe o nome e o valor no payload para adicionar",
         "fieldName": {
           "label": "Nome do Campo",
-          "placeholder": "ex.: temperatura"
+          "placeholder": "Selecione um nome padrão ou digite o seu",
+          "customHint": "Escolha uma sugestão ou digite um nome personalizado",
+          "createCustomPrefix": "Criar campo personalizado",
+          "suggestedType": "Tipo sugerido",
+          "unitLabel": "Unidade"
         },
         "fieldType": {
           "label": "Tipo"
         },
         "valuePath": {
-          "label": "Caminho do Valor",
+          "label": "Valor no payload",
+          "helper": "De onde, no payload do evento, vem esse valor",
           "placeholder": "Selecione o caminho",
           "noOptions": "Nenhum campo disponível"
         },

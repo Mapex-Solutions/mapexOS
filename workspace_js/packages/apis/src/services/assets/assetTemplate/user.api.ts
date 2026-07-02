@@ -4,6 +4,8 @@ import type {
 	AssetTemplateUpdate,
 	AssetTemplateQuery,
 	AssetTemplateResponse,
+	FieldVocabularyQuery,
+	FieldVocabularyResponse,
 	PaginatedResponse,
 } from '@mapexos/schemas';
 import type { GetToken } from '@src/common';
@@ -14,6 +16,7 @@ import {
 	ZodAssetTemplateCreateSchema,
 	ZodAssetTemplateUpdateSchema,
 	ZodAssetTemplateQuerySchema,
+	ZodFieldVocabularyQuerySchema,
 } from '@mapexos/schemas';
 
 /**
@@ -99,6 +102,15 @@ export function userApi(http: AxiosInstance, getToken: GetToken | undefined) {
 				pathParams: {} as AssetTemplateId,
 				paramSchema: ZodAssetTemplateIdSchema,
 				responseType: {} as { availableFields: string[] },
+			},
+
+			// FIELD VOCABULARY - GET /field-vocabulary?lang=
+			fieldVocabulary: {
+				method: 'GET',
+				path: '/field-vocabulary',
+				queryParams: {} as FieldVocabularyQuery,
+				querySchema: ZodFieldVocabularyQuerySchema,
+				responseType: {} as FieldVocabularyResponse,
 			},
 		},
 	});

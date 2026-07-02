@@ -285,26 +285,46 @@
       "label": "Dynamic Fields",
       "description": "Configure custom fields for event queries",
       "title": "Dynamic Fields Mapping",
-      "subtitle": "Configure custom fields that can be used to search and filter events from this asset template.",
+      "subtitle": "Define the fields you'll use to search and filter this asset template's events.",
       "banner": {
         "title": "Custom Searchable Fields",
         "description": "Fields added here will be indexed and available for filtering and searching events. Map payload fields to custom names and types for easy querying."
+      },
+      "progress": {
+        "count": "{current} / {max} fields",
+        "remaining": "{remaining} remaining"
+      },
+      "limitReached": {
+        "title": "Field limit reached",
+        "description": "You have reached the maximum of {max} dynamic fields. Remove existing fields to add new ones.",
+        "tooltip": "Maximum field limit reached"
+      },
+      "nearLimit": {
+        "title": "Approaching field limit",
+        "description": "You have {current} fields. Maximum is {max}. {remaining} more fields can be added."
       },
       "noFieldsWarning": {
         "title": "No Available Fields",
         "description": "Run tests in Step 7 first to extract available fields from your payload."
       },
       "addField": {
-        "title": "Add New Field Mapping",
+        "title": "Add a field",
+        "helper": "A field links a value from the event payload to a name you use to filter and query.",
+        "disabledReason": "Enter a name and a value path to add",
         "fieldName": {
           "label": "Field Name",
-          "placeholder": "e.g., temperature"
+          "placeholder": "Select a standard name or type your own",
+          "customHint": "Pick a suggestion or type a custom name",
+          "createCustomPrefix": "Create custom field",
+          "suggestedType": "Suggested type",
+          "unitLabel": "Unit"
         },
         "fieldType": {
           "label": "Type"
         },
         "valuePath": {
-          "label": "Value Path",
+          "label": "Value in payload",
+          "helper": "Where this value is found in the event payload",
           "placeholder": "Select path",
           "noOptions": "No fields available"
         },
