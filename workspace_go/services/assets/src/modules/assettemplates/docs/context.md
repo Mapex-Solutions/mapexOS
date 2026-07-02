@@ -3,7 +3,7 @@
 **Service:** assets
 **Module path:** `src/modules/assettemplates/`
 **Owner:** @thiagoanselmo
-**Last reviewed:** 2026-05-11
+**Last reviewed:** 2026-06-30
 
 ## Purpose
 Owns the definition of an `AssetTemplate` — the reusable classification (manufacturer/model/category), schema (AvailableFields, DynamicFields with EVA `fieldId`) and scripts (validator, conversion, test, processor) that an Asset is bound to. Provides CRUD over HTTP, publishes scripts to MinIO (L2) so JS-Executor can consume them via TieredCache, and keeps denormalized classification names in sync by listening to list name-change events.
@@ -16,6 +16,7 @@ Owns the definition of an `AssetTemplate` — the reusable classification (manuf
 | DynamicField | Field mapping with immutable `fieldId` (uint16) for EVA storage in ClickHouse | `AvailableFields` (string list used for Rule autocomplete only) |
 | FieldId | Immutable numeric key per field; never reused, soft-deleted via `Status=0` | `NextFieldId` (auto-increment counter) |
 | AvailableFields | Flat list of field names for rule/UI autocomplete, cached 24h in Redis | `DynamicFields` which carries typing and EVA info |
+| FieldVocabulary | Curated, multi-tenant catalog of canonical dynamic-field names (English `value` + localized hint + type/unit/category) suggested in the authoring UI; read-only in this module | `DynamicField` (a concrete field mapping on a template) |
 | Script | One of `ScriptValidator`, `ScriptConversion`, `ScriptTest`, `ScriptProcessor` — JS source executed by JS-Executor | — |
 | List classification | External "list" entities (manufacturer/model/category) whose names are denormalized here | MongoDB `_id` references in `ManufacturerId`/`ModelId`/`CategoryId` |
 
@@ -34,11 +35,13 @@ Handled `ListType` values: `asset_manufacturer`, `asset_model`, `asset_category`
 
 ## Driving Ports (inbound — who calls this module)
 - HTTP `/api/v1/asset_templates` (JWT auth): CRUD + `GET /counter` + `GET /:id/available_fields`
+- HTTP `GET /api/v1/asset_templates/field-vocabulary` (JWT auth, `AssetTemplateList` permission): read-only field-name vocabulary for the caller's org (system standard unioned with the org's own entries), grouped by category and localized via `?lang` (en-US fallback)
 - HTTP `/internal/templates` (API-Key auth): TieredCache fallback endpoints for JS-Executor
 - NATS consumer on `mapexos.lists.name_updated` for denormalized-name sync
 
 ## Driven Ports (outbound — what this module requires)
 - `repositories.AssetTemplateRepository` — MongoDB persistence (`infrastructure/persistence/mongo`)
+- `repositories.FieldVocabularyRepository` — read-only MongoDB access to the `field_vocabulary` collection (`infrastructure/persistence/mongo`)
 - `ports.TemplateStoragePort` — MinIO writer for scripts (`infrastructure/storage/minio`)
 - `common.AppCache` — Redis cache for `AvailableFields` (24h TTL) and counter (6h TTL)
 - `natsModel.Bus` (name `core`) — consumer wiring for list-name sync
@@ -51,6 +54,7 @@ Handled `ListType` values: `asset_manufacturer`, `asset_model`, `asset_category`
 - `AvailableFields` cache is invalidated on create/update
 - Classification names (`manufacturerName`/`modelName`/`categoryName`) are denormalized and kept in sync only via the `mapexos.lists.name_updated` consumer
 - Counter cache (Redis) invalidated on create/delete
+- Field vocabulary is read-only here: the effective list is `enabled:true` AND (`isSystem:true` OR org match); creating/editing org-scoped entries is out of scope for this module
 
 ## Known Cross-Context Interactions
 - Assets module (same service): reads templates to enrich asset responses with classification + `AssetIDPath`

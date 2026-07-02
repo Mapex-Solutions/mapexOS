@@ -11,4 +11,9 @@ type (
 	AssetTemplateQueryDto  = v1.AssetTemplateQuery
 	AssetTemplateResponse  = v1.AssetTemplateResponse
 	DynamicField           = v1.DynamicField
+
+	FieldVocabularyQuery    = v1.FieldVocabularyQuery
+	FieldVocabularyField    = v1.FieldVocabularyField
+	FieldVocabularyGroup    = v1.FieldVocabularyGroup
+	FieldVocabularyResponse = v1.FieldVocabularyResponse
 )

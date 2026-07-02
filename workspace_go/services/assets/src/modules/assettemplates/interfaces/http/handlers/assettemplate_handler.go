@@ -250,3 +250,48 @@ func GetAssetTemplateCount(service ports.AssetTemplateServicePort) web.Handler {
 		return response.Success(c, contractsCommon.CounterResponse{Count: count})
 	}
 }
+
+// GetFieldVocabulary returns a Fiber handler that serves the curated,
+// multi-tenant field vocabulary to the asset-template authoring UI.
+//
+// The fields are grouped by category in a fixed display order, and each
+// field's hint plus the group label are resolved to the language requested
+// via the optional ?lang= query parameter (en-US fallback).
+//
+// Response data shape:
+//
+//	{
+//	  "groups": [
+//	    { "category": "climate", "label": "Climate", "fields": [
+//	        { "value": "temperature", "hint": "Ambient temperature", "type": "number", "unit": "°C" }
+//	    ] }
+//	  ]
+//	}
+//
+// Parameters:
+//   - service: The AssetTemplateServicePort interface for asset template business operations
+//
+// Returns:
+//   - A Fiber handler function that processes the field vocabulary request
+func GetFieldVocabulary(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found in request context", nil)
+		}
+
+		queryData, _ := requestValidation.GetDTO[*dtos.FieldVocabularyQuery](c, "queryDTO")
+		lang := ""
+		if queryData != nil {
+			lang = queryData.Lang
+		}
+
+		result, err := service.GetFieldVocabulary(ctx, requestContext, lang)
+		if err != nil {
+			return err
+		}
+		return response.Success(c, result)
+	}
+}

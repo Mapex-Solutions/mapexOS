@@ -278,3 +278,18 @@ func (s *AssetTemplateService) GetTemplateByIdForCacheFallback(c ctx.Context, te
 	return resp, nil
 }
 
+// GetFieldVocabulary orchestrates the read-only field vocabulary:
+// fetch the effective list (system standard unioned with the caller's
+// org entries) -> group by category in the fixed display order, omitting
+// empty groups -> resolve each field hint and the group label to the
+// requested language with en-US fallback.
+func (s *AssetTemplateService) GetFieldVocabulary(c ctx.Context, requestContext *reqCtx.RequestContext, lang string) (*dtos.FieldVocabularyResponse, error) {
+	fields, err := s.deps.FieldVocabularyRepo.ListFieldVocabulary(c, requestContext)
+	if err != nil {
+		return nil, err
+	}
+	byCategory := s.groupVocabularyByCategory(fields)
+	groups := s.buildVocabularyGroups(byCategory, lang)
+	return &dtos.FieldVocabularyResponse{Groups: groups}, nil
+}
+

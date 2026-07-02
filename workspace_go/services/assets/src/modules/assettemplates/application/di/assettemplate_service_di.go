@@ -28,6 +28,10 @@ type AssetTemplateServiceDependenciesInjection struct {
 	dig.In
 	AssetTemplateRepo repositories.AssetTemplateRepository
 
+	// FieldVocabularyRepo reads the curated, multi-tenant field vocabulary
+	// served to the asset-template authoring UI (read-only).
+	FieldVocabularyRepo repositories.FieldVocabularyRepository
+
 	// AppCache provides service-private cache (Redis DB 0)
 	// Used for: counter cache with 6h TTL
 	AppCache common.AppCache

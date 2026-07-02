@@ -188,4 +188,18 @@ type AssetTemplateServicePort interface {
 	//   - AssetTemplateResponse: The full template data
 	//   - error: If template not found
 	GetTemplateByIdForCacheFallback(ctx ctx.Context, templateId string) (*dtos.AssetTemplateResponse, error)
+
+	// GetFieldVocabulary returns the curated, multi-tenant field vocabulary
+	// grouped by category in a fixed display order, with each field's hint
+	// and the group label resolved to the requested language (en-US fallback).
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - requestContext: Org access data used to union org-scoped entries with the system standard
+	//   - lang: Requested locale (e.g. "pt-BR"); falls back to en-US when empty/unknown
+	//
+	// Returns:
+	//   - FieldVocabularyResponse: Groups (category, label, fields) in fixed order, empty groups omitted
+	//   - error: If the repository query fails
+	GetFieldVocabulary(ctx ctx.Context, requestContext *reqCtx.RequestContext, lang string) (*dtos.FieldVocabularyResponse, error)
 }

@@ -28,6 +28,7 @@ import (
 func InitRepositories() {
 	c := container.GetContainer()
 	c.Provide(collection.New)
+	c.Provide(collection.NewFieldVocabulary)            // Register FieldVocabularyRepository for the authoring UI vocabulary
 	c.Provide(minioProvider.NewTemplateStoragePort)     // Register TemplateStoragePort for script storage
 	c.Provide(redisCache.NewCacheKeyBuilderAdapter)     // Register CacheKeyBuilderPort for Redis key construction
 	logger.Info("[MODULE:AssetTemplates] Repositories registered")

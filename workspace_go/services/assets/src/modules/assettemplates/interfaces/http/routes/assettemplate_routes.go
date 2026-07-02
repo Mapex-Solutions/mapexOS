@@ -62,6 +62,21 @@ func RegisterRoutes(group web.Router, service ports.AssetTemplateServicePort) {
 		Description("Returns the total number of asset templates for the caller's organization, using a cached count.").
 		Returns(&contractsCommon.CounterResponse{})
 
+	/** Field Vocabulary Route */
+
+	// Get the curated, multi-tenant field vocabulary for the authoring UI.
+	// coverage middleware injects org filtering so org-scoped entries union
+	// with the system standard. Read-only; lang selects hint/label locale.
+	fieldVocabularyDto := validation.NewValidation(nil, &dtos.FieldVocabularyQuery{}, nil)
+	r.Get("/field-vocabulary", fieldVocabularyDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.AssetTemplateList),
+		coverageMw.InjectRequestContext(),
+		handlers.GetFieldVocabulary(service),
+	).
+		Summary("Get field vocabulary").
+		Description("Returns the curated, multi-tenant list of canonical dynamic-field names for the asset-template authoring UI, grouped by category in a fixed order. Each field hint and group label are resolved to the requested language (en-US fallback).").
+		Returns(&dtos.FieldVocabularyResponse{})
+
 	/** CRUD Routes */
 
 	// Create a new asset template. coverage middleware populates orgId and pathKey.

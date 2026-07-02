@@ -93,6 +93,18 @@ func (r *fakeRepo) CountDocuments(ctx context.Context, filters model.Map) (int64
 	return 0, nil
 }
 
+// fakeVocabRepo is an inline mock of repositories.FieldVocabularyRepository.
+type fakeVocabRepo struct {
+	listFn func(ctx context.Context, rc *reqCtx.RequestContext) ([]entities.FieldVocabulary, error)
+}
+
+func (r *fakeVocabRepo) ListFieldVocabulary(ctx context.Context, rc *reqCtx.RequestContext) ([]entities.FieldVocabulary, error) {
+	if r.listFn != nil {
+		return r.listFn(ctx, rc)
+	}
+	return nil, nil
+}
+
 type fakeStorage struct {
 	writeScriptsFn  func(ctx context.Context, t *entities.Assettemplate) error
 	deleteScriptsFn func(ctx context.Context, orgId, templateId string) error
@@ -198,12 +210,21 @@ func createTestMetrics() *bootstrap.AssetsMetrics {
 // newTestService wires a service with inline port mocks. Returned mocks let
 // each subtest configure only the call paths it cares about.
 func newTestService() (*AssetTemplateService, *fakeRepo, *fakeStorage, *fakeFanout) {
+	service, repo, storage, fanout, _ := newTestServiceWithVocab()
+	return service, repo, storage, fanout
+}
+
+// newTestServiceWithVocab is the full wiring helper; it additionally exposes
+// the field vocabulary repo mock for the vocabulary tests.
+func newTestServiceWithVocab() (*AssetTemplateService, *fakeRepo, *fakeStorage, *fakeFanout, *fakeVocabRepo) {
 	repo := &fakeRepo{}
 	storage := &fakeStorage{}
 	fanout := &fakeFanout{}
+	vocabRepo := &fakeVocabRepo{}
 
 	deps := di.AssetTemplateServiceDependenciesInjection{
 		AssetTemplateRepo:   repo,
+		FieldVocabularyRepo: vocabRepo,
 		AppCache:            &fakeAppCache{},
 		NatsBus:             fanout,
 		TemplateStoragePort: storage,
@@ -212,7 +233,7 @@ func newTestService() (*AssetTemplateService, *fakeRepo, *fakeStorage, *fakeFano
 		Metrics:             createTestMetrics(),
 	}
 
-	return &AssetTemplateService{deps: deps}, repo, storage, fanout
+	return &AssetTemplateService{deps: deps}, repo, storage, fanout, vocabRepo
 }
 
 /*
@@ -925,6 +946,91 @@ func TestFetchTemplateById(t *testing.T) {
 		}
 		if repo.findByIdCalls != 1 {
 			t.Fatalf("expected FindById to be called exactly once, got %d", repo.findByIdCalls)
+		}
+	})
+}
+
+func TestGetFieldVocabulary(t *testing.T) {
+	// vocabEntries spans three categories out of fixed order (climate,
+	// air-quality, electrical) and intentionally leaves the rest empty, so
+	// the test can assert empty-group omission and fixed ordering.
+	vocabEntries := []entities.FieldVocabulary{
+		{Value: "current", Type: "number", Unit: "A", Category: "electrical",
+			Hint: map[string]string{"en-US": "Electric current", "pt-BR": "Corrente elétrica"}, Enabled: true},
+		{Value: "temperature", Type: "number", Unit: "°C", Category: "climate",
+			Hint: map[string]string{"en-US": "Ambient temperature", "pt-BR": "Temperatura do ambiente"}, Enabled: true},
+		{Value: "co2", Type: "number", Unit: "ppm", Category: "air-quality",
+			Hint: map[string]string{"en-US": "CO2 concentration"}, Enabled: true}, // no pt-BR -> fallback
+	}
+
+	t.Run("should group by category in fixed order, omitting empty groups", func(t *testing.T) {
+		service, _, _, _, vocab := newTestServiceWithVocab()
+		vocab.listFn = func(_ context.Context, _ *reqCtx.RequestContext) ([]entities.FieldVocabulary, error) {
+			return vocabEntries, nil
+		}
+
+		result, err := service.GetFieldVocabulary(context.Background(), &reqCtx.RequestContext{}, "en-US")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if len(result.Groups) != 3 {
+			t.Fatalf("expected 3 non-empty groups, got %d", len(result.Groups))
+		}
+		wantOrder := []string{"climate", "air-quality", "electrical"}
+		for i, want := range wantOrder {
+			if result.Groups[i].Category != want {
+				t.Fatalf("group[%d]: want category %q, got %q", i, want, result.Groups[i].Category)
+			}
+		}
+		if result.Groups[0].Label != "Climate" {
+			t.Fatalf("expected en-US label 'Climate', got %q", result.Groups[0].Label)
+		}
+		if len(result.Groups[0].Fields) != 1 || result.Groups[0].Fields[0].Value != "temperature" {
+			t.Fatalf("expected climate group with temperature field, got %#v", result.Groups[0].Fields)
+		}
+		if result.Groups[0].Fields[0].Hint != "Ambient temperature" {
+			t.Fatalf("expected en-US hint, got %q", result.Groups[0].Fields[0].Hint)
+		}
+	})
+
+	t.Run("should resolve labels and hints to pt-BR with en-US fallback", func(t *testing.T) {
+		service, _, _, _, vocab := newTestServiceWithVocab()
+		vocab.listFn = func(_ context.Context, _ *reqCtx.RequestContext) ([]entities.FieldVocabulary, error) {
+			return vocabEntries, nil
+		}
+
+		result, err := service.GetFieldVocabulary(context.Background(), &reqCtx.RequestContext{}, "pt-BR")
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		// climate label localized
+		if result.Groups[0].Label != "Clima" {
+			t.Fatalf("expected pt-BR label 'Clima', got %q", result.Groups[0].Label)
+		}
+		if result.Groups[0].Fields[0].Hint != "Temperatura do ambiente" {
+			t.Fatalf("expected pt-BR hint, got %q", result.Groups[0].Fields[0].Hint)
+		}
+		// air-quality co2 has no pt-BR hint -> en-US fallback
+		if result.Groups[1].Category != "air-quality" {
+			t.Fatalf("expected air-quality group, got %q", result.Groups[1].Category)
+		}
+		if result.Groups[1].Fields[0].Hint != "CO2 concentration" {
+			t.Fatalf("expected en-US fallback hint, got %q", result.Groups[1].Fields[0].Hint)
+		}
+	})
+
+	t.Run("should return error when repository fails", func(t *testing.T) {
+		service, _, _, _, vocab := newTestServiceWithVocab()
+		vocab.listFn = func(_ context.Context, _ *reqCtx.RequestContext) ([]entities.FieldVocabulary, error) {
+			return nil, errTest
+		}
+
+		result, err := service.GetFieldVocabulary(context.Background(), &reqCtx.RequestContext{}, "")
+		if err == nil {
+			t.Fatal("expected error, got nil")
+		}
+		if result != nil {
+			t.Fatalf("expected nil result, got %#v", result)
 		}
 	})
 }
