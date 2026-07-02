@@ -23,9 +23,22 @@ export interface GenericDrawerProps {
 }
 
 /**
+ * Vertical scroll metrics forwarded from the drawer's internal scroll area
+ * (a subset of Quasar's QScrollArea @scroll payload). Consumers use these to
+ * drive infinite scroll — e.g. load the next page when nearing the bottom.
+ */
+export interface DrawerScrollInfo {
+  verticalPosition: number;
+  verticalPercentage: number;
+  verticalSize: number;
+  verticalContainerSize: number;
+}
+
+/**
  * Emits for GenericDrawer component
  */
 export interface GenericDrawerEmits {
   (e: 'update:modelValue', value: boolean): void;
   (e: 'close'): void;
+  (e: 'scroll', info: DrawerScrollInfo): void;
 }

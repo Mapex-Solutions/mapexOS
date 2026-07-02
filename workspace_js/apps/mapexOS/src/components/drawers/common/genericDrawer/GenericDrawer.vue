@@ -45,7 +45,7 @@
 
     <!-- Scrollable Content -->
     <div class="drawer-content">
-      <q-scroll-area class="fit">
+      <q-scroll-area class="fit" @scroll="onScrollArea">
         <div class="q-pa-md">
           <slot />
         </div>
@@ -68,7 +68,7 @@ defineOptions({
 });
 
 /** TYPE IMPORTS */
-import type { GenericDrawerProps, GenericDrawerEmits } from './interfaces';
+import type { GenericDrawerProps, GenericDrawerEmits, DrawerScrollInfo } from './interfaces';
 
 /** VUE IMPORTS */
 import { onMounted, onBeforeUnmount } from 'vue';
@@ -103,6 +103,15 @@ function handleEscKey(event: KeyboardEvent): void {
 function handleClose(): void {
   emit('update:modelValue', false);
   emit('close');
+}
+
+/**
+ * Forward the internal scroll area's scroll metrics so consumers can drive
+ * infinite scroll on the drawer content.
+ * @param {DrawerScrollInfo} info - Vertical scroll metrics from QScrollArea.
+ */
+function onScrollArea(info: DrawerScrollInfo): void {
+  emit('scroll', info);
 }
 
 /** LIFECYCLE HOOKS */

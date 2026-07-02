@@ -5,6 +5,7 @@ defineOptions({
 
 /** TYPE IMPORTS */
 import type { AssetTemplateResponse } from '@mapexos/schemas';
+import type { DrawerScrollInfo } from '@components/drawers/common/genericDrawer';
 import type { AssetTemplateSelectorDrawerProps, AssetTemplateSelectorDrawerEmits } from './interfaces';
 
 /** VUE IMPORTS */
@@ -41,6 +42,7 @@ const {
   loadingManufacturers,
   loadingModels,
   fetchTemplates,
+  loadMore,
   loadCategories,
   handleCategoryChange,
   handleManufacturerChange,
@@ -169,6 +171,22 @@ function onFilterChange(): void {
 }
 
 /**
+ * Infinite-scroll handler: load the next page when the drawer content is
+ * scrolled near the bottom. loadMore is a no-op when there is no next page
+ * or a fetch is already in flight.
+ *
+ * @param {DrawerScrollInfo} info - Vertical scroll metrics from the drawer.
+ */
+function onScroll(info: DrawerScrollInfo): void {
+  const reachedThreshold =
+    info.verticalPosition + info.verticalContainerSize >= info.verticalSize * 0.8;
+
+  if (reachedThreshold) {
+    void loadMore();
+  }
+}
+
+/**
  * Cancel handler
  */
 function handleCancel(): void {
@@ -184,6 +202,7 @@ function handleCancel(): void {
     icon="description"
     :width="600"
     @update:model-value="emit('update:modelValue', $event)"
+    @scroll="onScroll"
     @close="handleCancel"
   >
     <!-- Info Banner -->
