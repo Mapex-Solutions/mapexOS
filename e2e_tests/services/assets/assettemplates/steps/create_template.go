@@ -32,10 +32,25 @@ type templateCreateResponse struct {
 // from the bag rather than captured in a closure so Compensate stays
 // idempotent.
 func CreateTemplate() saga.Step {
+	return createTemplateStep("assets/assettemplates.CreateTemplate", payloads.SagaTemperatureTemplate)
+}
+
+// CreateTemplateWith is the parametrized variant of CreateTemplate: it POSTs
+// whatever template the injected builder produces (built from c.RunID) and writes
+// the returned id to the same BagKeyTemplateID with the same idempotent Compensate.
+// Journeys that need a non-default template (e.g. the LoRaWAN codec template)
+// call this with the matching payload builder.
+func CreateTemplateWith(build func(runID string) *payloads.AssetTemplateCreateBuilder) saga.Step {
+	return createTemplateStep("assets/assettemplates.CreateTemplateWith", build)
+}
+
+// createTemplateStep is the shared body: build the spec from the injected builder,
+// POST it, publish the id on the bag, and delete it on Compensate.
+func createTemplateStep(name string, build func(runID string) *payloads.AssetTemplateCreateBuilder) saga.Step {
 	return saga.Step{
-		Name: "assets/assettemplates.CreateTemplate",
+		Name: name,
 		Do: func(c *saga.Context) error {
-			spec := payloads.SagaTemperatureTemplate(c.RunID).Build()
+			spec := build(c.RunID).Build()
 			resp, err := c.Clients.Assets.Raw(c.Stdctx, http.MethodPost, "/api/v1/asset_templates", spec)
 			if err != nil {
 				return fmt.Errorf("create template: %w", err)

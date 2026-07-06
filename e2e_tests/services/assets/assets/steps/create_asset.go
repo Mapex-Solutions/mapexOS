@@ -34,6 +34,82 @@ func CreateAsset() saga.Step {
 	return CreateAssetWith(payloads.SagaMqttTemperatureSensor)
 }
 
+// CreateAssetWithLabel POSTs the AssetCreate built by the supplied payload fn and
+// writes the returned id/uuid under LABEL-scoped bag keys (AssetIDKey(label) /
+// AssetUUIDKey(label)) instead of the shared keys, so a journey can provision
+// several assets without their bag entries or Compensate teardown colliding.
+// Compensate deletes only this label's asset (idempotent, 404-tolerant).
+//
+// Reads (bag):
+//   - templateSteps.BagKeyTemplateID   string  set by CreateTemplate*
+//   - rgSteps.BagKeyRouteGroupID       string  set by CreateRouteGroup
+//
+// Writes (bag):
+//   - AssetIDKey(label)    string  Mongo ObjectID hex of the new asset
+//   - AssetUUIDKey(label)  string  device id consumed by presence/ingestion
+func CreateAssetWithLabel(fn PayloadFn, label string) saga.Step {
+	return saga.Step{
+		Name: "assets/assets.CreateAsset[" + label + "]",
+		Do: func(c *saga.Context) error {
+			// Template and route group are optional: a LoRaWAN gateway asset requires
+			// neither (the gateway-only presence journey omits both). Absent keys
+			// resolve to "" and the payload builder decides whether to set the field.
+			templateID := optBagString(c, templateSteps.BagKeyTemplateID)
+			routeGroupID := optBagString(c, rgSteps.BagKeyRouteGroupID)
+			spec := fn(c.RunID, templateID, routeGroupID).Build()
+
+			resp, err := c.Clients.Assets.Raw(c.Stdctx, http.MethodPost, "/api/v1/assets", spec)
+			if err != nil {
+				return fmt.Errorf("create asset %q: %w", label, err)
+			}
+			defer resp.Body.Close()
+			if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+				body, _ := io.ReadAll(resp.Body)
+				return fmt.Errorf("create asset %q: unexpected status %d body=%s", label, resp.StatusCode, string(body))
+			}
+			var out assetCreateResponse
+			if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+				return fmt.Errorf("decode create-asset %q response: %w", label, err)
+			}
+			if out.Data.ID == "" {
+				return fmt.Errorf("create asset %q: empty id in response", label)
+			}
+			c.Set(AssetIDKey(label), out.Data.ID)
+			c.Set(AssetUUIDKey(label), out.Data.AssetUUID)
+			return nil
+		},
+		Compensate: func(c *saga.Context) error {
+			id, ok := c.Get(AssetIDKey(label))
+			if !ok {
+				return nil
+			}
+			resp, err := c.Clients.Assets.Raw(c.Stdctx, http.MethodDelete, "/api/v1/assets/"+id.(string), nil)
+			if err != nil {
+				return fmt.Errorf("delete asset %q: %w", label, err)
+			}
+			defer resp.Body.Close()
+			if resp.StatusCode == http.StatusNotFound {
+				return nil
+			}
+			if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+				return fmt.Errorf("delete asset %q: unexpected status %d", label, resp.StatusCode)
+			}
+			return nil
+		},
+	}
+}
+
+// optBagString returns the string at key, or "" when the key is absent (or not a
+// string). Used for the optional template/route-group inputs.
+func optBagString(c *saga.Context, key string) string {
+	if v, ok := c.Get(key); ok {
+		if s, ok := v.(string); ok {
+			return s
+		}
+	}
+	return ""
+}
+
 // CreateAssetWith POSTs the AssetCreate built by the supplied
 // payload fn. Lets callers pick between password / cert variants
 // without forking the step's HTTP + Compensate logic.

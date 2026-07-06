@@ -152,6 +152,11 @@ type AssetTemplateResponse struct {
 
 	Created *common.NullTime `json:"created,omitempty"`
 	Updated *common.NullTime `json:"updated,omitempty"`
+
+	// Source is derived on read from the presence of a marketplaceGuid on the
+	// record: "marketplace" for an installed template, "local" for a hand-created
+	// one. It lets the UI show an origin icon without inspecting other fields.
+	Source *string `json:"source,omitempty"`
 }
 
 func (d *AssetTemplateResponse) SetCreated(t *common.NullTime) { d.Created = t }

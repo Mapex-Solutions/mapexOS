@@ -106,6 +106,50 @@ func SagaLorawanGatewayKey(runID, templateID, routeGroupID string) *AssetCreateB
 	}
 }
 
+// GatewayEUI derives a stable uppercase 16-hex gateway EUI unique to a (runID,
+// label) pair, so a journey can provision more than one gateway without an EUI
+// collision on the LNS.
+func GatewayEUI(runID, label string) string {
+	return euiFromRunID(runID + "-" + label)
+}
+
+// SagaLorawanGatewayFor returns an eui-mode gateway builder whose EUI (and name)
+// are label-scoped, so several gateways can coexist in one journey. Otherwise
+// identical to SagaLorawanGateway.
+func SagaLorawanGatewayFor(label string) func(runID, templateID, routeGroupID string) *AssetCreateBuilder {
+	return func(runID, templateID, routeGroupID string) *AssetCreateBuilder {
+		b := SagaLorawanGateway(runID, templateID, routeGroupID)
+		b.spec.Name = fmt.Sprintf("saga-lorawan-gateway-%s-%s", label, runID)
+		b.spec.AssetUUID = GatewayEUI(runID, label)
+		gatewayClearOptional(b, templateID, routeGroupID)
+		return b
+	}
+}
+
+// SagaLorawanGatewayKeyFor is the key-mode (Basics Station bearer token) analogue
+// of SagaLorawanGatewayFor. The token stays the shared SagaGatewayAPIKey.
+func SagaLorawanGatewayKeyFor(label string) func(runID, templateID, routeGroupID string) *AssetCreateBuilder {
+	return func(runID, templateID, routeGroupID string) *AssetCreateBuilder {
+		b := SagaLorawanGatewayKey(runID, templateID, routeGroupID)
+		b.spec.Name = fmt.Sprintf("saga-lorawan-gateway-key-%s-%s", label, runID)
+		b.spec.AssetUUID = GatewayEUI(runID, label)
+		gatewayClearOptional(b, templateID, routeGroupID)
+		return b
+	}
+}
+
+// gatewayClearOptional drops the template / route-group fields when they were not
+// supplied, so a gateway-only journey (which omits both — a LoRaWAN gateway asset
+// requires neither) does not send an empty template id or a [""] route-group list.
+func gatewayClearOptional(b *AssetCreateBuilder, templateID, routeGroupID string) {
+	if templateID == "" {
+		b.spec.AssetTemplateID = ""
+	}
+	if routeGroupID == "" {
+		b.spec.RouteGroupIds = nil
+	}
+}
+
 // euiFromRunID maps the runID to a stable uppercase 16-hex EUI (pad/truncate).
 func euiFromRunID(runID string) string {
 	h := strings.ToUpper(hex.EncodeToString([]byte(runID)))

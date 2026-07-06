@@ -81,3 +81,21 @@ const (
 	// the events search window to "after we disconnected".
 	BagKeyMqttDisconnectedAt = "assets.mqttDisconnectedAt"
 )
+
+// Label-scoped bag keys. A journey that provisions more than one asset (e.g. a
+// LoRaWAN gateway + sensor, per transport) gives each asset a label so its id/uuid
+// and its simulator handles live under distinct keys — every asset then has its
+// own Compensate and the asserts target the right one. CreateAssetWithLabel writes
+// AssetIDKey/AssetUUIDKey; the sim-driving steps use the Lorawan* keys.
+func AssetIDKey(label string) string   { return "assets.assetID." + label }
+func AssetUUIDKey(label string) string { return "assets.assetUUID." + label }
+
+// LorawanGatewayKey holds a *lorawansim.Gateway for the labelled gateway.
+func LorawanGatewayKey(label string) string { return "assets.lorawanGateway." + label }
+
+// LorawanSensorKey holds a *lorawansim.Sensor for the labelled sensor.
+func LorawanSensorKey(label string) string { return "assets.lorawanSensor." + label }
+
+// LorawanUplinkSentAtKey holds the time.Time captured just before the labelled
+// sensor's last uplink, scoping the ingestion assert's search window.
+func LorawanUplinkSentAtKey(label string) string { return "assets.lorawanUplinkSentAt." + label }

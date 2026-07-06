@@ -44,10 +44,26 @@ func AssertHealthStatusEventually(want string) saga.Assert {
 // budget. Use when a test deliberately needs a tighter window or
 // debugging a slow stack.
 func AssertHealthStatusEventuallyWithTimeout(want string, timeout, tick time.Duration) saga.Assert {
+	return healthStatusAssert(assetSteps.BagKeyAssetID, want, timeout, tick)
+}
+
+// AssertHealthStatusByLabel is the label-scoped variant: it reads the asset id from
+// AssetIDKey(label) instead of the shared BagKeyAssetID, so a journey that
+// provisions several assets can assert a specific one's health status.
+//
+// Reads (bag):
+//   - assetSteps.AssetIDKey(label)  string  set by CreateAssetWithLabel
+func AssertHealthStatusByLabel(label, want string) saga.Assert {
+	return healthStatusAssert(assetSteps.AssetIDKey(label), want, 15*time.Second, 500*time.Millisecond)
+}
+
+// healthStatusAssert is the shared polling body: it reads the asset id from idKey
+// and polls GET /api/v1/assets/{id} until healthStatus == want or timeout.
+func healthStatusAssert(idKey, want string, timeout, tick time.Duration) saga.Assert {
 	return saga.Assert{
 		Name: fmt.Sprintf("assets/assets.AssertHealthStatus[%s]", want),
 		Check: func(c *saga.Context) error {
-			id := c.MustGetString(assetSteps.BagKeyAssetID)
+			id := c.MustGetString(idKey)
 			deadline := time.Now().Add(timeout)
 			var lastSeen string
 

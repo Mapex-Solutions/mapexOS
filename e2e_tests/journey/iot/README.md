@@ -12,6 +12,9 @@ admin user is signed in (Phase 0 of every journey performs that).
 | mqtt_broker_auth           | phase0..phase3                                       | MQTT lifecycle with password + cert auth and TieredStore cascade              |
 | connectivity_actions_http  | phase1_workflow, phase2_trigger                      | Healthmonitor of HTTP assets → workflow + trigger via route group             |
 | connectivity_actions_mqtt  | phase1_workflow, phase2_trigger                      | Healthmonitor of MQTT assets → workflow + trigger via route group             |
+| lorawan_uplink_ingest      | single                                               | Real GW + sensor uplink → mapexLNS → MapexOS ingestion (raw bytes + metadata), UDP + Basics Station |
+| lorawan_gateway_presence   | single                                               | Gateway asset online via real LNS connect / offline via force, UDP + Basics Station |
+| lorawan_sensor_presence    | single                                               | Sensor asset online by data (uplink) / offline via force, UDP + Basics Station |
 
 Phase folder names carry the descriptor; package names inside them are
 short (`phase0`, `phase1`) so the import alias makes intent obvious.
@@ -43,6 +46,10 @@ them; only `go test -tags=saga` walks the journey folders.
 - assets     reachable at `ASSETS_URL`  (default `http://localhost:5002`)
 - router     reachable at `ROUTER_URL`  (default `http://localhost:5003`)
 - http_gateway reachable at `GATEWAY_URL` (default `http://localhost:5001`)
+- events     reachable at `EVENTS_URL`  (default `http://localhost:5004`) — the lorawan journeys assert ingestion via `/api/v1/events/raw`
+- mapexLNS   (LoRaWAN journeys only) at the UDP + Basics Station ingresses:
+  `LNS_UDP_HOST` (default `127.0.0.1`), `LNS_UDP_PORT` (default `1700`),
+  `LNS_BSTATION_URI` (default `ws://127.0.0.1:8887`)
 - Seed admin user provisioned by the canonical mongodb-init seed
   (`admin@mapex.local` / `mapex@123`)
 

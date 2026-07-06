@@ -1,6 +1,9 @@
 package constants
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 // Service URLs
 var (
@@ -97,9 +100,28 @@ var (
 	RedisDB   = 1 // Use DB 1 for tests
 )
 
+// mapexLNS (LoRaWAN Network Server) ingress endpoints the LoRaWAN e2e drives real
+// gateway traffic at. UDP is the Semtech packet-forwarder ingress; Basics Station
+// is the WebSocket ingress. Always env-overridable for flexibility; localhost by
+// default so a local stack works out of the box.
+var (
+	LNSUDPHost     = getEnv("LNS_UDP_HOST", "127.0.0.1")
+	LNSUDPPort     = getEnvInt("LNS_UDP_PORT", 1700)
+	LNSBStationURI = getEnv("LNS_BSTATION_URI", "ws://127.0.0.1:8887")
+)
+
 func getEnv(key, defaultValue string) string {
 	if value := os.Getenv(key); value != "" {
 		return value
+	}
+	return defaultValue
+}
+
+func getEnvInt(key string, defaultValue int) int {
+	if value := os.Getenv(key); value != "" {
+		if n, err := strconv.Atoi(value); err == nil {
+			return n
+		}
 	}
 	return defaultValue
 }

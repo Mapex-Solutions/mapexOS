@@ -39,36 +39,56 @@ func AssertAuthProjectionGateway(wantFrequencyPlanID string) saga.Assert {
 	return saga.Assert{
 		Name: "assets/assets.AssertAuthProjectionGateway",
 		Check: func(c *saga.Context) error {
-			uuid := c.MustGetString(assetSteps.BagKeyAssetUUID)
-			headers := map[string]string{"X-API-Key": constants.InternalApiKey}
-			resp, err := c.Clients.Assets.RawWithHeaders(c.Stdctx, http.MethodGet, "/internal/asset_auth/"+uuid, nil, headers)
-			if err != nil {
-				return fmt.Errorf("get asset-auth %s: %w", uuid, err)
-			}
-			defer resp.Body.Close()
-			if resp.StatusCode != http.StatusOK {
-				return fmt.Errorf("asset-auth %s: status %d", uuid, resp.StatusCode)
-			}
-			var env gatewayAuthEnvelope
-			if err := json.NewDecoder(resp.Body).Decode(&env); err != nil {
-				return fmt.Errorf("decode asset-auth %s: %w", uuid, err)
-			}
-			if env.Data.Type != "lorawan" {
-				return fmt.Errorf("asset-auth %s: type = %q, want lorawan", uuid, env.Data.Type)
-			}
-			lw := env.Data.Lorawan
-			if lw == nil || lw.Kind != "gateway" {
-				return fmt.Errorf("asset-auth %s: expected lorawan.kind=gateway, got %+v", uuid, lw)
-			}
-			if lw.Gateway == nil {
-				return fmt.Errorf("asset-auth %s: gateway block missing", uuid)
-			}
-			if lw.Gateway.FrequencyPlanID != wantFrequencyPlanID {
-				return fmt.Errorf("asset-auth %s: frequencyPlanId = %q, want %q", uuid, lw.Gateway.FrequencyPlanID, wantFrequencyPlanID)
-			}
-			return nil
+			return checkGatewayAuthProjection(c, c.MustGetString(assetSteps.BagKeyAssetUUID), wantFrequencyPlanID)
 		},
 	}
+}
+
+// AssertAuthProjectionGatewayByLabel is the label-scoped variant: it reads the
+// gateway uuid from AssetUUIDKey(label) instead of the shared BagKeyAssetUUID, so a
+// journey with several gateways can assert a specific one's L3 projection.
+//
+// Reads (bag):
+//   - assetSteps.AssetUUIDKey(label)  string  set by CreateAssetWithLabel
+func AssertAuthProjectionGatewayByLabel(label, wantFrequencyPlanID string) saga.Assert {
+	return saga.Assert{
+		Name: "assets/assets.AssertAuthProjectionGateway[" + label + "]",
+		Check: func(c *saga.Context) error {
+			return checkGatewayAuthProjection(c, c.MustGetString(assetSteps.AssetUUIDKey(label)), wantFrequencyPlanID)
+		},
+	}
+}
+
+// checkGatewayAuthProjection GETs the LNS Gateway Server's L3 source for uuid and
+// asserts type=lorawan + lorawan.kind=gateway + the expected frequency plan.
+func checkGatewayAuthProjection(c *saga.Context, uuid, wantFrequencyPlanID string) error {
+	headers := map[string]string{"X-API-Key": constants.InternalApiKey}
+	resp, err := c.Clients.Assets.RawWithHeaders(c.Stdctx, http.MethodGet, "/internal/asset_auth/"+uuid, nil, headers)
+	if err != nil {
+		return fmt.Errorf("get asset-auth %s: %w", uuid, err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("asset-auth %s: status %d", uuid, resp.StatusCode)
+	}
+	var env gatewayAuthEnvelope
+	if err := json.NewDecoder(resp.Body).Decode(&env); err != nil {
+		return fmt.Errorf("decode asset-auth %s: %w", uuid, err)
+	}
+	if env.Data.Type != "lorawan" {
+		return fmt.Errorf("asset-auth %s: type = %q, want lorawan", uuid, env.Data.Type)
+	}
+	lw := env.Data.Lorawan
+	if lw == nil || lw.Kind != "gateway" {
+		return fmt.Errorf("asset-auth %s: expected lorawan.kind=gateway, got %+v", uuid, lw)
+	}
+	if lw.Gateway == nil {
+		return fmt.Errorf("asset-auth %s: gateway block missing", uuid)
+	}
+	if lw.Gateway.FrequencyPlanID != wantFrequencyPlanID {
+		return fmt.Errorf("asset-auth %s: frequencyPlanId = %q, want %q", uuid, lw.Gateway.FrequencyPlanID, wantFrequencyPlanID)
+	}
+	return nil
 }
 
 // AssertAuthProjectionGatewayCert fetches the LNS Gateway Server's L3 source and
