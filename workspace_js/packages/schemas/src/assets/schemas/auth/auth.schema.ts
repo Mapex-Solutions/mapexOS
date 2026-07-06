@@ -33,16 +33,18 @@ const ZodMqttAuthSchema = z.object({
 	currentCertSerial: z.string().optional(),
 });
 
-// LorawanGatewayAuth: per-gateway frequency plan + auth mode + cert serial (no
-// keys). The LNS Gateway Server builds the radio config + auth from it.
+// LorawanGatewayAuth: per-gateway frequency plan + auth mode + cert serial or
+// api-key hash (no device keys). The LNS Gateway Server builds the radio config +
+// auth from it; apiKeyHash is set in key mode and bcrypt-compared at connect.
 const ZodLorawanGatewayAuthSchema = z.object({
-	authMode: z.enum(['eui', 'cert']),
+	authMode: z.enum(['eui', 'cert', 'key']),
 	frequencyPlanId: StringAndNotBeEmpty,
 	frequencyPlanIds: z.array(z.string()).optional(),
 	latitude: z.number().optional(),
 	longitude: z.number().optional(),
 	altitude: z.number().optional(),
 	currentCertSerial: z.string().optional(),
+	apiKeyHash: z.string().optional(),
 });
 
 // LorawanAuth: kind discriminates a device (identity + profile + encrypted keys,

@@ -74,3 +74,25 @@ export const ZodListResponseSchema = z.object({
 	created: IsStringDateFormat.optional(),
 	updated: IsStringDateFormat.optional(),
 });
+
+/**
+ * List Resolve request schema — resolve a classification slug into an org-scoped
+ * list id, creating the list when absent. Service-to-service (internal). Matches
+ * on (type, slug, orgId); never a global/system list.
+ */
+export const ZodListResolveRequestSchema = z.object({
+	type: StringAndNotBeEmpty,
+	slug: StringAndNotBeEmpty,
+	name: StringAndNotBeEmpty,
+	parentId: IsMongoId.optional(),
+	orgId: IsMongoId,
+	pathKey: IsString.optional(),
+	shareWithChildren: IsBoolean,
+});
+
+/**
+ * List Resolve response schema — the resolved (found-or-created) list id.
+ */
+export const ZodListResolveResponseSchema = z.object({
+	id: StringAndNotBeEmpty,
+});

@@ -56,4 +56,5 @@ export interface ApiInitConfig extends SessionsConfig {
   workflows?: ApiConfig
   vault?: ApiConfig
   workflowPluginsMarketplace?: ApiConfig
+  assetTemplatesMarketplace?: ApiConfig
 }

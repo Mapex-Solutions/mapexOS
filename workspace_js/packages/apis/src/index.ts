@@ -2,10 +2,10 @@
 /**
  * Mapex APIs module
 */
-import type { MapexOSApi, AssetsApi, EventsApi, RouterApi, TriggersApi, HttpGatewayApi, JsExecutorApi, WorkflowsApi, VaultApiMethods, WorkflowPluginsMarketplaceApiMethods } from './services'
+import type { MapexOSApi, AssetsApi, EventsApi, RouterApi, TriggersApi, HttpGatewayApi, JsExecutorApi, WorkflowsApi, VaultApiMethods, WorkflowPluginsMarketplaceApiMethods, AssetTemplatesMarketplaceApiMethods } from './services'
 
 import { ApiInitConfig, SessionsConfig } from './common'
-import { createMapexOSApi, createAssetsApi, createEventsApi, createRouterApi, createTriggersApi, createHttpGatewayApi, createJsExecutorApi, createWorkflowsApi, createVaultApi, createWorkflowPluginsMarketplaceApi } from './services'
+import { createMapexOSApi, createAssetsApi, createEventsApi, createRouterApi, createTriggersApi, createHttpGatewayApi, createJsExecutorApi, createWorkflowsApi, createVaultApi, createWorkflowPluginsMarketplaceApi, createAssetTemplatesMarketplaceApi } from './services'
 
 /**
  * Export all interfaces from the module.
@@ -44,6 +44,7 @@ export function initializeApis(params: ApiInitConfig) {
     workflows?: WorkflowsApi,
     vault?: VaultApiMethods,
     workflowPluginsMarketplace?: WorkflowPluginsMarketplaceApiMethods,
+    assetTemplatesMarketplace?: AssetTemplatesMarketplaceApiMethods,
     /** @deprecated Rule engine removed - stub for compilation */
     rules?: any,
     /** @deprecated Rule engine removed - stub for compilation */
@@ -61,6 +62,7 @@ export function initializeApis(params: ApiInitConfig) {
   if (params.workflows) apis.workflows = createWorkflowsApi(params.workflows, sessionParams)
   if (params.vault) apis.vault = createVaultApi(params.vault, sessionParams)
   if (params.workflowPluginsMarketplace) apis.workflowPluginsMarketplace = createWorkflowPluginsMarketplaceApi(params.workflowPluginsMarketplace, sessionParams)
+  if (params.assetTemplatesMarketplace) apis.assetTemplatesMarketplace = createAssetTemplatesMarketplaceApi(params.assetTemplatesMarketplace, sessionParams)
 
   return apis
 }

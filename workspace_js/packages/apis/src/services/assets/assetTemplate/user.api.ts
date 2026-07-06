@@ -112,6 +112,14 @@ export function userApi(http: AxiosInstance, getToken: GetToken | undefined) {
 				querySchema: ZodFieldVocabularyQuerySchema,
 				responseType: {} as FieldVocabularyResponse,
 			},
+
+			// INSTALL FROM MARKETPLACE - POST /:vendor/:slug/install
+			install: {
+				method: 'POST',
+				path: '/:vendor/:slug/install',
+				pathParams: {} as { vendor: string; slug: string },
+				responseType: {} as AssetTemplateResponse,
+			},
 		},
 	});
 }

@@ -57,10 +57,13 @@ const hexOfLen = (len: number) =>
 /**
  * LoRaWAN gateway config. Mirrors Go LorawanGatewayConfig. Per-gateway frequency
  * plan + connection auth mode (`eui` for UDP registered-EUI, `cert` for Basics
- * Station mTLS). A gateway has no device keys and is never linked to a device.
+ * Station mTLS, `key` for a Basics Station bearer token). A gateway has no device
+ * keys and is never linked to a device. apiKey is request-only (key mode);
+ * optional here and enforced server-side via required_if, like the device keys.
  */
 const ZodLorawanGatewayConfigSchema = z.object({
-	authMode: z.enum(['eui', 'cert']),
+	authMode: z.enum(['eui', 'cert', 'key']),
+	apiKey: hexOfLen(64).optional(),
 	certTTL: ZodCertTTLConfigSchema.optional(),
 	frequencyPlanId: StringAndNotBeEmpty,
 	frequencyPlanIds: z.array(z.string()).optional(),
@@ -194,6 +197,54 @@ export const ZodAssetUUIDSchema = z.object({
  * NOTE: Category and AssetType removed - they come from AssetTemplate
  * Classification (manufacturer, model, category) is managed at template level
  */
+/** Kinds a custom attribute value can take; mirrors the Go AssetAttribute contract. */
+export const ZodAssetAttributeKind = z.enum(['integer', 'string', 'boolean', 'date', 'geo']);
+
+/**
+ * Operator-defined custom attribute. `value` is typed by `kind`; the superRefine
+ * validates value validity per kind. Mirrors the Go AssetAttribute contract.
+ */
+export const ZodAssetAttribute = z
+	.object({
+		label: z.string().min(1).max(64).regex(/^[A-Za-z0-9_.:-]+$/),
+		kind: ZodAssetAttributeKind,
+		value: z.any(),
+		searchable: IsBoolean.default(true),
+	})
+	.superRefine((attr, ctx) => {
+		const bad = (message: string) =>
+			ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['value'], message });
+		switch (attr.kind) {
+			case 'string':
+				if (typeof attr.value !== 'string') bad('value must be a string');
+				break;
+			case 'integer':
+				if (typeof attr.value !== 'number' || !Number.isInteger(attr.value))
+					bad('value must be an integer');
+				break;
+			case 'boolean':
+				if (typeof attr.value !== 'boolean') bad('value must be a boolean');
+				break;
+			case 'date':
+				if (typeof attr.value !== 'string' || Number.isNaN(Date.parse(attr.value)))
+					bad('value must be an ISO-8601 date');
+				break;
+			case 'geo': {
+				const v = attr.value as { lat?: unknown; lon?: unknown } | null;
+				const ok =
+					!!v &&
+					typeof v.lat === 'number' &&
+					typeof v.lon === 'number' &&
+					v.lat >= -90 &&
+					v.lat <= 90 &&
+					v.lon >= -180 &&
+					v.lon <= 180;
+				if (!ok) bad('value must be an object with lat in [-90,90] and lon in [-180,180]');
+				break;
+			}
+		}
+	});
+
 export const ZodAssetCreateSchema = z.object({
 	name: StringAndNotBeEmpty,
 	enabled: IsBoolean,
@@ -201,10 +252,15 @@ export const ZodAssetCreateSchema = z.object({
 	description: IsString.max(500).optional(),
 
 	assetUUID: StringAndNotBeEmpty.min(5),
-	assetTemplateId: IsMongoId,
+	// assetTemplateId + routeGroupIds are required for every asset except a
+	// LoRaWAN gateway; the requirement is enforced by the topology refine below
+	// (a gateway has no data model and routes no telemetry of its own).
+	assetTemplateId: IsMongoId.optional(),
 
 	orgId: IsMongoId,
-	routeGroupIds: z.array(IsMongoId).min(1).max(3),
+	routeGroupIds: z.array(IsMongoId).max(3).optional(),
+
+	attributes: z.array(ZodAssetAttribute).max(20).optional(),
 
 	healthMonitor: ZodHealthMonitorConfigSchema.optional(),
 
@@ -270,12 +326,32 @@ export const ZodAssetCreateSchema = z.object({
 	message: "gateway block (authMode, frequencyPlanId) is required for a LoRaWAN gateway",
 	path: ['protocol', 'lorawan', 'gateway'],
 }).refine((data) => {
+	// Asset template + at least one route group are required unless the asset is
+	// a LoRaWAN gateway (radio infrastructure with no data model, routes no
+	// telemetry of its own).
+	const isGateway = data.protocol.type === 'lorawan' && data.protocol.lorawan?.kind === 'gateway';
+	if (isGateway) {
+		return true;
+	}
+	return !!data.assetTemplateId && (data.routeGroupIds?.length ?? 0) >= 1;
+}, {
+	message: "asset template and at least one route group are required unless the asset is a LoRaWAN gateway",
+	path: ['assetTemplateId'],
+}).refine((data) => {
 	// Validate routeGroupIds uniqueness
-	const uniqueIds = new Set(data.routeGroupIds);
-	return uniqueIds.size === data.routeGroupIds.length;
+	const ids = data.routeGroupIds ?? [];
+	const uniqueIds = new Set(ids);
+	return uniqueIds.size === ids.length;
 }, {
 	message: "RouteGroupIds must be unique (no duplicates)",
 	path: ['routeGroupIds'],
+}).refine((data) => {
+	// Attribute labels must be unique and must not use the reserved mapex. prefix.
+	const labels = (data.attributes ?? []).map((a) => a.label);
+	return new Set(labels).size === labels.length && labels.every((l) => !l.startsWith('mapex.'));
+}, {
+	message: 'Attribute labels must be unique and must not start with "mapex."',
+	path: ['attributes'],
 });
 
 /**
@@ -294,6 +370,8 @@ export const ZodAssetUpdateSchema = z.object({
 
 	orgId: IsMongoId.optional(),
 	routeGroupIds: z.array(IsMongoId).min(1).max(3).optional(),
+
+	attributes: z.array(ZodAssetAttribute).max(20).optional(),
 
 	healthMonitor: ZodHealthMonitorConfigSchema.optional(),
 
@@ -368,6 +446,13 @@ export const ZodAssetUpdateSchema = z.object({
 }, {
 	message: "RouteGroupIds must be unique (no duplicates)",
 	path: ['routeGroupIds'],
+}).refine((data) => {
+	// Attribute labels must be unique and must not use the reserved mapex. prefix.
+	const labels = (data.attributes ?? []).map((a) => a.label);
+	return new Set(labels).size === labels.length && labels.every((l) => !l.startsWith('mapex.'));
+}, {
+	message: 'Attribute labels must be unique and must not start with "mapex."',
+	path: ['attributes'],
 });
 
 /**
@@ -402,6 +487,8 @@ export const ZodAssetResponseSchema = z.object({
 	customerId: StringAndNotBeEmptyOrOptional,
 	routeGroupIds: z.array(IsString).optional(),
 	routeGroupNames: z.array(IsString).optional(),
+
+	attributes: z.array(ZodAssetAttribute).optional(),
 
 	healthMonitor: ZodHealthMonitorConfigSchema.optional(),
 	healthStatus: z.enum(['online', 'offline', 'unknown']).optional(),

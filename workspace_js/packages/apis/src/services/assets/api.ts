@@ -4,8 +4,10 @@ import { createHttp } from '@src/tools';
 
 import { createAssetApi } from './asset';
 import { createAssetTemplateApi } from './assetTemplate';
+import { createMigrationApi } from './migration';
 import { createDeviceApi } from './device';
 import { createMqttCertsApi } from './mqttcerts';
+import { createOtaPlansApi } from './otaPlans';
 
 /**
  * Creates complete Assets Service API with all modules.
@@ -48,15 +50,19 @@ export function createAssetsApi(config: ApiConfig, sessionsConfig?: SessionsConf
 	/** Initialize all modules with the same HTTP instance */
 	const asset = createAssetApi(http, getToken);
 	const assetTemplate = createAssetTemplateApi(http, getToken);
+	const migration = createMigrationApi(http, getToken);
 	const device = createDeviceApi(http);
 	const mqttcerts = createMqttCertsApi(http, getToken);
+	const otaPlans = createOtaPlansApi(http, getToken);
 
 	return {
 		http,          // Expose HTTP instance
 		asset,         // Asset module (includes user + internal methods)
 		assetTemplate, // Asset Template module (CRUD operations)
+		migration,     // Template Migration module (plan list + lifecycle)
 		device,        // Device module (device-side JWT refresh)
 		mqttcerts,     // MQTT cert lifecycle (issue, revoke, list revoked)
+		otaPlans,      // OTA remote firmware update (firmware upload, plans, executions)
 	};
 }
 

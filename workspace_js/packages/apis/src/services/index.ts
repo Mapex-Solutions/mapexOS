@@ -8,3 +8,4 @@ export * from './js_executor';
 export * from './workflows';
 export * from './vault';
 export * from './workflow_plugins_marketplace';
+export * from './asset_templates_marketplace';
