@@ -16,7 +16,19 @@ import (
 // Then calls model.New to initialize a Model[XXX],
 // targeting the configured collection name with default settings.
 func New(m *manager.MongoManager) repositories.ListRepository {
-	mdl := model.New[entities.List](m.GetDatabase(), collectionName, model.Config{})
+	// A resolved list is unique per (type, value, orgId, parentId): the same slug
+	// can exist under different parents (e.g. a "temperature" model under two
+	// manufacturers) and per org, so the compound key includes parentId. This
+	// makes the install's resolve-or-create race-safe (a concurrent create fails
+	// with a duplicate-key error the service treats as "already exists").
+	indexes := []model.IndexDefinition{
+		{
+			Name:   "idx_list_type_value_org_parent_unique",
+			Keys:   map[string]int{"type": 1, "value": 1, "orgId": 1, "parentId": 1},
+			Unique: true,
+		},
+	}
+	mdl := model.New[entities.List](m.GetDatabase(), collectionName, model.Config{Indexes: indexes})
 	return &repository{model: mdl}
 }
 

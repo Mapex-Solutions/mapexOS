@@ -47,6 +47,24 @@ func (s *ListService) CreateList(c ctx.Context, requestContext *reqCtx.RequestCo
 	return resp, nil
 }
 
+// ResolveOrCreateList resolves a classification slug into an org-scoped list id,
+// creating the list when absent. Idempotent and race-safe; never returns or
+// creates a global/system list (the install must not make a locally-installed
+// vendor/category/model public to other orgs).
+func (s *ListService) ResolveOrCreateList(c ctx.Context, req dtos.ListResolveRequest) (dtos.ListResolveResponse, error) {
+	id, err := s.findResolvedListId(c, req)
+	if err != nil {
+		return dtos.ListResolveResponse{}, err
+	}
+	if id == "" {
+		id, err = s.createResolvedList(c, req)
+		if err != nil {
+			return dtos.ListResolveResponse{}, err
+		}
+	}
+	return dtos.ListResolveResponse{Id: id}, nil
+}
+
 // GetListById fetches a single list by id. Returns 404 when the id is
 // unknown. The response is enriched with ParentName / ParentType so the
 // UI can show the parent hierarchy without an extra round-trip.

@@ -10,4 +10,7 @@ type (
 	ListQueryDTO  = v1.ListQuery
 	ListResponse  = v1.ListResponse
 	ListIdDTO     = v1.ListId
+
+	ListResolveRequest  = v1.ListResolveRequest
+	ListResolveResponse = v1.ListResolveResponse
 )

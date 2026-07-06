@@ -91,4 +91,9 @@ type ListServicePort interface {
 	//   - *model.PaginatedResult[dtos.ListResponse]: Paginated lists with DTOs
 	//   - error: Error if query fails
 	GetLists(ctx context.Context, requestContext *reqCtx.RequestContext, query *dtos.ListQueryDTO) (*model.PaginatedResult[dtos.ListResponse], error)
+
+	// ResolveOrCreateList resolves a classification slug into an org-scoped list
+	// id, creating the list when absent (never global/system). Service-to-service,
+	// idempotent and race-safe.
+	ResolveOrCreateList(ctx context.Context, req dtos.ListResolveRequest) (dtos.ListResolveResponse, error)
 }

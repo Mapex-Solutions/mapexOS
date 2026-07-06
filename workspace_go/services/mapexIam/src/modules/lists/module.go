@@ -14,6 +14,7 @@ import (
 	mongoManager "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/manager"
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
+	apikeyMw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/apiKey"
 	authmw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/auth"
 	ctxInjector "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/contextInjector"
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
@@ -63,7 +64,21 @@ func InitInterfaces() {
 		)
 
 		routes.RegisterRoutes(routesV1, service)
-		logger.Info("[MODULE:Lists] Routes registered")
+
+		// Internal routes (service-to-service, API-key protected). The asset
+		// template install resolves org-scoped classification through these.
+		internalApiKey, err := config.GetStringValue("internal_api_key")
+		if err != nil {
+			log.Fatalf("internal_api_key not configured: %v", err)
+		}
+		internalRoutesV1 := app.Group(
+			"/internal/lists",
+			ctxInjector.ContextInjector(ctxTimeout),
+			apikeyMw.ApiKeyAuthMiddleware(internalApiKey),
+		)
+		routes.RegisterInternalListRoutes(internalRoutesV1, service)
+
+		logger.Info("[MODULE:Lists] Routes registered (public + internal)")
 
 	}); err != nil {
 		log.Fatalf("failed to invoke lists module interfaces: %v", err)
