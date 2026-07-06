@@ -77,11 +77,12 @@ var DefaultConfiguration = []config.ConfigDefinition{
 	{Key: "mapexos_url", Env: "MAPEXOS_URL", Type: "string", Default: "http://localhost:5000"},
 
 	/* MinIO/S3 Configuration */
-	{Key: "minio_endpoint", Env: "MINIO_ENDPOINT", Type: "string", Default: "localhost:9000"},
-	{Key: "minio_access_key", Env: "MINIO_ACCESS_KEY", Type: "string", Default: "mapex_admin", Sensitive: true},
-	{Key: "minio_secret_key", Env: "MINIO_SECRET_KEY", Type: "string", Default: "mapex_admin_secret_change_me", Sensitive: true},
-	{Key: "minio_use_ssl", Env: "MINIO_USE_SSL", Type: "bool", Default: false},
-	{Key: "minio_region", Env: "MINIO_REGION", Type: "string", Default: "us-east-1"},
+	{Key: "object_store_endpoint", Env: "OBJECT_STORE_ENDPOINT", Type: "string", Default: "localhost:9000"},
+	{Key: "object_store_access_key", Env: "OBJECT_STORE_ACCESS_KEY", Type: "string", Default: "", Sensitive: true},
+	{Key: "object_store_secret_key", Env: "OBJECT_STORE_SECRET_KEY", Type: "string", Default: "", Sensitive: true},
+	{Key: "object_store_use_ssl", Env: "OBJECT_STORE_USE_SSL", Type: "bool", Default: false},
+	{Key: "object_store_region", Env: "OBJECT_STORE_REGION", Type: "string", Default: "us-east-1"},
+	{Key: "object_store_auth_is_needed", Env: "OBJECT_STORE_AUTH_IS_NEEDED", Type: "bool", Default: true},
 	{Key: "minio_definitions_bucket", Env: "MINIO_DEFINITIONS_BUCKET", Type: "string", Default: "mapex-workflows"},
 
 	/* TieredCache Configuration — Definitions (L0=RAM, L1=Disk, L2=MinIO) */

@@ -12,8 +12,8 @@ var sensitiveKeysForService = []string{
 	"nats_password",
 	"auth_secret",
 	"internal_api_key",
-	"minio_access_key",
-	"minio_secret_key",
+	"object_store_access_key",
+	"object_store_secret_key",
 	"credential_master_key",
 }
 
