@@ -24,19 +24,11 @@ type AssetScriptsResponse struct {
 	ScriptConversion string `json:"scriptConversion"`
 }
 
-/**
- * SHARED READ MODEL (CQRS Pattern)
- *
- * AssetReadModel represents the shared read model for cross-service queries.
- * This is a CQRS Read Model - a denormalized projection optimized for reads.
- *
- * OWNERSHIP: Asset Service (write only)
- * CONSUMERS: MQTT Gateway, Router, JS-Executor, Triggers, Asset Service (read only)
- *
- * Key Format: read:asset:{assetUUID}
- * TTL: 7 days
- * Redis DB: 5 (SharedCache)
- */
+// AssetReadModel is the shared read model for cross-service queries: a
+// denormalized CQRS projection optimized for reads. Owned by the assets service
+// (write only) and consumed read-only by the MQTT gateway, router, js-executor,
+// triggers, and the assets service. Cached at key read:asset:{assetUUID} (Redis
+// DB 5, SharedCache) with a 7-day TTL.
 type AssetReadModel struct {
 	// Identity
 	ID   string `json:"id"`
@@ -81,7 +73,7 @@ type AssetReadModel struct {
 }
 
 // AssetCertificate mirrors the embedded subdoc on the Asset entity.
-// PEM bytes are NEVER persisted or transmitted — only the metadata
+// PEM bytes are never persisted or transmitted — only the metadata
 // fields needed for the broker plugin to validate a cert-mode CONNECT
 // (serial match) and for ops dashboards (expiry).
 type AssetCertificate struct {
@@ -102,7 +94,7 @@ type NoneConfig struct{}
 // Mode semantics:
 //   - AuthType=password: device CONNECTs with username + password on
 //     the plaintext listener; the broker bcrypt-compares against
-//     PasswordHash. The asset MUST have a PasswordHash (set at create
+//     PasswordHash. The asset must have a PasswordHash (set at create
 //     or via subsequent rotation).
 //   - AuthType=cert: device CONNECTs with an mTLS client cert on port
 //     8883; the broker validates the cert serial against CurrentCert.
@@ -110,11 +102,11 @@ type NoneConfig struct{}
 //     cert's Subject CN ("{orgId}:{assetUUID}") as the lookup key.
 //
 // Field asymmetry between request and read-model contexts:
-//   - Password is the plaintext credential, present ONLY on create/update
+//   - Password is the plaintext credential, present only on create/update
 //     request bodies (and only when AuthType=password) — the platform
 //     bcrypt-hashes it before persistence and the response path always
 //     omits it (one-shot delivery, never retrievable).
-//   - PasswordHash is the bcrypt hash, present ONLY on the read-model
+//   - PasswordHash is the bcrypt hash, present only on the read-model
 //     path (AssetReadModel emitted to L2 MinIO / served by the internal
 //     read-model endpoint). The broker plugin consumes it for local
 //     bcrypt-compare on password-mode CONNECTs. Request bodies never
@@ -156,14 +148,14 @@ type CertTTLConfig struct {
 // LorawanConfig carries the LoRaWAN device identity, profile, and (request-only)
 // secret key material for an asset. It mirrors MqttConfig's request/read-model
 // field asymmetry: the plaintext keys (AppKey/NwkKey for OTAA, DevAddr/NwkSKey/
-// AppSKey for ABP) are present ONLY on create/update request bodies. The
+// AppSKey for ABP) are present only on create/update request bodies. The
 // platform envelope-encrypts them with the LoRaWAN device-keys KEK before
 // persistence and the response path always omits them (one-shot delivery, never
 // retrievable). The read-model carries identity + profile only, never keys.
 type LorawanConfig struct {
 	// Kind discriminates a LoRaWAN end-device from a gateway. Both are lorawan
 	// assets: a device carries identity + key material, a gateway carries a
-	// frequency plan + connection auth mode. A gateway is NEVER linked to a
+	// frequency plan + connection auth mode. A gateway is never linked to a
 	// device (LoRaWAN is star-of-stars; they are decoupled).
 	Kind string `json:"kind" validate:"required,oneof=device gateway"`
 
@@ -199,10 +191,14 @@ type LorawanConfig struct {
 // Kind == gateway (the parent gates its presence with required_if).
 type LorawanGatewayConfig struct {
 	// AuthMode is the connection auth: "eui" (UDP, registered-EUI only - the
-	// Semtech UDP protocol allows nothing stronger) or "cert" (Basics Station,
-	// mTLS via the platform PKI). A gateway is always created with auth; there is
-	// no anonymous mode.
-	AuthMode string `json:"authMode" validate:"required,oneof=eui cert"`
+	// Semtech UDP protocol allows nothing stronger), "cert" (Basics Station mTLS
+	// via the platform PKI), or "key" (Basics Station bearer token). A gateway is
+	// always created with auth; there is no anonymous mode.
+	AuthMode string `json:"authMode" validate:"required,oneof=eui cert key"`
+
+	// APIKey is the operator-supplied Basics Station token (authMode=key).
+	// Request-only: the service bcrypt-hashes it and never returns the plaintext.
+	APIKey string `json:"apiKey,omitempty" validate:"required_if=AuthMode key,omitempty,len=64,hexadecimal"`
 
 	// CertTTL is the validity window for the gateway's mTLS cert (authMode=cert),
 	// same shape the MQTT cert-mode devices use. Optional; the platform default
@@ -256,19 +252,40 @@ type AssetUUID struct {
 	AssetUUID string `params:"assetUUID" validate:"required,min=5"`
 }
 
+// AssetAttribute is one operator-defined custom field on an asset. Value is typed
+// by Kind and validated per-kind by the service (struct tags cannot type-switch on
+// an any value). Searchable is reserved for a future search index; it is captured
+// now and not yet used.
+type AssetAttribute struct {
+	Label      string `json:"label" validate:"required,max=64"`
+	Kind       string `json:"kind" validate:"required,oneof=integer string boolean date geo"`
+	Value      any    `json:"value" validate:"required"`
+	Searchable bool   `json:"searchable"`
+}
+
 type AssetCreate struct {
 	Name         string  `json:"name" validate:"required,min=1"`
 	Enabled      bool    `json:"enabled" validate:"required"`
 	DebugEnabled bool    `json:"debugEnabled"`
 	Description  *string `json:"description,omitempty" validate:"omitempty,max=500"`
 
-	AssetUUID       string `json:"assetUUID" validate:"required,min=5"`
-	AssetTemplateID string `json:"assetTemplateId" validate:"required,mongoid"`
+	AssetUUID string `json:"assetUUID" validate:"required,min=5"`
+	// AssetTemplateID is required for every asset except a LoRaWAN gateway; the
+	// requirement is enforced conditionally by the service (a gateway has no data
+	// model), so the tag is only format-checked here.
+	AssetTemplateID string `json:"assetTemplateId" validate:"omitempty,mongoid"`
 
 	// Multi-tenant fields (populated automatically by coverage middleware)
-	OrgID         *model.ObjectId `json:"orgId,omitempty" validate:"omitempty"`
-	PathKey       *string         `json:"pathKey,omitempty" validate:"omitempty"`
-	RouteGroupIds []string        `json:"routeGroupIds" validate:"required,min=1,max=3,dive,mongoid"`
+	OrgID   *model.ObjectId `json:"orgId,omitempty" validate:"omitempty"`
+	PathKey *string         `json:"pathKey,omitempty" validate:"omitempty"`
+	// RouteGroupIds is required for every asset except a LoRaWAN gateway; the
+	// requirement is enforced conditionally by the service (a gateway routes no
+	// telemetry of its own), so the tag is only format-checked here.
+	RouteGroupIds []string `json:"routeGroupIds" validate:"omitempty,min=1,max=3,dive,mongoid"`
+
+	// Attributes are operator-defined custom fields; value validity per kind is
+	// enforced by the service (validateAssetAttributes), not the tag layer.
+	Attributes []AssetAttribute `json:"attributes,omitempty" validate:"omitempty,max=20,dive"`
 
 	HealthMonitor *HealthMonitorConfig `json:"healthMonitor,omitempty"`
 
@@ -291,6 +308,10 @@ type AssetUpdate struct {
 
 	OrgId         *model.ObjectId `json:"orgId,omitempty" validate:"omitempty"`
 	RouteGroupIds *[]string       `json:"routeGroupIds,omitempty" validate:"omitempty,min=1,max=3,dive,mongoid"`
+
+	// Attributes replaces the whole list on update; value validity per kind is
+	// enforced by the service (validateAssetAttributes), not the tag layer.
+	Attributes []AssetAttribute `json:"attributes,omitempty" validate:"omitempty,max=20,dive"`
 
 	HealthMonitor *HealthMonitorConfig `json:"healthMonitor,omitempty"`
 
@@ -365,20 +386,23 @@ type AssetResponse struct {
 	ModelName         *string `json:"modelName,omitempty"`
 	Version           *string `json:"version,omitempty"`
 
-	OrgId         *common.ObjectID `json:"orgId,omitempty"`
-	PathKey       *string          `json:"pathKey,omitempty"`
-	CustomerID    *common.ObjectID `json:"customerId,omitempty"`
-	RouteGroupIds   *[]string  `json:"routeGroupIds,omitempty"`
-	RouteGroupNames *[]string  `json:"routeGroupNames,omitempty"` // Populated from Router service lookup
+	OrgId           *common.ObjectID `json:"orgId,omitempty"`
+	PathKey         *string          `json:"pathKey,omitempty"`
+	CustomerID      *common.ObjectID `json:"customerId,omitempty"`
+	RouteGroupIds   *[]string        `json:"routeGroupIds,omitempty"`
+	RouteGroupNames *[]string        `json:"routeGroupNames,omitempty"` // Populated from Router service lookup
+
+	// Attributes are operator-defined custom fields, returned verbatim.
+	Attributes []AssetAttribute `json:"attributes,omitempty"`
 
 	HealthMonitor         *HealthMonitorConfig `json:"healthMonitor,omitempty"`
 	HealthStatus          *string              `json:"healthStatus,omitempty"`
 	HealthStatusChangedAt *time.Time           `json:"healthStatusChangedAt,omitempty"` // Mongo-persisted flip time; null if never transitioned
 	LastSeenAt            *time.Time           `json:"lastSeenAt,omitempty"`            // Enriched from Redis (real-time)
 
-	Protocol  *ProtocolType    `json:"protocol,omitempty"`
-	Latitude  *float64         `json:"latitude,omitempty"`
-	Longitude *float64         `json:"longitude,omitempty"`
+	Protocol  *ProtocolType `json:"protocol,omitempty"`
+	Latitude  *float64      `json:"latitude,omitempty"`
+	Longitude *float64      `json:"longitude,omitempty"`
 
 	// CurrentCert is the asset's currently-active MQTT device cert
 	// metadata. nil when the asset has no active cert (password-mode
@@ -404,7 +428,7 @@ type GenerateMqttPasswordResponse struct {
 	Password string `json:"password"`
 }
 
-/** TRANSFORMATIONS **/
+/** Transformations */
 
 func (a *AssetCreate) Transform() error {
 	// Validate RouteGroupIds uniqueness (no duplicates)
@@ -445,4 +469,4 @@ func (p *ProtocolType) Transform() error {
 // Note: Internal DTOs (AssetInternalId, AssetInternalUpdate, AssetUUIDParam,
 // AssetScriptsResponse, AssetRouteGroupsResponse) were removed as consuming
 // services now fetch asset data via TieredCache (L2 = MinIO) instead of
-// internal API endpoints. Cache invalidation is handled via NATS FANOUT.
+// internal API endpoints. Cache invalidation is handled via NATS fanout.

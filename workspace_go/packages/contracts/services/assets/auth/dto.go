@@ -76,7 +76,9 @@ type LorawanAuth struct {
 // LorawanGatewayAuth is the slim LoRaWAN gateway block in the projection. The
 // LNS Gateway Server builds the per-gateway frequency plan + connection auth
 // from it; there is no device key material. CurrentCertSerial is set when
-// AuthMode == cert (pinned by the LNS against the presented mTLS cert).
+// AuthMode == cert (pinned by the LNS against the presented mTLS cert);
+// APIKeyHash is set when AuthMode == key (the LNS bcrypt-compares the presented
+// Basics Station token against it).
 type LorawanGatewayAuth struct {
 	AuthMode          string   `json:"authMode"`
 	FrequencyPlanID   string   `json:"frequencyPlanId"`
@@ -85,6 +87,7 @@ type LorawanGatewayAuth struct {
 	Longitude         *float64 `json:"longitude,omitempty"`
 	Altitude          *float64 `json:"altitude,omitempty"`
 	CurrentCertSerial string   `json:"currentCertSerial,omitempty"`
+	APIKeyHash        string   `json:"apiKeyHash,omitempty"`
 }
 
 // EncryptedKeys holds the four envelope fields produced by the goKit envelope
@@ -98,7 +101,7 @@ type EncryptedKeys struct {
 
 // LorawanKeyMaterial is the plaintext shape sealed inside EncryptedKeys. The
 // assets MS marshals it before encryption; the LNS unmarshals it after
-// decryption. Both sides MUST agree on these field names.
+// decryption. Both sides must agree on these field names.
 type LorawanKeyMaterial struct {
 	AppKey  string `json:"appKey,omitempty"`
 	NwkKey  string `json:"nwkKey,omitempty"`

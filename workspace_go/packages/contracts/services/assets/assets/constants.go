@@ -3,7 +3,8 @@
 //
 // These constants describe NATS subjects/streams that cross service
 // boundaries and therefore cannot live inside a service-local
-// application/constants file (see /go-arch §3 + §4 reciprocity).
+// application/constants file: a cross-service contract lives here and is
+// mirrored on the TypeScript side.
 //
 // Ownership: assets service (publisher of asset cache invalidation events).
 // Consumers (Go): router, js-executor, events.
@@ -16,7 +17,7 @@ import (
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 )
 
-// FanoutStreamName is the platform-wide JetStream stream carrying FANOUT
+// FanoutStreamName is the platform-wide JetStream stream carrying fanout
 // broadcast messages (cache invalidation). Shared across all publishers
 // and consumers of any *.fanout.* subject (assets, workflow, future
 // services). Resolved at package init from GO_ENV — e.g. "DEV-MAPEXOS-FANOUT".
@@ -32,7 +33,7 @@ var FanoutStreamName = config.StreamName("FANOUT", "")
 var FanoutAssetSubject = config.Subject("fanout", "asset.invalidate")
 
 // FanoutAssetEventType is the DLQ event-type identifier for consumer
-// failure routing of asset-invalidate FANOUT messages.
+// failure routing of asset-invalidate fanout messages.
 const FanoutAssetEventType = "fanout.asset.invalidate"
 
 // MQTT auth-type enum values. The asset declares which credential the
@@ -64,8 +65,28 @@ const (
 
 // LoRaWAN gateway connection auth modes. "eui" gates a UDP gateway by its
 // registered EUI (the Semtech UDP protocol allows nothing stronger); "cert" is
-// mTLS for a Basics Station gateway via the platform PKI.
+// mTLS for a Basics Station gateway via the platform PKI; "key" is a Basics
+// Station bearer token validated by the LNS.
 const (
 	LorawanGatewayAuthModeEUI  = "eui"
 	LorawanGatewayAuthModeCert = "cert"
+	LorawanGatewayAuthModeKey  = "key"
+)
+
+// Asset custom-attribute kinds. Value is typed by kind and validated by the
+// service (struct tags cannot type-switch on an any value).
+const (
+	AssetAttributeKindInteger = "integer"
+	AssetAttributeKindString  = "string"
+	AssetAttributeKindBoolean = "boolean"
+	AssetAttributeKindDate    = "date"
+	AssetAttributeKindGeo     = "geo"
+)
+
+// Asset custom-attribute limits and the reserved label prefix (platform-owned
+// labels the operator may not set).
+const (
+	AssetAttributeMaxCount       = 20
+	AssetAttributeLabelMaxLen    = 64
+	AssetAttributeReservedPrefix = "mapex."
 )

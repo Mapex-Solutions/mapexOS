@@ -2,20 +2,19 @@ package healthmonitor
 
 import "time"
 
-// PresenceAdvisory is the NATS payload published by the Mosquitto broker
-// plugin (mapex-broker-plugin) on every device CONNECT and DISCONNECT.
-// One subject only:
+// PresenceAdvisory is the NATS payload every edge server publishes on each
+// CONNECT and DISCONNECT, onto the shared subject mapexos.presence.advisory.
+// This is the mapexOS-internal view of the cross-repo edge contract: the
+// producers (the Mosquitto broker plugin for MQTT, the LNS Gateway Server for
+// LoRaWAN gateways) marshal the same shape from mapexGoKit/contracts/presence.
+// Field names + json tags MUST stay in sync with that canonical edge contract.
 //
-//	mapexos.mqtt.presence.advisory
-//
-// The plugin parses the device's MQTT username — encoded as
-// "{orgId}:{assetUUID}" by the platform on asset create — and emits the
-// advisory pre-resolved, so consumers no longer need a username→asset
-// lookup. Event is "connect" or "disconnect"; ReasonCode + ReasonText are
-// populated only on disconnect (clean=0, keepalive_timeout=4,
-// session_taken_over=142, admin_action=152).
+// Event is "connect" or "disconnect"; Protocol is "mqtt" or "lorawan";
+// ReasonCode + ReasonText are populated only on an MQTT disconnect (clean=0,
+// keepalive_timeout=4, session_taken_over=142, admin_action=152).
 type PresenceAdvisory struct {
 	Event      string    `json:"event"`
+	Protocol   string    `json:"protocol,omitempty"`
 	OrgID      string    `json:"orgId"`
 	AssetUUID  string    `json:"assetUUID"`
 	ClientID   string    `json:"clientId,omitempty"`
