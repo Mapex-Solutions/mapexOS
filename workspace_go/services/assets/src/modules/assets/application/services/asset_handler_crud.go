@@ -108,6 +108,29 @@ func (s *AssetService) encryptLorawanKeysIfNeeded(asset *entities.Asset, dto *dt
 	return nil
 }
 
+// hashGatewayAPIKeyIfNeeded bcrypts the operator-supplied Basics Station token
+// onto the entity for key-mode LoRaWAN gateways, mirroring
+// hashMqttPasswordIfNeeded. The plaintext is never persisted; the LNS
+// bcrypt-compares the presented token against the stored hash at connect.
+func (s *AssetService) hashGatewayAPIKeyIfNeeded(asset *entities.Asset, dto *dtos.AssetCreateDTO) error {
+	if asset.Protocol.Type != "lorawan" || dto.Protocol.Lorawan == nil {
+		return nil
+	}
+	gw := dto.Protocol.Lorawan.Gateway
+	if gw == nil || gw.APIKey == "" {
+		return nil
+	}
+	if asset.Protocol.Lorawan == nil || asset.Protocol.Lorawan.Gateway == nil {
+		return nil
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(gw.APIKey), constants.GatewayAPIKeyBcryptCost)
+	if err != nil {
+		return fmt.Errorf("hash gateway api key: %w", err)
+	}
+	asset.Protocol.Lorawan.Gateway.APIKeyHash = string(hash)
+	return nil
+}
+
 // sealLorawanKeys marshals the plaintext key material and envelope-encrypts it
 // with the in-RAM KEK, returning the four envelope fields for persistence.
 func (s *AssetService) sealLorawanKeys(appKey, nwkKey, devAddr, nwkSKey, appSKey string) (entities.EncryptedKeys, error) {
@@ -136,7 +159,7 @@ func (s *AssetService) sealLorawanKeys(appKey, nwkKey, devAddr, nwkSKey, appSKey
 // fanoutCreateSideEffects writes the AssetReadModel to MinIO (L2) and
 // invalidates the org counter cache. The read model includes
 // PasswordHash + CurrentCert, which the mapex-mqtt-broker plugin reads
-// from L2 on every CONNECT — so this write MUST land before the
+// from L2 on every CONNECT — so this write must land before the
 // device's first CONNECT for password / cert auth to work.
 func (s *AssetService) fanoutCreateSideEffects(c ctx.Context, rc *reqCtx.RequestContext, asset *entities.Asset) {
 	s.writeAssetMetadata(c, asset)
@@ -178,12 +201,21 @@ func (s *AssetService) applyAssetPatch(c ctx.Context, assetId *string, dto *dtos
 			}
 			fields["protocol.lorawan.keys"] = sealed
 		}
+		// Gateway key mode: bcrypt the supplied token, mirroring the mqtt password.
+		if lw.Gateway != nil && lw.Gateway.APIKey != "" {
+			hash, err := bcrypt.GenerateFromPassword([]byte(lw.Gateway.APIKey), constants.GatewayAPIKeyBcryptCost)
+			if err != nil {
+				return nil, fmt.Errorf("hash gateway api key: %w", err)
+			}
+			fields["protocol.lorawan.gateway.apiKeyHash"] = string(hash)
+		}
 	}
 	delete(fields, "protocol.lorawan.appKey")
 	delete(fields, "protocol.lorawan.nwkKey")
 	delete(fields, "protocol.lorawan.devAddr")
 	delete(fields, "protocol.lorawan.nwkSKey")
 	delete(fields, "protocol.lorawan.appSKey")
+	delete(fields, "protocol.lorawan.gateway.apiKey")
 	fields["updated"] = time.Now()
 	updated, _ := s.deps.AssetRepo.FindByIdAndUpdate(c, assetId, fields)
 	if updated.ID.IsZero() {
@@ -193,7 +225,7 @@ func (s *AssetService) applyAssetPatch(c ctx.Context, assetId *string, dto *dtos
 }
 
 // fanoutUpdateSideEffects rewrites the MinIO read model, publishes
-// FANOUT invalidation (which evicts the broker plugin's L1 + every
+// fanout invalidation (which evicts the broker plugin's L1 + every
 // other consumer's local cache), and clears health state when the user
 // flipped HealthMonitor.Enabled from true to false.
 func (s *AssetService) fanoutUpdateSideEffects(c ctx.Context, before, after *entities.Asset) {
@@ -203,7 +235,7 @@ func (s *AssetService) fanoutUpdateSideEffects(c ctx.Context, before, after *ent
 }
 
 // tearDownAssetCaches removes everything cached for one asset before
-// the Mongo delete: MinIO read model, FANOUT invalidation broadcast,
+// the Mongo delete: MinIO read model, fanout invalidation broadcast,
 // Redis health state, and the org counter cache. Cache-first order
 // ensures retries after partial failure stay consistent.
 func (s *AssetService) tearDownAssetCaches(c ctx.Context, asset *entities.Asset) {

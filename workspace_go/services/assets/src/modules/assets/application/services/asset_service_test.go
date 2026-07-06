@@ -22,6 +22,7 @@ import (
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/metrics"
 	"github.com/Mapex-Solutions/mapexGoKit/utils/typeconv"
 	"github.com/prometheus/client_golang/prometheus"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // errTest is the sentinel error used by failure-path tests.
@@ -163,10 +164,10 @@ func (r *fakeAssetTemplateRepo) CountDocuments(ctx context.Context, filters mode
 }
 
 type fakeAssetStoragePort struct {
-	writeAssetFn       func(ctx context.Context, a *entities.Asset, templateOrgId string) error
-	deleteAssetFn      func(ctx context.Context, orgId string, assetUUID string) error
-	writeAssetAuthFn   func(ctx context.Context, projection assetsAuthContract.AuthProjection) error
-	deleteAssetAuthFn  func(ctx context.Context, assetUUID string) error
+	writeAssetFn      func(ctx context.Context, a *entities.Asset, templateOrgId string) error
+	deleteAssetFn     func(ctx context.Context, orgId string, assetUUID string) error
+	writeAssetAuthFn  func(ctx context.Context, projection assetsAuthContract.AuthProjection) error
+	deleteAssetAuthFn func(ctx context.Context, assetUUID string) error
 }
 
 func (s *fakeAssetStoragePort) WriteAsset(ctx context.Context, a *entities.Asset, templateOrgId string) error {
@@ -382,12 +383,12 @@ func TestCreateAsset(t *testing.T) {
 		}
 
 		createdAsset := &entities.Asset{
-			ID:        orgObjectId,
-			Name:      "Test Asset",
-			Enabled:   true,
-			AssetUUID: "device-uuid-123",
-			OrgID:     orgObjectId,
-			PathKey:   pathKey,
+			ID:            orgObjectId,
+			Name:          "Test Asset",
+			Enabled:       true,
+			AssetUUID:     "device-uuid-123",
+			OrgID:         orgObjectId,
+			PathKey:       pathKey,
 			RouteGroupIds: []string{"route-group-1"},
 			Protocol: entities.ProtocolType{
 				Type: "mqtt",
@@ -415,6 +416,59 @@ func TestCreateAsset(t *testing.T) {
 		}
 		if createCalls != 1 {
 			t.Fatalf("expected Create to be called exactly once, got %d", createCalls)
+		}
+	})
+
+	t.Run("should hash the gateway api key in key mode without persisting plaintext", func(t *testing.T) {
+		h := newAssetTestService()
+
+		orgId := "68f5bbce1aef22967c3ebb30"
+		requestContext := &reqCtx.RequestContext{
+			OrgContext:     &orgId,
+			OrgContextData: &reqCtx.CoverageOrg{PathKey: "P1234"},
+		}
+
+		const plaintextToken = "00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF"
+		dto := &dtos.AssetCreateDTO{
+			Name:            "GW",
+			Enabled:         true,
+			AssetUUID:       "0102030405060708",
+			AssetTemplateID: "691bb4071e717d77a2430b46",
+			RouteGroupIds:   []string{"route-group-1"},
+			Protocol: assetsContract.ProtocolType{
+				Type: "lorawan",
+				Lorawan: &assetsContract.LorawanConfig{
+					Kind: "gateway",
+					Gateway: &assetsContract.LorawanGatewayConfig{
+						AuthMode:        "key",
+						FrequencyPlanID: "EU_863_870",
+						APIKey:          plaintextToken,
+					},
+				},
+			},
+		}
+
+		var captured *entities.Asset
+		h.repo.createFn = func(_ context.Context, asset *entities.Asset) (*entities.Asset, error) {
+			captured = asset
+			return asset, nil
+		}
+
+		if _, err := h.service.CreateAsset(context.Background(), requestContext, dto); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if captured == nil || captured.Protocol.Lorawan == nil || captured.Protocol.Lorawan.Gateway == nil {
+			t.Fatalf("gateway entity not built: %#v", captured)
+		}
+		hash := captured.Protocol.Lorawan.Gateway.APIKeyHash
+		if hash == "" {
+			t.Fatal("APIKeyHash is empty; the token was not hashed")
+		}
+		if hash == plaintextToken {
+			t.Fatal("APIKeyHash equals the plaintext; the token was not hashed")
+		}
+		if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(plaintextToken)); err != nil {
+			t.Fatalf("stored hash does not match the token: %v", err)
 		}
 	})
 

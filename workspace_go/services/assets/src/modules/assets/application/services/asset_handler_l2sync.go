@@ -20,7 +20,7 @@ import (
 //
 // On either failure the handler publishes a retry hint to the L2
 // writes stream so the in-module fallback consumer can reconcile
-// against current Mongo state once MinIO recovers. FANOUT is NOT
+// against current Mongo state once MinIO recovers. fanout is not
 // emitted here — the caller in asset_handler_sideeffects.go emits
 // it after this returns.
 func (s *AssetService) syncAssetL2(ctx ctx.Context, asset *entities.Asset) string {
@@ -141,7 +141,8 @@ func buildAuthProjection(asset *entities.Asset) assetsAuthContract.AuthProjectio
 
 // buildLorawanGatewayAuth maps the persisted gateway block to its slim
 // projection form. CurrentCertSerial is folded in (empty unless a cert was
-// issued) so the LNS can pin it on a cert-mode mTLS connect.
+// issued) so the LNS can pin it on a cert-mode mTLS connect; APIKeyHash carries
+// the bcrypt token hash the LNS compares on a key-mode connect.
 func buildLorawanGatewayAuth(gw *entities.LorawanGatewayConfig, certSerial string) *assetsAuthContract.LorawanGatewayAuth {
 	if gw == nil {
 		return nil
@@ -154,5 +155,6 @@ func buildLorawanGatewayAuth(gw *entities.LorawanGatewayConfig, certSerial strin
 		Longitude:         gw.Longitude,
 		Altitude:          gw.Altitude,
 		CurrentCertSerial: certSerial,
+		APIKeyHash:        gw.APIKeyHash,
 	}
 }

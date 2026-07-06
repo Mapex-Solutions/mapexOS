@@ -13,7 +13,7 @@ type NoneConfig struct{}
 // CONNECT; AuthType is the platform-declared credential mode the
 // broker enforces (password XOR cert — mutual exclusion).
 //
-// AuthType=password: the asset MUST have a PasswordHash (the bcrypt
+// AuthType=password: the asset must have a PasswordHash (the bcrypt
 // hash, returned to the broker via the read-model). Plaintext
 // password is shown to the operator exactly once at create or
 // change-password time and never retrievable afterwards.
@@ -51,7 +51,7 @@ type ProtocolType struct {
 // envelope-encrypted key material (Keys); a gateway carries the Gateway block
 // (frequency plan + auth mode) and no keys. A gateway is never linked to a device.
 //
-// Device secret key material (OTAA root keys or ABP session keys) is NEVER
+// Device secret key material (OTAA root keys or ABP session keys) is never
 // persisted in plaintext: it is envelope-encrypted with the LoRaWAN device-keys
 // KEK and only the four envelope fields are stored in Keys.
 type LorawanConfig struct {
@@ -74,8 +74,11 @@ type LorawanConfig struct {
 
 // LorawanGatewayConfig is the persistent gateway block: per-gateway frequency
 // plan + connection auth mode. No device key material; never bound to a device.
+// APIKeyHash is the bcrypt hash of the Basics Station token (authMode=key); the
+// plaintext is never persisted.
 type LorawanGatewayConfig struct {
 	AuthMode         string         `bson:"authMode"`
+	APIKeyHash       string         `bson:"apiKeyHash,omitempty"`
 	CertTTL          *CertTTLConfig `bson:"certTTL,omitempty"`
 	FrequencyPlanID  string         `bson:"frequencyPlanId"`
 	FrequencyPlanIDs []string       `bson:"frequencyPlanIds,omitempty"`
@@ -98,12 +101,17 @@ type EncryptedKeys struct {
 //
 // HeartbeatMode chooses how the platform learns the device is alive:
 //   - "" or "implicit" (default): js-executor emits a heartbeat for every
-//     data event the device sends.
+//     data event the device sends. This is the only viable mode for
+//     connectionless protocols (HTTP, and LoRaWAN devices of any class),
+//     where liveness can only be inferred from inbound data.
 //   - "explicit": js-executor SKIPS implicit publishes; the path is chosen
-//     by the asset's protocol — MQTT-protocol assets use NATS broker
-//     presence ($SYS.ACCOUNT.*.CONNECT + $SYS.ACCOUNT.*.DISCONNECT
-//     advisories; no device-side topic to publish); HTTP-protocol assets
-//     POST to /api/v1/heartbeat?ds={dataSourceId} with body { assetUUID }.
+//     by the asset's protocol — MQTT-protocol assets rely on the
+//     mapexMQTTBroker presence plugin, which emits connect/disconnect
+//     advisories to mapexos.presence.advisory (a successful broker auth
+//     is the connect signal — Mosquitto 2.0.x exposes no MOSQ_EVT_CONNECT —
+//     and MOSQ_EVT_DISCONNECT is the disconnect), consumed by the
+//     assets/healthmonitor presence consumer; HTTP-protocol assets POST to
+//     /api/v1/heartbeat?ds={dataSourceId} with body { assetUUID }.
 type HealthMonitorConfig struct {
 	Enabled              bool     `bson:"enabled"`
 	ThresholdMinutes     int      `bson:"thresholdMinutes"`
@@ -133,6 +141,15 @@ func (h *HealthMonitorConfig) ResolvedMode() string {
 	return "implicit"
 }
 
+// AssetAttribute is an operator-defined custom field persisted on the asset.
+// Value is typed by Kind; the service validates value validity before persistence.
+type AssetAttribute struct {
+	Label      string `bson:"label"`
+	Kind       string `bson:"kind"`
+	Value      any    `bson:"value"`
+	Searchable bool   `bson:"searchable"`
+}
+
 type Asset struct {
 	ID           model.ObjectId `bson:"_id,omitempty"`
 	Name         string         `bson:"name"`
@@ -150,6 +167,8 @@ type Asset struct {
 
 	RouteGroupIds []string `bson:"routeGroupIds"`
 
+	Attributes []AssetAttribute `bson:"attributes,omitempty"`
+
 	HealthMonitor         *HealthMonitorConfig `bson:"healthMonitor,omitempty"`
 	HealthStatus          string               `bson:"healthStatus"`
 	HealthStatusChangedAt *time.Time           `bson:"healthStatusChangedAt,omitempty"`
@@ -160,7 +179,7 @@ type Asset struct {
 
 	// CurrentCert is the asset's currently-active mTLS device cert
 	// metadata (one cert per asset; nil = no cert active). PEM bytes
-	// are NEVER persisted — issued certs are returned to the operator
+	// are never persisted — issued certs are returned to the operator
 	// once at issue time and discarded server-side. See the mqttcerts
 	// bounded context for the lifecycle.
 	CurrentCert *AssetCertificate `bson:"currentCert,omitempty"`
@@ -170,7 +189,7 @@ type Asset struct {
 }
 
 // AssetCertificate is the embedded subdoc carrying the active cert's
-// metadata. NEVER carries the PEM — PEM is returned once at issue
+// metadata. Never carries the PEM — PEM is returned once at issue
 // time and discarded. Domain entity: bson-only tags, no json tags,
 // no cross-service contract imports.
 type AssetCertificate struct {
@@ -249,7 +268,7 @@ type AssetWithTemplate struct {
 
 	// Health monitoring — HealthMonitor config + HealthStatusChangedAt flow through
 	// the $lookup aggregation so the List path can surface them on AssetResponse
-	// without an extra query. HealthMonitor MUST be projected so enrichHealthStatusBatch
+	// without an extra query. HealthMonitor must be projected so enrichHealthStatusBatch
 	// can run per-asset (guarded by HealthMonitor.Enabled).
 	HealthMonitor         *HealthMonitorConfig `bson:"healthMonitor,omitempty"`
 	HealthStatus          string               `bson:"healthStatus,omitempty"`
@@ -260,7 +279,7 @@ type AssetWithTemplate struct {
 	Longitude *float64     `bson:"longitude,omitempty"`
 
 	// CurrentCert is projected from the same Mongo field used by the
-	// canonical Asset entity. The list aggregation MUST $project it
+	// canonical Asset entity. The list aggregation must $project it
 	// (see templateProjectStage) — otherwise the response DTO comes
 	// back without currentCert and the UI's "no certificate" warning
 	// fires on every cert-mode row even after a successful issue.

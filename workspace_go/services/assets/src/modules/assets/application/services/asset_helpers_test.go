@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -38,11 +39,23 @@ func (f *fakeRouteGroupPort) GetRouterKindsByIds(ctx context.Context, ids []stri
 
 func boolPtr(b bool) *bool { return &b }
 
+func strPtr(s string) *string { return &s }
+
+// lorawanProtocol builds a LoRaWAN ProtocolType for the given device/gateway
+// kind, used to exercise the heartbeat-mode guard.
+func lorawanProtocol(kind string) *contracts.ProtocolType {
+	return &contracts.ProtocolType{
+		Type:    "lorawan",
+		Lorawan: &contracts.LorawanConfig{Kind: kind},
+	}
+}
+
 func TestValidateHealthMonitorConfig(t *testing.T) {
 	ctx := context.Background()
 
 	tests := []struct {
 		name         string
+		protocol     *contracts.ProtocolType
 		hm           *contracts.HealthMonitorConfig
 		kindsByGroup map[string][]string
 		kindsErr     error
@@ -54,6 +67,26 @@ func TestValidateHealthMonitorConfig(t *testing.T) {
 			name:    "nil HealthMonitor passes",
 			hm:      nil,
 			wantErr: false,
+		},
+		{
+			name:       "LoRaWAN device with explicit heartbeat fails 422",
+			protocol:   lorawanProtocol(contracts.LorawanKindDevice),
+			hm:         &contracts.HealthMonitorConfig{Enabled: boolPtr(true), HeartbeatMode: strPtr("explicit")},
+			wantErr:    true,
+			wantCode:   status.UNPROCESSABLE_ENTITY,
+			wantMsgSub: "implicit heartbeat only",
+		},
+		{
+			name:     "LoRaWAN device with implicit heartbeat passes",
+			protocol: lorawanProtocol(contracts.LorawanKindDevice),
+			hm:       &contracts.HealthMonitorConfig{Enabled: boolPtr(true), HeartbeatMode: strPtr("implicit")},
+			wantErr:  false,
+		},
+		{
+			name:     "LoRaWAN gateway with explicit heartbeat passes (LNS drives presence)",
+			protocol: lorawanProtocol(contracts.LorawanKindGateway),
+			hm:       &contracts.HealthMonitorConfig{Enabled: boolPtr(true), HeartbeatMode: strPtr("explicit")},
+			wantErr:  false,
 		},
 		{
 			name:    "Enabled is nil passes",
@@ -145,7 +178,7 @@ func TestValidateHealthMonitorConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			port := &fakeRouteGroupPort{kindsByGroup: tt.kindsByGroup, kindsErr: tt.kindsErr}
-			err := validateHealthMonitorConfig(ctx, port, tt.hm)
+			err := validateHealthMonitorConfig(ctx, port, tt.protocol, tt.hm)
 
 			if !tt.wantErr {
 				if err != nil {
@@ -250,4 +283,173 @@ func TestConvertHealthMonitor(t *testing.T) {
 	})
 
 	_ = &contracts.HealthMonitorConfig{} // ensure contracts import is used
+}
+
+func TestValidateAssetTopologyRequirements(t *testing.T) {
+	tests := []struct {
+		name       string
+		protocol   *contracts.ProtocolType
+		templateID string
+		routeGroup []string
+		wantErr    bool
+	}{
+		{
+			name:       "lorawan gateway is exempt with no template and no route group",
+			protocol:   lorawanProtocol(contracts.LorawanKindGateway),
+			templateID: "",
+			routeGroup: nil,
+		},
+		{
+			name:       "lorawan device with template and a route group passes",
+			protocol:   lorawanProtocol(contracts.LorawanKindDevice),
+			templateID: "691bb4071e717d77a2430b46",
+			routeGroup: []string{"rg-1"},
+		},
+		{
+			name:       "lorawan device without template denies",
+			protocol:   lorawanProtocol(contracts.LorawanKindDevice),
+			templateID: "",
+			routeGroup: []string{"rg-1"},
+			wantErr:    true,
+		},
+		{
+			name:       "mqtt without a route group denies",
+			protocol:   &contracts.ProtocolType{Type: "mqtt"},
+			templateID: "691bb4071e717d77a2430b46",
+			routeGroup: nil,
+			wantErr:    true,
+		},
+		{
+			name:       "http without template denies",
+			protocol:   &contracts.ProtocolType{Type: "http"},
+			templateID: "",
+			routeGroup: []string{"rg-1"},
+			wantErr:    true,
+		},
+		{
+			name:       "mqtt with template and a route group passes",
+			protocol:   &contracts.ProtocolType{Type: "mqtt"},
+			templateID: "691bb4071e717d77a2430b46",
+			routeGroup: []string{"rg-1"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateAssetTopologyRequirements(tt.protocol, tt.templateID, tt.routeGroup)
+			if tt.wantErr && err == nil {
+				t.Fatal("expected error, got nil")
+			}
+			if !tt.wantErr && err != nil {
+				t.Fatalf("expected nil, got %v", err)
+			}
+		})
+	}
+}
+
+func TestValidateAssetAttributes(t *testing.T) {
+	geo := func(lat, lon any) map[string]any { return map[string]any{"lat": lat, "lon": lon} }
+
+	tests := []struct {
+		name    string
+		attrs   []contracts.AssetAttribute
+		wantErr bool
+	}{
+		{
+			name:    "nil list is valid",
+			attrs:   nil,
+			wantErr: false,
+		},
+		{
+			name: "one of each kind is valid",
+			attrs: []contracts.AssetAttribute{
+				{Label: "site", Kind: contracts.AssetAttributeKindString, Value: "Lisbon-DC1"},
+				{Label: "floor", Kind: contracts.AssetAttributeKindInteger, Value: float64(42)},
+				{Label: "critical", Kind: contracts.AssetAttributeKindBoolean, Value: true},
+				{Label: "installed_at", Kind: contracts.AssetAttributeKindDate, Value: "2027-01-01T00:00:00Z"},
+				{Label: "location", Kind: contracts.AssetAttributeKindGeo, Value: geo(38.7, -9.1)},
+			},
+			wantErr: false,
+		},
+		{
+			name:    "integer with fractional value is rejected",
+			attrs:   []contracts.AssetAttribute{{Label: "n", Kind: contracts.AssetAttributeKindInteger, Value: float64(1.5)}},
+			wantErr: true,
+		},
+		{
+			name:    "integer with string value is rejected",
+			attrs:   []contracts.AssetAttribute{{Label: "n", Kind: contracts.AssetAttributeKindInteger, Value: "abc"}},
+			wantErr: true,
+		},
+		{
+			name:    "date not RFC3339 is rejected",
+			attrs:   []contracts.AssetAttribute{{Label: "d", Kind: contracts.AssetAttributeKindDate, Value: "2027-13-40"}},
+			wantErr: true,
+		},
+		{
+			name:    "geo missing lon is rejected",
+			attrs:   []contracts.AssetAttribute{{Label: "g", Kind: contracts.AssetAttributeKindGeo, Value: map[string]any{"lat": float64(10)}}},
+			wantErr: true,
+		},
+		{
+			name:    "geo lat out of range is rejected",
+			attrs:   []contracts.AssetAttribute{{Label: "g", Kind: contracts.AssetAttributeKindGeo, Value: geo(float64(100), float64(0))}},
+			wantErr: true,
+		},
+		{
+			name:    "boolean with non-bool value is rejected",
+			attrs:   []contracts.AssetAttribute{{Label: "b", Kind: contracts.AssetAttributeKindBoolean, Value: "true"}},
+			wantErr: true,
+		},
+		{
+			name: "duplicate labels are rejected",
+			attrs: []contracts.AssetAttribute{
+				{Label: "dup", Kind: contracts.AssetAttributeKindString, Value: "a"},
+				{Label: "dup", Kind: contracts.AssetAttributeKindString, Value: "b"},
+			},
+			wantErr: true,
+		},
+		{
+			name:    "reserved mapex prefix is rejected",
+			attrs:   []contracts.AssetAttribute{{Label: "mapex.owner", Kind: contracts.AssetAttributeKindString, Value: "x"}},
+			wantErr: true,
+		},
+		{
+			name:    "label with space fails the pattern",
+			attrs:   []contracts.AssetAttribute{{Label: "has space", Kind: contracts.AssetAttributeKindString, Value: "x"}},
+			wantErr: true,
+		},
+		{
+			name:    "unknown kind is rejected",
+			attrs:   []contracts.AssetAttribute{{Label: "x", Kind: "json", Value: "x"}},
+			wantErr: true,
+		},
+		{
+			name:    "more than max attributes is rejected",
+			attrs:   makeAttributes(contracts.AssetAttributeMaxCount + 1),
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateAssetAttributes(tt.attrs)
+			if (err != nil) != tt.wantErr {
+				t.Fatalf("validateAssetAttributes() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+// makeAttributes builds n valid string attributes with unique labels.
+func makeAttributes(n int) []contracts.AssetAttribute {
+	attrs := make([]contracts.AssetAttribute, n)
+	for i := range attrs {
+		attrs[i] = contracts.AssetAttribute{
+			Label: "attr_" + strconv.Itoa(i),
+			Kind:  contracts.AssetAttributeKindString,
+			Value: "v",
+		}
+	}
+	return attrs
 }

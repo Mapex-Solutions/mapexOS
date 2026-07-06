@@ -64,6 +64,39 @@ func TestBuildAuthProjection(t *testing.T) {
 			},
 		},
 		{
+			name: "lorawan gateway key mode projects apiKeyHash",
+			asset: &entities.Asset{
+				AssetUUID: "0807060504030201",
+				Enabled:   true,
+				Protocol: entities.ProtocolType{
+					Type: "lorawan",
+					Lorawan: &entities.LorawanConfig{
+						Kind: "gateway",
+						Gateway: &entities.LorawanGatewayConfig{
+							AuthMode:        "key",
+							FrequencyPlanID: "EU_863_870",
+							APIKeyHash:      "$2a$10$examplehashvalue",
+						},
+					},
+				},
+			},
+			verify: func(t *testing.T, proj assetsAuthContract.AuthProjection) {
+				gw := proj.Lorawan.Gateway
+				if gw == nil {
+					t.Fatalf("gateway sub-block missing")
+				}
+				if gw.AuthMode != "key" {
+					t.Errorf("AuthMode = %q, want key", gw.AuthMode)
+				}
+				if gw.APIKeyHash != "$2a$10$examplehashvalue" {
+					t.Errorf("APIKeyHash = %q, want the stored hash", gw.APIKeyHash)
+				}
+				if gw.CurrentCertSerial != "" {
+					t.Errorf("key mode must not carry a cert serial, got %q", gw.CurrentCertSerial)
+				}
+			},
+		},
+		{
 			name: "lorawan device projects identity + keys and no gateway block",
 			asset: &entities.Asset{
 				AssetUUID: "1122334455667788",

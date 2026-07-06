@@ -63,7 +63,15 @@ func (s *AssetService) CreateAsset(c ctx.Context, requestContext *reqCtx.Request
 	start := time.Now()
 
 	s.bindOrgContextOnCreate(requestContext, dto)
-	if err := validateHealthMonitorConfig(c, s.deps.RouteGroupPort, dto.HealthMonitor); err != nil {
+	if err := validateHealthMonitorConfig(c, s.deps.RouteGroupPort, &dto.Protocol, dto.HealthMonitor); err != nil {
+		s.recordAssetOp("create", "error", start)
+		return nil, err
+	}
+	if err := validateAssetTopologyRequirements(&dto.Protocol, dto.AssetTemplateID, dto.RouteGroupIds); err != nil {
+		s.recordAssetOp("create", "error", start)
+		return nil, err
+	}
+	if err := validateAssetAttributes(dto.Attributes); err != nil {
 		s.recordAssetOp("create", "error", start)
 		return nil, err
 	}
@@ -73,6 +81,10 @@ func (s *AssetService) CreateAsset(c ctx.Context, requestContext *reqCtx.Request
 		return nil, err
 	}
 	if err := s.encryptLorawanKeysIfNeeded(entity, dto); err != nil {
+		s.recordAssetOp("create", "error", start)
+		return nil, err
+	}
+	if err := s.hashGatewayAPIKeyIfNeeded(entity, dto); err != nil {
 		s.recordAssetOp("create", "error", start)
 		return nil, err
 	}
@@ -148,7 +160,7 @@ func (s *AssetService) GetAssetScriptsByUUID(c ctx.Context, assetUUID string) (*
 
 // UpdateAssetById orchestrates a partial update:
 // load the prior entity -> validate health-monitor invariants -> apply the
-// patch in Mongo -> fan out side effects (auth cache, MinIO write, FANOUT
+// patch in Mongo -> fan out side effects (auth cache, MinIO write, fanout
 // invalidation, health-state cleanup on enable->disable) -> build the
 // response DTO. Returns 404 when the target id is unknown.
 func (s *AssetService) UpdateAssetById(c ctx.Context, assetId *string, dto *dtos.AssetUpdateDTO) (*dtos.AssetResponse, error) {
@@ -159,7 +171,15 @@ func (s *AssetService) UpdateAssetById(c ctx.Context, assetId *string, dto *dtos
 		s.recordAssetOp("update", "error", start)
 		return nil, &customErrors.ServerCustomError{Code: httpStatus.NOT_FOUND, Errors: []string{"Asset not found"}}
 	}
-	if err := validateHealthMonitorConfig(c, s.deps.RouteGroupPort, dto.HealthMonitor); err != nil {
+	if err := validateHealthMonitorConfig(c, s.deps.RouteGroupPort, dto.Protocol, dto.HealthMonitor); err != nil {
+		s.recordAssetOp("update", "error", start)
+		return nil, err
+	}
+	if err := validateUpdateAssetTopology(before, dto); err != nil {
+		s.recordAssetOp("update", "error", start)
+		return nil, err
+	}
+	if err := validateAssetAttributes(dto.Attributes); err != nil {
 		s.recordAssetOp("update", "error", start)
 		return nil, err
 	}
@@ -176,7 +196,7 @@ func (s *AssetService) UpdateAssetById(c ctx.Context, assetId *string, dto *dtos
 
 // DeleteAssetById orchestrates asset deletion in cache-first order:
 // load the asset -> clear all caches and Redis health state -> publish
-// FANOUT invalidation -> finally delete from Mongo. The cache-first order
+// fanout invalidation -> finally delete from Mongo. The cache-first order
 // guarantees that any retry after a partial failure repopulates from
 // Mongo (still present) instead of leaving orphan cache entries.
 func (s *AssetService) DeleteAssetById(c ctx.Context, assetId *string) (map[string]bool, error) {
@@ -239,7 +259,6 @@ func (s *AssetService) GetAssetByMqttUsername(c ctx.Context, username string) (*
 	return s.buildSimpleResponse(asset), nil
 }
 
-
 // GetAssetReadModelByUUID returns the denormalized read model used by
 // TieredCache fallback. Repopulates MinIO (L2) before returning so the
 // next request from any consumer hits the cache.
@@ -277,9 +296,9 @@ func (s *AssetService) GetAuthProjectionByUUID(c ctx.Context, assetUUID string) 
 
 // ProcessL2WriteRetry is the public entry point for the L2 sync
 // fallback consumer (asset_l2sync). On receipt of a retry hint the
-// service re-fetches the current asset state from Mongo (NEVER
+// service re-fetches the current asset state from Mongo (never
 // trusting the event payload — a stale event can't overwrite newer
-// data) and re-runs syncAssetL2. On success the existing FANOUT
+// data) and re-runs syncAssetL2. On success the existing fanout
 // invalidation is emitted so caches downstream refresh. Returns an
 // error if Mongo lookup fails — the consumer NAKs and NATS retries
 // with backoff.
@@ -300,7 +319,7 @@ func (s *AssetService) ProcessL2WriteRetry(c ctx.Context, assetId string) error 
 // SetCurrentCert orchestrates the cross-module cert-issued reflection:
 // load the asset by UUID (=before) -> apply the cert subdoc via
 // FindByIdAndUpdate -> reuse fanoutUpdateSideEffects so the L2 +
-// FANOUT cache layers see the new serial. Errors surface NOT_FOUND
+// fanout cache layers see the new serial. Errors surface NOT_FOUND
 // when the asset has been deleted between issue and reflection, and
 // upstream errors otherwise.
 func (s *AssetService) SetCurrentCert(c ctx.Context, assetUUID string, cert ports.AssetCertificateInput) error {
