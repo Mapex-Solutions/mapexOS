@@ -1,6 +1,7 @@
 package payloads
 
 import (
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"strings"
@@ -107,10 +108,10 @@ func SagaLorawanGatewayKey(runID, templateID, routeGroupID string) *AssetCreateB
 }
 
 // GatewayEUI derives a stable uppercase 16-hex gateway EUI unique to a (runID,
-// label) pair, so a journey can provision more than one gateway without an EUI
-// collision on the LNS.
+// label) pair, so a journey can provision more than one gateway — and reruns can
+// coexist — without an EUI collision on the LNS.
 func GatewayEUI(runID, label string) string {
-	return euiFromRunID(runID + "-" + label)
+	return euiFromSeed(runID + "-gw-" + label)
 }
 
 // SagaLorawanGatewayFor returns an eui-mode gateway builder whose EUI (and name)
@@ -121,6 +122,7 @@ func SagaLorawanGatewayFor(label string) func(runID, templateID, routeGroupID st
 		b := SagaLorawanGateway(runID, templateID, routeGroupID)
 		b.spec.Name = fmt.Sprintf("saga-lorawan-gateway-%s-%s", label, runID)
 		b.spec.AssetUUID = GatewayEUI(runID, label)
+		b.spec.HealthMonitor = lorawanHealthMonitor()
 		gatewayClearOptional(b, templateID, routeGroupID)
 		return b
 	}
@@ -133,6 +135,7 @@ func SagaLorawanGatewayKeyFor(label string) func(runID, templateID, routeGroupID
 		b := SagaLorawanGatewayKey(runID, templateID, routeGroupID)
 		b.spec.Name = fmt.Sprintf("saga-lorawan-gateway-key-%s-%s", label, runID)
 		b.spec.AssetUUID = GatewayEUI(runID, label)
+		b.spec.HealthMonitor = lorawanHealthMonitor()
 		gatewayClearOptional(b, templateID, routeGroupID)
 		return b
 	}
@@ -148,6 +151,17 @@ func gatewayClearOptional(b *AssetCreateBuilder, templateID, routeGroupID string
 	if routeGroupID == "" {
 		b.spec.RouteGroupIds = nil
 	}
+}
+
+// euiFromSeed derives a stable, collision-resistant uppercase 16-hex EUI (8 bytes)
+// from an arbitrary seed by hashing it — unlike euiFromRunID (which hex-encodes the
+// raw string and truncates, so it only reflects the seed's first 8 characters), all
+// 16 hex chars here carry entropy, so distinct seeds (labels, reruns) yield distinct
+// EUIs. Deterministic: the same seed always maps to the same EUI, so a sim-driving
+// step can recompute the exact identity an asset was provisioned with.
+func euiFromSeed(seed string) string {
+	sum := sha256.Sum256([]byte(seed))
+	return strings.ToUpper(hex.EncodeToString(sum[:8]))
 }
 
 // euiFromRunID maps the runID to a stable uppercase 16-hex EUI (pad/truncate).

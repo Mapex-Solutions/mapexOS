@@ -25,13 +25,15 @@ const (
 // on the LNS. The JoinLorawanSensor step recomputes the same value to build the
 // matching simulated device.
 func SensorDevEUI(runID, label string) string {
-	return euiFromRunID(runID + "-sensor-" + label)
+	return euiFromSeed(runID + "-sensor-" + label)
 }
 
-// sensorHealthMonitor is the health config every saga sensor carries: implicit
-// mode (each uplink is a presence signal → online), a 10-minute anti-flap floor
-// (the contract's min), and one missed window to flip offline.
-func sensorHealthMonitor() *contracts.HealthMonitorConfig {
+// lorawanHealthMonitor is the health config every saga LoRaWAN asset carries so the
+// healthmonitor tracks its presence (it drops advisories for assets whose
+// HealthMonitor is not active): implicit mode (each uplink / gateway connect is a
+// presence signal → online), a 10-minute anti-flap floor (the contract's min), and
+// one missed window to flip offline. Shared by the sensor and gateway builders.
+func lorawanHealthMonitor() *contracts.HealthMonitorConfig {
 	return &contracts.HealthMonitorConfig{
 		Enabled:          zerovalue.Ptr(true),
 		ThresholdMinutes: zerovalue.Ptr(10),
@@ -63,11 +65,12 @@ func SagaLorawanSensorOTAAFor(label string) func(runID, templateID, routeGroupID
 						Region:     "EU868",
 						Class:      "A",
 						MacVersion: "1.0.3",
+						PhyVersion: "1.0.3",
 						Activation: contracts.LorawanActivationOTAA,
 						AppKey:     SagaSensorAppKey,
 					},
 				},
-				HealthMonitor: sensorHealthMonitor(),
+				HealthMonitor: lorawanHealthMonitor(),
 			},
 		}
 	}
@@ -93,13 +96,14 @@ func SagaLorawanSensorABPFor(label string) func(runID, templateID, routeGroupID 
 						Region:     "EU868",
 						Class:      "A",
 						MacVersion: "1.0.3",
+						PhyVersion: "1.0.3",
 						Activation: contracts.LorawanActivationABP,
 						DevAddr:    SagaSensorDevAddr,
 						NwkSKey:    SagaSensorABPKey,
 						AppSKey:    SagaSensorABPKey,
 					},
 				},
-				HealthMonitor: sensorHealthMonitor(),
+				HealthMonitor: lorawanHealthMonitor(),
 			},
 		}
 	}

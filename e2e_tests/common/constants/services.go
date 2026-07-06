@@ -107,7 +107,7 @@ var (
 var (
 	LNSUDPHost     = getEnv("LNS_UDP_HOST", "127.0.0.1")
 	LNSUDPPort     = getEnvInt("LNS_UDP_PORT", 1700)
-	LNSBStationURI = getEnv("LNS_BSTATION_URI", "ws://127.0.0.1:8887")
+	LNSBStationURI = getEnv("LNS_BSTATION_URI", "ws://127.0.0.1:1887")
 )
 
 func getEnv(key, defaultValue string) string {
