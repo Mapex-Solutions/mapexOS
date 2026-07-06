@@ -167,6 +167,11 @@
 			"currentStepLabel": "Current Step"
 		},
 		"steps": {
+			"groups": {
+				"setup": "Setup",
+				"integration": "Integration",
+				"finalization": "Finalization"
+			},
 			"basicInfo": {
 				"title": "Basic Information",
 				"description": "Name, description and status of the data source"

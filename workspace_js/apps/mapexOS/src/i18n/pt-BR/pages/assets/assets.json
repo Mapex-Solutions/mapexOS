@@ -1,10 +1,10 @@
 {
   "title": "ativos",
-  "description": "gerencie seus ativos IoT e gateways",
+  "description": "gerencie seus ativos e gateways",
   "addButton": "adicionar ativo",
   "info": {
     "title": "O que é um Ativo?",
-    "description": "Um Ativo representa um dispositivo IoT físico ou virtual em sua infraestrutura. Ativos podem ser sensores, gateways, máquinas ou qualquer dispositivo conectado que envia ou recebe dados através do MapexOS.",
+    "description": "Um Ativo é qualquer origem que o MapexOS governa — um dispositivo, gateway, API ou sistema de negócio, físico ou virtual — que envia ou recebe dados pela plataforma.",
     "items": {
       "templates": {
         "title": "Baseado em Templates",
@@ -20,7 +20,7 @@
       },
       "realtime": {
         "title": "Dados em Tempo Real",
-        "text": "Ativos enviam dados de telemetria em tempo real e podem receber comandos instantaneamente"
+        "text": "Ativos transmitem dados em tempo real e podem receber comandos instantaneamente"
       },
       "location": {
         "title": "Geo-Localização",
@@ -41,7 +41,7 @@
     "allStatus": "todos",
     "assetName": "nome do ativo",
     "assetUUID": "UUID do ativo",
-    "deviceUUID": "UUID do dispositivo",
+    "deviceUUID": "UUID do ativo",
     "status": "status",
     "category": "categoria",
     "manufacturer": "fabricante",
@@ -232,9 +232,14 @@
       "title": "A presença MQTT é a fonte da verdade",
       "body": "Para assets com protocolo MQTT, o status online/offline vem direto do broker (CONNECT / DISCONNECT). O monitoramento de saúde fica sempre habilitado — você só escolhe quais grupos de roteamento disparam em cada transição."
     },
+    "gatewayAlwaysOn": "Gateway LoRaWAN — sempre monitorado",
+    "gatewayBanner": {
+      "title": "A presença no LNS é a fonte da verdade",
+      "body": "Para gateways LoRaWAN, o status online/offline vem direto da conexão com o servidor de rede. O monitoramento de saúde fica sempre habilitado — você só escolhe quais grupos de roteamento disparam em cada transição."
+    },
     "sections": {
       "heartbeatSource": "fonte de heartbeat",
-      "heartbeatSourceDescription": "Como a plataforma sabe que o device está vivo.",
+      "heartbeatSourceDescription": "Como a plataforma sabe que o ativo está vivo.",
       "detectionThresholds": "limites de detecção",
       "detectionThresholdsDescription": "Quando a ausência de heartbeats é tratada como offline.",
       "transitionRouting": "roteamento de transições",
@@ -249,14 +254,14 @@
     "heartbeatMode": {
       "label": "fonte de heartbeat",
       "optionImplicit": "implícito (do evento de dados)",
-      "optionExplicit": "explícito (o device envia heartbeat dedicado)",
+      "optionExplicit": "explícito (o ativo envia heartbeat dedicado)",
       "implicitTitle": "Automático via eventos de dados",
-      "implicitHint": "Os heartbeats são derivados automaticamente de cada evento enviado pelo device. Sem integração adicional.",
-      "explicitTitle": "Envie heartbeats a partir do device",
+      "implicitHint": "Os heartbeats são derivados automaticamente de cada evento enviado pelo ativo. Sem integração adicional.",
+      "explicitTitle": "Envie heartbeats a partir do ativo",
       "explicitHint": "O canal correto depende do protocolo do asset — veja os cards abaixo.",
       "mqttCardTitle": "MQTT (automático)",
       "httpCardTitle": "POST no endpoint",
-      "mqttPresenceHint": "A liveness é automática via conexão MQTT do device — a plataforma detecta connect e disconnect pelo próprio broker. Nada a configurar no device além de manter a sessão MQTT aberta.",
+      "mqttPresenceHint": "A liveness é automática via conexão MQTT do ativo — a plataforma detecta connect e disconnect pelo próprio broker. Nada a configurar no ativo além de manter a sessão MQTT aberta.",
       "explicitHttpEndpoint": "Endpoint HTTP: POST /api/v1/heartbeat?ds=<dataSourceId> com body { \"assetUUID\": \"...\" } (mesma autenticação de /api/v1/events)",
       "explicitHttpExample": "Exemplo: curl -X POST 'http://localhost:8080/api/v1/heartbeat?ds=68f5bbce1aef22967c3ebb30' -H 'x-api-key: <sua-key>' -H 'Content-Type: application/json' -d '{\"assetUUID\":\"sensor-temp-001\"}'",
       "copyAria": "copiar para área de transferência",
@@ -281,6 +286,69 @@
       "online": "online",
       "offline": "offline",
       "unknown": "desconhecido"
+    }
+  },
+  "lorawanConfig": {
+    "kind": {
+      "label": "tipo de asset lorawan",
+      "description": "um gateway é infraestrutura de rádio; um sensor é um end-device. cada um abre um conjunto de campos diferente.",
+      "gateway": "gateway",
+      "device": "sensor (device)"
+    },
+    "device": {
+      "joinEui": "join eui",
+      "region": "plano de frequência (região)",
+      "class": "classe do device",
+      "classOptions": {
+        "a": "classe a",
+        "b": "classe b",
+        "c": "classe c"
+      },
+      "macVersion": "versão mac",
+      "phyVersion": "versão phy",
+      "activation": "ativação",
+      "activationOptions": {
+        "otaa": "otaa",
+        "abp": "abp"
+      },
+      "appKey": "app key",
+      "nwkKey": "network key",
+      "devAddr": "endereço do device",
+      "nwkSKey": "network session key",
+      "appSKey": "app session key",
+      "generate": "gerar"
+    },
+    "gateway": {
+      "frequencyPlanId": "plano de frequência",
+      "frequencyPlanIds": "planos de frequência adicionais",
+      "frequencyPlanIdsHint": "a maioria dos gateways usa um único plano; gateways de 16/64 canais podem usar múltiplos na mesma sub-banda",
+      "authMode": "auth de conexão",
+      "authModeOptions": {
+        "cert": "certificado (basics station mtls)",
+        "key": "api key (token basics station)",
+        "eui": "eui (udp)"
+      },
+      "apiKey": "api key do gateway",
+      "certTtlValue": "validade do cert",
+      "certTtlUnit": "unidade",
+      "certTtlUnits": {
+        "day": "dia",
+        "week": "semana",
+        "month": "mês",
+        "year": "ano"
+      }
+    },
+    "eui": {
+      "label": "EUI",
+      "hintGateway": "o eui do gateway — copiado do uuid do asset definido no passo 1",
+      "hintDevice": "o eui do device — copiado do uuid do asset definido no passo 1"
+    },
+    "sections": {
+      "frequency": "plano de frequência",
+      "authentication": "autenticação",
+      "identity": "identidade",
+      "profile": "perfil do device",
+      "activation": "ativação"
     }
   }
 }

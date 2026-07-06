@@ -25,6 +25,9 @@ vi.mock('@composables/i18n', () => ({
       });
     },
   }),
+  useCommonErrors: () => new Proxy({}, {
+    get: (_t: any, prop: string) => ({ value: String(prop) }),
+  }),
 }));
 
 vi.mock('@composables/useLogger', () => ({

@@ -84,6 +84,19 @@ export const DEFAULT_RESOURCE_PERMISSIONS: ResourcePermission[] = [
       { name: 'delete', label: 'Delete', granted: false },
     ],
   },
+  {
+    resource: 'templatemigrations',
+    label: 'Template Migrations',
+    icon: 'sync_alt',
+    enabled: false,
+    actions: [
+      { name: 'list', label: 'List', granted: false },
+      { name: 'create', label: 'Create', granted: false },
+      { name: 'read', label: 'Read', granted: false },
+      { name: 'update', label: 'Update', granted: false },
+      { name: 'delete', label: 'Delete', granted: false },
+    ],
+  },
 
   // ── Data ───────────────────────────────────────────────────────────
   {
@@ -304,7 +317,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
   {
     label: 'Assets',
     icon: 'device_hub',
-    resources: ['assets', 'assettemplates'],
+    resources: ['assets', 'assettemplates', 'templatemigrations'],
   },
   {
     label: 'Data',

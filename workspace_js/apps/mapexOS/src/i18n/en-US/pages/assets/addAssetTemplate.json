@@ -17,6 +17,12 @@
     "currentStep": "Current step"
   },
   "steps": {
+    "groups": {
+      "setup": "Setup",
+      "uplink": "Uplink",
+      "retrieval": "Retrieval",
+      "finalization": "Finalization"
+    },
     "step1": {
       "label": "Basic Information",
       "description": "Add template name, manufacturer, and device details",
@@ -401,7 +407,7 @@
   "tour": {
     "pageOverview": {
       "title": "Asset Template Wizard",
-      "description": "This wizard guides you through creating an Asset Template. An Asset Template defines how MapexOS processes data from your devices (IoT, ERP, Webhooks, APIs, etc.)."
+      "description": "This wizard guides you through creating an Asset Template. An Asset Template defines how MapexOS processes data from your sources (IoT, ERP, Webhooks, APIs, etc.)."
     },
     "stepper": {
       "title": "Navigation Steps",

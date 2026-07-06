@@ -1,0 +1,140 @@
+{
+  "title": "create OTA plan",
+  "description": "roll out a firmware update as a template-to-template migration",
+  "button": "back to plans",
+  "groups": {
+    "setup": "Setup",
+    "rollout": "Rollout",
+    "finalization": "Finalization"
+  },
+  "steps": {
+    "details": {
+      "label": "details",
+      "description": "name and describe the update plan",
+      "title": "Plan details",
+      "subtitle": "Give the rollout a recognizable name and an optional description",
+      "fields": {
+        "name": {
+          "label": "plan name",
+          "placeholder": "e.g. Sensor fleet 2.0.0 rollout",
+          "hint": "shown on the plans list and the detail drawer",
+          "required": "the plan name is required"
+        },
+        "description": {
+          "label": "description",
+          "placeholder": "what changes in this firmware?",
+          "hint": "optional"
+        }
+      }
+    },
+    "schedule": {
+      "label": "schedule",
+      "description": "run immediately or at a future time",
+      "title": "Schedule",
+      "subtitle": "Choose when the rollout starts and when it must finish",
+      "modeLabel": "execution",
+      "options": {
+        "now": "run immediately",
+        "scheduled": "schedule for later"
+      },
+      "field": {
+        "label": "start at",
+        "placeholder": "YYYY-MM-DD HH:mm",
+        "hint": "local time",
+        "required": "pick the start date and time",
+        "future": "the start must be in the future",
+        "close": "close"
+      },
+      "maxTime": {
+        "label": "deadline",
+        "placeholder": "YYYY-MM-DD HH:mm",
+        "hint": "pending devices time out and the rollout closes at this time",
+        "required": "pick the deadline",
+        "afterStart": "the deadline must be after the start"
+      },
+      "pacing": {
+        "title": "Pacing and safety",
+        "ratePerMinute": "dispatch rate (devices/minute)",
+        "abortThresholdPct": "abort threshold (%)",
+        "abortThresholdHint": "abort the rollout when the failure rate crosses this",
+        "abortMinExecuted": "minimum executed before abort"
+      }
+    },
+    "fromTemplate": {
+      "label": "source template",
+      "description": "which template the devices run today",
+      "title": "Source template",
+      "subtitle": "Pick the template the devices are currently on — its devices become the candidates for this rollout"
+    },
+    "devices": {
+      "label": "devices",
+      "description": "select the devices to update",
+      "title": "Devices",
+      "subtitle": "Choose which devices on the source template receive this update"
+    },
+    "toTemplate": {
+      "label": "target template",
+      "description": "the version of record devices migrate to",
+      "title": "Target template",
+      "subtitle": "Pick the template devices switch to after reporting a successful update"
+    },
+    "firmware": {
+      "label": "firmware",
+      "description": "upload the firmware binary"
+    },
+    "review": {
+      "label": "review",
+      "description": "confirm and create"
+    }
+  },
+  "firmware": {
+    "version": "firmware version",
+    "versionHint": "the version the device reports after applying the update",
+    "size": "size",
+    "checksum": "SHA-256",
+    "upload": "upload firmware",
+    "computing": "computing checksum...",
+    "uploading": "uploading...",
+    "confirming": "confirming upload...",
+    "ready": "firmware ready",
+    "uploadSuccess": "firmware uploaded and confirmed",
+    "uploadError": "firmware upload failed",
+    "dropzone": {
+      "title": "drag the .bin here or click to browse",
+      "hint": "one binary per plan — the platform validates size and SHA-256 on finalize"
+    },
+    "fileFacts": {
+      "name": "file",
+      "size": "size",
+      "checksum": "SHA-256"
+    }
+  },
+  "review": {
+    "title": "review your plan",
+    "firmware": "firmware",
+    "devices": "devices",
+    "window": "window",
+    "runNow": "starts immediately",
+    "pacing": "pacing",
+    "deviceCount": "devices selected"
+  },
+  "buttons": {
+    "next": "next",
+    "back": "back",
+    "submit": "create plan"
+  },
+  "validation": {
+    "required": "required",
+    "fileRequired": "select a firmware file",
+    "assetsRequired": "select at least one device"
+  },
+  "messages": {
+    "createSuccess": "OTA plan created",
+    "createError": "failed to create the OTA plan"
+  },
+  "devices": {
+    "selectAll": "select all",
+    "selected": "selected",
+    "noAssets": "no devices on the source template"
+  }
+}

@@ -34,6 +34,31 @@ export const PERMISSIONS = {
     ALL: 'assettemplates.*',
   },
 
+  /** Template migration permissions */
+  TEMPLATE_MIGRATIONS: {
+    LIST: 'templatemigrations.list',
+    CREATE: 'templatemigrations.create',
+    READ: 'templatemigrations.read',
+    UPDATE: 'templatemigrations.update',
+    DELETE: 'templatemigrations.delete',
+    ALL: 'templatemigrations.*',
+  },
+
+  /** OTA plan permissions (remote firmware update) */
+  OTA_PLANS: {
+    LIST: 'ota_plans.list',
+    CREATE: 'ota_plans.create',
+    READ: 'ota_plans.read',
+    UPDATE: 'ota_plans.update',
+    DELETE: 'ota_plans.delete',
+    ALL: 'ota_plans.*',
+  },
+
+  /** OTA firmware permissions */
+  OTA_FIRMWARE: {
+    UPLOAD: 'ota_firmware.upload',
+  },
+
   /** DataSource permissions */
   DATASOURCES: {
     LIST: 'datasources.list',

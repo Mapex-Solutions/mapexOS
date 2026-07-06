@@ -327,6 +327,7 @@ export function useAssetTemplatesTranslations() {
         basicInfo: computed(() => ts('pages.assets.assetTemplates.drawer.sections.basicInfo')),
         configuration: computed(() => ts('pages.assets.assetTemplates.drawer.sections.configuration')),
         scripts: computed(() => ts('pages.assets.assetTemplates.drawer.sections.scripts')),
+        fields: computed(() => ts('pages.assets.assetTemplates.drawer.sections.fields')),
         timestamps: computed(() => ts('pages.assets.assetTemplates.drawer.sections.timestamps')),
       },
 
@@ -344,9 +345,18 @@ export function useAssetTemplatesTranslations() {
         scriptValidator: computed(() => ts('pages.assets.assetTemplates.drawer.fields.scriptValidator')),
         scriptConversion: computed(() => ts('pages.assets.assetTemplates.drawer.fields.scriptConversion')),
         scriptsSummary: computed(() => ts('pages.assets.assetTemplates.drawer.fields.scriptsSummary')),
+        dynamicFields: computed(() => ts('pages.assets.assetTemplates.drawer.fields.dynamicFields')),
+        availableFields: computed(() => ts('pages.assets.assetTemplates.drawer.fields.availableFields')),
         created: computed(() => ts('pages.assets.assetTemplates.drawer.fields.created')),
         updated: computed(() => ts('pages.assets.assetTemplates.drawer.fields.updated')),
       },
+
+      fieldsModal: {
+        dynamicTitle: computed(() => ts('pages.assets.assetTemplates.drawer.fieldsModal.dynamicTitle')),
+        availableTitle: computed(() => ts('pages.assets.assetTemplates.drawer.fieldsModal.availableTitle')),
+      },
+
+      viewFields: computed(() => ts('pages.assets.assetTemplates.drawer.viewFields')),
 
       empty: {
         description: computed(() => ts('pages.assets.assetTemplates.drawer.empty.description')),

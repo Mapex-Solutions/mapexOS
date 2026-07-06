@@ -1,0 +1,140 @@
+{
+  "title": "criar plano OTA",
+  "description": "distribua uma atualização de firmware como uma migração de template para template",
+  "button": "voltar aos planos",
+  "groups": {
+    "setup": "Configuração",
+    "rollout": "Distribuição",
+    "finalization": "Finalização"
+  },
+  "steps": {
+    "details": {
+      "label": "detalhes",
+      "description": "nomeie e descreva o plano de atualização",
+      "title": "Detalhes do plano",
+      "subtitle": "Dê um nome reconhecível à distribuição e uma descrição opcional",
+      "fields": {
+        "name": {
+          "label": "nome do plano",
+          "placeholder": "ex.: Rollout sensores 2.0.0",
+          "hint": "exibido na lista de planos e no painel de detalhes",
+          "required": "o nome do plano é obrigatório"
+        },
+        "description": {
+          "label": "descrição",
+          "placeholder": "o que muda neste firmware?",
+          "hint": "opcional"
+        }
+      }
+    },
+    "schedule": {
+      "label": "agendamento",
+      "description": "execute imediatamente ou em um horário futuro",
+      "title": "Agendamento",
+      "subtitle": "Escolha quando a distribuição começa e até quando deve terminar",
+      "modeLabel": "execução",
+      "options": {
+        "now": "executar imediatamente",
+        "scheduled": "agendar para depois"
+      },
+      "field": {
+        "label": "iniciar em",
+        "placeholder": "AAAA-MM-DD HH:mm",
+        "hint": "horário local",
+        "required": "escolha a data e hora de início",
+        "future": "o início deve estar no futuro",
+        "close": "fechar"
+      },
+      "maxTime": {
+        "label": "prazo final",
+        "placeholder": "AAAA-MM-DD HH:mm",
+        "hint": "dispositivos pendentes expiram e a distribuição encerra neste horário",
+        "required": "escolha o prazo final",
+        "afterStart": "o prazo final deve ser depois do início"
+      },
+      "pacing": {
+        "title": "Ritmo e segurança",
+        "ratePerMinute": "taxa de envio (dispositivos/minuto)",
+        "abortThresholdPct": "limite de aborto (%)",
+        "abortThresholdHint": "aborta a distribuição quando a taxa de falhas cruza este limite",
+        "abortMinExecuted": "mínimo executado antes do aborto"
+      }
+    },
+    "fromTemplate": {
+      "label": "template de origem",
+      "description": "em qual template os dispositivos estão hoje",
+      "title": "Template de origem",
+      "subtitle": "Escolha o template atual dos dispositivos — os dispositivos dele são os candidatos desta distribuição"
+    },
+    "devices": {
+      "label": "dispositivos",
+      "description": "selecione os dispositivos a atualizar",
+      "title": "Dispositivos",
+      "subtitle": "Escolha quais dispositivos do template de origem recebem esta atualização"
+    },
+    "toTemplate": {
+      "label": "template de destino",
+      "description": "a versão de registro para a qual os dispositivos migram",
+      "title": "Template de destino",
+      "subtitle": "Escolha o template para o qual os dispositivos mudam após reportarem a atualização com sucesso"
+    },
+    "firmware": {
+      "label": "firmware",
+      "description": "envie o binário do firmware"
+    },
+    "review": {
+      "label": "revisão",
+      "description": "confirme e crie"
+    }
+  },
+  "firmware": {
+    "version": "versão do firmware",
+    "versionHint": "a versão que o dispositivo reporta após aplicar a atualização",
+    "size": "tamanho",
+    "checksum": "SHA-256",
+    "upload": "enviar firmware",
+    "computing": "calculando checksum...",
+    "uploading": "enviando...",
+    "confirming": "confirmando envio...",
+    "ready": "firmware pronto",
+    "uploadSuccess": "firmware enviado e confirmado",
+    "uploadError": "falha no envio do firmware",
+    "dropzone": {
+      "title": "arraste o .bin aqui ou clique para procurar",
+      "hint": "um binário por plano — a plataforma valida tamanho e SHA-256 na confirmação"
+    },
+    "fileFacts": {
+      "name": "arquivo",
+      "size": "tamanho",
+      "checksum": "SHA-256"
+    }
+  },
+  "review": {
+    "title": "revise seu plano",
+    "firmware": "firmware",
+    "devices": "dispositivos",
+    "window": "janela",
+    "runNow": "inicia imediatamente",
+    "pacing": "ritmo",
+    "deviceCount": "dispositivos selecionados"
+  },
+  "buttons": {
+    "next": "próximo",
+    "back": "voltar",
+    "submit": "criar plano"
+  },
+  "validation": {
+    "required": "obrigatório",
+    "fileRequired": "selecione um arquivo de firmware",
+    "assetsRequired": "selecione pelo menos um dispositivo"
+  },
+  "messages": {
+    "createSuccess": "plano OTA criado",
+    "createError": "falha ao criar o plano OTA"
+  },
+  "devices": {
+    "selectAll": "selecionar todos",
+    "selected": "selecionados",
+    "noAssets": "nenhum dispositivo no template de origem"
+  }
+}

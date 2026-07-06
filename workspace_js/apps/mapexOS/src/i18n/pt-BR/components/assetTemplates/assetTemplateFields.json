@@ -1,0 +1,19 @@
+{
+  "dynamicFields": {
+    "headers": {
+      "field": "Campo",
+      "type": "Tipo",
+      "value": "Caminho do valor",
+      "status": "Status"
+    },
+    "status": {
+      "active": "Ativo",
+      "deprecated": "Descontinuado"
+    },
+    "empty": "Nenhum campo dinâmico definido"
+  },
+  "availableFields": {
+    "empty": "Nenhum campo disponível definido"
+  },
+  "count": "{count} campo(s)"
+}

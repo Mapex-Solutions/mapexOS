@@ -10,58 +10,20 @@
       </div>
     </div>
 
-    <q-banner rounded class="bg-blue-1 text-blue-9 q-mb-md">
-      <template #avatar>
-        <q-icon name="info" color="blue" />
-      </template>
-      {{ t.steps.step4.banner.info.value }}
-    </q-banner>
-
     <div class="row q-col-gutter-md">
-      <div class="col-12">
-        <q-select
-          v-model="localData.protocol"
-          outlined
-          dense
-          emit-value
-          map-options
-          class="rounded-borders"
-          data-testid="asset-protocol-select"
-          :label="t.steps.step4.fields.protocol.label.value + ' *'"
-          :placeholder="t.steps.step4.fields.protocol.placeholder.value"
-          :hint="t.steps.step4.fields.protocol.hint.value"
-          :options="protocolOptions"
-          option-label="label"
-          option-value="value"
-          option-disable="disable"
-          :rules="[(val) => !!val || t.steps.step4.fields.protocol.required.value]"
-          @update:model-value="handleProtocolChange"
-        >
-          <template #prepend>
-            <q-icon name="router" color="primary" />
-          </template>
-        </q-select>
-      </div>
-
       <!-- HTTP Info Banner -->
       <div v-if="localData.protocol === 'HTTP'" class="col-12">
-        <q-banner rounded class="bg-grey-2 text-grey-8">
-          <template #avatar>
-            <q-icon name="http" color="grey-7" />
-          </template>
+        <InfoBanner variant="neutral" icon="http">
           {{ t.steps.step4.banner.httpInfo.value }}
-        </q-banner>
+        </InfoBanner>
       </div>
 
       <!-- MQTT Configuration Fields -->
       <template v-if="localData.protocol === 'MQTT'">
         <div class="col-12">
-          <q-banner rounded class="bg-green-1 text-green-9 q-mb-sm">
-            <template #avatar>
-              <q-icon name="mdi-lan-connect" color="green" />
-            </template>
+          <InfoBanner variant="success" icon="mdi-lan-connect" class="q-mb-sm">
             {{ t.steps.step4.banner.mqttInfo.value }}
-          </q-banner>
+          </InfoBanner>
         </div>
 
         <!-- Client ID — derived from assetUUID, readonly. The broker
@@ -178,23 +140,19 @@
              not enter any field here. -->
         <template v-if="localData.mqttConfig.authType === MQTT_AUTH_TYPE_CERT">
           <div class="col-12">
-            <q-banner rounded class="cert-mode-banner">
-              <template #avatar>
-                <q-icon name="badge" color="primary" />
-              </template>
-              <div class="text-weight-medium q-mb-xs">
-                {{ t.steps.step4.fields.authType.certBannerTitle.value }}
-              </div>
-              <div class="text-caption">
-                {{ t.steps.step4.fields.authType.certBannerBody.value }}
-              </div>
-            </q-banner>
+            <InfoBanner
+              variant="neutral"
+              icon="badge"
+              :title="t.steps.step4.fields.authType.certBannerTitle.value"
+            >
+              {{ t.steps.step4.fields.authType.certBannerBody.value }}
+            </InfoBanner>
           </div>
 
           <!-- Cert TTL — operator-declared validity window. Backend
                clamps to [1 day, 10 years] and persists on the asset
                so each subsequent IssueCert uses the same TTL. -->
-          <div class="col-12 col-md-3">
+          <div class="col-12 col-sm-6">
             <q-input
               v-model.number="certTTLValueModel"
               outlined
@@ -213,7 +171,7 @@
               </template>
             </q-input>
           </div>
-          <div class="col-12 col-md-3">
+          <div class="col-12 col-sm-6">
             <q-select
               v-model="certTTLUnitModel"
               outlined
@@ -238,42 +196,58 @@
         </template>
       </template>
 
-      <!-- Location Fields -->
-      <div class="col-12 col-md-6">
-        <q-input
-          v-model.number="localData.latitude"
-          outlined
-          dense
-          type="number"
-          class="rounded-borders"
-          data-testid="asset-latitude-input"
-          :label="t.steps.step4.fields.latitude.label.value"
-          :placeholder="t.steps.step4.fields.latitude.placeholder.value"
-          :hint="t.steps.step4.fields.latitude.hint.value"
-          @update:model-value="updateValue"
-        >
-          <template #prepend>
-            <q-icon name="place" color="primary" />
-          </template>
-        </q-input>
-      </div>
-      <div class="col-12 col-md-6">
-        <q-input
-          v-model.number="localData.longitude"
-          outlined
-          dense
-          type="number"
-          class="rounded-borders"
-          data-testid="asset-longitude-input"
-          :label="t.steps.step4.fields.longitude.label.value"
-          :placeholder="t.steps.step4.fields.longitude.placeholder.value"
-          :hint="t.steps.step4.fields.longitude.hint.value"
-          @update:model-value="updateValue"
-        >
-          <template #prepend>
-            <q-icon name="place" color="primary" />
-          </template>
-        </q-input>
+      <!-- LoRaWAN Configuration (gateway vs device drives the field set) -->
+      <template v-if="localData.protocol === 'LORAWAN'">
+        <div class="col-12">
+          <LorawanConfigSection
+            :model-value="localData.lorawanConfig"
+            :asset-u-u-i-d="modelValue.assetId"
+            @update:model-value="onLorawanChange"
+          />
+        </div>
+      </template>
+
+      <!-- Location Fields: latitude + longitude always share their own row,
+           independent of how many fields the auth mode rendered above. -->
+      <div class="col-12">
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model.number="localData.latitude"
+              outlined
+              dense
+              type="number"
+              class="rounded-borders"
+              data-testid="asset-latitude-input"
+              :label="t.steps.step4.fields.latitude.label.value"
+              :placeholder="t.steps.step4.fields.latitude.placeholder.value"
+              :hint="t.steps.step4.fields.latitude.hint.value"
+              @update:model-value="updateValue"
+            >
+              <template #prepend>
+                <q-icon name="place" color="primary" />
+              </template>
+            </q-input>
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model.number="localData.longitude"
+              outlined
+              dense
+              type="number"
+              class="rounded-borders"
+              data-testid="asset-longitude-input"
+              :label="t.steps.step4.fields.longitude.label.value"
+              :placeholder="t.steps.step4.fields.longitude.placeholder.value"
+              :hint="t.steps.step4.fields.longitude.hint.value"
+              @update:model-value="updateValue"
+            >
+              <template #prepend>
+                <q-icon name="place" color="primary" />
+              </template>
+            </q-input>
+          </div>
+        </div>
       </div>
     </div>
   </q-form>
@@ -286,17 +260,21 @@ defineOptions({
 
 /** TYPE IMPORTS */
 import type { Step4ConnectivityProps } from './interfaces/Step4Connectivity.interface';
-import type { AssetFormData, SelectOption } from '../../interfaces';
+import type { AssetFormData } from '../../interfaces';
 import type { QForm } from 'quasar';
 
 /** VUE IMPORTS */
 import { ref, computed, reactive, watch } from 'vue';
 
+/** COMPONENTS */
+import { InfoBanner } from '@components/banners';
+import { LorawanConfigSection } from '../LorawanConfigSection';
+
 /** COMPOSABLES */
 import { useAddAssetTranslations } from '@src/composables/i18n/pages/assets/addAsset/useAddAssetTranslations';
 
 /** LOCAL IMPORTS */
-import { INITIAL_MQTT_CONFIG } from '../../constants';
+import { INITIAL_MQTT_CONFIG, INITIAL_LORAWAN_CONFIG } from '../../constants';
 import { MQTT_AUTH_TYPE_PASSWORD, MQTT_AUTH_TYPE_CERT, CERT_TTL_UNITS } from '../../interfaces/createEditAsset.interface';
 import type { CertTTLUnit } from '../../interfaces/createEditAsset.interface';
 
@@ -318,6 +296,11 @@ const localData = reactive({
   latitude: props.modelValue.latitude || null,
   longitude: props.modelValue.longitude || null,
   mqttConfig: { ...INITIAL_MQTT_CONFIG, ...props.modelValue.mqttConfig },
+  lorawanConfig: {
+    ...INITIAL_LORAWAN_CONFIG,
+    ...props.modelValue.lorawanConfig,
+    gateway: { ...INITIAL_LORAWAN_CONFIG.gateway, ...props.modelValue.lorawanConfig?.gateway },
+  },
 });
 
 // Derive the canonical MQTT identity from the operator-chosen asset
@@ -337,6 +320,11 @@ watch(() => props.modelValue, (newVal) => {
   localData.latitude = newVal.latitude || null;
   localData.longitude = newVal.longitude || null;
   localData.mqttConfig = { ...INITIAL_MQTT_CONFIG, ...newVal.mqttConfig };
+  localData.lorawanConfig = {
+    ...INITIAL_LORAWAN_CONFIG,
+    ...newVal.lorawanConfig,
+    gateway: { ...INITIAL_LORAWAN_CONFIG.gateway, ...newVal.lorawanConfig?.gateway },
+  };
   syncDerivedIdentity();
 }, { deep: true });
 
@@ -348,12 +336,6 @@ watch(() => props.modelValue.assetId, () => {
 });
 
 /** COMPUTED */
-const protocolOptions = computed((): SelectOption[] => [
-  { label: t.steps.step4.protocolOptions.http.value, value: 'HTTP', disable: false },
-  { label: t.steps.step4.protocolOptions.mqtt.value, value: 'MQTT', disable: false },
-  { label: t.steps.step4.protocolOptions.lorawan.value, value: 'LoRaWAN', disable: true },
-]);
-
 const authTypeOptions = computed(() => [
   { label: t.steps.step4.fields.authType.optionPassword.value, value: MQTT_AUTH_TYPE_PASSWORD },
   { label: t.steps.step4.fields.authType.optionCert.value, value: MQTT_AUTH_TYPE_CERT },
@@ -439,20 +421,6 @@ const mqttPasswordRules = computed(() => {
 
 /** FUNCTIONS */
 
-/**
- * Handle protocol change event. Resets MQTT-specific state when
- * switching away from MQTT so the create payload does not carry stale
- * username / clientId / password for an HTTP-protocol asset. When
- * switching INTO MQTT re-derive client/username from the asset UUID.
- */
-function handleProtocolChange(): void {
-  if (localData.protocol !== 'MQTT' && localData.protocol !== 'LoRaWAN') {
-    localData.mqttConfig = { ...INITIAL_MQTT_CONFIG };
-  } else if (localData.protocol === 'MQTT') {
-    syncDerivedIdentity();
-  }
-  updateValue();
-}
 
 /**
  * Handle auth-type change. Clears the password field when switching
@@ -477,7 +445,21 @@ function updateValue(): void {
     latitude: localData.latitude,
     longitude: localData.longitude,
     mqttConfig: localData.mqttConfig,
+    lorawanConfig: localData.lorawanConfig,
   });
+}
+
+/**
+ * Merges the LoRaWAN sub-form's emitted config into local state and re-emits.
+ * @param {Partial<typeof localData.lorawanConfig>} value - The updated LoRaWAN config.
+ */
+function onLorawanChange(value: Partial<typeof localData.lorawanConfig>): void {
+  localData.lorawanConfig = {
+    ...localData.lorawanConfig,
+    ...value,
+    gateway: { ...localData.lorawanConfig.gateway, ...value.gateway },
+  };
+  updateValue();
 }
 
 defineExpose({
@@ -487,13 +469,6 @@ defineExpose({
 
 <style scoped lang="scss">
 .rounded-borders {
-  border-radius: var(--mapex-radius-md);
-}
-
-.cert-mode-banner {
-  background: var(--mapex-surface-info-soft, #e3f2fd);
-  color: var(--mapex-text-primary);
-  border: 1px solid var(--mapex-border-info, #90caf9);
   border-radius: var(--mapex-radius-md);
 }
 </style>

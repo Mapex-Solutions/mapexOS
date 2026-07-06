@@ -6,6 +6,9 @@ import type { MenuItem } from '../interfaces';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
+/** COMPONENTS */
+import { MenuTreeItem } from './MenuTreeItem';
+
 /** COMPOSABLES */
 import { useMainLayoutTranslations } from '@composables/i18n';
 
@@ -30,18 +33,6 @@ const t = useMainLayoutTranslations();
  * Current route path
  */
 const currentRoute = computed(() => route.path);
-
-/** FUNCTIONS */
-
-/**
- * Get child menu item icon with fallback
- *
- * @param {MenuItem} child - Child menu item
- * @returns {string} Icon name
- */
-function getChildIcon(child: MenuItem): string {
-  return child.icon || 'chevron_right';
-}
 </script>
 
 <template>
@@ -100,28 +91,12 @@ function getChildIcon(child: MenuItem): string {
             :icon-color="currentRoute.startsWith(item.children[0]?.to ?? '') ? 'primary' : 'grey-7'"
           >
             <q-list class="submenu-list">
-              <template v-for="(child, cIndex) in item.children" :key="cIndex">
-                <!-- Separator -->
-                <q-separator v-if="child.separator" class="q-my-xs" />
-                <!-- Menu Item -->
-                <q-item
-                  v-else
-                  v-ripple
-                  clickable
-                  active-class="active-menu-item"
-                  class="submenu-item"
-                  :to="child.to"
-                  :active="currentRoute === child.to"
-                >
-                  <q-item-section avatar>
-                    <q-icon
-                      :name="getChildIcon(child)"
-                      :color="currentRoute === child.to ? 'primary' : 'grey-7'"
-                    />
-                  </q-item-section>
-                  <q-item-section>{{ child.label }}</q-item-section>
-                </q-item>
-              </template>
+              <MenuTreeItem
+                v-for="(child, cIndex) in item.children"
+                :key="cIndex"
+                :item="child"
+                :current-route="currentRoute"
+              />
             </q-list>
           </q-expansion-item>
 
@@ -149,28 +124,12 @@ function getChildIcon(child: MenuItem): string {
               <q-list class="submenu-list">
                 <q-item-label header>{{ item.label }}</q-item-label>
                 <q-separator class="q-my-sm"/>
-                <template v-for="(child, cIndex) in item.children" :key="cIndex">
-                  <!-- Separator -->
-                  <q-separator v-if="child.separator" class="q-my-xs" />
-                  <!-- Menu Item -->
-                  <q-item
-                    v-else
-                    v-ripple
-                    v-close-popup
-                    clickable
-                    active-class="active-menu-item"
-                    :to="child.to"
-                    :active="currentRoute === child.to"
-                  >
-                    <q-item-section avatar>
-                      <q-icon
-                        :name="getChildIcon(child)"
-                        :color="currentRoute === child.to ? 'primary' : 'grey-7'"
-                      />
-                    </q-item-section>
-                    <q-item-section>{{ child.label }}</q-item-section>
-                  </q-item>
-                </template>
+                <MenuTreeItem
+                  v-for="(child, cIndex) in item.children"
+                  :key="cIndex"
+                  :item="child"
+                  :current-route="currentRoute"
+                />
               </q-list>
             </q-menu>
           </q-item>

@@ -303,6 +303,65 @@
             </div>
           </div>
 
+          <!-- Fields Section -->
+          <div class="section q-mb-md">
+            <div class="section-header">
+              <q-icon name="dataset" color="primary" size="sm" class="q-mr-sm" />
+              <span class="text-subtitle1 text-weight-medium">{{ t.drawer.sections.fields.value }}</span>
+            </div>
+            <q-separator class="q-my-sm" />
+
+            <!-- Dynamic Fields -->
+            <div class="field-row">
+              <div class="field-label">{{ t.drawer.fields.dynamicFields.value }}</div>
+              <div class="field-value row items-center q-gutter-xs">
+                <DetailChip
+                  icon="dataset"
+                  :color="dynamicFieldsCount > 0 ? 'blue' : 'grey'"
+                  size="sm"
+                  :label="String(dynamicFieldsCount)"
+                />
+                <q-btn
+                  v-if="dynamicFieldsCount > 0"
+                  flat
+                  dense
+                  round
+                  size="sm"
+                  icon="visibility"
+                  color="primary"
+                  @click="viewDynamicFields()"
+                >
+                  <AppTooltip :content="t.drawer.viewFields.value" />
+                </q-btn>
+              </div>
+            </div>
+
+            <!-- Available Fields -->
+            <div class="field-row">
+              <div class="field-label">{{ t.drawer.fields.availableFields.value }}</div>
+              <div class="field-value row items-center q-gutter-xs">
+                <DetailChip
+                  icon="list"
+                  :color="availableFieldsCount > 0 ? 'blue' : 'grey'"
+                  size="sm"
+                  :label="String(availableFieldsCount)"
+                />
+                <q-btn
+                  v-if="availableFieldsCount > 0"
+                  flat
+                  dense
+                  round
+                  size="sm"
+                  icon="visibility"
+                  color="primary"
+                  @click="viewAvailableFields()"
+                >
+                  <AppTooltip :content="t.drawer.viewFields.value" />
+                </q-btn>
+              </div>
+            </div>
+          </div>
+
           <!-- Timestamps Section -->
           <div class="section">
             <div class="section-header">
@@ -360,6 +419,18 @@
     :copy-success-message="t.drawer.scriptViewer.copySuccess.value"
     :copy-fail-message="t.drawer.scriptViewer.copyFail.value"
   />
+
+  <!-- Fields Content Modal -->
+  <ContentModal v-model="showFieldsModal" :title="fieldsModalTitle" icon="dataset">
+    <DynamicFieldsTable
+      v-if="fieldsModalKind === 'dynamic'"
+      :fields="template?.dynamicFields ?? []"
+    />
+    <AvailableFieldsList
+      v-else-if="fieldsModalKind === 'available'"
+      :fields="template?.availableFields ?? []"
+    />
+  </ContentModal>
 </template>
 
 <script setup lang="ts">
@@ -377,6 +448,8 @@ import { date } from 'quasar';
 
 /** COMPONENTS */
 import { ScriptViewerDialog } from '@components/dialogs/scriptViewer';
+import { ContentModal } from '@components/dialogs/common';
+import { DynamicFieldsTable, AvailableFieldsList } from '@components/assetTemplates';
 import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 
@@ -410,10 +483,23 @@ const currentScriptTitle = ref('');
 const currentScriptContent = ref('');
 const currentScriptLanguage = ref<'javascript' | 'json'>('javascript');
 
+const showFieldsModal = ref(false);
+const fieldsModalKind = ref<'dynamic' | 'available' | null>(null);
+
 /** COMPUTED */
 const isSystemTemplate = computed(() => {
   return template.value?.isSystem === true;
 });
+
+const dynamicFieldsCount = computed(() => template.value?.dynamicFields?.length ?? 0);
+
+const availableFieldsCount = computed(() => template.value?.availableFields?.length ?? 0);
+
+const fieldsModalTitle = computed(() =>
+  fieldsModalKind.value === 'dynamic'
+    ? t.drawer.fieldsModal.dynamicTitle.value
+    : t.drawer.fieldsModal.availableTitle.value
+);
 
 /** WATCHERS */
 watch(() => props.templateId, (newTemplateId) => {
@@ -546,6 +632,24 @@ function viewScript(scriptKey: string, scriptTitle: string, language: 'javascrip
   currentScriptContent.value = scriptContent;
   currentScriptLanguage.value = language;
   showScriptViewer.value = true;
+}
+
+/**
+ * Open the fields modal showing the template's dynamic fields
+ * @returns {void}
+ */
+function viewDynamicFields(): void {
+  fieldsModalKind.value = 'dynamic';
+  showFieldsModal.value = true;
+}
+
+/**
+ * Open the fields modal showing the template's available fields
+ * @returns {void}
+ */
+function viewAvailableFields(): void {
+  fieldsModalKind.value = 'available';
+  showFieldsModal.value = true;
 }
 
 /**

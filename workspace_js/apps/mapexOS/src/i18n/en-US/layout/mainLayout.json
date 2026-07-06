@@ -32,8 +32,11 @@
   "menu": {
     "dashboard": "Dashboard",
     "assets": "Assets",
-    "assetsItems": "Assets",
-    "assetsTemplate": "Assets Template",
+    "assetsItems": "All Assets",
+    "assetsTemplate": "Template",
+    "assetsMarketplace": "Marketplace",
+    "templateMigrations": "Update Templates",
+    "otaPlans": "OTA Plans",
     "data": "Data",
     "http": "HTTP",
     "automation": "Automation",

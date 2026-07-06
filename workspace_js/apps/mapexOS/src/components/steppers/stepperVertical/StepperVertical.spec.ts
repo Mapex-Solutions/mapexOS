@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { mountWithPlugins } from '@src/test/helpers';
 import StepperVertical from './StepperVertical.vue';
-import type { StepperVerticalProps, StepperVerticalItem } from './interfaces';
+import type { StepperVerticalProps, StepperVerticalItem, StepperRenderRow } from './interfaces';
 
 /** Stub that renders its default slot as a plain div */
 const SlotStub = { template: '<div><slot /></div>' };
@@ -17,6 +17,20 @@ const mockSteps: StepperVerticalItem[] = [
   { title: 'Basic Info', description: 'Enter basic details', icon: 'info' },
   { title: 'Configuration', description: 'Set up config', icon: 'settings' },
   { title: 'Review', description: 'Review and confirm', icon: 'check' },
+];
+
+const groupedSteps: StepperVerticalItem[] = [
+  { title: 'Type', description: 'pick', icon: 'shape' },
+  {
+    title: 'Identification',
+    description: '',
+    icon: 'badge',
+    children: [
+      { title: 'Information', description: 'name and id', icon: 'info' },
+      { title: 'Attributes', description: 'custom fields', icon: 'label' },
+    ],
+  },
+  { title: 'Review', description: 'confirm', icon: 'check' },
 ];
 
 const makeProps = (overrides: Partial<StepperVerticalProps> = {}): StepperVerticalProps => ({
@@ -107,75 +121,100 @@ describe('StepperVertical', () => {
     });
   });
 
+  describe('grouped steps', () => {
+    it('renders a group header and continuous leaf numbering', () => {
+      const wrapper = mountWithPlugins(StepperVertical, {
+        props: makeProps({ steps: groupedSteps }),
+        stubs: quasarStubs,
+      });
+      // Type + Information + Attributes + Review = 4 navigable leaves.
+      expect(wrapper.findAll('.step-item')).toHaveLength(4);
+      // One group header (Identification).
+      expect(wrapper.findAll('.step-group')).toHaveLength(1);
+      const leafNumbers = (wrapper.vm.renderRows as StepperRenderRow[])
+        .filter((r: StepperRenderRow) => r.kind === 'leaf')
+        .map((r: StepperRenderRow) => r.leafNumber);
+      expect(leafNumbers).toEqual([1, 2, 3, 4]);
+    });
+
+    it('stays flat (no group header) when no item has children', () => {
+      const wrapper = mountWithPlugins(StepperVertical, {
+        props: makeProps(),
+        stubs: quasarStubs,
+      });
+      expect(wrapper.findAll('.step-group')).toHaveLength(0);
+    });
+  });
+
   describe('step ID prefix', () => {
-    it('should generate step IDs when stepIdPrefix is provided', () => {
+    it('should generate step IDs (1-based leaf number) when stepIdPrefix is provided', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ stepIdPrefix: 'wizard-step' }),
       });
-      expect(wrapper.vm.getStepAttrs(0)).toEqual({ id: 'wizard-step-1' });
-      expect(wrapper.vm.getStepAttrs(1)).toEqual({ id: 'wizard-step-2' });
-      expect(wrapper.vm.getStepAttrs(2)).toEqual({ id: 'wizard-step-3' });
+      expect(wrapper.vm.getStepAttrs(1)).toEqual({ id: 'wizard-step-1' });
+      expect(wrapper.vm.getStepAttrs(2)).toEqual({ id: 'wizard-step-2' });
+      expect(wrapper.vm.getStepAttrs(3)).toEqual({ id: 'wizard-step-3' });
     });
 
     it('should return empty attrs when stepIdPrefix is not provided', () => {
       const wrapper = mountWithPlugins(StepperVertical, { props: makeProps() });
-      expect(wrapper.vm.getStepAttrs(0)).toEqual({});
+      expect(wrapper.vm.getStepAttrs(1)).toEqual({});
     });
   });
 
-  describe('isActive (creating mode)', () => {
-    it('should mark only the current step as active', () => {
+  describe('isLeafActive (creating mode)', () => {
+    it('should mark only the current leaf as active', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 2 }),
       });
-      expect(wrapper.vm.isActive(0)).toBe(false);
-      expect(wrapper.vm.isActive(1)).toBe(true);
-      expect(wrapper.vm.isActive(2)).toBe(false);
+      expect(wrapper.vm.isLeafActive(1)).toBe(false);
+      expect(wrapper.vm.isLeafActive(2)).toBe(true);
+      expect(wrapper.vm.isLeafActive(3)).toBe(false);
     });
   });
 
-  describe('isActive (editing mode)', () => {
-    it('should mark all steps as active in editing mode', () => {
+  describe('isLeafActive (editing mode)', () => {
+    it('should mark all leaves as active in editing mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ mode: 'editing', currentStep: 1 }),
       });
-      expect(wrapper.vm.isActive(0)).toBe(true);
-      expect(wrapper.vm.isActive(1)).toBe(true);
-      expect(wrapper.vm.isActive(2)).toBe(true);
+      expect(wrapper.vm.isLeafActive(1)).toBe(true);
+      expect(wrapper.vm.isLeafActive(2)).toBe(true);
+      expect(wrapper.vm.isLeafActive(3)).toBe(true);
     });
 
-    it('should mark all steps as active when allowStepNavigation is true', () => {
+    it('should mark all leaves as active when allowStepNavigation is true', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ allowStepNavigation: true, currentStep: 1 }),
       });
-      expect(wrapper.vm.isActive(0)).toBe(true);
-      expect(wrapper.vm.isActive(1)).toBe(true);
-      expect(wrapper.vm.isActive(2)).toBe(true);
+      expect(wrapper.vm.isLeafActive(1)).toBe(true);
+      expect(wrapper.vm.isLeafActive(2)).toBe(true);
+      expect(wrapper.vm.isLeafActive(3)).toBe(true);
     });
   });
 
-  describe('isCompleted', () => {
-    it('should mark previous steps as completed in creating mode', () => {
+  describe('isLeafCompleted', () => {
+    it('should mark previous leaves as completed in creating mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 3 }),
       });
-      expect(wrapper.vm.isCompleted(0)).toBe(true);
-      expect(wrapper.vm.isCompleted(1)).toBe(true);
-      expect(wrapper.vm.isCompleted(2)).toBe(false);
+      expect(wrapper.vm.isLeafCompleted(1)).toBe(true);
+      expect(wrapper.vm.isLeafCompleted(2)).toBe(true);
+      expect(wrapper.vm.isLeafCompleted(3)).toBe(false);
     });
 
-    it('should mark all steps as completed in editing mode', () => {
+    it('should mark all leaves as completed in editing mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ mode: 'editing', currentStep: 1 }),
       });
-      expect(wrapper.vm.isCompleted(0)).toBe(true);
-      expect(wrapper.vm.isCompleted(1)).toBe(true);
-      expect(wrapper.vm.isCompleted(2)).toBe(true);
+      expect(wrapper.vm.isLeafCompleted(1)).toBe(true);
+      expect(wrapper.vm.isLeafCompleted(2)).toBe(true);
+      expect(wrapper.vm.isLeafCompleted(3)).toBe(true);
     });
   });
 
   describe('getCurrentStepLabel', () => {
-    it('should return the title of the current step', () => {
+    it('should return the title of the current leaf', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 2 }),
       });
@@ -189,80 +228,80 @@ describe('StepperVertical', () => {
       expect(wrapper.vm.getCurrentStepLabel()).toBe('');
     });
 
-    it('should return first step label by default (currentStep=1)', () => {
+    it('should return first leaf label by default (currentStep=1)', () => {
       const wrapper = mountWithPlugins(StepperVertical, { props: makeProps() });
       expect(wrapper.vm.getCurrentStepLabel()).toBe('Basic Info');
     });
   });
 
-  describe('getStepIcon', () => {
-    it('should return check_circle for completed steps in creating mode', () => {
+  describe('getLeafIcon', () => {
+    it('should return check_circle for completed leaves in creating mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 3 }),
       });
-      expect(wrapper.vm.getStepIcon(mockSteps[0], 0)).toBe('check_circle');
-      expect(wrapper.vm.getStepIcon(mockSteps[1], 1)).toBe('check_circle');
+      expect(wrapper.vm.getLeafIcon(mockSteps[0], 1)).toBe('check_circle');
+      expect(wrapper.vm.getLeafIcon(mockSteps[1], 2)).toBe('check_circle');
     });
 
-    it('should return the step own icon for the current step in creating mode', () => {
+    it('should return the leaf own icon for the current leaf in creating mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 2 }),
       });
-      expect(wrapper.vm.getStepIcon(mockSteps[1], 1)).toBe('settings');
+      expect(wrapper.vm.getLeafIcon(mockSteps[1], 2)).toBe('settings');
     });
 
-    it('should return the step own icon for future steps in creating mode', () => {
+    it('should return the leaf own icon for future leaves in creating mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 1 }),
       });
-      expect(wrapper.vm.getStepIcon(mockSteps[2], 2)).toBe('check');
+      expect(wrapper.vm.getLeafIcon(mockSteps[2], 3)).toBe('check');
     });
 
-    it('should always return step own icon in editing mode', () => {
+    it('should always return leaf own icon in editing mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ mode: 'editing', currentStep: 3 }),
       });
-      expect(wrapper.vm.getStepIcon(mockSteps[0], 0)).toBe('info');
-      expect(wrapper.vm.getStepIcon(mockSteps[1], 1)).toBe('settings');
-      expect(wrapper.vm.getStepIcon(mockSteps[2], 2)).toBe('check');
+      expect(wrapper.vm.getLeafIcon(mockSteps[0], 1)).toBe('info');
+      expect(wrapper.vm.getLeafIcon(mockSteps[1], 2)).toBe('settings');
+      expect(wrapper.vm.getLeafIcon(mockSteps[2], 3)).toBe('check');
     });
   });
 
-  describe('getStepIconStateClass', () => {
-    it('should return "step-icon--active" for current step in creating mode', () => {
+  describe('getLeafIconStateClass', () => {
+    it('should return "step-icon--active" for current leaf in creating mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 2 }),
       });
-      expect(wrapper.vm.getStepIconStateClass(1)).toBe('step-icon--active');
+      expect(wrapper.vm.getLeafIconStateClass(2)).toBe('step-icon--active');
     });
 
-    it('should return "step-icon--completed" for past steps in creating mode', () => {
+    it('should return "step-icon--completed" for past leaves in creating mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 3 }),
       });
-      expect(wrapper.vm.getStepIconStateClass(0)).toBe('step-icon--completed');
+      expect(wrapper.vm.getLeafIconStateClass(1)).toBe('step-icon--completed');
     });
 
-    it('should return "step-icon--pending" for future steps in creating mode', () => {
+    it('should return "step-icon--pending" for future leaves in creating mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ currentStep: 1 }),
       });
-      expect(wrapper.vm.getStepIconStateClass(2)).toBe('step-icon--pending');
+      expect(wrapper.vm.getLeafIconStateClass(3)).toBe('step-icon--pending');
     });
 
-    it('should return "step-icon--active" for current step in editing mode', () => {
+    it('should return "step-icon--active" for current leaf in editing mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ mode: 'editing', currentStep: 2 }),
       });
-      expect(wrapper.vm.getStepIconStateClass(1)).toBe('step-icon--active');
+      expect(wrapper.vm.getLeafIconStateClass(2)).toBe('step-icon--active');
     });
 
-    it('should return "step-icon--completed" for non-current steps in editing mode', () => {
+    it('should return "step-icon--completed" for non-current leaves in editing mode', () => {
       const wrapper = mountWithPlugins(StepperVertical, {
         props: makeProps({ mode: 'editing', currentStep: 2 }),
       });
-      expect(wrapper.vm.getStepIconStateClass(0)).toBe('step-icon--completed');
-      expect(wrapper.vm.getStepIconStateClass(2)).toBe('step-icon--completed');
+      expect(wrapper.vm.getLeafIconStateClass(1)).toBe('step-icon--completed');
+      expect(wrapper.vm.getLeafIconStateClass(3)).toBe('step-icon--completed');
     });
   });
 

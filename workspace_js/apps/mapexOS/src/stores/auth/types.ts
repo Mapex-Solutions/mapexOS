@@ -16,9 +16,7 @@ export type User = {
 }
 
 export interface AuthState {
-	// form fields
-	email: string;
-	password: string;
+	// session persistence preference
 	keepConnected: boolean;
 
 	// session
@@ -29,10 +27,4 @@ export interface AuthState {
 	// ui
 	loading: boolean;
 	error: string | null;
-}
-
-export type AuthSnapshot = {
-	token: string
-	user: User | null
-	keepConnected: boolean
 }

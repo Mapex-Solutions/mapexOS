@@ -12,8 +12,9 @@ import { ref, reactive, watch, computed } from 'vue';
 import { copyToClipboard } from 'quasar';
 
 /** COMPONENTS */
+import { InfoBanner } from '@components/banners';
 import { BaseButton } from '@components/buttons';
-import { SelectableChip } from '@components/chips';
+import { DetailChip, SelectableChip } from '@components/chips';
 import { RouteGroupSelectorDrawer } from '@components/drawers';
 import { AppTooltip } from '@components/tooltips';
 
@@ -22,6 +23,9 @@ import { useTS } from '@utils/translation';
 
 /** UTILS */
 import { notifySuccess, notifyFail } from '@utils/alert/notify';
+
+/** LOCAL IMPORTS */
+import { resolveProtocolHealthPolicy } from '../../helpers';
 
 /** PROPS & EMITS */
 const props = defineProps<{
@@ -34,6 +38,10 @@ const props = defineProps<{
    *  the heartbeat-mode selector are both hidden. Operators still pick
    *  thresholds and the online/offline route groups. */
   protocol?: string;
+  /** LoRaWAN kind (device | gateway) — only a LoRaWAN end-DEVICE is forced to
+   *  implicit (connectionless, by-data). A LoRaWAN gateway has explicit
+   *  connection presence driven by the LNS, so it is not constrained here. */
+  lorawanKind?: string;
 }>();
 
 const emit = defineEmits<{
@@ -54,23 +62,38 @@ const HEALTH_ALLOWED_KINDS = ['trigger', 'workflow'] as const;
 /** COMPUTED — protocol gating */
 
 /**
- * MQTT-protocol assets are health-monitored exclusively via broker
- * presence (CONNECT / DISCONNECT advisories). The operator does NOT
- * pick a heartbeat mode and cannot disable monitoring — both fields
- * are forced (enabled=true, heartbeatMode='explicit') and the inputs
- * are hidden from the UI.
+ * A LoRaWAN end-DEVICE is connectionless: liveness can only be inferred from
+ * inbound data, so the heartbeat-mode toggle is hidden — explicit mode has no
+ * producer for a device (the backend rejects it).
  */
-const isMqtt = computed<boolean>(() => (props.protocol ?? '').toUpperCase() === 'MQTT');
+const isLorawanDevice = computed<boolean>(
+  () => (props.protocol ?? '').toUpperCase() === 'LORAWAN' && (props.lorawanKind ?? '') === 'device'
+);
+
+/** A LoRaWAN gateway picks the gateway-specific always-monitored copy. */
+const isGateway = computed<boolean>(
+  () => (props.protocol ?? '').toUpperCase() === 'LORAWAN' && (props.lorawanKind ?? '') === 'gateway'
+);
+
+/** Per-protocol forced monitoring rules (enabled lock, forced heartbeat mode). */
+const healthPolicy = computed(() => resolveProtocolHealthPolicy(props.protocol ?? '', props.lorawanKind));
+
+/**
+ * Always-monitored protocols (MQTT broker presence, LoRaWAN gateway via the LNS)
+ * lock monitoring on: the enable toggle and heartbeat selector are replaced by a
+ * status badge plus an explanatory banner.
+ */
+const isAlwaysMonitored = computed<boolean>(() => healthPolicy.value.alwaysEnabled);
 
 /** STATE */
 const showOfflineDrawer = ref(false);
 const showOnlineDrawer = ref(false);
 
 const localData = reactive({
-  enabled: isMqtt.value ? true : props.modelValue.enabled,
+  enabled: healthPolicy.value.alwaysEnabled ? true : props.modelValue.enabled,
   thresholdMinutes: props.modelValue.thresholdMinutes,
   requiredMisses: props.modelValue.requiredMisses,
-  heartbeatMode: isMqtt.value ? 'explicit' : (props.modelValue.heartbeatMode ?? 'implicit'),
+  heartbeatMode: healthPolicy.value.forcedHeartbeatMode ?? (props.modelValue.heartbeatMode ?? 'implicit'),
   offlineRouteGroupIds: props.modelValue.offlineRouteGroupIds || [],
   onlineRouteGroupIds: props.modelValue.onlineRouteGroupIds || [],
 });
@@ -84,10 +107,10 @@ const selectedOnlineRouteGroups = ref<RouteGroupResponse[]>(
 
 /** WATCHERS */
 watch(() => props.modelValue, (newVal) => {
-  localData.enabled = isMqtt.value ? true : newVal.enabled;
+  localData.enabled = healthPolicy.value.alwaysEnabled ? true : newVal.enabled;
   localData.thresholdMinutes = newVal.thresholdMinutes;
   localData.requiredMisses = newVal.requiredMisses;
-  localData.heartbeatMode = isMqtt.value ? 'explicit' : (newVal.heartbeatMode ?? 'implicit');
+  localData.heartbeatMode = healthPolicy.value.forcedHeartbeatMode ?? (newVal.heartbeatMode ?? 'implicit');
   localData.offlineRouteGroupIds = newVal.offlineRouteGroupIds || [];
   localData.onlineRouteGroupIds = newVal.onlineRouteGroupIds || [];
   if (newVal.selectedOfflineRouteGroups?.length) {
@@ -98,15 +121,19 @@ watch(() => props.modelValue, (newVal) => {
   }
 }, { deep: true });
 
-// React to protocol changes (Step4 lets the operator switch MQTT↔HTTP).
-// Switching INTO MQTT forces enabled=true + heartbeatMode='explicit'
-// and re-emits so the parent's form state reflects the locked values.
-watch(isMqtt, (nowMqtt) => {
-  if (nowMqtt) {
+// Apply the protocol's forced monitoring rules when the protocol changes, then
+// re-emit so the parent's form state reflects the locked values.
+watch(healthPolicy, (policy) => {
+  let changed = false;
+  if (policy.alwaysEnabled && !localData.enabled) {
     localData.enabled = true;
-    localData.heartbeatMode = 'explicit';
-    emitUpdate();
+    changed = true;
   }
+  if (policy.forcedHeartbeatMode && localData.heartbeatMode !== policy.forcedHeartbeatMode) {
+    localData.heartbeatMode = policy.forcedHeartbeatMode;
+    changed = true;
+  }
+  if (changed) emitUpdate();
 });
 
 /** FUNCTIONS */
@@ -230,50 +257,49 @@ async function copyText(text: string): Promise<void> {
         <div class="text-subtitle1 text-weight-medium">{{ ts(`${bp}.title`) }}</div>
         <q-space />
         <q-toggle
-          v-if="!isMqtt"
+          v-if="!isAlwaysMonitored"
           v-model="localData.enabled"
           :label="localData.enabled ? ts(`${bp}.enabled`) : ts(`${bp}.disabled`)"
           color="primary"
           @update:model-value="emitUpdate"
         />
-        <q-chip
+        <DetailChip
           v-else
           color="positive"
-          text-color="white"
           icon="check_circle"
+          size="sm"
           dense
-          :label="ts(`${bp}.mqttAlwaysOn`)"
+          :label="isGateway ? ts(`${bp}.gatewayAlwaysOn`) : ts(`${bp}.mqttAlwaysOn`)"
         />
       </div>
 
-      <!-- MQTT presence banner: explains that MQTT assets are health-
-           monitored exclusively via broker presence advisories, so the
-           operator only picks thresholds and route groups. -->
-      <q-banner
-        v-if="isMqtt"
-        class="mqtt-presence-banner q-mb-md"
-        rounded
+      <!-- Always-monitored banner: explains that broker (MQTT) or LNS (gateway)
+           connection presence is the source of truth, so the operator only picks
+           thresholds and route groups. -->
+      <InfoBanner
+        v-if="isAlwaysMonitored"
+        variant="info"
+        :icon="isGateway ? 'mdi-router-wireless' : 'hub'"
         dense
+        class="q-mb-md"
+        :title="isGateway ? ts(`${bp}.gatewayBanner.title`) : ts(`${bp}.mqttBanner.title`)"
       >
-        <template v-slot:avatar>
-          <q-icon name="hub" color="primary" />
-        </template>
-        <div class="text-weight-medium q-mb-xs">{{ ts(`${bp}.mqttBanner.title`) }}</div>
-        <div class="text-caption">{{ ts(`${bp}.mqttBanner.body`) }}</div>
-      </q-banner>
+        {{ isGateway ? ts(`${bp}.gatewayBanner.body`) : ts(`${bp}.mqttBanner.body`) }}
+      </InfoBanner>
 
       <q-slide-transition>
         <div v-if="localData.enabled">
           <q-separator class="q-mb-lg" />
 
-          <!-- ============================================================ -->
-          <!-- SECTION 1: Heartbeat source — HIDDEN for MQTT (broker only)  -->
-          <!-- ============================================================ -->
-          <div v-if="!isMqtt" class="health-section">
+          <!-- Heartbeat source — hidden when monitoring is connection-driven
+               (MQTT broker, LoRaWAN gateway via LNS): there is no mode to pick. -->
+          <div v-if="!isAlwaysMonitored" class="health-section">
             <div class="health-section__label">{{ ts(`${bp}.sections.heartbeatSource`) }}</div>
             <div class="health-section__description">{{ ts(`${bp}.sections.heartbeatSourceDescription`) }}</div>
 
+            <!-- Toggle hidden for LoRaWAN — implicit is the only valid mode -->
             <q-btn-toggle
+              v-if="!isLorawanDevice"
               v-model="localData.heartbeatMode"
               :options="heartbeatModeOptions"
               toggle-color="primary"
@@ -331,10 +357,10 @@ async function copyText(text: string): Promise<void> {
             </div>
           </div>
 
-          <!-- ============================================================ -->
-          <!-- SECTION 2: Detection thresholds                              -->
-          <!-- ============================================================ -->
-          <div class="health-section">
+          <!-- Detection thresholds — only meaningful for heartbeat-based liveness.
+               Hidden when monitoring is connection-driven (MQTT broker, LoRaWAN
+               gateway via LNS), where online/offline is known without thresholds. -->
+          <div v-if="!isAlwaysMonitored" class="health-section">
             <div class="health-section__label">{{ ts(`${bp}.sections.detectionThresholds`) }}</div>
             <div class="health-section__description">{{ ts(`${bp}.sections.detectionThresholdsDescription`) }}</div>
 
@@ -374,12 +400,9 @@ async function copyText(text: string): Promise<void> {
             <div class="health-section__label">{{ ts(`${bp}.sections.transitionRouting`) }}</div>
             <div class="health-section__description">{{ ts(`${bp}.sections.transitionRoutingDescription`) }}</div>
 
-            <q-banner v-if="showMonitorOnlyHint" class="bg-grey-2 text-grey-9 q-mb-md text-caption" rounded dense>
-              <template v-slot:avatar>
-                <q-icon name="info" color="primary" />
-              </template>
+            <InfoBanner v-if="showMonitorOnlyHint" variant="neutral" dense class="q-mb-md">
               {{ ts(`${bp}.monitorOnlyHint`) }}
-            </q-banner>
+            </InfoBanner>
 
             <div class="row q-col-gutter-md">
             <!-- Offline Route Groups -->
@@ -393,7 +416,7 @@ async function copyText(text: string): Promise<void> {
                   <div class="text-caption text-grey">{{ ts(`${bp}.offlineRouteGroupsHint`) }}</div>
                 </q-card-section>
 
-                <q-card-section>
+                <q-card-section class="health-route-card__footer">
                   <div v-if="selectedOfflineRouteGroups.length" class="row q-gutter-sm q-mb-sm">
                     <SelectableChip
                       v-for="rg in selectedOfflineRouteGroups"
@@ -435,7 +458,7 @@ async function copyText(text: string): Promise<void> {
                   <div class="text-caption text-grey">{{ ts(`${bp}.onlineRouteGroupsHint`) }}</div>
                 </q-card-section>
 
-                <q-card-section>
+                <q-card-section class="health-route-card__footer">
                   <div v-if="selectedOnlineRouteGroups.length" class="row q-gutter-sm q-mb-sm">
                     <SelectableChip
                       v-for="rg in selectedOnlineRouteGroups"
@@ -491,6 +514,14 @@ async function copyText(text: string): Promise<void> {
 .health-route-card {
   border-radius: var(--mapex-radius-md);
   transition: var(--mapex-transition-base);
+  display: flex;
+  flex-direction: column;
+
+  // Pin the empty-state + action block to the bottom so both cards align
+  // regardless of how many lines the header hint wraps to.
+  &__footer {
+    margin-top: auto;
+  }
 
   &--offline {
     border-left: 3px solid var(--q-negative);
@@ -525,13 +556,6 @@ async function copyText(text: string): Promise<void> {
 }
 
 .heartbeat-mode-banner {
-  background: var(--mapex-surface-elevated);
-  color: var(--mapex-text-primary);
-  border: 1px solid var(--mapex-card-border);
-  border-left: 3px solid var(--q-primary);
-}
-
-.mqtt-presence-banner {
   background: var(--mapex-surface-elevated);
   color: var(--mapex-text-primary);
   border: 1px solid var(--mapex-card-border);

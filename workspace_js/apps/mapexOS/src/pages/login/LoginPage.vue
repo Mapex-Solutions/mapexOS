@@ -40,7 +40,7 @@ const { welcome, features, form, validation, errors, languages, aria } = useLogi
 /** STATE */
 const email = ref<string>('');
 const password = ref<string>('');
-const rememberMe = ref<boolean>(false);
+const rememberMe = ref<boolean>(true);
 const showPassword = ref<boolean>(false);
 const selectedLanguage = ref<SupportedLocale>(DEFAULT_LANGUAGE);
 const loading = ref<boolean>(false);

@@ -1,0 +1,107 @@
+{
+  "title": "planos OTA",
+  "description": "distribua atualizações de firmware para sua frota de dispositivos",
+  "addButton": "novo plano",
+  "listTitle": "lista de planos OTA",
+  "itemLabel": "plano",
+  "itemLabelPlural": "planos",
+  "info": {
+    "title": "O que é um Plano OTA?",
+    "description": "Um plano OTA distribui uma atualização de firmware para um conjunto de dispositivos como uma migração de template para template: cada dispositivo baixa o binário, aplica e só então muda para o template de destino.",
+    "items": {
+      "migration": {
+        "title": "Migração de Template",
+        "text": "Dispositivos migram do template de origem para o de destino somente após reportarem a atualização com sucesso"
+      },
+      "paced": {
+        "title": "Ritmado e Seguro",
+        "text": "O envio respeita a presença do dispositivo e o ritmo configurado, com aborto automático quando a taxa de falhas cruza o limite"
+      },
+      "window": {
+        "title": "Janela Delimitada",
+        "text": "Todo plano executa entre um horário de início e um prazo final; dispositivos pendentes expiram quando a janela fecha"
+      }
+    },
+    "docsLabel": "Ver Documentação Completa"
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar planos...",
+    "status": "status",
+    "clearAll": "limpar tudo"
+  },
+  "columns": {
+    "name": "nome",
+    "status": "status",
+    "progress": "progresso",
+    "startAt": "inicia em",
+    "maxTime": "prazo final",
+    "updated": "atualizado"
+  },
+  "statuses": {
+    "SCHEDULED": "agendado",
+    "IN_PROGRESS": "em andamento",
+    "COMPLETED": "concluído",
+    "CLOSED": "encerrado",
+    "CANCELED": "cancelado",
+    "ABORTED": "abortado"
+  },
+  "empty": {
+    "title": "nenhum plano OTA ainda",
+    "description": "crie seu primeiro plano para distribuir uma atualização de firmware",
+    "action": "novo plano"
+  },
+  "actions": {
+    "view": "ver detalhes",
+    "cancel": "cancelar plano"
+  },
+  "cancelDialog": {
+    "title": "cancelar plano OTA",
+    "message": "isso interrompe a distribuição: dispositivos pendentes não serão atualizados e o binário do firmware será removido. Esta ação não pode ser desfeita.",
+    "confirm": "cancelar plano",
+    "keep": "manter plano"
+  },
+  "messages": {
+    "loadError": "falha ao carregar os planos OTA",
+    "cancelSuccess": "plano cancelado",
+    "cancelError": "falha ao cancelar o plano"
+  },
+  "drawer": {
+    "title": "detalhes do plano",
+    "info": {
+      "firmware": "versão do firmware",
+      "window": "janela de execução",
+      "counters": "progresso",
+      "source": "template de origem",
+      "target": "template de destino",
+      "rate": "taxa por minuto",
+      "abort": "limite de aborto"
+    },
+    "executions": {
+      "title": "dispositivos",
+      "columns": {
+        "device": "dispositivo",
+        "state": "estado",
+        "progress": "progresso",
+        "attempts": "tentativas",
+        "updated": "última atualização"
+      },
+      "states": {
+        "QUEUED": "na fila",
+        "INITIATED": "iniciado",
+        "DOWNLOADING": "baixando",
+        "DOWNLOADED": "baixado",
+        "VERIFIED": "verificado",
+        "UPDATING": "atualizando",
+        "UPDATED": "atualizado",
+        "FAILED": "falhou",
+        "TIMED_OUT": "expirado"
+      },
+      "empty": "nenhuma execução para este plano",
+      "refresh": "atualizar"
+    },
+    "messages": {
+      "loadError": "falha ao carregar os detalhes do plano"
+    }
+  }
+}

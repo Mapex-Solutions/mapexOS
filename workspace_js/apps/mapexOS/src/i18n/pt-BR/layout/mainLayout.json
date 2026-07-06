@@ -32,8 +32,11 @@
   "menu": {
     "dashboard": "Painel",
     "assets": "Ativos",
-    "assetsItems": "Ativos",
-    "assetsTemplate": "Templates de Ativos",
+    "assetsItems": "Todos os Ativos",
+    "assetsTemplate": "Template",
+    "assetsMarketplace": "Marketplace",
+    "templateMigrations": "Atualizar Templates",
+    "otaPlans": "Planos OTA",
     "data": "Dados",
     "http": "HTTP",
     "automation": "Automação",

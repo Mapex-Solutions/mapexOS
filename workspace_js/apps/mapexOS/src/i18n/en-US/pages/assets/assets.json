@@ -1,10 +1,10 @@
 {
   "title": "assets",
-  "description": "manage your IoT assets and gateways",
+  "description": "manage your assets and gateways",
   "addButton": "add asset",
   "info": {
     "title": "What is an Asset?",
-    "description": "An Asset represents a physical or virtual IoT device in your infrastructure. Assets can be sensors, gateways, machines, or any connected device that sends or receives data through MapexOS.",
+    "description": "An Asset is any source MapexOS governs — a device, gateway, API, or business system, physical or virtual — that sends or receives data through the platform.",
     "items": {
       "templates": {
         "title": "Template-Based",
@@ -20,7 +20,7 @@
       },
       "realtime": {
         "title": "Real-Time Data",
-        "text": "Assets send telemetry data in real-time and can receive commands instantly"
+        "text": "Assets stream data in real time and can receive commands instantly"
       },
       "location": {
         "title": "Geo-Location",
@@ -41,7 +41,7 @@
     "allStatus": "all",
     "assetName": "asset name",
     "assetUUID": "asset UUID",
-    "deviceUUID": "device UUID",
+    "deviceUUID": "asset UUID",
     "status": "status",
     "category": "category",
     "manufacturer": "manufacturer",
@@ -232,9 +232,14 @@
       "title": "MQTT presence is the source of truth",
       "body": "For MQTT-protocol assets, online/offline status comes directly from the broker (CONNECT / DISCONNECT). Health monitoring is always enabled — you only choose which route groups fire on each transition."
     },
+    "gatewayAlwaysOn": "LoRaWAN gateway — always monitored",
+    "gatewayBanner": {
+      "title": "LNS presence is the source of truth",
+      "body": "For LoRaWAN gateways, online/offline status comes directly from the network server connection. Health monitoring is always enabled — you only choose which route groups fire on each transition."
+    },
     "sections": {
       "heartbeatSource": "heartbeat source",
-      "heartbeatSourceDescription": "How the platform learns the device is alive.",
+      "heartbeatSourceDescription": "How the platform learns the asset is alive.",
       "detectionThresholds": "detection thresholds",
       "detectionThresholdsDescription": "When the absence of heartbeats is treated as offline.",
       "transitionRouting": "transition routing",
@@ -249,14 +254,14 @@
     "heartbeatMode": {
       "label": "heartbeat source",
       "optionImplicit": "implicit (from data events)",
-      "optionExplicit": "explicit (device sends dedicated heartbeat)",
+      "optionExplicit": "explicit (the asset sends a dedicated heartbeat)",
       "implicitTitle": "Auto from data events",
-      "implicitHint": "Heartbeats are derived automatically from each data event the device sends. No extra integration needed.",
-      "explicitTitle": "Send heartbeats from your device",
+      "implicitHint": "Heartbeats are derived automatically from each data event the asset sends. No extra integration needed.",
+      "explicitTitle": "Send heartbeats from your asset",
       "explicitHint": "The right channel depends on the asset's protocol — see the cards below.",
       "mqttCardTitle": "MQTT (automatic)",
       "httpCardTitle": "POST to endpoint",
-      "mqttPresenceHint": "Liveness is automatic via the device's MQTT connection — the platform detects connect and disconnect through the broker. Nothing to configure on the device beyond keeping the MQTT session open.",
+      "mqttPresenceHint": "Liveness is automatic via the asset's MQTT connection — the platform detects connect and disconnect through the broker. Nothing to configure on the asset beyond keeping the MQTT session open.",
       "explicitHttpEndpoint": "HTTP endpoint: POST /api/v1/heartbeat?ds=<dataSourceId> with body { \"assetUUID\": \"...\" } (same auth as /api/v1/events)",
       "explicitHttpExample": "Example: curl -X POST 'http://localhost:8080/api/v1/heartbeat?ds=68f5bbce1aef22967c3ebb30' -H 'x-api-key: <your-key>' -H 'Content-Type: application/json' -d '{\"assetUUID\":\"sensor-temp-001\"}'",
       "copyAria": "copy to clipboard",
@@ -281,6 +286,69 @@
       "online": "online",
       "offline": "offline",
       "unknown": "unknown"
+    }
+  },
+  "lorawanConfig": {
+    "kind": {
+      "label": "lorawan asset type",
+      "description": "a gateway is radio infrastructure; a sensor is an end-device. each opens a different field set.",
+      "gateway": "gateway",
+      "device": "sensor (device)"
+    },
+    "device": {
+      "joinEui": "join eui",
+      "region": "frequency plan (region)",
+      "class": "device class",
+      "classOptions": {
+        "a": "class a",
+        "b": "class b",
+        "c": "class c"
+      },
+      "macVersion": "mac version",
+      "phyVersion": "phy version",
+      "activation": "activation",
+      "activationOptions": {
+        "otaa": "otaa",
+        "abp": "abp"
+      },
+      "appKey": "app key",
+      "nwkKey": "network key",
+      "devAddr": "device address",
+      "nwkSKey": "network session key",
+      "appSKey": "app session key",
+      "generate": "generate"
+    },
+    "gateway": {
+      "frequencyPlanId": "frequency plan",
+      "frequencyPlanIds": "additional frequency plans",
+      "frequencyPlanIdsHint": "most gateways use a single plan; 16/64-channel gateways may use multiple within the same sub-band",
+      "authMode": "connection auth",
+      "authModeOptions": {
+        "cert": "certificate (basics station mtls)",
+        "key": "api key (basics station token)",
+        "eui": "eui (udp)"
+      },
+      "apiKey": "gateway api key",
+      "certTtlValue": "cert validity",
+      "certTtlUnit": "unit",
+      "certTtlUnits": {
+        "day": "day",
+        "week": "week",
+        "month": "month",
+        "year": "year"
+      }
+    },
+    "eui": {
+      "label": "EUI",
+      "hintGateway": "the gateway eui — copied from the asset uuid set in step 1",
+      "hintDevice": "the device eui — copied from the asset uuid set in step 1"
+    },
+    "sections": {
+      "frequency": "frequency plan",
+      "authentication": "authentication",
+      "identity": "identity",
+      "profile": "device profile",
+      "activation": "activation"
     }
   }
 }

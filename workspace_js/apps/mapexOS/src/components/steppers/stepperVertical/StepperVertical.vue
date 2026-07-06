@@ -3,9 +3,13 @@ defineOptions({
   name: 'StepperVertical'
 });
 
-import type { StepperVerticalProps, StepperVerticalItem } from './interfaces';
+/** TYPE IMPORTS */
+import type { StepperVerticalProps, StepperVerticalItem, StepperRenderRow } from './interfaces';
 
-// Define props with defaults
+/** VUE IMPORTS */
+import { computed } from 'vue';
+
+/** PROPS & EMITS */
 const props = withDefaults(defineProps<StepperVerticalProps>(), {
   currentStep: 1,
   title: 'Configuration Steps',
@@ -17,113 +21,155 @@ const props = withDefaults(defineProps<StepperVerticalProps>(), {
   allowStepNavigation: false,
 });
 
-/**
- * Generates step attributes including optional ID
- * @param index Zero-based index of the step
- * @returns Object with step attributes
- */
-const getStepAttrs = (index: number): Record<string, string> => {
-  const attrs: Record<string, string> = {};
-  if (props.stepIdPrefix) {
-    attrs.id = `${props.stepIdPrefix}-${index + 1}`;
-  }
-  return attrs;
-};
-
-// Define emits
 const emit = defineEmits<{
   (e: 'step-click', stepNumber: number): void
 }>();
 
+/** COMPUTED */
+
 /**
- * Determines if a step should be shown as active
- * @param index Zero-based index of the step
- * @returns Whether the step should be shown as active
+ * Flattens the (possibly grouped) steps into ordered render rows. Leaves are
+ * numbered 1..N in document order; a grouped item yields a header row followed
+ * by its child leaf rows. With no children this is the flat list, unchanged.
  */
-const isActive = (index: number): boolean => {
-  // If navigation is allowed (edit mode), all steps are active
-  if (props.allowStepNavigation || props.mode === 'editing') {
-    return true;
+const renderRows = computed<StepperRenderRow[]>(() => {
+  const rows: StepperRenderRow[] = [];
+  let leaf = 0;
+  for (const item of props.steps) {
+    if (item.children && item.children.length) {
+      const childNumbers: number[] = [];
+      const childRows: StepperRenderRow[] = [];
+      for (const child of item.children) {
+        leaf += 1;
+        childNumbers.push(leaf);
+        childRows.push({ kind: 'leaf', item: child, leafNumber: leaf, indented: true, childLeafNumbers: [] });
+      }
+      rows.push({ kind: 'group', item, leafNumber: 0, indented: false, childLeafNumbers: childNumbers });
+      rows.push(...childRows);
+    } else {
+      leaf += 1;
+      rows.push({ kind: 'leaf', item, leafNumber: leaf, indented: false, childLeafNumbers: [] });
+    }
   }
-  return props.currentStep === index + 1;
-};
+  return rows;
+});
+
+/** True when at least one step is a group (enables the grouped layout). */
+const hasGroups = computed(() => props.steps.some((s) => !!s.children?.length));
+
+/** FUNCTIONS */
 
 /**
- * Determines if a step should be shown as completed
- * @param index Zero-based index of the step
- * @returns Whether the step should be shown as completed
+ * True in edit mode / free navigation, where every step is reachable.
+ * @returns {boolean} Whether all steps are navigable.
  */
-const isCompleted = (index: number): boolean => {
-  // If navigation is allowed (edit mode), all steps are completed
-  if (props.allowStepNavigation || props.mode === 'editing') {
-    return true;
+function isEditNav(): boolean {
+  return props.allowStepNavigation || props.mode === 'editing';
+}
+
+/**
+ * Builds optional per-leaf DOM attributes (id for tours/CSS selectors).
+ * @param {number} leafNumber - The 1-based leaf number.
+ * @returns {Record<string, string>} Attributes to bind.
+ */
+function getStepAttrs(leafNumber: number): Record<string, string> {
+  const attrs: Record<string, string> = {};
+  if (props.stepIdPrefix) {
+    attrs.id = `${props.stepIdPrefix}-${leafNumber}`;
   }
-  return props.currentStep > index + 1;
-};
+  return attrs;
+}
 
 /**
- * Gets the label of the current active step
- * @returns The label of the current step
+ * Whether a leaf should render as active.
+ * @param {number} n - The leaf number.
+ * @returns {boolean} Active state.
  */
-const getCurrentStepLabel = (): string => {
-  const step = props.steps[props.currentStep - 1];
-  return step ? step.title : '';
-};
+function isLeafActive(n: number): boolean {
+  return isEditNav() ? true : props.currentStep === n;
+}
 
 /**
- * Determines the icon to display for a step
- * @param step The step item
- * @param index Zero-based index of the step
- * @returns Icon name to display
+ * Whether a leaf should render as completed.
+ * @param {number} n - The leaf number.
+ * @returns {boolean} Completed state.
  */
-const getStepIcon = (step: StepperVerticalItem, index: number): string => {
-  // If navigation is allowed (edit mode), always use the step's icon
-  if (props.allowStepNavigation || props.mode === 'editing') {
+function isLeafCompleted(n: number): boolean {
+  return isEditNav() ? true : props.currentStep > n;
+}
+
+/**
+ * Whether a leaf can be clicked to navigate.
+ * @param {number} n - The leaf number.
+ * @returns {boolean} Clickable state.
+ */
+function isLeafClickable(n: number): boolean {
+  return props.allowStepNavigation || props.mode === 'editing' || n < props.currentStep;
+}
+
+/**
+ * Icon for a leaf (check when completed in creating mode).
+ * @param {StepperVerticalItem} step - The leaf item.
+ * @param {number} n - The leaf number.
+ * @returns {string} Icon name.
+ */
+function getLeafIcon(step: StepperVerticalItem, n: number): string {
+  if (isEditNav()) {
     return step.icon;
   }
-
-  // In creating mode, use check_circle for completed steps
-  if (props.currentStep > index + 1) {
-    return 'check_circle';
-  }
-  return step.icon;
-};
+  return props.currentStep > n ? 'check_circle' : step.icon;
+}
 
 /**
- * Returns the CSS state class for a step icon.
- * All visual styling is handled via CSS classes + CSS variables,
- * so dark mode works automatically without JS changes.
- *
- * @param {number} index - Zero-based index of the step
- * @returns {string} CSS class name for the step icon state
+ * CSS state class for a leaf icon.
+ * @param {number} n - The leaf number.
+ * @returns {string} State class.
  */
-const getStepIconStateClass = (index: number): string => {
-  if (props.allowStepNavigation || props.mode === 'editing') {
-    // Edit mode: current step = active, others = completed (muted)
-    return props.currentStep === index + 1
-      ? 'step-icon--active'
-      : 'step-icon--completed';
+function getLeafIconStateClass(n: number): string {
+  if (isEditNav()) {
+    return props.currentStep === n ? 'step-icon--active' : 'step-icon--completed';
   }
-
-  // Creating mode
-  if (props.currentStep === index + 1) return 'step-icon--active';
-  if (props.currentStep > index + 1) return 'step-icon--completed';
+  if (props.currentStep === n) return 'step-icon--active';
+  if (props.currentStep > n) return 'step-icon--completed';
   return 'step-icon--pending';
-};
+}
 
 /**
- * Handles click on a step item
- * @param stepNumber 1-based index of the clicked step
+ * A group is active when the current leaf is one of its children.
+ * @param {number[]} children - Child leaf numbers.
+ * @returns {boolean} Active state.
  */
-const handleStepClick = (stepNumber: number): void => {
-  // Allow navigation if:
-  // 1. allowStepNavigation is true (can click any step)
-  // 2. mode is 'editing' (backward compatibility)
-  // 3. stepNumber < currentStep (can always go back to previous steps)
-  if (props.allowStepNavigation || props.mode === 'editing' || stepNumber < props.currentStep) {
-    emit('step-click', stepNumber);
+function isGroupActive(children: number[]): boolean {
+  return children.includes(props.currentStep);
+}
+
+/**
+ * A group is completed when the current leaf is past all of its children.
+ * @param {number[]} children - Child leaf numbers.
+ * @returns {boolean} Completed state.
+ */
+function isGroupCompleted(children: number[]): boolean {
+  return children.length > 0 && props.currentStep > Math.max(...children);
+}
+
+/**
+ * Title of the current active leaf.
+ * @returns {string} The current step title.
+ */
+function getCurrentStepLabel(): string {
+  const row = renderRows.value.find((r) => r.kind === 'leaf' && r.leafNumber === props.currentStep);
+  return row ? row.item.title : '';
+}
+
+/**
+ * Emits a navigation request for the clicked leaf when allowed.
+ * @param {number} leafNumber - The 1-based leaf number.
+ */
+function handleStepClick(leafNumber: number): void {
+  if (props.allowStepNavigation || props.mode === 'editing' || leafNumber < props.currentStep) {
+    emit('step-click', leafNumber);
   }
-};
+}
 </script>
 
 <template>
@@ -137,32 +183,48 @@ const handleStepClick = (stepNumber: number): void => {
     </q-card-section>
 
     <q-card-section class="q-pa-md">
-      <div class="progress-steps">
-        <div
-            v-for="(st, idx) in steps"
-            :key="idx"
-            v-bind="getStepAttrs(idx)"
+      <div class="progress-steps" :class="{ 'progress-steps--grouped': hasGroups }">
+        <template v-for="(row, idx) in renderRows" :key="idx">
+          <!-- Group header (visual only, not navigable) -->
+          <div
+            v-if="row.kind === 'group'"
+            class="step-group"
+            :class="{
+              'step-group--active': isGroupActive(row.childLeafNumbers),
+              'step-group--completed': isGroupCompleted(row.childLeafNumbers),
+            }"
+          >
+            <q-icon size="xs" :name="row.item.icon" class="step-group__icon" />
+            <span class="step-group__title">{{ row.item.title }}</span>
+          </div>
+
+          <!-- Leaf step -->
+          <div
+            v-else
+            v-bind="getStepAttrs(row.leafNumber)"
             class="step-item"
             :class="{
-              active: isActive(idx),
-              completed: isCompleted(idx),
-              clickable: props.allowStepNavigation || props.mode === 'editing' || idx < props.currentStep - 1
+              active: isLeafActive(row.leafNumber),
+              completed: isLeafCompleted(row.leafNumber),
+              clickable: isLeafClickable(row.leafNumber),
+              'step-item--indented': row.indented,
             }"
-            @click="handleStepClick(idx + 1)"
-        >
-          <div class="step-icon-wrapper">
-            <div class="step-icon" :class="getStepIconStateClass(idx)">
-              <q-icon
-                  size="sm"
-                  :name="getStepIcon(st, idx)"
-              />
+            @click="handleStepClick(row.leafNumber)"
+          >
+            <div class="step-icon-wrapper">
+              <div class="step-icon" :class="getLeafIconStateClass(row.leafNumber)">
+                <q-icon
+                    size="sm"
+                    :name="getLeafIcon(row.item, row.leafNumber)"
+                />
+              </div>
+            </div>
+            <div class="step-content">
+              <div class="step-title">{{ row.item.title }}</div>
+              <div class="step-description">{{ row.item.description }}</div>
             </div>
           </div>
-          <div class="step-content">
-            <div class="step-title">{{ st.title }}</div>
-            <div class="step-description">{{ st.description }}</div>
-          </div>
-        </div>
+        </template>
       </div>
 
       <q-separator class="q-my-md" />
@@ -212,7 +274,7 @@ const handleStepClick = (stepNumber: number): void => {
   text-decoration: underline;
 }
 
-// Connector line between steps
+// Connector line between steps (flat mode only)
 .step-item:not(:last-child)::after {
   content: '';
   position: absolute;
@@ -224,12 +286,51 @@ const handleStepClick = (stepNumber: number): void => {
   z-index: 0;
 }
 
+// Grouped layout uses indentation instead of connector lines
+.progress-steps--grouped {
+  gap: 10px;
+
+  .step-item::after {
+    display: none;
+  }
+}
+
+// Group header — a lightweight, non-interactive context label
+.step-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0 0;
+  color: var(--mapex-text-secondary);
+}
+
+.step-group__icon {
+  color: var(--mapex-text-muted);
+}
+
+.step-group__title {
+  font-size: var(--mapex-font-xs);
+  font-weight: var(--mapex-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.step-group--active {
+  .step-group__title,
+  .step-group__icon {
+    color: var(--mapex-primary);
+  }
+}
+
+.step-item--indented {
+  padding-left: 16px;
+}
+
 .step-icon-wrapper {
   position: relative;
   z-index: 1;
 }
 
-// ── Step icon base ─────────────────────────────────────────
 .step-icon {
   width: 40px;
   height: 40px;
@@ -239,27 +340,23 @@ const handleStepClick = (stepNumber: number): void => {
   justify-content: center;
   transition: var(--mapex-transition-slow);
 
-  // Default (pending) - muted appearance
   background-color: var(--mapex-surface-elevated);
   border: 2px solid var(--mapex-card-border);
   color: var(--mapex-text-muted);
 }
 
-// ── Active step: solid primary, white icon ─────────────────
 .step-icon--active {
   background-color: var(--q-primary);
   border-color: var(--q-primary);
   color: white;
 }
 
-// ── Completed step: subtle primary bg, primary icon ────────
 .step-icon--completed {
   background-color: rgba(var(--mapex-primary-rgb), 0.15);
   border-color: rgba(var(--mapex-primary-rgb), 0.3);
   color: var(--mapex-primary);
 }
 
-// ── Pending step: inherits base (muted) ────────────────────
 .step-icon--pending {
   // Uses the base .step-icon styles (muted)
 }
@@ -270,14 +367,14 @@ const handleStepClick = (stepNumber: number): void => {
 }
 
 .step-title {
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: var(--mapex-font-weight-semibold);
+  font-size: var(--mapex-font-md);
   color: var(--mapex-text-primary);
   margin-bottom: 4px;
 }
 
 .step-description {
-  font-size: 12px;
+  font-size: var(--mapex-font-xs);
   color: var(--mapex-text-secondary);
   line-height: 1.4;
 }

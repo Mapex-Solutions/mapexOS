@@ -1,0 +1,19 @@
+{
+  "dynamicFields": {
+    "headers": {
+      "field": "Field",
+      "type": "Type",
+      "value": "Value path",
+      "status": "Status"
+    },
+    "status": {
+      "active": "Active",
+      "deprecated": "Deprecated"
+    },
+    "empty": "No dynamic fields defined"
+  },
+  "availableFields": {
+    "empty": "No available fields defined"
+  },
+  "count": "{count} field(s)"
+}

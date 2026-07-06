@@ -78,6 +78,9 @@ export const actions = {
 	 * Persists authentication tokens to storage based on keepConnected preference.
 	 * If keepConnected is true, tokens are stored in localStorage for persistence across sessions.
 	 * If false, tokens are stored in sessionStorage for the current session only.
+	 *
+	 * Writes the active storage and clears the other one, so a token left by a
+	 * previous session with a different preference can never be hydrated by mistake.
 	 */
 	persistTokens() {
 		const store = this as AuthState & typeof actions;
@@ -92,9 +95,11 @@ export const actions = {
 		if (store.keepConnected) {
 			// Persistent storage - survives browser restart
 			storage.local.set('auth_tokens', authData);
+			storage.session.remove('auth_tokens');
 		} else {
 			// Session storage - cleared on browser close
 			storage.session.set('auth_tokens', authData);
+			storage.local.remove('auth_tokens');
 		}
 	},
 
@@ -138,14 +143,5 @@ export const actions = {
 
 		// Re-persist with same storage strategy
 		store.persistTokens();
-	},
-
-	setEmail() {
-	},
-
-	setPassword() {
-	},
-
-	setKeepConnected() {
 	},
 };

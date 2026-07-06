@@ -19,7 +19,7 @@ import { useHttpDataSourceCreateEditTranslations } from '@composables/i18n/pages
 import { useLogger } from '@composables/useLogger';
 
 /** COMPONENTS */
-import { StepperVertical } from '@components/steppers';
+import { StepperVertical, buildStepperTree } from '@components/steppers';
 import { PageHeader } from '@components/headers';
 import { FormCard } from '@components/cards';
 import {
@@ -378,6 +378,9 @@ const pageDescription = computed(() =>
  */
 const translatedSteps = computed(() => t.steps.value);
 
+// Grouped tree for the vertical stepper; navigation still runs on translatedSteps.
+const stepperTree = computed(() => buildStepperTree(translatedSteps.value));
+
 /**
  * Form navigation configuration
  */
@@ -452,7 +455,7 @@ onMounted(() => {
           :info-text="t.stepper.infoText.value"
           :current-step-label="t.stepper.currentStepLabel.value"
           :current-step="currentStep"
-          :steps="translatedSteps"
+          :steps="stepperTree"
           :allow-step-navigation="isEditMode"
           @step-click="changeStep"
         />

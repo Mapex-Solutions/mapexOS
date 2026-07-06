@@ -12,6 +12,40 @@ export interface StepperVerticalItem {
   color?: string;
   /** Optional custom background color for the step icon */
   backgroundColor?: string;
+  /**
+   * Optional child steps. When present, this item renders as a visual group
+   * header and its children render as the navigable leaf steps. Items without
+   * children stay flat (the default, backward-compatible behavior).
+   */
+  children?: StepperVerticalItem[];
+}
+
+/** A visual group a step belongs to; renders as a header above its child leaves. */
+export interface StepGroup {
+  id: string;
+  label: string;
+  icon: string;
+}
+
+/** A flat leaf step, optionally tagged with the group it belongs to. */
+export interface GroupedStep extends StepperVerticalItem {
+  group?: StepGroup;
+}
+
+/**
+ * A flattened render row for the vertical stepper: either a group header or a
+ * navigable leaf. Leaves carry the 1-based leaf number used for active/completed
+ * state and click navigation.
+ */
+export interface StepperRenderRow {
+  kind: 'group' | 'leaf';
+  item: StepperVerticalItem;
+  /** 1-based leaf number (leaf rows only; 0 for group headers). */
+  leafNumber: number;
+  /** True when this leaf sits under a group header. */
+  indented: boolean;
+  /** Leaf numbers contained by a group header (group rows only). */
+  childLeafNumbers: number[];
 }
 
 /**

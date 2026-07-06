@@ -1,0 +1,93 @@
+{
+  "page": {
+    "back": "back to plans",
+    "notFound": "OTA plan not found",
+    "loadError": "failed to load the OTA plan",
+    "apiNotInitialized": "assets API not initialized"
+  },
+  "sections": {
+    "overview": "Overview",
+    "overviewSubtitle": "plan, firmware and schedule",
+    "status": "Status",
+    "templates": "Templates",
+    "schedule": "Schedule"
+  },
+  "fields": {
+    "status": "status",
+    "sourceTemplate": "source template",
+    "targetTemplate": "target template",
+    "schedule": "start",
+    "created": "created",
+    "deadline": "deadline"
+  },
+  "firmware": {
+    "title": "Firmware",
+    "version": "version",
+    "filename": "file",
+    "size": "size",
+    "checksum": "checksum",
+    "artifactStatus": "artifact",
+    "empty": "firmware details unavailable",
+    "download": "download",
+    "notFound": "firmware not found",
+    "downloadError": "failed to get the download link"
+  },
+  "progress": {
+    "title": "progress",
+    "total": "total",
+    "succeeded": "updated",
+    "failed": "failed",
+    "timedOut": "timed out"
+  },
+  "executions": {
+    "title": "Devices",
+    "itemLabel": "device",
+    "itemLabelPlural": "devices",
+    "filterStatus": "state",
+    "allStatus": "all states",
+    "empty": "no executions for this plan",
+    "columns": {
+      "device": "device",
+      "state": "state",
+      "progress": "progress",
+      "attempts": "attempts",
+      "error": "error",
+      "updated": "last update"
+    },
+    "emptyTitle": "no devices yet",
+    "resetFilter": "reset filter"
+  },
+  "header": {
+    "immediate": "starts immediately"
+  },
+  "actions": {
+    "cancel": "cancel plan",
+    "refresh": "refresh"
+  },
+  "cancelDialog": {
+    "title": "cancel OTA plan",
+    "message": "this stops the rollout: pending devices will not be updated and the firmware binary will be purged. This cannot be undone.",
+    "confirm": "cancel plan",
+    "success": "plan canceled",
+    "error": "failed to cancel the plan"
+  },
+  "statuses": {
+    "SCHEDULED": "scheduled",
+    "IN_PROGRESS": "in progress",
+    "COMPLETED": "completed",
+    "CLOSED": "closed",
+    "CANCELED": "canceled",
+    "ABORTED": "aborted"
+  },
+  "states": {
+    "QUEUED": "queued",
+    "INITIATED": "initiated",
+    "DOWNLOADING": "downloading",
+    "DOWNLOADED": "downloaded",
+    "VERIFIED": "verified",
+    "UPDATING": "updating",
+    "UPDATED": "updated",
+    "FAILED": "failed",
+    "TIMED_OUT": "timed out"
+  }
+}

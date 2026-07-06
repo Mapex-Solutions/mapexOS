@@ -19,6 +19,7 @@ import filtersComponent from './components/filters.json';
 import organizationTreeDrawerComponent from './components/organizationTreeDrawer.json';
 import advancedFiltersDrawerComponent from './components/drawers/advancedFiltersDrawer.json';
 import dynamicFiltersDrawerComponent from './components/drawers/dynamicFiltersDrawer.json';
+import assetTemplateFieldsComponent from './components/assetTemplates/assetTemplateFields.json';
 import assetTemplateSelectorComponent from './components/selectors/assetTemplateSelector.json';
 import routeGroupSelectorComponent from './components/selectors/routeGroupSelector.json';
 import assetClassificationSelectorComponent from './components/forms/assetClassificationSelector.json';
@@ -48,8 +49,12 @@ import accessAuditPage from './pages/administrations/accessAudit.json';
 // Pages - Assets
 import assetsPage from './pages/assets/assets.json';
 import assetTemplatesPage from './pages/assets/assetTemplates.json';
+import assetTemplateMarketplacePage from './pages/assets/assetTemplateMarketplace.json';
 import addAssetPage from './pages/assets/addAsset.json';
 import addAssetTemplatePage from './pages/assets/addAssetTemplate.json';
+import otaPlanListPage from './pages/otaPlans/otaPlanList.json';
+import createEditOtaPlanPage from './pages/otaPlans/createEditOtaPlan.json';
+import otaPlanDetailPage from './pages/otaPlans/otaPlanDetail.json';
 
 // Pages - Dashboards
 import dashboardAdmPage from './pages/dashboards/dashboardAdm.json';
@@ -93,6 +98,7 @@ import dlqLogsPage from './pages/logs/dlqLogsPage.json';
 import loginPage from './pages/login.json';
 import changePasswordPage from './pages/changePassword.json';
 import errorPage from './pages/error.json';
+import templateMigrationsPage from './pages/templateMigrations.json';
 import noOrganizationPage from './pages/errors/noOrganization.json';
 
 export default {
@@ -115,6 +121,9 @@ export default {
     cards: cardsComponent,
     filters: filtersComponent,
     organizationTreeDrawer: organizationTreeDrawerComponent,
+    assetTemplates: {
+      assetTemplateFields: assetTemplateFieldsComponent,
+    },
     selectors: {
       assetTemplateSelector: assetTemplateSelectorComponent,
       routeGroupSelector: routeGroupSelectorComponent,
@@ -154,8 +163,14 @@ export default {
     assets: {
       assets: assetsPage,
       assetTemplates: assetTemplatesPage,
+      assetTemplateMarketplace: assetTemplateMarketplacePage,
       addAsset: addAssetPage,
       addAssetTemplate: addAssetTemplatePage,
+    },
+    otaPlans: {
+      otaPlanList: otaPlanListPage,
+      createEditOtaPlan: createEditOtaPlanPage,
+      otaPlanDetail: otaPlanDetailPage,
     },
     dashboards: {
       dashboardAdm: dashboardAdmPage,
@@ -198,6 +213,7 @@ export default {
     login: loginPage,
     changePassword: changePasswordPage,
     error: errorPage,
+    templateMigrations: templateMigrationsPage,
     errors: {
       noOrganization: noOrganizationPage,
     },

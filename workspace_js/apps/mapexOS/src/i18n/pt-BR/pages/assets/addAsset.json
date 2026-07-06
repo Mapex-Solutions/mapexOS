@@ -2,7 +2,7 @@
   "page": {
     "title": "adicionar ativo",
     "titleEdit": "editar ativo",
-    "description": "registrar um novo ativo IoT com template predefinido",
+    "description": "registre um novo ativo — qualquer origem, qualquer protocolo",
     "button": "voltar para ativos"
   },
   "stepper": {
@@ -12,11 +12,46 @@
     "currentStep": "etapa atual"
   },
   "steps": {
+    "groups": {
+      "setup": "Configuração",
+      "identification": "Identificação",
+      "connectivity": "Conectividade",
+      "routing": "Roteamento",
+      "finalization": "Finalização"
+    },
     "step1": {
       "label": "identificação",
       "description": "nome, ID e descrição do ativo",
       "title": "identificação",
       "subtitle": "adicione informações básicas do ativo",
+      "leafLabel": "Informações",
+      "leafDescription": "nome, ID e descrição",
+      "attributes": {
+        "title": "Atributos",
+        "subtitle": "campos personalizados para o seu próprio negócio",
+        "addButton": "Adicionar atributo",
+        "empty": "Nenhum atributo adicionado ainda.",
+        "columns": {
+          "label": "Rótulo",
+          "labelPlaceholder": "ex.: site",
+          "kind": "Tipo",
+          "value": "Valor",
+          "valuePlaceholder": "valor",
+          "datePlaceholder": "AAAA-MM-DDTHH:mm:ssZ"
+        },
+        "kinds": {
+          "integer": "Inteiro",
+          "string": "Texto",
+          "boolean": "Booleano",
+          "date": "Data",
+          "geo": "Ponto geo"
+        },
+        "geo": {
+          "lat": "Latitude",
+          "lon": "Longitude"
+        },
+        "remove": "Remover atributo"
+      },
       "fields": {
         "name": {
           "label": "nome",
@@ -84,7 +119,7 @@
       "subtitle": "selecione um ou mais grupos de roteamento para definir como os dados do ativo serão roteados",
       "banner": {
         "title": "o que são grupos de roteamento?",
-        "description": "grupos de roteamento definem como os dados de telemetria deste ativo serão roteados para diferentes destinos como regras de negócio, lakehouses ou canais de notificação."
+        "description": "grupos de roteamento definem como os dados deste ativo serão roteados para diferentes destinos como regras de negócio, lakehouses ou canais de notificação."
       },
       "labels": {
         "systemTemplate": "Template do Sistema",
@@ -105,7 +140,7 @@
       "label": "conectividade",
       "description": "protocolo e localização",
       "title": "conectividade",
-      "subtitle": "configure o protocolo de comunicação e localização do ativo",
+      "subtitle": "configure as definições de conexão e localização do ativo",
       "certificate": {
         "activeTitle": "Certificado ativo",
         "revokedTitle": "Certificados revogados",
@@ -191,17 +226,16 @@
         },
         "debugEnabled": {
           "label": "modo debug",
-          "hint": "quando ativado, eventos de telemetria serao registrados para depuracao"
+          "hint": "quando ativado, eventos de dados serao registrados para depuracao"
         }
       },
       "protocolOptions": {
         "http": "HTTP",
         "mqtt": "MQTT",
-        "lorawan": "LoRaWAN (em breve)"
+        "lorawan": "LoRaWAN"
       },
       "banner": {
-        "info": "selecione o protocolo de comunicacao para seu dispositivo. HTTP e MQTT estao disponiveis.",
-        "httpInfo": "para dispositivos HTTP, crie uma Fonte de Dados para receber dados deste ativo.",
+        "httpInfo": "para origens HTTP, crie uma Fonte de Dados para receber dados deste ativo.",
         "mqttInfo": "configure as credenciais MQTT para conexao segura do dispositivo ao broker."
       },
       "certDialog": {
@@ -217,6 +251,18 @@
       "description": "configurar monitoramento de saúde do ativo",
       "title": "monitoramento de saúde",
       "subtitle": "habilite o monitoramento para detectar quando o ativo ficar offline"
+    },
+    "stepType": {
+      "label": "tipo de ativo",
+      "description": "escolha o que você está registrando",
+      "title": "o que você está registrando?",
+      "subtitle": "escolha o protocolo e o tipo — isso define o restante do wizard",
+      "cards": {
+        "mqtt": { "label": "Dispositivo MQTT", "description": "um dispositivo que conecta via MQTT" },
+        "http": { "label": "Dispositivo HTTP", "description": "um dispositivo que envia dados via HTTP" },
+        "lorawanSensor": { "label": "Sensor LoRaWAN", "description": "um end device que envia dados LoRaWAN" },
+        "lorawanGateway": { "label": "Gateway LoRaWAN", "description": "infraestrutura de rádio que encaminha pacotes dos dispositivos" }
+      }
     },
     "step6": {
       "label": "revisão",
@@ -250,7 +296,16 @@
         "threshold": "limite de inatividade",
         "requiredMisses": "falhas necessárias",
         "offlineRouteGroups": "quando offline",
-        "onlineRouteGroups": "quando voltar online"
+        "onlineRouteGroups": "quando voltar online",
+        "lorawanKind": "Tipo LoRaWAN",
+        "lorawanKindGateway": "Gateway",
+        "lorawanKindDevice": "Sensor (device)",
+        "lorawanDevEui": "Device EUI",
+        "lorawanRegion": "Plano de frequência",
+        "lorawanClass": "Classe",
+        "lorawanActivation": "Ativação",
+        "lorawanFrequencyPlan": "Plano de frequência",
+        "lorawanAuthMode": "Auth de conexão"
       }
     }
   },

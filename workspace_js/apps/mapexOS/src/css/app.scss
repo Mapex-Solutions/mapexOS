@@ -48,6 +48,23 @@ body.body--light {
   --mapex-danger-active:      rgba(255, 77, 79, 0.15);
   --mapex-danger-border:      rgba(255, 77, 79, 0.25);
 
+  // Feedback surfaces (banners, inline notices) — soft fill + border + icon/fg.
+  // `info` rides the brand primary so neutral notices stay on-brand (no off-brand blue).
+  --mapex-info-fg:            var(--mapex-primary);
+  --mapex-info-soft:          rgba(var(--mapex-primary-rgb), 0.12);
+  --mapex-info-border:        rgba(var(--mapex-primary-rgb), 0.32);
+  --mapex-success-fg:         #2E7D32;
+  --mapex-success-soft:       rgba(46, 125, 50, 0.14);
+  --mapex-success-border:     rgba(46, 125, 50, 0.32);
+  --mapex-warning-fg:         #E65100;
+  --mapex-warning-soft:       rgba(230, 81, 0, 0.13);
+  --mapex-warning-border:     rgba(230, 81, 0, 0.32);
+  --mapex-danger-fg:          #C62828;
+  --mapex-danger-soft:        rgba(198, 40, 40, 0.12);
+  --mapex-neutral-fg:         var(--mapex-text-secondary);
+  --mapex-neutral-soft:       rgba(0, 0, 0, 0.05);
+  --mapex-neutral-border:     var(--mapex-divider);
+
   // Quasar overrides
   --q-negative:               #C10015;
 
@@ -163,6 +180,23 @@ body.body--dark {
   --mapex-danger-hover:       rgba(255, 77, 79, 0.14);
   --mapex-danger-active:      rgba(255, 77, 79, 0.25);
   --mapex-danger-border:      rgba(255, 77, 79, 0.35);
+
+  // Feedback surfaces (banners, inline notices) — soft fill + border + icon/fg.
+  // `info` rides the brand primary so neutral notices stay on-brand (no off-brand blue).
+  --mapex-info-fg:            var(--mapex-primary);
+  --mapex-info-soft:          rgba(var(--mapex-primary-rgb), 0.20);
+  --mapex-info-border:        rgba(var(--mapex-primary-rgb), 0.45);
+  --mapex-success-fg:         #81C784;
+  --mapex-success-soft:       rgba(76, 175, 80, 0.22);
+  --mapex-success-border:     rgba(76, 175, 80, 0.45);
+  --mapex-warning-fg:         #FFB74D;
+  --mapex-warning-soft:       rgba(255, 152, 0, 0.20);
+  --mapex-warning-border:     rgba(255, 152, 0, 0.45);
+  --mapex-danger-fg:          #FF8A80;
+  --mapex-danger-soft:        rgba(255, 77, 79, 0.22);
+  --mapex-neutral-fg:         var(--mapex-text-secondary);
+  --mapex-neutral-soft:       rgba(255, 255, 255, 0.07);
+  --mapex-neutral-border:     var(--mapex-divider);
 
   // Quasar dark mode alignment
   --q-dark-page:              #1B2530;

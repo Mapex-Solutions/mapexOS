@@ -17,6 +17,12 @@
     "currentStep": "Etapa atual"
   },
   "steps": {
+    "groups": {
+      "setup": "Configuração",
+      "uplink": "Uplink",
+      "retrieval": "Busca",
+      "finalization": "Finalização"
+    },
     "step1": {
       "label": "Informações Básicas",
       "description": "Adicione nome do template, fabricante e detalhes do dispositivo",
@@ -401,7 +407,7 @@
   "tour": {
     "pageOverview": {
       "title": "Assistente de Template de Ativo",
-      "description": "Este assistente guia você na criação de um Template de Ativo. Um Template de Ativo define como o MapexOS processa dados dos seus dispositivos (IoT, ERP, Webhooks, APIs, etc.)."
+      "description": "Este assistente guia você na criação de um Template de Ativo. Um Template de Ativo define como o MapexOS processa dados das suas origens (IoT, ERP, Webhooks, APIs, etc.)."
     },
     "stepper": {
       "title": "Etapas de Navegação",

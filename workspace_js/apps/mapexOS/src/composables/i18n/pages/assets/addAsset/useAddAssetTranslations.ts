@@ -41,6 +41,25 @@ export function useAddAssetTranslations() {
      */
     steps: {
       /**
+       * Group headers for the vertical stepper (visual grouping only).
+       */
+      groups: {
+        setup: computed(() => ts('pages.assets.addAsset.steps.groups.setup')),
+        identification: computed(() => ts('pages.assets.addAsset.steps.groups.identification')),
+        connectivity: computed(() => ts('pages.assets.addAsset.steps.groups.connectivity')),
+        routing: computed(() => ts('pages.assets.addAsset.steps.groups.routing')),
+        finalization: computed(() => ts('pages.assets.addAsset.steps.groups.finalization')),
+      },
+      /**
+       * Step Type: asset type card selector (first step)
+       */
+      stepType: {
+        label: computed(() => ts('pages.assets.addAsset.steps.stepType.label')),
+        description: computed(() => tsRaw('pages.assets.addAsset.steps.stepType.description')),
+        title: computed(() => ts('pages.assets.addAsset.steps.stepType.title')),
+        subtitle: computed(() => tsRaw('pages.assets.addAsset.steps.stepType.subtitle')),
+      },
+      /**
        * Step 1: Identification
        */
       step1: {
@@ -48,6 +67,10 @@ export function useAddAssetTranslations() {
         description: computed(() => tsRaw('pages.assets.addAsset.steps.step1.description')),
         title: computed(() => ts('pages.assets.addAsset.steps.step1.title')),
         subtitle: computed(() => tsRaw('pages.assets.addAsset.steps.step1.subtitle')),
+        leafLabel: computed(() => ts('pages.assets.addAsset.steps.step1.leafLabel')),
+        leafDescription: computed(() => tsRaw('pages.assets.addAsset.steps.step1.leafDescription')),
+        attributesLabel: computed(() => ts('pages.assets.addAsset.steps.step1.attributes.title')),
+        attributesDescription: computed(() => tsRaw('pages.assets.addAsset.steps.step1.attributes.subtitle')),
         fields: {
           name: {
             label: computed(() => ts('pages.assets.addAsset.steps.step1.fields.name.label')),
@@ -235,7 +258,6 @@ export function useAddAssetTranslations() {
           lorawan: computed(() => ts('pages.assets.addAsset.steps.step4.protocolOptions.lorawan')),
         },
         banner: {
-          info: computed(() => tsRaw('pages.assets.addAsset.steps.step4.banner.info')),
           httpInfo: computed(() => tsRaw('pages.assets.addAsset.steps.step4.banner.httpInfo')),
           mqttInfo: computed(() => tsRaw('pages.assets.addAsset.steps.step4.banner.mqttInfo')),
         },
@@ -307,6 +329,15 @@ export function useAddAssetTranslations() {
           requiredMisses: computed(() => ts('pages.assets.addAsset.steps.step6.fields.requiredMisses')),
           offlineRouteGroups: computed(() => ts('pages.assets.addAsset.steps.step6.fields.offlineRouteGroups')),
           onlineRouteGroups: computed(() => ts('pages.assets.addAsset.steps.step6.fields.onlineRouteGroups')),
+          lorawanKind: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanKind')),
+          lorawanKindGateway: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanKindGateway')),
+          lorawanKindDevice: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanKindDevice')),
+          lorawanDevEui: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanDevEui')),
+          lorawanRegion: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanRegion')),
+          lorawanClass: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanClass')),
+          lorawanActivation: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanActivation')),
+          lorawanFrequencyPlan: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanFrequencyPlan')),
+          lorawanAuthMode: computed(() => ts('pages.assets.addAsset.steps.step6.fields.lorawanAuthMode')),
         },
       },
     },

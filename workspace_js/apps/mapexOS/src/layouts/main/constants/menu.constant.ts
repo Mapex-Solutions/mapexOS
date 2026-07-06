@@ -8,6 +8,9 @@ interface MenuTranslations {
   assets: ComputedRef<string>;
   assetsItems: ComputedRef<string>;
   assetsTemplate: ComputedRef<string>;
+  assetsMarketplace: ComputedRef<string>;
+  templateMigrations: ComputedRef<string>;
+  otaPlans: ComputedRef<string>;
   data: ComputedRef<string>;
   http: ComputedRef<string>;
   automation: ComputedRef<string>;
@@ -50,10 +53,18 @@ export function buildMenuList(m: MenuTranslations): MenuItem[] {
     {
       icon: 'device_hub',
       label: m.assets.value,
-      permissions: [PERMISSIONS.ASSETS.LIST, PERMISSIONS.ASSET_TEMPLATES.LIST],
+      permissions: [PERMISSIONS.ASSETS.LIST, PERMISSIONS.ASSET_TEMPLATES.LIST, PERMISSIONS.OTA_PLANS.LIST],
       children: [
+        // Devices: the physical assets you own
         { label: m.assetsItems.value, to: '/assets', icon: 'devices', permissions: [PERMISSIONS.ASSETS.LIST] },
+        { separator: true },
+        // Templates: the data models — your own plus the marketplace to get more
         { label: m.assetsTemplate.value, to: '/assets_template', icon: 'memory', permissions: [PERMISSIONS.ASSET_TEMPLATES.LIST] },
+        { label: m.assetsMarketplace.value, to: '/assets_template/marketplace', icon: 'storefront', permissions: [PERMISSIONS.ASSET_TEMPLATES.LIST] },
+        { separator: true },
+        // Rollouts: scheduled plans that push template/firmware changes across the fleet
+        { label: m.templateMigrations.value, to: '/assets_template/migrations', icon: 'sync_alt', permissions: [PERMISSIONS.TEMPLATE_MIGRATIONS.LIST] },
+        { label: m.otaPlans.value, to: '/ota_plans', icon: 'system_update', permissions: [PERMISSIONS.OTA_PLANS.LIST] },
       ],
     },
 

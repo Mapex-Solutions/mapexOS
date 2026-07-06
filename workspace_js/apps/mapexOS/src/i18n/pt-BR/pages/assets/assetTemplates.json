@@ -142,6 +142,7 @@
       "basicInfo": "informações básicas",
       "configuration": "configuração",
       "scripts": "scripts",
+      "fields": "campos",
       "timestamps": "timestamps"
     },
     "fields": {
@@ -158,9 +159,16 @@
       "scriptValidator": "script de validação",
       "scriptConversion": "script de conversão",
       "scriptsSummary": "resumo dos scripts",
+      "dynamicFields": "campos dinâmicos",
+      "availableFields": "campos disponíveis",
       "created": "criado",
       "updated": "atualizado"
     },
+    "fieldsModal": {
+      "dynamicTitle": "campos dinâmicos",
+      "availableTitle": "campos disponíveis"
+    },
+    "viewFields": "ver campos",
     "empty": {
       "description": "nenhuma descrição fornecida"
     },

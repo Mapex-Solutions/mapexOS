@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import type { Ref } from 'vue';
 
 import type { AssetFormData, AssetFormState } from '../interfaces';
+import { INITIAL_LORAWAN_CONFIG } from '../constants';
 
 /** Mock dependencies */
 vi.mock('@utils/alert/notify', () => ({
@@ -33,6 +34,29 @@ vi.mock('@src/composables/i18n/pages/assets/addAsset/useAddAssetTranslations', (
       creationFailed: 'Creation failed',
       updateFailed: { value: 'Update failed' },
     },
+    steps: {
+      groups: {
+        setup: { value: 'Setup' },
+        identification: { value: 'Identification' },
+        connectivity: { value: 'Connectivity' },
+        routing: { value: 'Routing' },
+        finalization: { value: 'Finalization' },
+      },
+      stepType: { label: { value: 'type' }, description: { value: '' } },
+      step1: {
+        label: { value: 'identification' },
+        description: { value: '' },
+        leafLabel: { value: 'Information' },
+        leafDescription: { value: '' },
+        attributesLabel: { value: 'Attributes' },
+        attributesDescription: { value: '' },
+      },
+      step2: { label: { value: 'assetTemplate' }, description: { value: '' } },
+      step3: { label: { value: 'routeGroups' }, description: { value: '' } },
+      step4: { label: { value: 'connectivity' }, description: { value: '' } },
+      step5: { label: { value: 'health' }, description: { value: '' } },
+      step6: { label: { value: 'review' }, description: { value: '' } },
+    },
   }),
 }));
 
@@ -59,10 +83,12 @@ function createAssetFormData(overrides: Partial<AssetFormData> = {}): AssetFormD
     description: '',
     assetTemplateId: null,
     routeGroupIds: [],
+    attributes: [],
     protocol: 'HTTP',
     latitude: null,
     longitude: null,
     mqttConfig: { clientId: '', username: '', authType: 'cert' as const, password: '' },
+    lorawanConfig: { ...INITIAL_LORAWAN_CONFIG, gateway: { ...INITIAL_LORAWAN_CONFIG.gateway } },
     debugEnabled: false,
     healthMonitor: {
       enabled: false,
@@ -128,6 +154,42 @@ describe('useAssetFormHandlers', () => {
     });
   }
 
+  function gatewayLorawanConfig() {
+    return { ...INITIAL_LORAWAN_CONFIG, kind: 'gateway' as const, gateway: { ...INITIAL_LORAWAN_CONFIG.gateway } };
+  }
+
+  describe('visibleSteps', () => {
+    it('includes all seven steps for a non-gateway asset', () => {
+      assetData.value = createAssetFormData({ protocol: 'MQTT' });
+      const { visibleSteps } = setup();
+
+      expect(visibleSteps.value.map((s) => s.id)).toEqual([
+        'type', 'assetTemplate', 'identification', 'attributes', 'connectivity', 'health', 'routeGroups', 'review',
+      ]);
+    });
+
+    it('skips assetTemplate + routeGroups for a LoRaWAN gateway', () => {
+      assetData.value = createAssetFormData({ protocol: 'LORAWAN', lorawanConfig: gatewayLorawanConfig() });
+      const { visibleSteps } = setup();
+
+      expect(visibleSteps.value.map((s) => s.id)).toEqual([
+        'type', 'identification', 'attributes', 'connectivity', 'health', 'review',
+      ]);
+    });
+
+    it('re-expands when switching from gateway to device', () => {
+      assetData.value = createAssetFormData({ protocol: 'LORAWAN', lorawanConfig: gatewayLorawanConfig() });
+      const { visibleSteps } = setup();
+
+      expect(visibleSteps.value).toHaveLength(6);
+
+      assetData.value.lorawanConfig.kind = 'device';
+
+      expect(visibleSteps.value).toHaveLength(8);
+      expect(visibleSteps.value.map((s) => s.id)).toContain('assetTemplate');
+    });
+  });
+
   describe('onTemplateSelected', () => {
     it('sets the selected template in form state', () => {
       const { onTemplateSelected } = setup();
@@ -166,7 +228,8 @@ describe('useAssetFormHandlers', () => {
       expect(isNextButtonDisabled.value).toBe(false);
     });
 
-    it('returns true for step 2 when no template selected', () => {
+    it('returns true on the template step when no template selected', () => {
+      // Order: TYPE(1), ASSET_TEMPLATE(2), IDENTIFICATION(3), ATTRIBUTES(4), CONNECTIVITY(5), HEALTH(6), ROUTE_GROUPS(7), ...
       currentStep.value = 2;
       assetData.value!.assetTemplateId = null;
       const { isNextButtonDisabled } = setup();
@@ -174,7 +237,7 @@ describe('useAssetFormHandlers', () => {
       expect(isNextButtonDisabled.value).toBe(true);
     });
 
-    it('returns false for step 2 when template selected', () => {
+    it('returns false on the template step when template selected', () => {
       currentStep.value = 2;
       assetData.value!.assetTemplateId = 'tpl-1';
       const { isNextButtonDisabled } = setup();
@@ -182,16 +245,17 @@ describe('useAssetFormHandlers', () => {
       expect(isNextButtonDisabled.value).toBe(false);
     });
 
-    it('returns true for step 3 when no route groups selected', () => {
-      currentStep.value = 3;
+    it('returns true on the route-groups step when none selected', () => {
+      // ROUTE_GROUPS is position 7 in the non-gateway flow.
+      currentStep.value = 7;
       assetData.value!.routeGroupIds = [];
       const { isNextButtonDisabled } = setup();
 
       expect(isNextButtonDisabled.value).toBe(true);
     });
 
-    it('returns false for step 3 when route groups selected', () => {
-      currentStep.value = 3;
+    it('returns false on the route-groups step when selected', () => {
+      currentStep.value = 7;
       assetData.value!.routeGroupIds = ['rg-1'];
       const { isNextButtonDisabled } = setup();
 
@@ -209,23 +273,24 @@ describe('useAssetFormHandlers', () => {
     });
 
     it('blocks step change when form validation fails', async () => {
+      // Position 3 is IDENTIFICATION, whose form is step1FormRef.
       step1FormRef.value = { validate: vi.fn().mockResolvedValue(false) };
-      currentStep.value = 1;
+      currentStep.value = 3;
       const { changeStep } = setup();
 
-      await changeStep(2);
+      await changeStep(4);
 
-      expect(currentStep.value).toBe(1);
+      expect(currentStep.value).toBe(3);
     });
 
     it('allows step change when form validation passes', async () => {
       step1FormRef.value = { validate: vi.fn().mockResolvedValue(true) };
-      currentStep.value = 1;
+      currentStep.value = 3;
       const { changeStep } = setup();
 
-      await changeStep(2);
+      await changeStep(4);
 
-      expect(currentStep.value).toBe(2);
+      expect(currentStep.value).toBe(4);
     });
   });
 
@@ -274,6 +339,68 @@ describe('useAssetFormHandlers', () => {
 
       expect(handleApiError).toHaveBeenCalled();
       expect(isSaving.value).toBe(false);
+    });
+  });
+
+  describe('submitForm — LoRaWAN gateway key mode', () => {
+    function setupCreateMock() {
+      (apis.assets as any) = {
+        asset: { create: vi.fn().mockResolvedValue({ id: 'new-id' }), update: vi.fn() },
+      };
+    }
+
+    function gatewayConfig(gw: Partial<typeof INITIAL_LORAWAN_CONFIG.gateway>) {
+      return {
+        ...INITIAL_LORAWAN_CONFIG,
+        kind: 'gateway' as const,
+        gateway: { ...INITIAL_LORAWAN_CONFIG.gateway, frequencyPlanId: 'EU_863_870', ...gw },
+      };
+    }
+
+    function sentGateway() {
+      return (apis.assets.asset.create as any).mock.calls[0][0].protocol.lorawan.gateway;
+    }
+
+    it('sends apiKey when authMode=key and the token is filled', async () => {
+      setupCreateMock();
+      assetData.value = createAssetFormData({
+        assetTemplateId: 'tpl-1',
+        protocol: 'LORAWAN',
+        lorawanConfig: gatewayConfig({ authMode: 'key', apiKey: 'ABCDEF0123' }),
+      });
+      const { submitForm } = setup();
+
+      await submitForm();
+
+      expect(sentGateway().apiKey).toBe('ABCDEF0123');
+    });
+
+    it('omits apiKey when authMode=key but the token is blank', async () => {
+      setupCreateMock();
+      assetData.value = createAssetFormData({
+        assetTemplateId: 'tpl-1',
+        protocol: 'LORAWAN',
+        lorawanConfig: gatewayConfig({ authMode: 'key', apiKey: '' }),
+      });
+      const { submitForm } = setup();
+
+      await submitForm();
+
+      expect(sentGateway()).not.toHaveProperty('apiKey');
+    });
+
+    it('omits apiKey for cert and eui modes', async () => {
+      setupCreateMock();
+      assetData.value = createAssetFormData({
+        assetTemplateId: 'tpl-1',
+        protocol: 'LORAWAN',
+        lorawanConfig: gatewayConfig({ authMode: 'cert', apiKey: 'should-not-send' }),
+      });
+      const { submitForm } = setup();
+
+      await submitForm();
+
+      expect(sentGateway()).not.toHaveProperty('apiKey');
     });
   });
 

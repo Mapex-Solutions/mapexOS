@@ -12,6 +12,11 @@
     "currentStep": "current step"
   },
   "steps": {
+    "groups": {
+      "setup": "Setup",
+      "details": "Details",
+      "finalization": "Finalization"
+    },
     "step1": {
       "label": "select category",
       "description": "choose between Technical or Communication triggers",

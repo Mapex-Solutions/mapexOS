@@ -1,0 +1,253 @@
+{
+  "pageHeader": {
+    "title": "template migrations",
+    "description": "plan and track migrations of assets from one template to another.",
+    "button": "add migration",
+    "info": {
+      "title": "What is a Migration Plan?",
+      "description": "A Migration Plan moves a set of assets from a source template to a target template, in controlled batches, immediately or on a schedule.",
+      "items": {
+        "batches": {
+          "title": "Controlled Batches",
+          "text": "Migrate assets in configurable batch sizes to keep the platform responsive"
+        },
+        "scheduling": {
+          "title": "Immediate or Scheduled",
+          "text": "Run a plan right away or schedule it for a future maintenance window"
+        },
+        "tracking": {
+          "title": "Progress Tracking",
+          "text": "Follow each plan through its lifecycle with live progress and error counters"
+        }
+      },
+      "docsLabel": "View Complete Documentation"
+    }
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search plans...",
+    "status": "status",
+    "allStatus": "all",
+    "clearAll": "clear all"
+  },
+  "listHeader": {
+    "title": "migration plans",
+    "itemLabel": "plan",
+    "itemLabelPlural": "plans"
+  },
+  "columns": {
+    "name": "name",
+    "route": "from → to",
+    "schedule": "schedule",
+    "status": "status",
+    "progress": "progress"
+  },
+  "schedule": {
+    "immediate": "immediate"
+  },
+  "statuses": {
+    "pending": "pending",
+    "scheduled": "scheduled",
+    "running": "running",
+    "complete": "complete",
+    "completed_with_errors": "completed with errors",
+    "cancelled": "cancelled"
+  },
+  "empty": {
+    "title": "no migration plans",
+    "description": "create a migration plan to move assets between templates."
+  },
+  "errors": {
+    "apiNotInitialized": "assets api not initialized"
+  },
+  "notifications": {
+    "loadError": "failed to load migration plans"
+  },
+  "detail": {
+    "page": {
+      "back": "back to migrations",
+      "loadError": "failed to load the migration plan",
+      "notFound": "migration plan not found"
+    },
+    "header": {
+      "route": "from → to",
+      "schedule": "schedule",
+      "immediate": "immediate",
+      "created": "created",
+      "updated": "updated"
+    },
+    "sections": {
+      "overview": "overview",
+      "overviewSubtitle": "Plan status, templates and progress",
+      "migration": "migration",
+      "status": "status",
+      "templates": "templates",
+      "schedule": "schedule"
+    },
+    "fields": {
+      "status": "status",
+      "fromTemplate": "from template",
+      "toTemplate": "to template"
+    },
+    "progress": {
+      "title": "progress",
+      "total": "total",
+      "migrated": "migrated",
+      "failed": "failed"
+    },
+    "executions": {
+      "title": "executions",
+      "itemLabel": "execution",
+      "itemLabelPlural": "executions",
+      "filterStatus": "status",
+      "allStatus": "all",
+      "empty": "no executions found",
+      "columns": {
+        "assetId": "asset",
+        "status": "status",
+        "error": "error",
+        "attempts": "attempts",
+        "updated": "updated"
+      },
+      "statuses": {
+        "pending": "pending",
+        "migrated": "migrated",
+        "failed": "failed",
+        "cancelled": "cancelled"
+      },
+      "emptyTitle": "no assets yet",
+      "resetFilter": "reset filter"
+    },
+    "actions": {
+      "edit": "edit",
+      "cancel": "cancel plan",
+      "refresh": "refresh"
+    },
+    "cancelDialog": {
+      "title": "cancel migration plan",
+      "message": "are you sure you want to cancel this migration plan? this action cannot be undone.",
+      "confirm": "cancel plan",
+      "success": "migration plan cancelled",
+      "error": "failed to cancel the migration plan"
+    },
+    "errors": {
+      "apiNotInitialized": "assets api not initialized"
+    }
+  },
+  "createPlan": {
+    "page": {
+      "title": "add migration plan",
+      "editTitle": "edit migration plan",
+      "description": "define, schedule and target a template migration.",
+      "editDescription": "update the name, description and schedule of this migration plan.",
+      "back": "back to migrations"
+    },
+    "stepper": {
+      "title": "migration plan",
+      "subtitle": "complete each step to configure the plan",
+      "requiredInfo": "fields marked with * are required",
+      "currentStep": "current step"
+    },
+    "navigation": {
+      "previous": "back",
+      "next": "next",
+      "save": "create plan"
+    },
+    "groups": {
+      "setup": "setup",
+      "migration": "migration"
+    },
+    "steps": {
+      "details": {
+        "label": "details",
+        "description": "name and describe the migration plan",
+        "title": "plan details",
+        "subtitle": "give the migration plan a clear name and an optional description.",
+        "fields": {
+          "name": {
+            "label": "name",
+            "placeholder": "e.g. sensors v1 to v2",
+            "hint": "a unique, recognizable name for this plan",
+            "required": "name is required"
+          },
+          "description": {
+            "label": "description",
+            "placeholder": "describe the purpose of this migration",
+            "hint": "optional context for other operators"
+          }
+        }
+      },
+      "schedule": {
+        "label": "schedule",
+        "description": "run immediately or at a future time",
+        "title": "when to run",
+        "subtitle": "choose to start the migration right away or schedule it for a future maintenance window.",
+        "modeLabel": "execution",
+        "options": {
+          "now": "run now",
+          "scheduled": "schedule for later"
+        },
+        "field": {
+          "label": "run at",
+          "hint": "the plan will start at this date and time",
+          "placeholder": "YYYY-MM-DD HH:mm",
+          "required": "a date and time is required",
+          "future": "choose a date and time in the future",
+          "close": "close"
+        }
+      },
+      "fromTemplate": {
+        "label": "from template",
+        "description": "select the source template to migrate from",
+        "title": "source template",
+        "subtitle": "pick the template the selected assets currently use."
+      },
+      "assets": {
+        "label": "assets",
+        "description": "select the assets to migrate",
+        "title": "assets to migrate",
+        "subtitle": "choose which assets on the source template should be migrated.",
+        "counter": "{selected} of {total} selected",
+        "selectAll": "select all {total} matching",
+        "selectPage": "select page",
+        "clearSelection": "clear selection",
+        "columns": {
+          "name": "asset",
+          "identifier": "identifier"
+        },
+        "empty": "no assets found for this template.",
+        "loadError": "failed to load assets"
+      },
+      "toTemplate": {
+        "label": "to template",
+        "description": "select the target template",
+        "title": "target template",
+        "subtitle": "pick the template the selected assets will be migrated to."
+      }
+    },
+    "notifications": {
+      "createSuccess": "migration plan created",
+      "createError": "failed to create the migration plan",
+      "updateSuccess": "migration plan updated",
+      "updateError": "failed to update the migration plan",
+      "loadError": "failed to load the migration plan",
+      "notEditable": "this migration plan can no longer be edited",
+      "apiNotInitialized": "assets api not initialized"
+    }
+  },
+  "actions": {
+    "view": "view details",
+    "viewHint": "see the full plan",
+    "edit": "edit plan",
+    "editHint": "change the plan details",
+    "remove": "remove plan",
+    "removeHint": "cancel this scheduled plan"
+  },
+  "cancelDialog": {
+    "title": "remove migration plan",
+    "message": "this will cancel the scheduled plan and its pending assets. continue?",
+    "confirm": "remove",
+    "success": "migration plan removed",
+    "error": "failed to remove the migration plan"
+  }
+}

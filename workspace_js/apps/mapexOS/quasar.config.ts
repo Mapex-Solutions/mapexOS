@@ -90,6 +90,11 @@ export default defineConfig((ctx: any) => {
 				// cloud service by default; an env override only redirects dev builds.
 				WORKFLOW_PLUGINS_MARKETPLACE_URL:
 					process.env.WORKFLOW_PLUGINS_MARKETPLACE_URL || 'https://marketplace.mapexos.io/api/v1/workflow_plugins',
+
+				// Asset Templates Marketplace — online-only catalog, always the
+				// cloud service by default; an env override only redirects dev builds.
+				ASSET_TEMPLATES_MARKETPLACE_URL:
+					process.env.ASSET_TEMPLATES_MARKETPLACE_URL || 'https://marketplace.mapexos.io/api/v1/asset_templates',
 			},
 			// rawDefine: {}
 			// ignorePublicFolder: true,

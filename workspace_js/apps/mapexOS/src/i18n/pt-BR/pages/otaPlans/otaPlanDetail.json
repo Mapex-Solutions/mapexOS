@@ -1,0 +1,93 @@
+{
+  "page": {
+    "back": "voltar aos planos",
+    "notFound": "plano OTA não encontrado",
+    "loadError": "falha ao carregar o plano OTA",
+    "apiNotInitialized": "API de assets não inicializada"
+  },
+  "sections": {
+    "overview": "Visão geral",
+    "overviewSubtitle": "plano, firmware e agendamento",
+    "status": "Status",
+    "templates": "Templates",
+    "schedule": "Agendamento"
+  },
+  "fields": {
+    "status": "status",
+    "sourceTemplate": "template de origem",
+    "targetTemplate": "template de destino",
+    "schedule": "início",
+    "created": "criado em",
+    "deadline": "prazo final"
+  },
+  "firmware": {
+    "title": "Firmware",
+    "version": "versão",
+    "filename": "arquivo",
+    "size": "tamanho",
+    "checksum": "checksum",
+    "artifactStatus": "artefato",
+    "empty": "detalhes do firmware indisponíveis",
+    "download": "baixar",
+    "notFound": "firmware não encontrado",
+    "downloadError": "falha ao obter o link de download"
+  },
+  "progress": {
+    "title": "progresso",
+    "total": "total",
+    "succeeded": "atualizados",
+    "failed": "falharam",
+    "timedOut": "expiraram"
+  },
+  "executions": {
+    "title": "Dispositivos",
+    "itemLabel": "dispositivo",
+    "itemLabelPlural": "dispositivos",
+    "filterStatus": "estado",
+    "allStatus": "todos os estados",
+    "empty": "nenhuma execução para este plano",
+    "columns": {
+      "device": "dispositivo",
+      "state": "estado",
+      "progress": "progresso",
+      "attempts": "tentativas",
+      "error": "erro",
+      "updated": "última atualização"
+    },
+    "emptyTitle": "nenhum dispositivo ainda",
+    "resetFilter": "limpar filtro"
+  },
+  "header": {
+    "immediate": "inicia imediatamente"
+  },
+  "actions": {
+    "cancel": "cancelar plano",
+    "refresh": "atualizar"
+  },
+  "cancelDialog": {
+    "title": "cancelar plano OTA",
+    "message": "isso interrompe a distribuição: dispositivos pendentes não serão atualizados e o binário do firmware será removido. Esta ação não pode ser desfeita.",
+    "confirm": "cancelar plano",
+    "success": "plano cancelado",
+    "error": "falha ao cancelar o plano"
+  },
+  "statuses": {
+    "SCHEDULED": "agendado",
+    "IN_PROGRESS": "em andamento",
+    "COMPLETED": "concluído",
+    "CLOSED": "encerrado",
+    "CANCELED": "cancelado",
+    "ABORTED": "abortado"
+  },
+  "states": {
+    "QUEUED": "na fila",
+    "INITIATED": "iniciado",
+    "DOWNLOADING": "baixando",
+    "DOWNLOADED": "baixado",
+    "VERIFIED": "verificado",
+    "UPDATING": "atualizando",
+    "UPDATED": "atualizado",
+    "FAILED": "falhou",
+    "TIMED_OUT": "expirado"
+  }
+}

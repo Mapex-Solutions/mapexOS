@@ -2,6 +2,7 @@
 import type { FormCardHeader } from '@components/cards';
 import type { AssetTemplateData, TestResults } from './interfaces';
 import type { PageTourStep } from '@composables/tour';
+import type { GroupedStep } from '@components/steppers';
 
 import { ref, computed, onMounted } from 'vue';
 import { QForm } from 'quasar';
@@ -22,7 +23,7 @@ defineOptions({
 });
 
 /** COMPONENTS */
-import { StepperVertical } from '@components/steppers';
+import { StepperVertical, buildStepperTree } from '@components/steppers';
 import { PageHeader } from '@components/headers';
 import { FormCard } from '@components/cards';
 import { StandardizedPayloadHelpModal } from '@components/dialogs/standardizedPayloadHelp';
@@ -114,54 +115,29 @@ const assetTemplateId = ref(route.params.id as string | undefined);
 const isLoading = ref(false);  // Loading data (edit mode)
 const isSaving = ref(false);   // Saving/updating (replaces isCreating)
 
-// Translated STEPS array
-const translatedSteps = computed(() => [
-  {
-    title: t.steps.step1.label.value,
-    icon: 'mdi-information',
-    description: t.steps.step1.description.value,
-  },
-  {
-    title: t.steps.step2.label.value,
-    icon: 'mdi-routes',
-    description: t.steps.step2.description.value,
-  },
-  {
-    title: t.steps.step3.label.value,
-    icon: 'mdi-code-braces',
-    description: t.steps.step3.description.value,
-  },
-  {
-    title: t.steps.step4.label.value,
-    icon: 'mdi-shield-check',
-    description: t.steps.step4.description.value,
-  },
-  {
-    title: t.steps.step5.label.value,
-    icon: 'mdi-swap-horizontal',
-    description: t.steps.step5.description.value,
-  },
-  {
-    title: t.steps.step6.label.value,
-    icon: 'mdi-flask',
-    description: t.steps.step6.description.value,
-  },
-  {
-    title: t.steps.step7.label.value,
-    icon: 'mdi-test-tube',
-    description: t.steps.step7.description.value,
-  },
-  {
-    title: t.steps.step8.label.value,
-    icon: 'mdi-database-cog',
-    description: t.steps.step8.description.value,
-  },
-  {
-    title: t.steps.step9.label.value,
-    icon: 'mdi-clipboard-check',
-    description: t.steps.step9.description.value,
-  },
-]);
+// Flat, ordered leaf steps — drive navigation, the current-step index and the
+// form-card header. `group` collapses them into the stepper's grouped tree
+// (see stepperTree). Convention: Setup first, Finalization (Review) last.
+const translatedSteps = computed<GroupedStep[]>(() => {
+  const setup = { id: 'setup', label: t.steps.groups.setup.value, icon: 'mdi-cog-outline' };
+  const uplink = { id: 'uplink', label: t.steps.groups.uplink.value, icon: 'mdi-upload-network-outline' };
+  const retrieval = { id: 'retrieval', label: t.steps.groups.retrieval.value, icon: 'mdi-database-search-outline' };
+  const finalization = { id: 'finalization', label: t.steps.groups.finalization.value, icon: 'mdi-clipboard-check' };
+  return [
+    { title: t.steps.step1.label.value, icon: 'mdi-information', description: t.steps.step1.description.value, group: setup },
+    { title: t.steps.step2.label.value, icon: 'mdi-routes', description: t.steps.step2.description.value, group: setup },
+    { title: t.steps.step3.label.value, icon: 'mdi-code-braces', description: t.steps.step3.description.value, group: uplink },
+    { title: t.steps.step4.label.value, icon: 'mdi-shield-check', description: t.steps.step4.description.value, group: uplink },
+    { title: t.steps.step5.label.value, icon: 'mdi-swap-horizontal', description: t.steps.step5.description.value, group: uplink },
+    { title: t.steps.step6.label.value, icon: 'mdi-flask', description: t.steps.step6.description.value, group: uplink },
+    { title: t.steps.step7.label.value, icon: 'mdi-test-tube', description: t.steps.step7.description.value, group: uplink },
+    { title: t.steps.step8.label.value, icon: 'mdi-database-cog', description: t.steps.step8.description.value, group: retrieval },
+    { title: t.steps.step9.label.value, icon: 'mdi-clipboard-check', description: t.steps.step9.description.value, group: finalization },
+  ];
+});
+
+// Grouped tree for the vertical stepper; navigation still runs on translatedSteps.
+const stepperTree = computed(() => buildStepperTree(translatedSteps.value));
 
 // Form and stepper state
 const step1FormRef = ref<QForm | null>(null);
@@ -494,7 +470,7 @@ onMounted(() => {
           :info-text="t.stepper.requiredInfo.value"
           :current-step-label="t.stepper.currentStep.value"
           :current-step="currentStep"
-          :steps="translatedSteps"
+          :steps="stepperTree"
           :allow-step-navigation="isEditMode"
           step-id-prefix="step"
           @step-click="changeStep"

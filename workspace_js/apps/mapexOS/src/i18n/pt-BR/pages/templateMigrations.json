@@ -1,0 +1,253 @@
+{
+  "pageHeader": {
+    "title": "planos de atualização",
+    "description": "planeje e acompanhe a migração de ativos de um modelo para outro.",
+    "button": "adicionar",
+    "info": {
+      "title": "O que é um Plano de Atualização?",
+      "description": "Um Plano de Atualização move um conjunto de ativos de um modelo de origem para um modelo de destino, em lotes controlados, imediatamente ou de forma agendada.",
+      "items": {
+        "batches": {
+          "title": "Lotes Controlados",
+          "text": "Migre ativos em lotes de tamanho configurável para manter a plataforma responsiva"
+        },
+        "scheduling": {
+          "title": "Imediato ou Agendado",
+          "text": "Execute um plano imediatamente ou agende-o para uma janela de manutenção futura"
+        },
+        "tracking": {
+          "title": "Acompanhamento de Progresso",
+          "text": "Acompanhe cada plano em seu ciclo de vida com progresso ao vivo e contadores de erro"
+        }
+      },
+      "docsLabel": "Ver Documentação Completa"
+    }
+  },
+  "filters": {
+    "label": "filtros",
+    "searchPlaceholder": "buscar planos...",
+    "status": "status",
+    "allStatus": "todos",
+    "clearAll": "limpar tudo"
+  },
+  "listHeader": {
+    "title": "planos de atualização",
+    "itemLabel": "plano",
+    "itemLabelPlural": "planos"
+  },
+  "columns": {
+    "name": "nome",
+    "route": "de → para",
+    "schedule": "agendamento",
+    "status": "status",
+    "progress": "progresso"
+  },
+  "schedule": {
+    "immediate": "imediato"
+  },
+  "statuses": {
+    "pending": "pendente",
+    "scheduled": "agendado",
+    "running": "em execução",
+    "complete": "concluído",
+    "completed_with_errors": "concluído com erros",
+    "cancelled": "cancelado"
+  },
+  "empty": {
+    "title": "nenhum plano de atualização",
+    "description": "crie um plano de atualização para mover ativos entre modelos."
+  },
+  "errors": {
+    "apiNotInitialized": "api de ativos não inicializada"
+  },
+  "notifications": {
+    "loadError": "falha ao carregar os planos de atualização"
+  },
+  "detail": {
+    "page": {
+      "back": "voltar para migrações",
+      "loadError": "falha ao carregar o plano de atualização",
+      "notFound": "plano de atualização não encontrado"
+    },
+    "header": {
+      "route": "de → para",
+      "schedule": "agendamento",
+      "immediate": "imediato",
+      "created": "criado",
+      "updated": "atualizado"
+    },
+    "sections": {
+      "overview": "visão geral",
+      "overviewSubtitle": "Status do plano, modelos e progresso",
+      "migration": "migração",
+      "status": "status",
+      "templates": "templates",
+      "schedule": "agendamento"
+    },
+    "fields": {
+      "status": "status",
+      "fromTemplate": "modelo de origem",
+      "toTemplate": "modelo de destino"
+    },
+    "progress": {
+      "title": "progresso",
+      "total": "total",
+      "migrated": "migrados",
+      "failed": "falhas"
+    },
+    "executions": {
+      "title": "execuções",
+      "itemLabel": "execução",
+      "itemLabelPlural": "execuções",
+      "filterStatus": "status",
+      "allStatus": "todos",
+      "empty": "nenhuma execução encontrada",
+      "columns": {
+        "assetId": "ativo",
+        "status": "status",
+        "error": "erro",
+        "attempts": "tentativas",
+        "updated": "atualizado"
+      },
+      "statuses": {
+        "pending": "pendente",
+        "migrated": "migrado",
+        "failed": "falhou",
+        "cancelled": "cancelado"
+      },
+      "emptyTitle": "nenhum ativo ainda",
+      "resetFilter": "limpar filtro"
+    },
+    "actions": {
+      "edit": "editar",
+      "cancel": "cancelar plano",
+      "refresh": "atualizar"
+    },
+    "cancelDialog": {
+      "title": "cancelar plano de atualização",
+      "message": "tem certeza de que deseja cancelar este plano de atualização? esta ação não pode ser desfeita.",
+      "confirm": "cancelar plano",
+      "success": "plano de atualização cancelado",
+      "error": "falha ao cancelar o plano de atualização"
+    },
+    "errors": {
+      "apiNotInitialized": "api de ativos não inicializada"
+    }
+  },
+  "createPlan": {
+    "page": {
+      "title": "adicionar plano de atualização",
+      "editTitle": "editar plano de atualização",
+      "description": "defina, agende e direcione uma migração de modelo.",
+      "editDescription": "atualize o nome, a descrição e o agendamento deste plano de atualização.",
+      "back": "voltar para migrações"
+    },
+    "stepper": {
+      "title": "plano de atualização",
+      "subtitle": "conclua cada etapa para configurar o plano",
+      "requiredInfo": "campos marcados com * são obrigatórios",
+      "currentStep": "etapa atual"
+    },
+    "navigation": {
+      "previous": "voltar",
+      "next": "próximo",
+      "save": "criar plano"
+    },
+    "groups": {
+      "setup": "configuração",
+      "migration": "migração"
+    },
+    "steps": {
+      "details": {
+        "label": "detalhes",
+        "description": "nomeie e descreva o plano de atualização",
+        "title": "detalhes do plano",
+        "subtitle": "dê ao plano de atualização um nome claro e uma descrição opcional.",
+        "fields": {
+          "name": {
+            "label": "nome",
+            "placeholder": "ex. sensores v1 para v2",
+            "hint": "um nome único e reconhecível para este plano",
+            "required": "o nome é obrigatório"
+          },
+          "description": {
+            "label": "descrição",
+            "placeholder": "descreva o propósito desta migração",
+            "hint": "contexto opcional para outros operadores"
+          }
+        }
+      },
+      "schedule": {
+        "label": "agendamento",
+        "description": "executar imediatamente ou em um horário futuro",
+        "title": "quando executar",
+        "subtitle": "escolha iniciar a migração imediatamente ou agende-a para uma janela de manutenção futura.",
+        "modeLabel": "execução",
+        "options": {
+          "now": "executar agora",
+          "scheduled": "agendar para depois"
+        },
+        "field": {
+          "label": "executar em",
+          "hint": "o plano iniciará nesta data e hora",
+          "placeholder": "AAAA-MM-DD HH:mm",
+          "required": "uma data e hora é obrigatória",
+          "future": "escolha uma data e hora no futuro",
+          "close": "fechar"
+        }
+      },
+      "fromTemplate": {
+        "label": "modelo de origem",
+        "description": "selecione o modelo de origem para migrar",
+        "title": "modelo de origem",
+        "subtitle": "escolha o modelo que os ativos selecionados usam atualmente."
+      },
+      "assets": {
+        "label": "ativos",
+        "description": "selecione os ativos para migrar",
+        "title": "ativos para migrar",
+        "subtitle": "escolha quais ativos do modelo de origem devem ser migrados.",
+        "counter": "{selected} de {total} selecionados",
+        "selectAll": "selecionar todos os {total} correspondentes",
+        "selectPage": "selecionar página",
+        "clearSelection": "limpar seleção",
+        "columns": {
+          "name": "ativo",
+          "identifier": "identificador"
+        },
+        "empty": "nenhum ativo encontrado para este modelo.",
+        "loadError": "falha ao carregar os ativos"
+      },
+      "toTemplate": {
+        "label": "modelo de destino",
+        "description": "selecione o modelo de destino",
+        "title": "modelo de destino",
+        "subtitle": "escolha o modelo para o qual os ativos selecionados serão migrados."
+      }
+    },
+    "notifications": {
+      "createSuccess": "plano de atualização criado",
+      "createError": "falha ao criar o plano de atualização",
+      "updateSuccess": "plano de atualização atualizado",
+      "updateError": "falha ao atualizar o plano de atualização",
+      "loadError": "falha ao carregar o plano de atualização",
+      "notEditable": "este plano de atualização não pode mais ser editado",
+      "apiNotInitialized": "api de ativos não inicializada"
+    }
+  },
+  "actions": {
+    "view": "ver detalhes",
+    "viewHint": "ver o plano completo",
+    "edit": "editar plano",
+    "editHint": "alterar os detalhes do plano",
+    "remove": "remover plano",
+    "removeHint": "cancelar este plano agendado"
+  },
+  "cancelDialog": {
+    "title": "remover plano de atualização",
+    "message": "isto irá cancelar o plano agendado e seus assets pendentes. continuar?",
+    "confirm": "remover",
+    "success": "plano de atualização removido",
+    "error": "falha ao remover o plano de atualização"
+  }
+}

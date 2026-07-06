@@ -1,0 +1,71 @@
+{
+  "page": {
+    "title": "marketplace de templates",
+    "subtitle": "explore e instale templates de ativos compartilhados do marketplace"
+  },
+  "empty": {
+    "title": "nenhum template encontrado",
+    "description": "nenhum template compartilhado corresponde aos filtros atuais. limpe os filtros para ver o catálogo completo.",
+    "button": "limpar filtros"
+  },
+  "error": {
+    "title": "não foi possível carregar o marketplace",
+    "description": "o catálogo do marketplace não pôde ser carregado. verifique sua conexão e tente novamente.",
+    "button": "tentar novamente"
+  },
+  "search": {
+    "placeholder": "buscar templates..."
+  },
+  "facets": {
+    "category": "categoria",
+    "vendor": "fabricante",
+    "model": "modelo",
+    "version": "versão",
+    "all": "todos"
+  },
+  "card": {
+    "fields": "{count} campos",
+    "hasScripts": "inclui scripts",
+    "view": "ver detalhes"
+  },
+  "modal": {
+    "title": "detalhes do template",
+    "loading": "carregando template...",
+    "loadError": "falha ao carregar o template",
+    "sections": {
+      "overview": "visão geral",
+      "dynamicFields": "campos dinâmicos",
+      "scripts": "scripts",
+      "availableFields": "campos disponíveis"
+    },
+    "overview": {
+      "manufacturer": "fabricante",
+      "model": "modelo",
+      "version": "versão",
+      "category": "categoria",
+      "assetIdPath": "caminho do id do ativo",
+      "description": "descrição"
+    },
+    "scripts": {
+      "test": "teste",
+      "processor": "processador",
+      "validator": "validador",
+      "conversion": "conversão",
+      "configured": "configurado",
+      "notConfigured": "não configurado",
+      "view": "ver script"
+    },
+    "actions": {
+      "cancel": "cancelar",
+      "close": "fechar"
+    }
+  },
+  "install": {
+    "button": "instalar",
+    "installing": "instalando...",
+    "installed": "instalado",
+    "success": "template instalado",
+    "checksumError": "não foi possível verificar o template e ele não foi instalado",
+    "genericError": "falha ao instalar o template"
+  }
+}

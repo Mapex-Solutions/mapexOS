@@ -51,6 +51,15 @@ export function useAddAssetTemplateTranslations() {
      */
     steps: {
       /**
+       * Group headers for the vertical stepper (visual grouping only).
+       */
+      groups: {
+        setup: computed(() => ts('pages.assets.addAssetTemplate.steps.groups.setup')),
+        uplink: computed(() => ts('pages.assets.addAssetTemplate.steps.groups.uplink')),
+        retrieval: computed(() => ts('pages.assets.addAssetTemplate.steps.groups.retrieval')),
+        finalization: computed(() => ts('pages.assets.addAssetTemplate.steps.groups.finalization')),
+      },
+      /**
        * Step 1: Basic Information
        */
       step1: {

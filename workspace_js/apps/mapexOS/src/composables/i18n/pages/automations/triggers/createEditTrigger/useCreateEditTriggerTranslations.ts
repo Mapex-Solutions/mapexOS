@@ -41,6 +41,14 @@ export function useCreateEditTriggerTranslations() {
      */
     steps: {
       /**
+       * Group headers for the vertical stepper (visual grouping only).
+       */
+      groups: {
+        setup: computed(() => ts('pages.automations.createEditTrigger.steps.groups.setup')),
+        details: computed(() => ts('pages.automations.createEditTrigger.steps.groups.details')),
+        finalization: computed(() => ts('pages.automations.createEditTrigger.steps.groups.finalization')),
+      },
+      /**
        * Step 1: Select Category
        */
       step1: {

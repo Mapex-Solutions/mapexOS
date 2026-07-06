@@ -5,7 +5,7 @@ defineOptions({
 
 /** TYPE IMPORTS */
 import type { FormCardHeader } from '@components/cards';
-import type { AssetFormState } from './interfaces';
+import type { AssetFormState, AssetAttributeForm } from './interfaces';
 
 /** VUE IMPORTS */
 import { ref, computed, watch, onMounted } from 'vue';
@@ -28,11 +28,14 @@ import {
   Step5Review,
   HealthMonitoringSection,
 } from './components';
+import { Step1Type } from './components/Step1Type';
+import { AttributesSection } from './components/AttributesSection';
 import { GenerateCertificateDialog } from './components/GenerateCertificateDialog';
 
 /** LOCAL IMPORTS */
-import { INITIAL_ASSET_FORM_DATA, TOTAL_STEPS, STEP } from './constants';
+import { INITIAL_ASSET_FORM_DATA, STEP } from './constants';
 import { useAssetFormHandlers } from './handlers';
+import { applyProtocolHealthPolicy } from './helpers';
 
 /** STORES */
 
@@ -112,6 +115,12 @@ async function loadAssetData(): Promise<void> {
     assetData.value.description = data.description || '';
     assetData.value.assetTemplateId = data.assetTemplateId || null;
     assetData.value.routeGroupIds = data.routeGroupIds || [];
+    assetData.value.attributes = (data.attributes ?? []).map((a) => ({
+      label: a.label,
+      kind: a.kind,
+      value: a.value as AssetAttributeForm['value'],
+      searchable: a.searchable ?? true,
+    }));
     assetData.value.protocol = data.protocol?.type?.toUpperCase() || 'HTTP';
     assetData.value.latitude = data.latitude ?? null;
     assetData.value.longitude = data.longitude ?? null;
@@ -221,8 +230,8 @@ async function loadAssetData(): Promise<void> {
       fullData: data
     });
 
-    // In EDIT mode, skip to Review step by default
-    currentStep.value = STEP.REVIEW;
+    // In EDIT mode, skip to the Review step (always the last visible step).
+    currentStep.value = visibleSteps.value.length;
 
   } catch (error: any) {
     handleApiError(error, {
@@ -330,42 +339,6 @@ const pageTitle = computed(() =>
 );
 
 /**
- * Translated steps array with reactive translations
- */
-const translatedSteps = computed(() => [
-  {
-    title: t.steps.step1.label.value,
-    icon: 'mdi-fingerprint',
-    description: t.steps.step1.description.value,
-  },
-  {
-    title: t.steps.step2.label.value,
-    icon: 'mdi-file-document',
-    description: t.steps.step2.description.value,
-  },
-  {
-    title: t.steps.step3.label.value,
-    icon: 'mdi-routes',
-    description: t.steps.step3.description.value,
-  },
-  {
-    title: t.steps.step4.label.value,
-    icon: 'mdi-wifi',
-    description: t.steps.step4.description.value,
-  },
-  {
-    title: t.steps.step5.label.value,
-    icon: 'mdi-heart-pulse',
-    description: t.steps.step5.description.value,
-  },
-  {
-    title: t.steps.step6.label.value,
-    icon: 'mdi-clipboard-check',
-    description: t.steps.step6.description.value,
-  },
-]);
-
-/**
  * Asset form handlers composable
  */
 const handlers = useAssetFormHandlers({
@@ -381,12 +354,18 @@ const handlers = useAssetFormHandlers({
   step4FormRef: computed(() => step4Ref.value?.formRef ?? null),
 });
 
+// Visible steps + current step id come from the handler, which derives them
+// from the asset type (a LoRaWAN gateway skips the template + route-group steps).
+const visibleSteps = handlers.visibleSteps;
+const stepperTree = handlers.stepperTree;
+const currentStepId = handlers.currentStepId;
+
 /**
  * Form navigation configuration
  */
 const formNavigation = computed(() => ({
   currentStep: currentStep.value,
-  totalSteps: TOTAL_STEPS,
+  totalSteps: visibleSteps.value.length,
   showPreviousButton: true,
   showNextButton: true,
   showSaveButton: true,
@@ -422,11 +401,27 @@ const certDialogLabels = computed(() => ({
 /** COMPOSABLES USAGE */
 useStepperNavigation({
   currentStep,
-  totalSteps: TOTAL_STEPS,
+  totalSteps: visibleSteps.value.length,
   changeStep: handlers.handleStepChange,
 });
 
 /** WATCHERS */
+
+// Enforce each protocol's health-monitoring policy on the durable form state so
+// the review and payload reflect it even when the operator skips the health step
+// (the health component only mounts when that step is visited).
+watch(
+  () => [assetData.value.protocol, assetData.value.lorawanConfig?.kind] as const,
+  ([protocol, kind]) => {
+    assetData.value.healthMonitor = applyProtocolHealthPolicy(
+      assetData.value.healthMonitor,
+      protocol,
+      kind
+    );
+  },
+  { immediate: true }
+);
+
 watch(() => assetData.value.assetTemplateId, (newValue, oldValue) => {
   logger.debug('assetTemplateId changed:', {
     old: oldValue,
@@ -469,7 +464,7 @@ onMounted(() => {
             :info-text="t.stepper.requiredInfo.value"
             :current-step-label="t.stepper.currentStep.value"
             :current-step="currentStep"
-            :steps="translatedSteps"
+            :steps="stepperTree"
             :allow-step-navigation="isEditMode"
             @step-click="handlers.changeStep"
           />
@@ -478,64 +473,80 @@ onMounted(() => {
         <!-- Form Card -->
         <div class="col-12 col-md-8">
           <FormCard
-            :header="translatedSteps[currentStep - 1] as unknown as FormCardHeader"
+            :header="visibleSteps[currentStep - 1] as unknown as FormCardHeader"
             :navigation="formNavigation"
             :button-labels="buttonLabels"
             @previous="handlers.changeStep"
             @next="handlers.changeStep"
             @save="onSubmit"
           >
-            <!-- FORM BODY -->
+            <!-- FORM BODY (rendered by the current visible step's id) -->
             <template #form>
-              <!-- STEP 1: IDENTIFICATION -->
+              <!-- TYPE -->
+              <Step1Type
+                v-if="currentStepId === STEP.TYPE"
+                :model-value="assetData"
+                @update:model-value="updateAssetData"
+              />
+
+              <!-- IDENTIFICATION (information) -->
               <Step1Identification
-                v-if="currentStep === STEP.IDENTIFICATION"
+                v-else-if="currentStepId === STEP.IDENTIFICATION"
                 ref="step1Ref"
                 :model-value="assetData"
                 @update:model-value="updateAssetData"
               />
 
-              <!-- STEP 2: ASSET TEMPLATE -->
+              <!-- ATTRIBUTES -->
+              <AttributesSection
+                v-else-if="currentStepId === STEP.ATTRIBUTES"
+                :model-value="assetData.attributes"
+                @update:model-value="(v) => updateAssetData({ attributes: v })"
+              />
+
+              <!-- ASSET TEMPLATE -->
               <Step2AssetTemplate
-                v-else-if="currentStep === STEP.ASSET_TEMPLATE"
+                v-else-if="currentStepId === STEP.ASSET_TEMPLATE"
                 ref="step2Ref"
                 :model-value="assetData"
                 @update:model-value="updateAssetData"
                 @template-selected="handlers.onTemplateSelected"
               />
 
-              <!-- STEP 3: ROUTE GROUPS -->
+              <!-- ROUTE GROUPS -->
               <Step3RouteGroups
-                v-else-if="currentStep === STEP.ROUTE_GROUPS"
+                v-else-if="currentStepId === STEP.ROUTE_GROUPS"
                 ref="step3Ref"
                 :model-value="assetData"
                 @update:model-value="updateAssetData"
                 @route-groups-selected="handlers.onRouteGroupsSelected"
               />
 
-              <!-- STEP 4: CONNECTIVITY -->
+              <!-- CONNECTIVITY -->
               <Step4Connectivity
-                v-else-if="currentStep === STEP.CONNECTIVITY"
+                v-else-if="currentStepId === STEP.CONNECTIVITY"
                 ref="step4Ref"
                 :model-value="assetData"
                 :is-edit-mode="isEditMode"
                 @update:model-value="updateAssetData"
               />
 
-              <!-- STEP 5: HEALTH MONITORING -->
+              <!-- HEALTH MONITORING -->
               <HealthMonitoringSection
-                v-else-if="currentStep === STEP.HEALTH_MONITORING"
+                v-else-if="currentStepId === STEP.HEALTH_MONITORING"
                 :model-value="assetData.healthMonitor"
                 :asset-u-u-i-d="assetData.assetId"
                 :protocol="assetData.protocol"
+                :lorawan-kind="assetData.lorawanConfig?.kind"
                 @update:model-value="(val) => updateAssetData({ healthMonitor: { ...assetData.healthMonitor, ...val } })"
               />
 
-              <!-- STEP 6: REVIEW -->
+              <!-- REVIEW -->
               <Step5Review
-                v-else-if="currentStep === STEP.REVIEW"
+                v-else-if="currentStepId === STEP.REVIEW"
                 :model-value="assetData"
                 :form-state="formState"
+                :visible-step-ids="visibleSteps.map((s) => s.id)"
                 @edit-section="handlers.changeStep"
               />
             </template>

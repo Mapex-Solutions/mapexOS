@@ -38,8 +38,12 @@ export { useListDrawerTranslations } from './components/drawers/listDrawer';
 // Assets
 export { useAssetsTranslations } from './pages/assets/assets/useAssetsTranslations';
 export { useAssetTemplatesTranslations } from './pages/assets/assetTemplates/useAssetTemplatesTranslations';
+export { useAssetTemplateMarketplaceTranslations } from './pages/assets/assetTemplateMarketplace/useAssetTemplateMarketplaceTranslations';
 export { useAddAssetTranslations } from './pages/assets/addAsset/useAddAssetTranslations';
 export { useAddAssetTemplateTranslations } from './pages/assets/addAssetTemplate/useAddAssetTemplateTranslations';
+export { useMigrationPlansTranslations } from './pages/templateMigrations/useMigrationPlansTranslations';
+export { useCreateEditMigrationPlanTranslations } from './pages/templateMigrations/useCreateEditMigrationPlanTranslations';
+export { useMigrationPlanDetailTranslations } from './pages/templateMigrations/useMigrationPlanDetailTranslations';
 
 // DataSources
 export { useHttpDataSourcesTranslations } from './pages/datasources/http/useHttpDataSourcesTranslations';

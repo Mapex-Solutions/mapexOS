@@ -2,7 +2,7 @@
   "page": {
     "title": "add asset",
     "titleEdit": "edit asset",
-    "description": "register a new IoT asset with predefined template",
+    "description": "register a new asset — any source, any protocol",
     "button": "back to assets"
   },
   "stepper": {
@@ -12,11 +12,46 @@
     "currentStep": "current step"
   },
   "steps": {
+    "groups": {
+      "setup": "Setup",
+      "identification": "Identification",
+      "connectivity": "Connectivity",
+      "routing": "Routing",
+      "finalization": "Finalization"
+    },
     "step1": {
       "label": "identification",
       "description": "asset name, ID and description",
       "title": "identification",
       "subtitle": "add basic information about the asset",
+      "leafLabel": "Information",
+      "leafDescription": "name, ID and description",
+      "attributes": {
+        "title": "Attributes",
+        "subtitle": "custom fields for your own business needs",
+        "addButton": "Add attribute",
+        "empty": "No attributes added yet.",
+        "columns": {
+          "label": "Label",
+          "labelPlaceholder": "e.g.: site",
+          "kind": "Type",
+          "value": "Value",
+          "valuePlaceholder": "value",
+          "datePlaceholder": "YYYY-MM-DDTHH:mm:ssZ"
+        },
+        "kinds": {
+          "integer": "Integer",
+          "string": "Text",
+          "boolean": "Boolean",
+          "date": "Date",
+          "geo": "Geo point"
+        },
+        "geo": {
+          "lat": "Latitude",
+          "lon": "Longitude"
+        },
+        "remove": "Remove attribute"
+      },
       "fields": {
         "name": {
           "label": "name",
@@ -84,7 +119,7 @@
       "subtitle": "select one or more route groups to define how asset data will be routed",
       "banner": {
         "title": "what are route groups?",
-        "description": "route groups define how telemetry data from this asset will be routed to different destinations like business rules, lakehouses, or notification channels."
+        "description": "route groups define how data from this asset will be routed to different destinations like business rules, lakehouses, or notification channels."
       },
       "labels": {
         "systemTemplate": "System Template",
@@ -105,7 +140,7 @@
       "label": "connectivity",
       "description": "protocol and location",
       "title": "connectivity",
-      "subtitle": "configure communication protocol and asset location",
+      "subtitle": "configure connection settings and asset location",
       "certificate": {
         "activeTitle": "Active certificate",
         "revokedTitle": "Revoked certificates",
@@ -191,17 +226,16 @@
         },
         "debugEnabled": {
           "label": "debug mode",
-          "hint": "when enabled, telemetry events will be logged for debugging purposes"
+          "hint": "when enabled, data events will be logged for debugging purposes"
         }
       },
       "protocolOptions": {
         "http": "HTTP",
         "mqtt": "MQTT",
-        "lorawan": "LoRaWAN (coming soon)"
+        "lorawan": "LoRaWAN"
       },
       "banner": {
-        "info": "select the communication protocol for your device. HTTP and MQTT are available.",
-        "httpInfo": "for HTTP devices, create a Data Source to receive data from this asset.",
+        "httpInfo": "for HTTP sources, create a Data Source to receive data from this asset.",
         "mqttInfo": "configure MQTT credentials for secure device connection to the broker."
       },
       "certDialog": {
@@ -217,6 +251,18 @@
       "description": "configure asset health monitoring",
       "title": "health monitoring",
       "subtitle": "enable monitoring to detect when the asset goes offline"
+    },
+    "stepType": {
+      "label": "asset type",
+      "description": "choose what you are registering",
+      "title": "what are you registering?",
+      "subtitle": "pick the protocol and kind — this shapes the rest of the wizard",
+      "cards": {
+        "mqtt": { "label": "MQTT device", "description": "a device that connects over MQTT" },
+        "http": { "label": "HTTP device", "description": "a device that pushes data over HTTP" },
+        "lorawanSensor": { "label": "LoRaWAN sensor", "description": "an end device that sends LoRaWAN data" },
+        "lorawanGateway": { "label": "LoRaWAN gateway", "description": "radio infrastructure that forwards device packets" }
+      }
     },
     "step6": {
       "label": "review",
@@ -250,7 +296,16 @@
         "threshold": "inactivity threshold",
         "requiredMisses": "required misses",
         "offlineRouteGroups": "when offline",
-        "onlineRouteGroups": "when back online"
+        "onlineRouteGroups": "when back online",
+        "lorawanKind": "LoRaWAN type",
+        "lorawanKindGateway": "Gateway",
+        "lorawanKindDevice": "Sensor (device)",
+        "lorawanDevEui": "Device EUI",
+        "lorawanRegion": "Frequency plan",
+        "lorawanClass": "Class",
+        "lorawanActivation": "Activation",
+        "lorawanFrequencyPlan": "Frequency plan",
+        "lorawanAuthMode": "Connection auth"
       }
     }
   },

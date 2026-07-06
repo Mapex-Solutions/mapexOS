@@ -1,0 +1,107 @@
+{
+  "title": "OTA plans",
+  "description": "roll out firmware updates to your device fleet",
+  "addButton": "new plan",
+  "listTitle": "OTA plans list",
+  "itemLabel": "plan",
+  "itemLabelPlural": "plans",
+  "info": {
+    "title": "What is an OTA Plan?",
+    "description": "An OTA plan rolls out a firmware update to a set of devices as a template-to-template migration: each device downloads the binary, applies it, and only then switches to the target template.",
+    "items": {
+      "migration": {
+        "title": "Template Migration",
+        "text": "Devices move from the source template to the target template only after reporting a successful update"
+      },
+      "paced": {
+        "title": "Paced & Safe",
+        "text": "Dispatch is presence-gated and paced, with automatic abort when the failure rate crosses the configured threshold"
+      },
+      "window": {
+        "title": "Bounded Window",
+        "text": "Every plan runs between a start time and a deadline; pending devices time out when the window closes"
+      }
+    },
+    "docsLabel": "View Complete Documentation"
+  },
+  "filters": {
+    "label": "filters",
+    "searchPlaceholder": "search plans...",
+    "status": "status",
+    "clearAll": "clear all"
+  },
+  "columns": {
+    "name": "name",
+    "status": "status",
+    "progress": "progress",
+    "startAt": "starts at",
+    "maxTime": "deadline",
+    "updated": "updated"
+  },
+  "statuses": {
+    "SCHEDULED": "scheduled",
+    "IN_PROGRESS": "in progress",
+    "COMPLETED": "completed",
+    "CLOSED": "closed",
+    "CANCELED": "canceled",
+    "ABORTED": "aborted"
+  },
+  "empty": {
+    "title": "no OTA plans yet",
+    "description": "create your first plan to roll out a firmware update",
+    "action": "new plan"
+  },
+  "actions": {
+    "view": "view details",
+    "cancel": "cancel plan"
+  },
+  "cancelDialog": {
+    "title": "cancel OTA plan",
+    "message": "this stops the rollout: pending devices will not be updated and the firmware binary will be purged. This cannot be undone.",
+    "confirm": "cancel plan",
+    "keep": "keep plan"
+  },
+  "messages": {
+    "loadError": "failed to load OTA plans",
+    "cancelSuccess": "plan canceled",
+    "cancelError": "failed to cancel the plan"
+  },
+  "drawer": {
+    "title": "plan details",
+    "info": {
+      "firmware": "firmware version",
+      "window": "execution window",
+      "counters": "progress",
+      "source": "source template",
+      "target": "target template",
+      "rate": "rate per minute",
+      "abort": "abort threshold"
+    },
+    "executions": {
+      "title": "devices",
+      "columns": {
+        "device": "device",
+        "state": "state",
+        "progress": "progress",
+        "attempts": "attempts",
+        "updated": "last update"
+      },
+      "states": {
+        "QUEUED": "queued",
+        "INITIATED": "initiated",
+        "DOWNLOADING": "downloading",
+        "DOWNLOADED": "downloaded",
+        "VERIFIED": "verified",
+        "UPDATING": "updating",
+        "UPDATED": "updated",
+        "FAILED": "failed",
+        "TIMED_OUT": "timed out"
+      },
+      "empty": "no executions for this plan",
+      "refresh": "refresh"
+    },
+    "messages": {
+      "loadError": "failed to load the plan details"
+    }
+  }
+}

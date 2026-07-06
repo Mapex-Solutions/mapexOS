@@ -1,6 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import { AllAssets, AssetsManager } from './assets';
+import { AllAssets, AssetsManager, AssetTemplateMarketplace, TemplateMigrations } from './assets';
+import { OtaPlans } from './otaPlans';
 import { Triggers, Workflows, WorkflowInstances } from './automations';
 import { Customers, UserProfile, Users, Settings, Lists, Roles, Groups, AccessAudit, AllRetentionPolicies } from './administrations';
 import { AnalyticDashboard } from './dashboards';
@@ -14,7 +15,10 @@ import { RoutingRoutes } from './routing';
 
 export const routes: RouteRecordRaw[] = [
 	// assets
-	AllAssets, AssetsManager,
+	AllAssets, AssetsManager, AssetTemplateMarketplace, TemplateMigrations,
+
+	// OTA remote firmware update
+	OtaPlans,
 
 	// automations
 	Triggers, Workflows, WorkflowInstances,

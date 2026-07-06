@@ -59,16 +59,6 @@ describe('AuthStore', () => {
   // ────────────────────────────────────────────────────────────────────────
 
   describe('state', () => {
-    it('has default email', () => {
-      const store = useAuthStore();
-      expect(store.email).toBe('admin@mapex.global');
-    });
-
-    it('has default password', () => {
-      const store = useAuthStore();
-      expect(store.password).toBe('mapex123');
-    });
-
     it('has keepConnected true by default', () => {
       const store = useAuthStore();
       expect(store.keepConnected).toBe(true);
@@ -343,6 +333,28 @@ describe('AuthStore', () => {
           user: { id: 'u1' },
           keepConnected: false,
         });
+      });
+
+      it('clears sessionStorage when persisting to localStorage', async () => {
+        const storage = (await import('@utils/storages')).default;
+
+        const store = useAuthStore();
+        store.keepConnected = true;
+
+        store.persistTokens();
+
+        expect(storage.session.remove).toHaveBeenCalledWith('auth_tokens');
+      });
+
+      it('clears localStorage when persisting to sessionStorage', async () => {
+        const storage = (await import('@utils/storages')).default;
+
+        const store = useAuthStore();
+        store.keepConnected = false;
+
+        store.persistTokens();
+
+        expect(storage.local.remove).toHaveBeenCalledWith('auth_tokens');
       });
     });
 

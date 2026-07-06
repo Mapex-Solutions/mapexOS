@@ -1,0 +1,71 @@
+{
+  "page": {
+    "title": "template marketplace",
+    "subtitle": "browse and install shared asset templates from the marketplace"
+  },
+  "empty": {
+    "title": "no templates found",
+    "description": "no shared templates match the current filters. try clearing them to see the full catalog.",
+    "button": "clear filters"
+  },
+  "error": {
+    "title": "could not load the marketplace",
+    "description": "the marketplace catalog could not be loaded. check your connection and try again.",
+    "button": "retry"
+  },
+  "search": {
+    "placeholder": "search templates..."
+  },
+  "facets": {
+    "category": "category",
+    "vendor": "vendor",
+    "model": "model",
+    "version": "version",
+    "all": "all"
+  },
+  "card": {
+    "fields": "{count} fields",
+    "hasScripts": "includes scripts",
+    "view": "view details"
+  },
+  "modal": {
+    "title": "template details",
+    "loading": "loading template...",
+    "loadError": "failed to load the template",
+    "sections": {
+      "overview": "overview",
+      "dynamicFields": "dynamic fields",
+      "scripts": "scripts",
+      "availableFields": "available fields"
+    },
+    "overview": {
+      "manufacturer": "manufacturer",
+      "model": "model",
+      "version": "version",
+      "category": "category",
+      "assetIdPath": "asset id path",
+      "description": "description"
+    },
+    "scripts": {
+      "test": "test",
+      "processor": "processor",
+      "validator": "validator",
+      "conversion": "conversion",
+      "configured": "configured",
+      "notConfigured": "not configured",
+      "view": "view script"
+    },
+    "actions": {
+      "cancel": "cancel",
+      "close": "close"
+    }
+  },
+  "install": {
+    "button": "install",
+    "installing": "installing...",
+    "installed": "installed",
+    "success": "template installed",
+    "checksumError": "the template could not be verified and was not installed",
+    "genericError": "failed to install the template"
+  }
+}

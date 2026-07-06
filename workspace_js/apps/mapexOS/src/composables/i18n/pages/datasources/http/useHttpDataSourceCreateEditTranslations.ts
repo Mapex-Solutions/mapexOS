@@ -30,34 +30,44 @@ export function useHttpDataSourceCreateEditTranslations() {
 			currentStepLabel: computed(() => ts(`${basePath}.stepper.currentStepLabel`)),
 		},
 
-		/** Steps configuration */
-		steps: computed(() => [
-			{
-				title: ts(`${basePath}.steps.basicInfo.title`),
-				icon: 'info',
-				description: ts(`${basePath}.steps.basicInfo.description`),
-			},
-			{
-				title: ts(`${basePath}.steps.workingHours.title`),
-				icon: 'schedule',
-				description: ts(`${basePath}.steps.workingHours.description`),
-			},
-			{
-				title: ts(`${basePath}.steps.authentication.title`),
-				icon: 'lock',
-				description: ts(`${basePath}.steps.authentication.description`),
-			},
-			{
-				title: ts(`${basePath}.steps.assetBinding.title`),
-				icon: 'device_unknown',
-				description: ts(`${basePath}.steps.assetBinding.description`),
-			},
-			{
-				title: ts(`${basePath}.steps.review.title`),
-				icon: 'check_circle',
-				description: ts(`${basePath}.steps.review.description`),
-			},
-		]),
+		/** Steps configuration (with stepper group tags — visual grouping only). */
+		steps: computed(() => {
+			const setup = { id: 'setup', label: ts(`${basePath}.steps.groups.setup`), icon: 'mdi-cog-outline' };
+			const integration = { id: 'integration', label: ts(`${basePath}.steps.groups.integration`), icon: 'mdi-transit-connection-variant' };
+			const finalization = { id: 'finalization', label: ts(`${basePath}.steps.groups.finalization`), icon: 'mdi-clipboard-check' };
+			return [
+				{
+					title: ts(`${basePath}.steps.basicInfo.title`),
+					icon: 'info',
+					description: ts(`${basePath}.steps.basicInfo.description`),
+					group: setup,
+				},
+				{
+					title: ts(`${basePath}.steps.workingHours.title`),
+					icon: 'schedule',
+					description: ts(`${basePath}.steps.workingHours.description`),
+					group: setup,
+				},
+				{
+					title: ts(`${basePath}.steps.authentication.title`),
+					icon: 'lock',
+					description: ts(`${basePath}.steps.authentication.description`),
+					group: integration,
+				},
+				{
+					title: ts(`${basePath}.steps.assetBinding.title`),
+					icon: 'device_unknown',
+					description: ts(`${basePath}.steps.assetBinding.description`),
+					group: integration,
+				},
+				{
+					title: ts(`${basePath}.steps.review.title`),
+					icon: 'check_circle',
+					description: ts(`${basePath}.steps.review.description`),
+					group: finalization,
+				},
+			];
+		}),
 
 		/** Step progress side panel labels */
 		progress: {
