@@ -18,6 +18,7 @@ import type { JsExecutorMetrics } from '@/bootstrap/metrics';
 import {
 	initJsExecuteConsumer,
 	initMqttDataConsumer,
+	initLorawanDataConsumer,
 	initAssetInvalidateConsumer,
 	initTemplateInvalidateConsumer,
 } from '@modules/events/interfaces/message';
@@ -32,7 +33,7 @@ const FANOUT_SUBJECTS = [subject('fanout', '') + '>'];
  * InitListeners starts NATS event listeners for the events module.
  *
  * Consumer Types:
- * - Queue consumers (JsExecute, MqttData): Load-balanced, full lifecycle
+ * - Queue consumers (JsExecute, MqttData, LorawanData): Load-balanced, full lifecycle
  * - FANOUT consumers (AssetInvalidate, TemplateInvalidate): Broadcast, cache invalidation
  */
 export async function initListeners(): Promise<void> {
@@ -58,6 +59,13 @@ export async function initListeners(): Promise<void> {
 	});
 
 	void initMqttDataConsumer({
+		natsBus, logger, scriptService, config,
+		batchSize: metrics.batchSize,
+		eventsProcessed: metrics.eventsProcessed,
+		payloadSize: metrics.payloadSize,
+	});
+
+	void initLorawanDataConsumer({
 		natsBus, logger, scriptService, config,
 		batchSize: metrics.batchSize,
 		eventsProcessed: metrics.eventsProcessed,

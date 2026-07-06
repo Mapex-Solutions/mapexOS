@@ -101,4 +101,15 @@ export interface ScriptServicePort {
 	 * @returns Per-message results (consumer uses for ACK/Nack decisions)
 	 */
 	handleHttpBatch(messages: Message[]): Promise<BatchMessageResult[]>;
+
+	/**
+	 * Processes a batch of LoRaWAN uplinks republished by the mapexLNS adapter.
+	 * Parses the LorawanUplinkEnvelope (orgId/assetUUID/payload in the body),
+	 * decodes the FRMPayload into bytes for the device codec, normalizes into
+	 * the common batch contract, then runs the shared processing pipeline.
+	 *
+	 * @param messages - Raw NATS messages from LORAWAN-DATA stream
+	 * @returns Per-message results (consumer uses for ACK/Nack decisions)
+	 */
+	handleLorawanBatch(messages: Message[]): Promise<BatchMessageResult[]>;
 }

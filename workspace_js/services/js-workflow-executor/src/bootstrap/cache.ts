@@ -9,17 +9,18 @@ import { New as NewMinIO, NewTieredCache } from '@mapexos/infrastructure';
 export async function initCache(configModule: ConfigModule, logger: Logger) {
 
 	// MinIO base configuration
-	const minioEndpoint = configModule.get('minio_endpoint') as string;
+	const minioEndpoint = configModule.get('object_store_endpoint') as string;
 	const [minioHost, minioPortStr] = minioEndpoint.split(':');
 	const minioPort = parseInt(minioPortStr) || 9000;
 
 	const minioBaseConfig = {
 		Endpoint: minioHost,
 		Port: minioPort,
-		AccessKeyID: configModule.get('minio_access_key') as string,
-		SecretAccessKey: configModule.get('minio_secret_key') as string,
-		UseSSL: configModule.get('minio_use_ssl') as boolean,
-		Region: configModule.get('minio_region') as string,
+		AuthIsNeeded: configModule.get('object_store_auth_is_needed') as boolean,
+		AccessKeyID: configModule.get('object_store_access_key') as string,
+		SecretAccessKey: configModule.get('object_store_secret_key') as string,
+		UseSSL: configModule.get('object_store_use_ssl') as boolean,
+		Region: configModule.get('object_store_region') as string,
 	};
 
 	// TieredCache shared configuration (L0 + L1)

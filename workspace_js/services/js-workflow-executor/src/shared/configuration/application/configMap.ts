@@ -42,11 +42,12 @@ export const defaultConfiguration: ConfigDefinition[] = [
 	{ key: 'log_level', env: 'LOG_LEVEL', type: 'string', default: '' },
 
 	/** MinIO/S3 Configuration */
-	{ key: 'minio_endpoint', env: 'MINIO_ENDPOINT', type: 'string', default: 'localhost:9000' },
-	{ key: 'minio_access_key', env: 'MINIO_ACCESS_KEY', type: 'string', default: 'mapex_admin', sensitive: true },
-	{ key: 'minio_secret_key', env: 'MINIO_SECRET_KEY', type: 'string', default: 'mapex_admin_secret_change_me', sensitive: true },
-	{ key: 'minio_use_ssl', env: 'MINIO_USE_SSL', type: 'bool', default: false },
-	{ key: 'minio_region', env: 'MINIO_REGION', type: 'string', default: 'us-east-1' },
+	{ key: 'object_store_endpoint', env: 'OBJECT_STORE_ENDPOINT', type: 'string', default: 'localhost:9000' },
+	{ key: 'object_store_access_key', env: 'OBJECT_STORE_ACCESS_KEY', type: 'string', default: '', sensitive: true },
+	{ key: 'object_store_secret_key', env: 'OBJECT_STORE_SECRET_KEY', type: 'string', default: '', sensitive: true },
+	{ key: 'object_store_use_ssl', env: 'OBJECT_STORE_USE_SSL', type: 'bool', default: false },
+	{ key: 'object_store_region', env: 'OBJECT_STORE_REGION', type: 'string', default: 'us-east-1' },
+	{ key: 'object_store_auth_is_needed', env: 'OBJECT_STORE_AUTH_IS_NEEDED', type: 'bool', default: true },
 	{ key: 'minio_workflows_bucket', env: 'MINIO_WORKFLOWS_BUCKET', type: 'string', default: 'mapex-workflows' },
 
 	/** TieredCache Configuration (L0=RAM, L1=Disk, L2=MinIO) */

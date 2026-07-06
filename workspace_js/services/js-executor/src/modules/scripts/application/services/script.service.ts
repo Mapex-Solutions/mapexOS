@@ -11,6 +11,7 @@ import type { Logger } from '@mapexos/microservices';
 
 import { handleMqttBatch } from './script.handler_mqtt';
 import { handleHttpBatch } from './script.handler_http';
+import { handleLorawanBatch } from './script.handler_lorawan';
 
 import { isEmpty } from 'lodash';
 
@@ -66,6 +67,10 @@ export class ScriptService implements ScriptServicePort {
 
 	async handleHttpBatch(messages: Message[]): Promise<BatchMessageResult[]> {
 		return handleHttpBatch(this.internalDeps, messages, this.resolveAssetUUID.bind(this));
+	}
+
+	async handleLorawanBatch(messages: Message[]): Promise<BatchMessageResult[]> {
+		return handleLorawanBatch(this.internalDeps, messages);
 	}
 
 	/**

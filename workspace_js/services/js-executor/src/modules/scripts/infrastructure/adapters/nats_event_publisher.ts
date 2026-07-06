@@ -139,11 +139,20 @@ export class NatsEventPublisherAdapter implements EventPublisherPort {
 	 *
 	 * Other liveness paths do NOT pass through this method:
 	 *   - Explicit-mode MQTT-protocol assets: liveness is signaled by the
-	 *     NATS broker itself ($SYS.ACCOUNT.*.CONNECT/DISCONNECT advisories
-	 *     consumed by the assets/healthmonitor module). No code path here.
+	 *     mapexMQTTBroker presence plugin, which emits connect/disconnect
+	 *     advisories to mapexos.mqtt.presence.advisory (a successful broker
+	 *     auth is the connect signal — Mosquitto 2.0.x exposes no
+	 *     MOSQ_EVT_CONNECT — and MOSQ_EVT_DISCONNECT is the disconnect),
+	 *     consumed by the assets/healthmonitor presence consumer. No code
+	 *     path here.
 	 *   - Explicit-mode HTTP-protocol assets: the device POSTs to
 	 *     /api/v1/heartbeat?ds=... and the http_gateway publishes directly
 	 *     to mapexos.asset.heartbeat.{orgId}.
+	 *
+	 * LoRaWAN-protocol assets are connectionless at the device level (the
+	 * persistent link is gateway↔LNS, never device↔LNS), so devices of any
+	 * class rely on this implicit by-data path; there is no explicit
+	 * device-presence path for them.
 	 *
 	 * The downstream consumer (assets/healthmonitor heartbeat handler) is
 	 * origin-agnostic: this implicit publish and the http_gateway explicit

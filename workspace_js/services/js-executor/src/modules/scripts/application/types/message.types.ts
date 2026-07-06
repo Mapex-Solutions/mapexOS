@@ -69,6 +69,52 @@ export interface ScriptProcessorMessage {
 }
 
 /**
+ * LorawanUplinkEnvelope is the wire contract js-executor expects on
+ * ${env}.mapexos.lorawan.data.> — published by the mapexLNS adapter (the
+ * Anti-Corruption Layer over The Things Stack). Mirrors the broker's
+ * IngressMessage style: every routing field travels in the JSON body, the
+ * subject stays agnostic.
+ *
+ * `orgId` and `assetUUID` are required (handler rejects otherwise). `payload`
+ * is the raw FRMPayload, base64-encoded (Go marshals []byte as base64). The
+ * LoRaWAN-standard fields (fPort, fCnt, rxInfo) ride alongside so the device
+ * codec can decode the bytes in the decode step.
+ */
+export interface LorawanUplinkEnvelope {
+	/** Organization ID (TTS application_id) */
+	orgId: string;
+	/** Asset UUID (TTS device_id / devEUI) */
+	assetUUID: string;
+	/** Raw FRMPayload, base64-encoded */
+	payload?: string;
+	/** LoRaWAN frame port */
+	fPort?: number;
+	/** LoRaWAN frame counter */
+	fCnt?: number;
+	/** Gateway rx metadata (RSSI, SNR, timestamps, ...) */
+	rxInfo?: unknown;
+	/** Uplink reception time (RFC3339), for parity with the broker envelope */
+	timestamp?: string;
+}
+
+/**
+ * LorawanDecodeInput is what the device codec sees as the global `payload` in
+ * the decode step: the FRMPayload as a byte array plus the frame metadata.
+ * Shaped after the TTN/ChirpStack codec convention
+ * (decodeUplink({ bytes, fPort })).
+ */
+export interface LorawanDecodeInput {
+	/** Decoded FRMPayload bytes */
+	bytes: number[];
+	/** LoRaWAN frame port */
+	fPort: number;
+	/** LoRaWAN frame counter */
+	fCnt: number;
+	/** Gateway rx metadata */
+	rxInfo?: unknown;
+}
+
+/**
  * Represents the message payload received from NATS for script updates.
  */
 export interface ScriptUpdateMessage {
