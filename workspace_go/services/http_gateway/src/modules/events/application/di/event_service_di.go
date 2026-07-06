@@ -24,4 +24,9 @@ type EventServiceDependenciesInjection struct {
 	dig.In
 	NatsBus ports.EventBusPort
 	Metrics *bootstrap.HttpGatewayMetrics
+
+	// OTAJobs fetches a device's pending OTA job from the Asset MS internal
+	// API (device poll relay). Port interface — implemented by the assets
+	// HTTP client adapter.
+	OTAJobs ports.OTAJobsPort
 }

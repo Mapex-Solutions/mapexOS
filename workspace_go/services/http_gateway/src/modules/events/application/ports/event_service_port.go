@@ -3,6 +3,9 @@ package ports
 import (
 	ctx "context"
 	dsDto "http_gateway/src/modules/datasources/application/dtos"
+	"http_gateway/src/modules/events/application/dtos"
+
+	downlink "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/downlink"
 )
 
 // EventServicePort defines the business operations for processing events.
@@ -62,4 +65,17 @@ type EventServicePort interface {
 	// Returns:
 	//   - error if the DataSource is missing required fields, the assetUUID is empty, or the publish fails
 	ProcessHeartbeat(ctx ctx.Context, dataSource *dsDto.DataSourceResponse, assetUUID string) error
+
+	// ProcessOTAStatus normalizes a device's OTA progress report (body of
+	// POST /api/v1/ota/status?ds={dataSourceId}) into the shared
+	// OTAStatusAdvisory and publishes it on the STATIC inbound subject the
+	// Asset MS consumes. orgId comes from the resolved DataSource — never from
+	// the body — so a compromised body cannot spoof a different tenant.
+	ProcessOTAStatus(ctx ctx.Context, dataSource *dsDto.DataSourceResponse, report *dtos.OTAStatusRequestDTO) error
+
+	// GetOTAJob relays the device poll (GET /api/v1/ota/jobs?ds={dataSourceId}
+	// &assetUUID={assetUUID}) to the Asset MS internal API and returns the
+	// pending OTA command (with a fresh presigned download URL) or nil when the
+	// device has nothing actionable.
+	GetOTAJob(ctx ctx.Context, dataSource *dsDto.DataSourceResponse, assetUUID string) (*downlink.OTAUpdateCommand, error)
 }

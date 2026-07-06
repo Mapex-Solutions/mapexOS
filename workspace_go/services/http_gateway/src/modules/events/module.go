@@ -9,6 +9,7 @@ import (
 	dsPort "http_gateway/src/modules/datasources/application/ports"
 	port "http_gateway/src/modules/events/application/ports"
 	service "http_gateway/src/modules/events/application/services"
+	assetsClient "http_gateway/src/modules/events/infrastructure/httpclient/assets"
 	routes "http_gateway/src/modules/events/interfaces/http/routes"
 
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
@@ -19,6 +20,7 @@ import (
 // InitServices registers the events services in the DIG container.
 func InitServices() {
 	c := container.GetContainer()
+	c.Provide(assetsClient.NewOTAJobsPort)
 	c.Provide(service.New)
 	logger.Info("[MODULE:Events] Services registered")
 }

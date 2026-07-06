@@ -63,6 +63,10 @@ var DefaultConfiguration = []config.ConfigDefinition{
 	 */
 	{Key: "internal_api_key", Env: "INTERNAL_API_KEY", Type: "string", Default: "5230c2e2-e245-468d-89e8-94154cf520d0", Sensitive: true},
 
+	// assets_service_url is the Asset MS base URL for internal MS-to-MS calls
+	// (device OTA job poll relay).
+	{Key: "assets_service_url", Env: "ASSETS_SERVICE_URL", Type: "string", Default: "http://localhost:5002"},
+
 	/** Environment administration */
 	{Key: "go_env", Env: "GO_ENV", Type: "string", Default: "dev"},
 

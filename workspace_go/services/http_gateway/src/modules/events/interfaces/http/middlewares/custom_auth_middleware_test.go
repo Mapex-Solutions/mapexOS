@@ -18,6 +18,7 @@ import (
 	"http_gateway/src/modules/events/application/dtos"
 	eventsPort "http_gateway/src/modules/events/application/ports"
 
+	downlink "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/downlink"
 	dsContract "github.com/Mapex-Solutions/MapexOS/contracts/services/http_gateway/datasources"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
@@ -81,6 +82,14 @@ func (m *mockEventService) ProcessEvent(_ context.Context, _ map[string]any, _ *
 
 func (m *mockEventService) ProcessHeartbeat(_ context.Context, _ *dsDto.DataSourceResponse, _ string) error {
 	panic("ProcessHeartbeat not expected on the auth-gate path")
+}
+
+func (m *mockEventService) ProcessOTAStatus(_ context.Context, _ *dsDto.DataSourceResponse, _ *dtos.OTAStatusRequestDTO) error {
+	panic("ProcessOTAStatus not expected on the auth-gate path")
+}
+
+func (m *mockEventService) GetOTAJob(_ context.Context, _ *dsDto.DataSourceResponse, _ string) (*downlink.OTAUpdateCommand, error) {
+	panic("GetOTAJob not expected on the auth-gate path")
 }
 
 // newGateMetrics returns a minimal HttpGatewayMetrics wired to a fresh

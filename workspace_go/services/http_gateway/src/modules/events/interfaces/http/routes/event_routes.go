@@ -8,6 +8,7 @@ import (
 	"http_gateway/src/modules/events/interfaces/http/handlers"
 	"http_gateway/src/modules/events/interfaces/http/middlewares"
 
+	downlink "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/downlink"
 	ctxInjector "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/contextInjector"
 	validation "github.com/Mapex-Solutions/mapexGoKit/microservices/http/requestValidation"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/swagger"
@@ -73,4 +74,31 @@ func RegisterRoutes(app *web.App, ctxTimeout int, service ports.EventServicePort
 		Summary("Send asset heartbeat").
 		Description("Explicit-mode HTTP heartbeat for an asset. Authenticated per-DataSource via the ?ds={dataSourceId} query parameter; the body carries { assetUUID }. Publishes a fire-and-forget heartbeat to NATS to drive the asset's online state.").
 		Returns(map[string]bool{})
+
+	// /ota — device-facing OTA endpoints (poll + status report). Same
+	// per-DataSource auth chain as /events and /heartbeat.
+	otaV1 := app.Group("/api/v1/ota", ctxInjector.ContextInjector(ctxTimeout))
+	ota := swagger.Wrap(otaV1).Tag("Ingestion")
+
+	otaStatusValidation := validation.NewValidation(
+		&dtos.OTAStatusRequestDTO{},
+		&dtos.EvenIdentificationDto{},
+		nil,
+	)
+	ota.Post("/status", otaStatusValidation, swagger.Expose,
+		middlewares.CustomAuthMiddleware(dtService, service, m),
+		handlers.ProcessOTAStatus(service, m),
+	).
+		Summary("Report OTA status").
+		Description("Device OTA progress report. Authenticated per-DataSource via the ?ds={dataSourceId} query parameter; the body carries { assetUUID, executionId, status, progress, error?, message? }. The report is normalized into the OTA status advisory consumed by the Asset MS.").
+		Returns(map[string]bool{})
+
+	otaJobsValidation := validation.NewValidation(nil, &dtos.EvenIdentificationDto{}, nil)
+	ota.Get("/jobs", otaJobsValidation, swagger.Expose,
+		middlewares.CustomAuthMiddleware(dtService, service, m),
+		handlers.GetOTAJob(service, m),
+	).
+		Summary("Poll pending OTA job").
+		Description("Device poll for its pending OTA firmware-update command. Authenticated per-DataSource via the ?ds={dataSourceId} query parameter plus the &assetUUID={assetUUID} identity. Returns the command with a freshly minted presigned download URL, or 204 when the device has nothing actionable.").
+		Returns(&downlink.OTAUpdateCommand{})
 }

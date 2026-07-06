@@ -8,7 +8,10 @@ import (
 
 	dsDto "http_gateway/src/modules/datasources/application/dtos"
 	"http_gateway/src/modules/events/application/di"
+	"http_gateway/src/modules/events/application/dtos"
 	"http_gateway/src/modules/events/application/ports"
+
+	downlink "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/downlink"
 )
 
 // Compile-time check to ensure EventService implements EventServicePort interface.
@@ -106,4 +109,30 @@ func (s *EventService) ProcessHeartbeat(ctx context.Context, dataSource *dsDto.D
 	}
 	s.recordHeartbeatResult(start, "success")
 	return nil
+}
+
+// ProcessOTAStatus handles POST /api/v1/ota/status?ds={ds}: normalizes a
+// device's OTA progress report into the shared OTAStatusAdvisory and publishes
+// it on the STATIC advisory subject for the Asset MS. orgId comes from the
+// resolved DataSource (server-side) — never from the body.
+//
+// Steps: validate dataSource -> build advisory -> JetStream publish.
+func (s *EventService) ProcessOTAStatus(ctx context.Context, dataSource *dsDto.DataSourceResponse, report *dtos.OTAStatusRequestDTO) error {
+	adv, err := s.buildOTAAdvisory(dataSource, report)
+	if err != nil {
+		return err
+	}
+	return s.publishOTAAdvisory(ctx, adv)
+}
+
+// GetOTAJob handles GET /api/v1/ota/jobs?ds={ds}&assetUUID={assetUUID}: fetches
+// the device's pending OTA command from the Asset MS internal API (which mints
+// the fresh download URL). Returns nil when the device has nothing actionable.
+//
+// Steps: validate dataSource + assetUUID -> fetch via the OTAJobsPort.
+func (s *EventService) GetOTAJob(ctx context.Context, dataSource *dsDto.DataSourceResponse, assetUUID string) (*downlink.OTAUpdateCommand, error) {
+	if err := s.validateOTAJobQuery(dataSource, assetUUID); err != nil {
+		return nil, err
+	}
+	return s.deps.OTAJobs.FetchPendingJob(ctx, assetUUID)
 }
