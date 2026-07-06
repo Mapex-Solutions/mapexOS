@@ -19,7 +19,7 @@ var DefaultConfiguration = []config.ConfigDefinition{
 	{Key: "http_address", Env: "HTTP_ADDRESS", Type: "string", Default: "0.0.0.0"},
 
 	{Key: "service_name", Env: "SERVICE_NAME", Type: "string", Default: "router"},
-	{Key: "service_version", Env: "SERVICE_VERSION", Type: "string", Default: "1.0.0"},
+	{Key: "service_version", Env: "SERVICE_VERSION", Type: "string", Default: "1.1.0"},
 
 	/* MongoDB Configuration */
 	{Key: "mongo_uri", Env: "MONGO_URI", Type: "string", Default: "mongodb://localhost:27017"},

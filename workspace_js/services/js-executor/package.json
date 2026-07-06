@@ -1,6 +1,6 @@
 {
   "name": "@mapexos/js-executor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Dynamic JS Executor",
   "productName": "JS Executor",
   "author": "Thiago Anselmo <thiagoo.anselmoo@gmail.com>",

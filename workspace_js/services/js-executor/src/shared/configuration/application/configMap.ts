@@ -8,7 +8,7 @@ export const defaultConfiguration: ConfigDefinition[] = [
 	{ key: 'http_address', env: 'HTTP_ADDRESS', type: 'string', default: '0.0.0.0' },
 
 	{ key: 'service_name', env: 'SERVICE_NAME', type: 'string', default: 'js-executor' },
-	{ key: 'service_version', env: 'SERVICE_VERSION', type: 'string', default: '1.0.0' },
+	{ key: 'service_version', env: 'SERVICE_VERSION', type: 'string', default: '1.1.0' },
 
 	/* Redis Configuration */
 	{ key: 'redis_host', env: 'REDIS_HOST', type: 'string', default: 'localhost' },

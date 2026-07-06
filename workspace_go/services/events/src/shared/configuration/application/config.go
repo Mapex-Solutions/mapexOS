@@ -19,7 +19,7 @@ var DefaultConfiguration = []config.ConfigDefinition{
 	{Key: "http_address", Env: "HTTP_ADDRESS", Type: "string", Default: "0.0.0.0"},
 
 	{Key: "service_name", Env: "SERVICE_NAME", Type: "string", Default: "events"},
-	{Key: "service_version", Env: "SERVICE_VERSION", Type: "string", Default: "1.0.0"},
+	{Key: "service_version", Env: "SERVICE_VERSION", Type: "string", Default: "1.1.0"},
 
 	/* ClickHouse Configuration */
 	{Key: "clickhouse_host", Env: "CLICKHOUSE_HOST", Type: "string", Default: "localhost"},

@@ -8,7 +8,7 @@ export const defaultConfiguration: ConfigDefinition[] = [
 	{ key: 'http_address', env: 'HTTP_ADDRESS', type: 'string', default: '0.0.0.0' },
 
 	{ key: 'service_name', env: 'SERVICE_NAME', type: 'string', default: 'js-workflow-executor' },
-	{ key: 'service_version', env: 'SERVICE_VERSION', type: 'string', default: '1.0.0' },
+	{ key: 'service_version', env: 'SERVICE_VERSION', type: 'string', default: '1.1.0' },
 
 	/** NATS Configuration */
 	{ key: 'nats_url', env: 'NATS_URL', type: 'string', default: 'nats://localhost:4222' },

@@ -1,6 +1,6 @@
 {
   "name": "@mapexos/js-workflow-executor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Workflow JS Executor - Executes workflow code nodes in isolated V8",
   "productName": "JS Workflow Executor",
   "author": "Thiago Anselmo <thiagoo.anselmoo@gmail.com>",
