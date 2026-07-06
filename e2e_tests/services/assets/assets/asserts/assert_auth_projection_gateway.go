@@ -21,6 +21,7 @@ type gatewayAuthEnvelope struct {
 				AuthMode          string `json:"authMode"`
 				FrequencyPlanID   string `json:"frequencyPlanId"`
 				CurrentCertSerial string `json:"currentCertSerial"`
+				APIKeyHash        string `json:"apiKeyHash"`
 			} `json:"gateway"`
 		} `json:"lorawan"`
 	} `json:"data"`

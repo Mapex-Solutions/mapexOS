@@ -71,6 +71,41 @@ func SagaLorawanGatewayCert(runID, templateID, routeGroupID string) *AssetCreate
 	}
 }
 
+// SagaGatewayAPIKey is the known plaintext Basics Station token the key-mode
+// saga gateway registers with: 64 hex chars (32 bytes), within bcrypt's input
+// limit. The assert bcrypt-compares the projection's apiKeyHash against it.
+const SagaGatewayAPIKey = "00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF"
+
+// SagaLorawanGatewayKey returns a LoRaWAN gateway asset payload in key mode:
+// protocol=lorawan, kind=gateway, authMode=key (Basics Station bearer token). The
+// token (SagaGatewayAPIKey) is request-only; the assets service hashes it and the
+// projection carries only the bcrypt hash. Same EUI derivation as the other
+// variants.
+func SagaLorawanGatewayKey(runID, templateID, routeGroupID string) *AssetCreateBuilder {
+	eui := euiFromRunID(runID)
+	return &AssetCreateBuilder{
+		spec: contracts.AssetCreate{
+			Name:            fmt.Sprintf("saga-lorawan-gateway-key-%s", runID),
+			Enabled:         true,
+			DebugEnabled:    true,
+			AssetUUID:       eui,
+			AssetTemplateID: templateID,
+			RouteGroupIds:   []string{routeGroupID},
+			Protocol: contracts.ProtocolType{
+				Type: "lorawan",
+				Lorawan: &contracts.LorawanConfig{
+					Kind: contracts.LorawanKindGateway,
+					Gateway: &contracts.LorawanGatewayConfig{
+						AuthMode:        contracts.LorawanGatewayAuthModeKey,
+						FrequencyPlanID: SagaGatewayFrequencyPlan,
+						APIKey:          SagaGatewayAPIKey,
+					},
+				},
+			},
+		},
+	}
+}
+
 // euiFromRunID maps the runID to a stable uppercase 16-hex EUI (pad/truncate).
 func euiFromRunID(runID string) string {
 	h := strings.ToUpper(hex.EncodeToString([]byte(runID)))
