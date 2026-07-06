@@ -64,8 +64,8 @@ export const defaultConfiguration: ConfigDefinition[] = [
 
 	/** MinIO/S3 Configuration */
 	{ key: 'object_store_endpoint', env: 'OBJECT_STORE_ENDPOINT', type: 'string', default: 'localhost:9000' },
-	{ key: 'object_store_access_key', env: 'OBJECT_STORE_ACCESS_KEY', type: 'string', default: '', sensitive: true },
-	{ key: 'object_store_secret_key', env: 'OBJECT_STORE_SECRET_KEY', type: 'string', default: '', sensitive: true },
+	{ key: 'object_store_access_key', env: 'OBJECT_STORE_ACCESS_KEY', type: 'string', default: 'svc-jsexec', sensitive: true },
+	{ key: 'object_store_secret_key', env: 'OBJECT_STORE_SECRET_KEY', type: 'string', default: 'svc-jsexec-secret-change-me', sensitive: true },
 	{ key: 'object_store_use_ssl', env: 'OBJECT_STORE_USE_SSL', type: 'bool', default: false },
 	{ key: 'object_store_region', env: 'OBJECT_STORE_REGION', type: 'string', default: 'us-east-1' },
 	{ key: 'object_store_auth_is_needed', env: 'OBJECT_STORE_AUTH_IS_NEEDED', type: 'bool', default: true },

@@ -95,10 +95,21 @@ var DefaultConfiguration = []config.ConfigDefinition{
 	{Key: "mapex_vault_url", Env: "MAPEX_VAULT_URL", Type: "string", Default: "http://localhost:5010"},
 	{Key: "mapex_vault_api_key", Env: "MAPEX_VAULT_API_KEY", Type: "string", Default: "5230c2e2-e245-468d-89e8-94154cf520d0", Sensitive: true},
 
+	/** Marketplace Configuration */
+	// The asset_templates marketplace catalog is open and unauthenticated (no API
+	// key). The install client fetches a bundle by (vendor, slug) from here. Set
+	// the real host per environment.
+	{Key: "asset_marketplace_url", Env: "ASSET_MARKETPLACE_URL", Type: "string", Default: "http://localhost:5020"},
+
+	/** mapexIam Configuration */
+	// The install resolves org-scoped classification through mapexIam's internal
+	// /internal/lists/resolve endpoint, authenticated with internal_api_key above.
+	{Key: "mapexiam_url", Env: "MAPEXIAM_URL", Type: "string", Default: "http://localhost:5000"},
+
 	/** MinIO/S3 Configuration */
 	{Key: "object_store_endpoint", Env: "OBJECT_STORE_ENDPOINT", Type: "string", Default: "localhost:9000"},
-	{Key: "object_store_access_key", Env: "OBJECT_STORE_ACCESS_KEY", Type: "string", Default: "", Sensitive: true},
-	{Key: "object_store_secret_key", Env: "OBJECT_STORE_SECRET_KEY", Type: "string", Default: "", Sensitive: true},
+	{Key: "object_store_access_key", Env: "OBJECT_STORE_ACCESS_KEY", Type: "string", Default: "svc-assets", Sensitive: true},
+	{Key: "object_store_secret_key", Env: "OBJECT_STORE_SECRET_KEY", Type: "string", Default: "svc-assets-secret-change-me", Sensitive: true},
 	{Key: "object_store_use_ssl", Env: "OBJECT_STORE_USE_SSL", Type: "bool", Default: false},
 	{Key: "object_store_region", Env: "OBJECT_STORE_REGION", Type: "string", Default: "us-east-1"},
 	{Key: "object_store_auth_is_needed", Env: "OBJECT_STORE_AUTH_IS_NEEDED", Type: "bool", Default: true},
