@@ -10,6 +10,11 @@ import (
 type AssetTemplateRepository interface {
 	Create(ctx context.Context, u *entities.Assettemplate) (*entities.Assettemplate, error)
 	FindById(ctx context.Context, dataSourceId *string) (*entities.Assettemplate, error)
+
+	// FindByMarketplaceGuidAndOrg returns the caller-org's link record for a
+	// marketplace-installed template, or (nil, nil) when that org has not
+	// installed it. The (marketplaceGuid, orgId) pair is the per-org install key.
+	FindByMarketplaceGuidAndOrg(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*entities.Assettemplate, error)
 	FindByIdAndUpdate(ctx context.Context, dataSourceId *string, payload map[string]any) (*entities.Assettemplate, error)
 	DeleteById(ctx context.Context, dataSourceId *string) error
 	FindWithFilters(ctx context.Context, filters model.Map, pagination *model.PaginationOpts, projection model.Map) (*model.PaginatedResult[entities.Assettemplate], error)

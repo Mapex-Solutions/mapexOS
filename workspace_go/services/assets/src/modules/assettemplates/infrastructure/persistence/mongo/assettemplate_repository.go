@@ -49,6 +49,14 @@ func (r *repository) FindById(ctx context.Context, dataSourceId *string) (*entit
 	return retData, nil
 }
 
+// FindByMarketplaceGuidAndOrg returns the caller-org's link record for a
+// marketplace-installed template, or nil when that org has not installed it.
+func (r *repository) FindByMarketplaceGuidAndOrg(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*entities.Assettemplate, error) {
+	query := model.Map{"marketplaceGuid": marketplaceGuid, "orgId": orgId}
+	retData, _ := r.model.FindOne(ctx, &query, nil)
+	return retData, nil
+}
+
 // FindByIdAndUpdate updates a Assettemplate entity in the repository by its ID.
 // It accepts a context for cancellation and timeouts, a pointer to the event ID,
 // and a map containing the fields to be updated.

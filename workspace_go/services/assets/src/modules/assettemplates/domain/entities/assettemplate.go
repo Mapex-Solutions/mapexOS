@@ -47,6 +47,13 @@ type Assettemplate struct {
 	ModelName        *string         `bson:"modelName,omitempty"`
 	Version          *string         `bson:"version,omitempty"`
 
+	// Marketplace identity + integrity — set only when this record is the per-org
+	// link to a marketplace-installed template (nil for hand-created ones). The
+	// heavy shared content lives in the tiered cache keyed by MarketplaceGuid;
+	// this record carries just ids + scope. Immutable post-install.
+	MarketplaceGuid *string `bson:"marketplaceGuid,omitempty"`
+	Sha256          *string `bson:"sha256,omitempty"`
+
 	AssetIDPath string `bson:"assetIdPath"`
 
 	ScriptTest       *string `bson:"scriptTest,omitempty"`

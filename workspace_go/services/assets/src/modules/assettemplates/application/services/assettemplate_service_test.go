@@ -40,6 +40,8 @@ type fakeRepo struct {
 	updateManyFn        func(ctx context.Context, filter model.Map, update model.Map) (int64, error)
 	countDocumentsFn    func(ctx context.Context, filters model.Map) (int64, error)
 
+	findByMarketplaceGuidAndOrgFn func(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*entities.Assettemplate, error)
+
 	findByIdCalls int
 }
 
@@ -54,6 +56,13 @@ func (r *fakeRepo) FindById(ctx context.Context, id *string) (*entities.Assettem
 	r.findByIdCalls++
 	if r.findByIdFn != nil {
 		return r.findByIdFn(ctx, id)
+	}
+	return nil, nil
+}
+
+func (r *fakeRepo) FindByMarketplaceGuidAndOrg(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*entities.Assettemplate, error) {
+	if r.findByMarketplaceGuidAndOrgFn != nil {
+		return r.findByMarketplaceGuidAndOrgFn(ctx, marketplaceGuid, orgId)
 	}
 	return nil, nil
 }
