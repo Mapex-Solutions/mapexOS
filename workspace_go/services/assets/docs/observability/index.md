@@ -146,4 +146,4 @@ Structured logs via the shared microservices logger. Use `LOG_LEVEL` to override
 | `warn` | Degraded states (cache miss, optional dep unavailable, `mqttcerts.OnMount` retry) |
 | `error` | Hard failures (MongoDB write error, NATS publish failure, mapexVault unreachable on first mount) |
 
-Log lines follow the `[LAYER:Component]` convention — examples: `[SERVICE:Assets]`, `[SERVICE:MqttCerts]`, `[CONSUMER:MqttPresenceConnect]`, `[CONSUMER:MqttPresenceDisconnect]`, `[CONSUMER:AssetHeartbeat]`.
+Log lines follow the `[LAYER:Component]` convention — examples: `[SERVICE:Assets]`, `[SERVICE:MqttCerts]`, `[CONSUMER:EdgePresence]`, `[CONSUMER:AssetHeartbeat]`.

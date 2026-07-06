@@ -5,6 +5,7 @@ import (
 	"assets/src/modules/assettemplates"
 	"assets/src/modules/healthmonitor"
 	"assets/src/modules/mqttcerts"
+	"assets/src/modules/ota"
 
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/common"
 )
@@ -61,5 +62,14 @@ var Modules = []common.ModuleConfig{
 		InitRepositories: mqttcerts.InitRepositories,
 		InitServices:     mqttcerts.InitServices,
 		InitInterfaces:   mqttcerts.InitInterfaces,
+	},
+
+	// OTA module — remote firmware updates (depends on assets + healthmonitor).
+	{
+		Name:             "ota",
+		Lazy:             false,
+		InitRepositories: ota.InitRepositories,
+		InitServices:     ota.InitServices,
+		InitInterfaces:   ota.InitInterfaces,
 	},
 }

@@ -34,7 +34,7 @@ It also owns the device-side MQTT control plane: per-asset X.509 certificate lif
 - **Issuance** — `mqttcerts` signs device certs locally using the intermediate CA cached in RAM via `common.Mountable.OnMount` (pulled from mapexVault `pki/` at startup, exponential-backoff retry on failure). Device private key never persists server-side — it is downloaded once at issuance time.
 - **Revocation** — HARD delete on revoke + 30-day TTL audit row in `mqttRevokedCertificates` (Mongo TTL on `revokedAt`).
 - **Auth decisions** — the mapex-mqtt-broker plugin reads the `AssetReadModel` from its TieredCache (L1 Pebble → L2 MinIO → L3 HTTP) and decides every CONNECT locally: bcrypt-compare `Protocol.Mqtt.PasswordHash` for password mode, equality-check `CurrentCert.Serial` against the device's cert serial for cert mode. There is NO HTTP auth callout — the only HTTP path between broker and assets is the L3 read-model fallback.
-- **Presence** — broker plugin publishes connect/disconnect advisories on `${env}.mapexos.mqtt.presence.advisory` (single subject, `Event` field discriminates). `healthmonitor` consumes both with separate durables and updates the asset's online state.
+- **Presence** — every edge server (MQTT broker plugin, LNS Gateway Server) publishes connect/disconnect advisories on `${env}.mapexos.presence.advisory` (single subject; `Event` discriminates, `Protocol` = mqtt|lorawan). `healthmonitor` consumes them with one durable and updates the asset's online state.
 
 ## Docs Map
 - [Architecture](architecture/index.md)

@@ -60,7 +60,7 @@ All routes gated by the standard `ApiKeyAuthMiddleware` (`X-API-Key` header). Th
 | Subject | Stream | Direction | Description |
 |---|---|---|---|
 | `${env}.mapexos.asset.heartbeat.>` | `MAPEXOS-ASSETS-HEARTBEAT` | subscribe (DLQ) | Heartbeat ingestion — origin-agnostic; both implicit (`js-executor`) and explicit (`http_gateway`) flow here. MQTT-protocol assets do NOT use this path. |
-| `${env}.mapexos.mqtt.presence.advisory` | `MAPEXOS-ASSETS-MQTT-PRESENCE` | subscribe (DLQ) | Single subject for broker presence; two durables (`assets-mqtt-presence`, `assets-mqtt-presence-connect`) gate by `Event=connect\|disconnect`. Payload `healthmonitor.PresenceAdvisory`. |
+| `${env}.mapexos.presence.advisory` | `MAPEXOS-EDGE-PRESENCE` | subscribe (DLQ) | Single shared subject for every edge server's presence; one durable (`assets-edge-presence`) dispatches by `Event=connect\|disconnect`. Payload `healthmonitor.PresenceAdvisory`. |
 | `${env}.mapexos.healthmonitor.scan` | `MAPEXOS-ASSETS-HEALTH-MONITOR` | subscribe (DLQ) | Fires the next offline scan; handler republishes the next schedule. |
 | `${env}.mapexos.lists.name_updated` | `MAPEXOS-LISTS` | subscribe | Sync denormalized manufacturer/model/category names in templates. |
 

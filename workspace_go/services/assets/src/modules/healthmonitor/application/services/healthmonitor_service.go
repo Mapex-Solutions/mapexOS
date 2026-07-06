@@ -126,8 +126,8 @@ func (s *HealthMonitorService) MarkOnlineFromConnect(ctx context.Context, orgId,
 	return nil
 }
 
-// HandlePresenceConnect processes a CONNECT advisory published by the
-// Mosquitto broker plugin to mapexos.mqtt.presence.advisory. Both
+// HandlePresenceConnect processes a CONNECT advisory published by an
+// edge server to mapexos.presence.advisory. Both
 // connect and disconnect share the subject; this handler gates on
 // adv.Event == "connect" and Acks the rest without state mutation.
 // Always Acks the message — workqueue retention removes it after.
@@ -164,7 +164,7 @@ func (s *HealthMonitorService) HandlePresenceConnect(msg *natsModel.Message) {
 }
 
 // HandlePresenceDisconnect processes a DISCONNECT advisory published by
-// the Mosquitto broker plugin to mapexos.mqtt.presence.advisory. Both
+// an edge server to mapexos.presence.advisory. Both
 // connect and disconnect share the subject; this handler gates on
 // adv.Event == "disconnect" and Acks the rest without state mutation.
 // Always Acks the message — workqueue retention removes it after.
@@ -190,7 +190,7 @@ func (s *HealthMonitorService) HandlePresenceDisconnect(msg *natsModel.Message) 
 		msg.Ack()
 		return
 	}
-	s.handleMqttPresenceDisconnect(ctx, asset, adv)
+	s.handlePresenceDisconnect(ctx, asset, adv)
 	msg.Ack()
 }
 

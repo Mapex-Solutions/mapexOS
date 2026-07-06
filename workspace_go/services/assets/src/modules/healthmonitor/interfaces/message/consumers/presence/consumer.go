@@ -35,13 +35,13 @@ func NewConsumer(bus *natsModel.Bus, service ports.HealthMonitorServicePort) {
 		natsFetchTimeout = 1
 	}
 
-	logger.Info(fmt.Sprintf("[CONSUMER:MqttPresence] Starting %s", PresenceDurable))
+	logger.Info(fmt.Sprintf("[CONSUMER:EdgePresence] Starting %s", PresenceDurable))
 
 	_, err := bus.StartConsumer(natsModel.ConsumerOptions{
 		Stream:          Stream,
 		Subject:         AdvisorySubject,
 		Durable:         PresenceDurable,
-		QueueGroup:      "assets-mqtt-presence",
+		QueueGroup:      "assets-edge-presence",
 		FetchTimeout:    time.Duration(natsFetchTimeout) * time.Second,
 		DuplicateWindow: 1 * time.Minute,
 
@@ -57,20 +57,20 @@ func NewConsumer(bus *natsModel.Bus, service ports.HealthMonitorServicePort) {
 		},
 	})
 	if err != nil {
-		logger.Error(err, "[CONSUMER:MqttPresence] Failed to start consumer")
+		logger.Error(err, "[CONSUMER:EdgePresence] Failed to start consumer")
 		return
 	}
-	logger.Info("[CONSUMER:MqttPresence] Started successfully")
+	logger.Info("[CONSUMER:EdgePresence] Started successfully")
 }
 
 // dispatch peeks at the Event field and forwards the message to the
 // matching service handler. Malformed payloads or unknown events are
-// Ack-and-drop — the broker plugin only emits two event shapes and an
+// Ack-and-drop — edge servers only emit two event shapes and an
 // outlier would mean a contract drift the consumer should not retry.
 func dispatch(service ports.HealthMonitorServicePort, msg *natsModel.Message) {
 	var env presenceEnvelope
 	if err := json.Unmarshal(msg.Data, &env); err != nil {
-		logger.Warn(fmt.Sprintf("[CONSUMER:MqttPresence] malformed payload: %v", err))
+		logger.Warn(fmt.Sprintf("[CONSUMER:EdgePresence] malformed payload: %v", err))
 		msg.Ack()
 		return
 	}

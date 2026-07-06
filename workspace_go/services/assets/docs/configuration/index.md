@@ -38,7 +38,7 @@ Configuration is provided via environment variables.
 | `NATS_USERNAME` | `service` | NATS username |
 | `NATS_PASSWORD` | `service_secret` | NATS password |
 | `NATS_CLIENT_NAME` | `assets-service` | NATS client name |
-| `STREAM_REPLICAS` | `1` | Replica count used when this service creates its owned streams (`MAPEXOS-ASSETS-HEARTBEAT`, `MAPEXOS-ASSETS-MQTT-PRESENCE`, `MAPEXOS-ASSETS-HEALTH-MONITOR`). |
+| `STREAM_REPLICAS` | `1` | Replica count used when this service creates its owned streams (`MAPEXOS-ASSETS-HEARTBEAT`, `MAPEXOS-EDGE-PRESENCE`, `MAPEXOS-ASSETS-HEALTH-MONITOR`). |
 
 ## mapexVault (MQTT PKI source of truth)
 | ENV | Default | Description |

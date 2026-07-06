@@ -227,25 +227,25 @@ func InitMetrics(c *dig.Container) {
 			HealthPresenceReceived: reg.NewCounterVec(metrics.CounterOpts{
 				Subsystem: "health",
 				Name:      "presence_received_total",
-				Help:      "MQTT presence events received by action",
+				Help:      "Edge presence events received by action",
 			}, []string{"action"}),
 
 			HealthPresenceFiltered: reg.NewCounterVec(metrics.CounterOpts{
 				Subsystem: "health",
 				Name:      "presence_filtered_total",
-				Help:      "MQTT presence events filtered before any I/O, by reason",
+				Help:      "Edge presence events filtered before any I/O, by reason",
 			}, []string{"reason"}),
 
 			HealthPresenceProcessed: reg.NewCounterVec(metrics.CounterOpts{
 				Subsystem: "health",
 				Name:      "presence_processed_total",
-				Help:      "MQTT presence events that mutated state, by outcome",
+				Help:      "Edge presence events that mutated state, by outcome",
 			}, []string{"outcome"}),
 
 			HealthPresenceHandlerDuration: reg.NewHistogram(metrics.HistogramOpts{
 				Subsystem: "health",
 				Name:      "presence_handler_duration_seconds",
-				Help:      "End-to-end MQTT presence handler duration",
+				Help:      "End-to-end Edge presence handler duration",
 				Buckets:   prometheus.DefBuckets,
 			}),
 		}

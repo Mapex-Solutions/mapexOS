@@ -113,12 +113,12 @@ func (s *HealthMonitorService) resolvePresenceOnlineTransition(ctx context.Conte
 		assetUUID, orgId))
 }
 
-// handleMqttPresenceDisconnect orchestrates the offline transition from a
+// handlePresenceDisconnect orchestrates the offline transition from a
 // broker-plugin DISCONNECT advisory. Enforces the anti-race invariant:
 // disconnect.Timestamp must be strictly greater than redis.lastConnectAt;
 // otherwise the message is a stale leftover from a previous broker tick
 // and is dropped without state mutation.
-func (s *HealthMonitorService) handleMqttPresenceDisconnect(ctx context.Context, asset *assetPorts.Asset, adv *ports.PresenceAdvisory) {
+func (s *HealthMonitorService) handlePresenceDisconnect(ctx context.Context, asset *assetPorts.Asset, adv *ports.PresenceAdvisory) {
 	orgId := asset.OrgID.Hex()
 	assetUUID := asset.AssetUUID
 

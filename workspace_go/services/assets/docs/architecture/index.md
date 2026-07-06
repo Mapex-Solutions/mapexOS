@@ -39,11 +39,11 @@ There is NO MQTT auth-callout module / service / route. The mapex-mqtt-broker pl
 - Producers: `js-executor` (implicit heartbeat on every data event when `heartbeatMode='implicit'`) and `http_gateway` (explicit `POST /api/v1/heartbeat?ds={dsId}`)
 - MQTT-protocol assets do NOT publish here — they use the presence path below.
 
-### MQTT presence (subscribe — `healthmonitor`)
-- Stream: `MAPEXOS-ASSETS-MQTT-PRESENCE` (env-scoped, CORE)
-- Subject: `${env}.mapexos.mqtt.presence.advisory` (single subject; `Event` field = `connect` | `disconnect`)
-- Producer: mapex-mqtt-broker plugin on every device CONNECT/DISCONNECT
-- Two consumers with independent durables (`assets-mqtt-presence`, `assets-mqtt-presence-connect`) gate by `Event` in their handlers.
+### Edge presence (subscribe — `healthmonitor`)
+- Stream: `MAPEXOS-EDGE-PRESENCE` (env-scoped, CORE)
+- Subject: `${env}.mapexos.presence.advisory` (single subject; `Event` field = `connect` | `disconnect`)
+- Producers: every edge server (mapex-mqtt-broker plugin for MQTT, mapexLNS Gateway Server for LoRaWAN gateways) on every CONNECT/DISCONNECT
+- One consumer (durable `assets-edge-presence`) dispatches by `Event` in its handler.
 - Payload contract: `packages/contracts/services/assets/healthmonitor/presence.go::PresenceAdvisory`
 
 ### Scan scheduling (subscribe — `healthmonitor`)

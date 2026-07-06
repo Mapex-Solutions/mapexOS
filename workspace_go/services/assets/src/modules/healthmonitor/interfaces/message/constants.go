@@ -47,24 +47,19 @@ var ScanScheduleSubject = config.Subject("healthmonitor", "scan.schedule")
 // Duplicates to ensure exactly-one pending schedule across pods.
 const ScanMsgId = "hm-scan"
 
-// MqttPresenceStreamName is the JetStream stream that captures broker
-// presence advisories published by the Mosquitto broker plugin
-// (mapex-broker-plugin). Single subject — both connect and disconnect
-// share it, discriminated by the Event field on the payload. The stream
-// feeds two separate consumers (one filter per Event) inside the
-// healthmonitor module — see interfaces/message/consumers/presence/.
+// EdgePresenceStreamName is the JetStream stream that captures every edge
+// server's presence advisories — the Mosquitto broker plugin (MQTT) and the
+// LNS Gateway Server (LoRaWAN gateways) — on one shared subject. Both connect
+// and disconnect share it, discriminated by the Event field on the payload.
 // Cluster-ready: replicas parameterized via STREAM_REPLICAS at stream
-// creation time. Resolved at package init —
-// e.g. "DEV-MAPEXOS-ASSETS-MQTT-PRESENCE".
-var MqttPresenceStreamName = config.StreamName("ASSETS", "MQTT-PRESENCE")
+// creation time. Resolved at package init — e.g. "DEV-MAPEXOS-EDGE-PRESENCE".
+var EdgePresenceStreamName = config.StreamName("EDGE", "PRESENCE")
 
-// MqttPresenceAdvisorySubject is the single subject the broker plugin
-// publishes to on every device CONNECT and DISCONNECT. Payload schema:
-// healthmonitor.PresenceAdvisory (Event field = "connect"|"disconnect").
-// The two healthmonitor consumers subscribe to the same subject and
-// gate by Event in their handlers.
-var MqttPresenceAdvisorySubject = config.Subject("mqtt", "presence.advisory")
+// EdgePresenceAdvisorySubject is the single subject every edge server publishes
+// to on each CONNECT and DISCONNECT. Payload schema: healthmonitor.PresenceAdvisory
+// (Event = "connect"|"disconnect", Protocol = "mqtt"|"lorawan"). The consumer
+// subscribes to this subject and gates by Event in its handler.
+var EdgePresenceAdvisorySubject = config.Subject("presence", "advisory")
 
-// MqttPresenceEventType is the DLQ event-type label for the presence
-// consumer family.
-const MqttPresenceEventType = "mqtt-presence"
+// EdgePresenceEventType is the DLQ event-type label for the presence consumer.
+const EdgePresenceEventType = "edge-presence"

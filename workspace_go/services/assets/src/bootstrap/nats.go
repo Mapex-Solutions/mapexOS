@@ -6,7 +6,9 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 	"go.uber.org/dig"
 
+	atMessage "assets/src/modules/assettemplates/interfaces/message"
 	hmMessage "assets/src/modules/healthmonitor/interfaces/message"
+	otaMessage "assets/src/modules/ota/interfaces/message"
 
 	assetsContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/assets"
 	assetsAuthContract "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/auth"
@@ -23,9 +25,9 @@ import (
 //
 //  1. JetStream consumers + publishers + ScheduleManager (telemetry,
 //     health monitor scan schedule, fanout invalidation, etc).
-//  2. MQTT presence consumer — subscribes to mapexos.mqtt.presence.advisory
-//     published by the Mosquitto broker plugin (mapex-broker-plugin) on
-//     every device CONNECT and DISCONNECT.
+//  2. Edge presence consumer — subscribes to mapexos.presence.advisory
+//     published by the edge servers (MQTT broker plugin, LNS Gateway
+//     Server) on every CONNECT and DISCONNECT.
 //
 // Device CONNECT auth runs entirely inside the mapex-mqtt-broker plugin
 // off the AssetReadModel returned by its TieredCache (L1 Pebble → L2
@@ -113,22 +115,59 @@ func InitNATS(c *dig.Container) {
 			logger.Info("[INFRA:NATS] Asset health monitor stream ready (WorkQueue, AllowMsgSchedules, Duplicates=10s)")
 		}
 
-		// MQTT presence stream — captures broker plugin advisories for both
-		// device CONNECT and DISCONNECT events. WorkQueue so scaling out
-		// healthmonitor pods spreads each subject across the queue group;
+		// OTA stream — plan timers (schedule → start/close/scan) via native @at
+		// scheduling + inbound device status advisories. STATIC subjects (ota.>);
+		// planId/executionId travel in the payload. WorkQueue so pods share via
+		// queue group; Duplicates < scan interval to keep the re-schedule loop alive.
+		if err := params.Bus.EnsureStream(jetstream.StreamConfig{
+			Name:              otaMessage.OTAScheduleStream,
+			Description:       "OTA plan timers (schedule/start/close/scan) + device status advisories",
+			Subjects:          []string{config.Subject("ota", "") + ">"},
+			Storage:           jetstream.FileStorage,
+			Retention:         jetstream.WorkQueuePolicy,
+			AllowMsgSchedules: true,
+			Duplicates:        10 * time.Second,
+		}); err != nil {
+			logger.Error(err, "[INFRA:NATS] Failed to create OTA stream")
+		} else {
+			logger.Info("[INFRA:NATS] OTA stream ready (WorkQueue, AllowMsgSchedules)")
+		}
+
+		// Asset template migration stream — plan start timers via native @at
+		// scheduling. STATIC subjects (assettemplates.migration.>); the plan id
+		// travels in the payload + MsgId. WorkQueue so pods share via queue group;
+		// Duplicates < the shortest timer gap to keep re-schedules alive.
+		if err := params.Bus.EnsureStream(jetstream.StreamConfig{
+			Name:              atMessage.MigrationScheduleStream,
+			Description:       "Asset template migration plan start timers",
+			Subjects:          []string{config.Subject("assettemplates", "migration") + ".>"},
+			Storage:           jetstream.FileStorage,
+			Retention:         jetstream.WorkQueuePolicy,
+			AllowMsgSchedules: true,
+			Duplicates:        10 * time.Second,
+		}); err != nil {
+			logger.Error(err, "[INFRA:NATS] Failed to create asset template migration stream")
+		} else {
+			logger.Info("[INFRA:NATS] Asset template migration stream ready (WorkQueue, AllowMsgSchedules)")
+		}
+
+		// Edge presence stream — captures every edge server's advisories (the
+		// MQTT broker plugin, the LNS Gateway Server) for both CONNECT and
+		// DISCONNECT on one shared subject. WorkQueue so scaling out
+		// healthmonitor pods spreads the subject across the queue group;
 		// 5m max-age keeps the buffer small (presence is best-effort, an
 		// older advisory than that would be misleading anyway).
 		if err := params.Bus.EnsureStream(jetstream.StreamConfig{
-			Name:        hmMessage.MqttPresenceStreamName,
-			Description: "MQTT broker presence advisories (connect/disconnect)",
-			Subjects:    []string{hmMessage.MqttPresenceAdvisorySubject},
+			Name:        hmMessage.EdgePresenceStreamName,
+			Description: "Edge presence advisories (connect/disconnect)",
+			Subjects:    []string{hmMessage.EdgePresenceAdvisorySubject},
 			Storage:     jetstream.FileStorage,
 			Retention:   jetstream.WorkQueuePolicy,
 			MaxAge:      5 * time.Minute,
 		}); err != nil {
-			logger.Error(err, "[INFRA:NATS] Failed to create MQTT presence stream")
+			logger.Error(err, "[INFRA:NATS] Failed to create edge presence stream")
 		} else {
-			logger.Info("[INFRA:NATS] MQTT presence stream ready")
+			logger.Info("[INFRA:NATS] Edge presence stream ready")
 		}
 
 		// FANOUT cache invalidation stream — broadcast channel for asset and

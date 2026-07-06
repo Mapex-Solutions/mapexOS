@@ -16,11 +16,12 @@ import (
 
 // InitTieredCache registers MinIO clients (assets + templates) and TieredCache for templates.
 func InitTieredCache(c *dig.Container) {
-	minioEndpoint, _ := config.GetStringValue("minio_endpoint")
-	minioAccessKey, _ := config.GetStringValue("minio_access_key")
-	minioSecretKey, _ := config.GetStringValue("minio_secret_key")
-	minioUseSSL := config.GetConfigValue("minio_use_ssl").(bool)
-	minioRegion, _ := config.GetStringValue("minio_region")
+	minioEndpoint, _ := config.GetStringValue("object_store_endpoint")
+	minioAccessKey, _ := config.GetStringValue("object_store_access_key")
+	minioSecretKey, _ := config.GetStringValue("object_store_secret_key")
+	minioUseSSL := config.GetConfigValue("object_store_use_ssl").(bool)
+	minioRegion, _ := config.GetStringValue("object_store_region")
+	minioAuthIsNeeded := config.GetConfigValue("object_store_auth_is_needed").(bool)
 
 	// Initialize MinIO Client for Assets (L2 Cache - TieredCache)
 	// Used for: Asset read model storage for consuming services (Router, JS-Executor)
@@ -30,6 +31,7 @@ func InitTieredCache(c *dig.Container) {
 	c.Provide(func() *minioModel.MinIOClient {
 		mc, err := minioModel.New(minioModel.Config{
 			Endpoint:        minioEndpoint,
+			AuthIsNeeded:    minioAuthIsNeeded,
 			AccessKeyID:     minioAccessKey,
 			SecretAccessKey: minioSecretKey,
 			UseSSL:          minioUseSSL,
@@ -53,6 +55,7 @@ func InitTieredCache(c *dig.Container) {
 	c.Provide(func() *minioModel.MinIOClient {
 		mc, err := minioModel.New(minioModel.Config{
 			Endpoint:        minioEndpoint,
+			AuthIsNeeded:    minioAuthIsNeeded,
 			AccessKeyID:     minioAccessKey,
 			SecretAccessKey: minioSecretKey,
 			UseSSL:          minioUseSSL,
@@ -74,6 +77,7 @@ func InitTieredCache(c *dig.Container) {
 	c.Provide(func() *minioModel.MinIOClient {
 		mc, err := minioModel.New(minioModel.Config{
 			Endpoint:        minioEndpoint,
+			AuthIsNeeded:    minioAuthIsNeeded,
 			AccessKeyID:     minioAccessKey,
 			SecretAccessKey: minioSecretKey,
 			UseSSL:          minioUseSSL,
