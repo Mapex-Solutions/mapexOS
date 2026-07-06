@@ -115,6 +115,24 @@ type EventServicePort interface {
 	GetEventsJsExec(c ctx.Context, requestContext *reqCtx.RequestContext, query *dtos.EventsJsExecQueryDto) (*dtos.EventsJsExecCursorResultDto, error)
 
 	/**
+	 * OTA Status History Events
+	 */
+
+	// ProcessOTAStatusBatch processes a complete batch of OTA status advisories
+	// at once. Receives all messages from the NATS batch, maps each
+	// OTAStatusAdvisory to an OTAStatusEvent, and performs a single bulk insert
+	// into the events_ota_status ClickHouse history table.
+	//
+	// The service handles ALL message lifecycle decisions:
+	//   - msg.Reject(reason): invalid JSON → DLQ immediately
+	//   - msg.Nack(err): bulk insert failed → retry with backoff
+	//   - msg.Ack(): successfully processed → removed from queue
+	//
+	// Returns:
+	//   - Always nil (service handles all messages internally)
+	ProcessOTAStatusBatch(messages []*natsModel.Message) error
+
+	/**
 	 * Dead Letter Queue (DLQ) Events
 	 */
 

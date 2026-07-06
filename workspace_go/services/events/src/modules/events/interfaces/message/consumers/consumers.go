@@ -10,6 +10,7 @@ import (
 	"events/src/modules/events/interfaces/message/consumers/events_save"
 	"events/src/modules/events/interfaces/message/consumers/events_trigger"
 	"events/src/modules/events/interfaces/message/consumers/events_workflow"
+	"events/src/modules/events/interfaces/message/consumers/ota_status"
 	"events/src/modules/events/interfaces/message/consumers/template_invalidate"
 
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
@@ -36,6 +37,11 @@ func NewEventsJsExecConsumer(bus *natsModel.Bus, eventService ports.EventService
 // NewEventsRawConsumer creates the raw events consumer
 func NewEventsRawConsumer(bus *natsModel.Bus, eventService ports.EventServicePort) {
 	events_raw.NewConsumer(bus, eventService)
+}
+
+// NewEventsOTAStatusConsumer creates the OTA status-history consumer
+func NewEventsOTAStatusConsumer(bus *natsModel.Bus, eventService ports.EventServicePort) {
+	ota_status.NewConsumer(bus, eventService)
 }
 
 // NewEventsDLQConsumer creates the DLQ events consumer

@@ -82,6 +82,18 @@ func (s *EventService) ProcessJsExecEventBatch(messages []*natsModel.Message) er
 	)
 }
 
+// ProcessOTAStatusBatch persists a batch of OTA status advisories into the
+// events_ota_status history table. Same three-phase pipeline as the other
+// batch consumers, with the OTA status parser.
+func (s *EventService) ProcessOTAStatusBatch(messages []*natsModel.Message) error {
+	return orchestrateBatch(s, "otaStatus", "eventsOtaStatus", messages,
+		s.processOTAStatusMessage,
+		func(ctx context.Context, entities []*entities.OTAStatusEvent) error {
+			return s.deps.EventRepo.SaveOTAStatusEventBatch(ctx, entities)
+		},
+	)
+}
+
 // GetEventsJsExec retrieves JS Executor events with cursor-based pagination.
 func (s *EventService) GetEventsJsExec(c context.Context, requestContext *reqCtx.RequestContext, query *dtos.EventsJsExecQueryDto) (*dtos.EventsJsExecCursorResultDto, error) {
 	orgFilter, err := s.buildOrgFilterCH(requestContext, query)

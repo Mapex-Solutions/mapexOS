@@ -3,7 +3,7 @@
 **Service:** events
 **Module path:** `src/modules/events/`
 **Owner:** @thiagoanselmo
-**Last reviewed:** 2026-05-04
+**Last reviewed:** 2026-07-01
 
 ## Purpose
 Terminal ClickHouse sink for every operational event in the platform: processed events (with EVA field resolution), raw ingestion payloads, JS-executor debug logs, DLQ entries, and execution history for router / business rule / trigger / workflow pipelines. Exposes cursor-paginated HTTP read APIs over each stream. Owns no business decisions — this BC is about durable, query-efficient storage and retrieval of things that already happened.
@@ -34,11 +34,12 @@ Terminal ClickHouse sink for every operational event in the platform: processed 
 | Business rule execution history | `mapexos.events.businessrule` (stream `EVENTS-BUSINESSRULE`) | `domain/entities.BusinessRuleEvent` | ruleengine (inferred) |
 | Trigger execution history | `mapexos.events.trigger` (stream `EVENTS-TRIGGER`) | `domain/entities.TriggerEvent` | triggers |
 | Workflow execution history | `mapexos.events.workflow` (stream `EVENTS-WORKFLOW`) | `domain/entities.WorkflowEvent` | workflow |
+| OTA status history | `mapexos.events.ota.status` (stream `EVENTS-OTA-STATUS`) | `contracts/services/ota/events::OTAStatusAdvisory` → `domain/entities.OTAStatusEvent` | assets (OTA) |
 | Dead Letter Queue | `mapexos.dlq` (stream `MAPEXOS-DLQ`) | `domain/entities.DLQEvent` | any service's DLQ policy |
 | TemplateInvalidate | `mapexos.fanout.template.invalidate` (stream `FANOUT`, ephemeral) | `contracts/services/assets/assettemplates/types.go::TemplateInvalidatePayload` | assets |
 
 ## Driving Ports (inbound)
-- 8 NATS batch consumers (see table above). All use `DefaultRetryPolicy` and DLQ policy except the DLQ consumer itself, which ACKs unconditionally to avoid redelivery loops.
+- 9 NATS batch consumers (see table above). All use `DefaultRetryPolicy` and DLQ policy except the DLQ consumer itself, which ACKs unconditionally to avoid redelivery loops.
 - HTTP under `/api/v1/events`, all protected by `AuthMiddleware` + `InjectRequestContext` + per-route permission:
   - `GET /raw`, `GET /jsexec`, `GET /router`, `GET /businessrule`, `GET /trigger`, `GET /workflow`, `GET /dlq`, `GET /dlq/counts` — cursor-paginated lists.
   - `GET /workflow/execution/:executionId` — single workflow event by Mongo hex id.

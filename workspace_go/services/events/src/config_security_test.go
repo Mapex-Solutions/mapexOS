@@ -13,8 +13,8 @@ var sensitiveKeysForService = []string{
 	"auth_secret",
 	"internal_api_key",
 	"clickhouse_password",
-	"minio_access_key",
-	"minio_secret_key",
+	"object_store_access_key",
+	"object_store_secret_key",
 }
 
 func TestSecurity_SensitiveKeysAreMarked(t *testing.T) {

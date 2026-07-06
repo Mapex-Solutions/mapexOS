@@ -91,6 +91,12 @@ func InitInterfaces() {
 		logger.Error(err, "[MODULE:Events] Failed to start events.logs.jsexecutor consumer")
 	}
 
+	// Start events.ota.status consumer (OTA per-device status history)
+	// Stores rows in events_ota_status for rollout audit/analytics (retention: default 90 days)
+	if err := c.Invoke(consumers.NewEventsOTAStatusConsumer); err != nil {
+		logger.Error(err, "[MODULE:Events] Failed to start events.ota.status consumer")
+	}
+
 	// Start DLQ consumer (Dead Letter Queue events)
 	// Stores failed events in dlq table for investigation
 	if err := c.Invoke(consumers.NewEventsDLQConsumer); err != nil {

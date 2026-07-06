@@ -19,6 +19,10 @@ type EventService struct {
 	deps di.EventServiceDependenciesInjection
 }
 
+// defaultOTAStatusRetentionDays is the fallback history retention applied to an
+// events_ota_status row when no per-org retention policy is configured.
+const defaultOTAStatusRetentionDays uint16 = 90
+
 // tenantContext is the minimal shape used to extract orgId/pathKey/eventTrackerId
 // from a raw NATS payload before full DTO unmarshal. Ensures DLQ messages always
 // carry tenant context even when the full unmarshal fails downstream.

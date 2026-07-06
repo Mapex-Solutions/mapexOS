@@ -26,4 +26,5 @@ type EventRepository interface {
 	EventStoreRepository
 	TriggerEventRepository
 	WorkflowEventRepository
+	OTAStatusEventRepository
 }

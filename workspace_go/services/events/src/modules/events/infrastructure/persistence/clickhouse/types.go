@@ -31,6 +31,7 @@ type EventRepositoryClickHouse struct {
 	businessRuleEventTable *chModel.Table[entities.BusinessRuleEvent]
 	triggerEventTable      *chModel.Table[entities.TriggerEvent]
 	workflowEventTable     *chModel.Table[entities.WorkflowEvent]
+	otaStatusEventTable    *chModel.Table[entities.OTAStatusEvent]
 }
 
 /**

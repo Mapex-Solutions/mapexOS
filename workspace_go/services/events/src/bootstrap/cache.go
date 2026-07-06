@@ -20,21 +20,23 @@ func InitTieredCache(c *dig.Container) {
 	serviceName, _ := config.GetStringValue("service_name")
 
 	// Initialize S3 Client for Templates (L2 Cache - TieredCache)
-	minioEndpoint, _ := config.GetStringValue("minio_endpoint")
-	minioAccessKey, _ := config.GetStringValue("minio_access_key")
-	minioSecretKey, _ := config.GetStringValue("minio_secret_key")
+	minioEndpoint, _ := config.GetStringValue("object_store_endpoint")
+	minioAccessKey, _ := config.GetStringValue("object_store_access_key")
+	minioSecretKey, _ := config.GetStringValue("object_store_secret_key")
 	minioUseSSL := false
-	if val := config.GetConfigValue("minio_use_ssl"); val != nil {
+	if val := config.GetConfigValue("object_store_use_ssl"); val != nil {
 		if b, ok := val.(bool); ok {
 			minioUseSSL = b
 		}
 	}
-	minioRegion, _ := config.GetStringValue("minio_region")
+	minioRegion, _ := config.GetStringValue("object_store_region")
+	minioAuthIsNeeded := config.GetConfigValue("object_store_auth_is_needed").(bool)
 	minioTemplatesBucket, _ := config.GetStringValue("minio_templates_bucket")
 
 	c.Provide(func() *minioModel.MinIOClient {
 		mc, err := minioModel.New(minioModel.Config{
 			Endpoint:        minioEndpoint,
+			AuthIsNeeded:    minioAuthIsNeeded,
 			AccessKeyID:     minioAccessKey,
 			SecretAccessKey: minioSecretKey,
 			UseSSL:          minioUseSSL,

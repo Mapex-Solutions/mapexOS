@@ -84,6 +84,15 @@ func NewEventRepository(conn driver.Conn) repositories.EventRepository {
 		logger.Error(err, "[REPO:Event] Failed to initialize events_workflow table model")
 	}
 
+	// Initialize the Table wrapper for events_ota_status
+	otaStatusTable, err := chModel.NewTable[entities.OTAStatusEvent](conn, "events_ota_status", chModel.TableConfig{
+		TimestampField: "created",
+		DefaultOrder:   "DESC",
+	})
+	if err != nil {
+		logger.Error(err, "[REPO:Event] Failed to initialize events_ota_status table model")
+	}
+
 	return &EventRepositoryClickHouse{
 		conn:                   conn,
 		eventTable:             eventTable,
@@ -94,6 +103,7 @@ func NewEventRepository(conn driver.Conn) repositories.EventRepository {
 		businessRuleEventTable: businessRuleTable,
 		triggerEventTable:      triggerTable,
 		workflowEventTable:     workflowTable,
+		otaStatusEventTable:    otaStatusTable,
 	}
 }
 
