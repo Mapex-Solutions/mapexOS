@@ -33,14 +33,22 @@ export async function New(config: Config): Promise<MinIOClient> {
 
 	const region = config.Region || DefaultRegion;
 
-	const minioClient = new Minio.Client({
+	// Static keys when the deployment provides them; otherwise the ambient IAM
+	// credential chain (EC2/ECS instance metadata) — see Config.AuthIsNeeded.
+	const clientOptions: Minio.ClientOptions = {
 		endPoint: config.Endpoint,
 		port: config.Port,
 		useSSL: config.UseSSL ?? false,
-		accessKey: config.AccessKeyID,
-		secretKey: config.SecretAccessKey,
 		region: region,
-	});
+	};
+	if (config.AuthIsNeeded) {
+		clientOptions.accessKey = config.AccessKeyID;
+		clientOptions.secretKey = config.SecretAccessKey;
+	} else {
+		clientOptions.credentialsProvider = new Minio.IamAwsProvider({});
+	}
+
+	const minioClient = new Minio.Client(clientOptions);
 
 	// Verify connection with a health check
 	try {
@@ -67,17 +75,21 @@ export async function New(config: Config): Promise<MinIOClient> {
 }
 
 /**
- * validateConfig validates the MinIO configuration.
+ * validateConfig validates the MinIO configuration. Exported for unit testing
+ * the static-auth vs ambient-IAM branch (mirrors the Go kit's minio_test.go).
  */
-function validateConfig(config: Config): string | null {
+export function validateConfig(config: Config): string | null {
 	if (!config.Endpoint) {
 		return 'endpoint is required';
 	}
-	if (!config.AccessKeyID) {
-		return 'access key ID is required';
-	}
-	if (!config.SecretAccessKey) {
-		return 'secret access key is required';
+	// Keys are only required for static auth; ambient IAM has none.
+	if (config.AuthIsNeeded) {
+		if (!config.AccessKeyID) {
+			return 'access key ID is required';
+		}
+		if (!config.SecretAccessKey) {
+			return 'secret access key is required';
+		}
 	}
 	return null;
 }

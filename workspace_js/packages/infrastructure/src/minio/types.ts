@@ -22,10 +22,19 @@ export interface Config {
 	// Endpoint is the MinIO server address (e.g., "localhost:9000")
 	Endpoint: string;
 
-	// AccessKeyID is the MinIO access key (like AWS Access Key)
+	// AuthIsNeeded selects the credential provider. When true, the client
+	// authenticates with the static AccessKeyID/SecretAccessKey below. When
+	// false, it uses the ambient IAM credential chain (EC2/ECS instance metadata
+	// via IamAwsProvider) and the static keys are ignored — for deployments where
+	// the compute identity is granted bucket access directly.
+	AuthIsNeeded: boolean;
+
+	// AccessKeyID is the object-store access key (like AWS Access Key). Used only
+	// when AuthIsNeeded is true.
 	AccessKeyID: string;
 
-	// SecretAccessKey is the MinIO secret key (like AWS Secret Key)
+	// SecretAccessKey is the object-store secret key (like AWS Secret Key). Used
+	// only when AuthIsNeeded is true.
 	SecretAccessKey: string;
 
 	// BucketName is the default bucket for this client instance
