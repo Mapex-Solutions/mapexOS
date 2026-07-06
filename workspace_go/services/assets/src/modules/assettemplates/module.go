@@ -5,15 +5,19 @@ import (
 
 	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
+	assetsPorts "assets/src/modules/assets/application/ports"
 	"assets/src/modules/assettemplates/application/di"
 	"assets/src/modules/assettemplates/application/ports"
 	service "assets/src/modules/assettemplates/application/services"
+	adapters "assets/src/modules/assettemplates/infrastructure/adapters"
 	redisCache "assets/src/modules/assettemplates/infrastructure/cache/redis"
-	minioProvider "assets/src/modules/assettemplates/infrastructure/storage/minio"
+	natsAdapter "assets/src/modules/assettemplates/infrastructure/messaging/nats"
 	collection "assets/src/modules/assettemplates/infrastructure/persistence/mongo"
-	consumers "assets/src/modules/assettemplates/interfaces/message/consumers"
+	minioProvider "assets/src/modules/assettemplates/infrastructure/storage/minio"
 	routes "assets/src/modules/assettemplates/interfaces/http/routes"
+	consumers "assets/src/modules/assettemplates/interfaces/message/consumers"
 
+	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	configuration "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
 	apikeymw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/apiKey"
@@ -28,15 +32,31 @@ import (
 func InitRepositories() {
 	c := container.GetContainer()
 	c.Provide(collection.New)
-	c.Provide(collection.NewFieldVocabulary)            // Register FieldVocabularyRepository for the authoring UI vocabulary
-	c.Provide(minioProvider.NewTemplateStoragePort)     // Register TemplateStoragePort for script storage
-	c.Provide(redisCache.NewCacheKeyBuilderAdapter)     // Register CacheKeyBuilderPort for Redis key construction
+	c.Provide(collection.NewFieldVocabulary)              // Register FieldVocabularyRepository for the authoring UI vocabulary
+	c.Provide(minioProvider.NewTemplateStoragePort)       // Register TemplateStoragePort for script storage
+	c.Provide(redisCache.NewCacheKeyBuilderAdapter)       // Register CacheKeyBuilderPort for Redis key construction
+	c.Provide(collection.NewMigrationPlanRepository)      // Register MigrationPlanRepository for template migration plans
+	c.Provide(collection.NewMigrationExecutionRepository) // Register MigrationExecutionRepository for per-asset executions
 	logger.Info("[MODULE:AssetTemplates] Repositories registered")
 }
 
 // InitServices registers the assettemplates services in the DIG container
 func InitServices() {
 	c := container.GetContainer()
+
+	// Migration start-timer scheduler over the core NATS ScheduleManager.
+	c.Provide(func(params struct {
+		container.In
+		SM natsModel.ScheduleManager `name:"core"`
+	}) ports.MigrationSchedulerPort {
+		return natsAdapter.NewMigrationScheduler(params.SM)
+	})
+
+	// Template switcher — rebinds an asset to a target template via the assets service.
+	c.Provide(func(svc assetsPorts.AssetServicePort) ports.TemplateSwitcherPort {
+		return adapters.NewTemplateSwitcherAdapter(svc)
+	})
+
 	c.Provide(service.New)
 	logger.Info("[MODULE:AssetTemplates] Services registered")
 }
@@ -83,6 +103,13 @@ func InitInterfaces() {
 		consumers.NewListNameUpdatedConsumer(params.CoreBus, params.AssetTemplateService)
 	}); err != nil {
 		logger.Error(err, "[CONSUMER:ListNameUpdated] Failed to start list name updated consumer")
+	}
+
+	// Start migration timers consumer for fired plan start-timer messages.
+	if err := c.Invoke(func(params di.AssetTemplateConsumerDependenciesInjection) {
+		consumers.NewMigrationTimersConsumer(params.CoreBus, params.AssetTemplateService)
+	}); err != nil {
+		logger.Error(err, "[CONSUMER:MigrationTimers] Failed to start migration timers consumer")
 	}
 
 	logger.Info("[MODULE:AssetTemplates] Consumers registered (NATS Core)")

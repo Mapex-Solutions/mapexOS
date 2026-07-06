@@ -293,3 +293,124 @@ func (s *AssetTemplateService) GetFieldVocabulary(c ctx.Context, requestContext 
 	return &dtos.FieldVocabularyResponse{Groups: groups}, nil
 }
 
+// CreateMigrationPlan orchestrates plan creation:
+// resolve org scope -> assert both templates exist -> build the plan and its
+// per-asset executions (ids, batch size, schedule) -> persist both -> arm the
+// start timer -> return the response DTO.
+func (s *AssetTemplateService) CreateMigrationPlan(c ctx.Context, requestContext *reqCtx.RequestContext, dto *dtos.MigrationPlanCreateRequest) (*dtos.MigrationPlanResponse, error) {
+	orgID, err := s.resolveMigrationOrgID(requestContext)
+	if err != nil {
+		return nil, err
+	}
+	fromName, toName, err := s.resolveMigrationTemplateNames(c, dto)
+	if err != nil {
+		return nil, err
+	}
+	plan, execs, err := s.buildMigrationPlan(orgID, dto, fromName, toName)
+	if err != nil {
+		return nil, err
+	}
+	if err := s.persistMigrationPlan(c, plan, execs); err != nil {
+		return nil, err
+	}
+	_ = s.deps.MigrationScheduler.ScheduleStart(plan.ID.Hex(), plan.ScheduleAt)
+	return s.toMigrationPlanResponse(plan), nil
+}
+
+// GetMigrationPlans orchestrates the paginated list:
+// build the org-scoped filter (plus optional name/status) -> run the repository
+// query -> map entities to response DTOs.
+func (s *AssetTemplateService) GetMigrationPlans(c ctx.Context, requestContext *reqCtx.RequestContext, query *dtos.MigrationPlanQueryDTO) (*model.PaginatedResult[dtos.MigrationPlanResponse], error) {
+	filters, err := s.buildMigrationPlanFilters(requestContext, query)
+	if err != nil {
+		return nil, err
+	}
+	pagination := &model.PaginationOpts{Page: int64(query.GetPage()), PerPage: int64(query.GetPerPage())}
+	result, err := s.deps.MigrationPlanRepo.FindWithFilters(c, filters, pagination, nil)
+	if err != nil {
+		return nil, err
+	}
+	items := s.mapMigrationPlansToDtos(result.Items)
+	return &model.PaginatedResult[dtos.MigrationPlanResponse]{Items: items, Pagination: result.Pagination}, nil
+}
+
+// GetMigrationPlanById fetches a plan by id (404 on miss) and returns its DTO.
+func (s *AssetTemplateService) GetMigrationPlanById(c ctx.Context, planId *string) (*dtos.MigrationPlanResponse, error) {
+	plan, err := s.fetchMigrationPlan(c, planId)
+	if err != nil {
+		return nil, err
+	}
+	return s.toMigrationPlanResponse(plan), nil
+}
+
+// UpdateMigrationPlanById orchestrates a partial plan update:
+// load (404 on miss) -> reject when no longer editable (409) -> assemble the
+// $set patch -> re-arm the timer if ScheduleAt moved -> apply -> return the DTO.
+func (s *AssetTemplateService) UpdateMigrationPlanById(c ctx.Context, planId *string, dto *dtos.MigrationPlanUpdateRequest) (*dtos.MigrationPlanResponse, error) {
+	plan, err := s.fetchMigrationPlan(c, planId)
+	if err != nil {
+		return nil, err
+	}
+	if !plan.IsEditable() {
+		return nil, &customErrors.ServerCustomError{Code: httpStatus.CONFLICT, Errors: []string{"Migration plan is not editable"}}
+	}
+	patch, err := s.buildMigrationPlanPatch(dto)
+	if err != nil {
+		return nil, err
+	}
+	s.rescheduleMigrationIfNeeded(planId, dto)
+	updated, err := s.deps.MigrationPlanRepo.FindByIdAndUpdate(c, planId, patch)
+	if err != nil {
+		return nil, err
+	}
+	return s.toMigrationPlanResponse(updated), nil
+}
+
+// CancelMigrationPlanById cancels an editable plan:
+// load (404 on miss) -> reject when no longer editable (409) -> release the
+// pending start timer -> mark the plan cancelled.
+func (s *AssetTemplateService) CancelMigrationPlanById(c ctx.Context, planId *string) error {
+	plan, err := s.fetchMigrationPlan(c, planId)
+	if err != nil {
+		return err
+	}
+	if !plan.IsEditable() {
+		return &customErrors.ServerCustomError{Code: httpStatus.CONFLICT, Errors: []string{"Migration plan is not editable"}}
+	}
+	_ = s.deps.MigrationScheduler.CancelStart(*planId)
+	return s.markMigrationPlanCancelled(c, planId)
+}
+
+// GetMigrationExecutions orchestrates the paginated per-asset execution list:
+// build the status/asset filter -> run the plan-scoped query -> map entities to
+// response DTOs.
+func (s *AssetTemplateService) GetMigrationExecutions(c ctx.Context, planId *string, query *dtos.MigrationExecutionQueryDTO) (*model.PaginatedResult[dtos.MigrationExecutionResponse], error) {
+	filters := s.buildMigrationExecutionFilters(query)
+	pagination := &model.PaginationOpts{Page: int64(query.GetPage()), PerPage: int64(query.GetPerPage())}
+	result, err := s.deps.MigrationExecutionRepo.FindByPlan(c, planId, filters, pagination)
+	if err != nil {
+		return nil, err
+	}
+	items, err := s.mapMigrationExecutionsToDtos(result.Items)
+	if err != nil {
+		return nil, err
+	}
+	return &model.PaginatedResult[dtos.MigrationExecutionResponse]{Items: items, Pagination: result.Pagination}, nil
+}
+
+// RunMigrationPlan orchestrates a scheduled plan run:
+// load + guard (skip nil/non-runnable/stale-timer firings) -> transition to
+// running -> switch every asset in BatchSize batches, recording each outcome ->
+// finalize by recomputing authoritative counters and the terminal status.
+func (s *AssetTemplateService) RunMigrationPlan(c ctx.Context, planId string) error {
+	plan, ok := s.guardMigrationRun(c, planId)
+	if !ok {
+		return nil
+	}
+	if err := s.markMigrationPlanRunning(c, plan); err != nil {
+		return err
+	}
+	s.runMigrationBatches(c, plan)
+	return s.finalizeMigrationPlan(c, plan)
+}
+

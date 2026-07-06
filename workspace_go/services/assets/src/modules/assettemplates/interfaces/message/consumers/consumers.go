@@ -3,6 +3,7 @@ package consumers
 import (
 	"assets/src/modules/assettemplates/application/ports"
 	"assets/src/modules/assettemplates/interfaces/message/consumers/list_name_updated"
+	"assets/src/modules/assettemplates/interfaces/message/consumers/migration_timers"
 	"assets/src/modules/assettemplates/interfaces/message/consumers/template_l2sync"
 
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
@@ -26,4 +27,11 @@ func NewListNameUpdatedConsumer(bus *natsModel.Bus, assetTemplateService ports.A
 // and forwards each retry to AssetTemplateService.ProcessL2WriteRetry.
 func NewTemplateL2SyncConsumer(bus *natsModel.Bus, assetTemplateService ports.AssetTemplateServicePort) {
 	template_l2sync.NewConsumer(bus, assetTemplateService)
+}
+
+// NewMigrationTimersConsumer creates the migration timers consumer.
+// Receives fired start-timer messages on the static migration subjects and
+// drives the plan runner via AssetTemplateService.RunMigrationPlan.
+func NewMigrationTimersConsumer(bus *natsModel.Bus, assetTemplateService ports.AssetTemplateServicePort) {
+	migration_timers.NewConsumer(bus, assetTemplateService)
 }

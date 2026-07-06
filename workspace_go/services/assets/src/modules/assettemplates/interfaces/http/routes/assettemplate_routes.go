@@ -77,6 +77,74 @@ func RegisterRoutes(group web.Router, service ports.AssetTemplateServicePort) {
 		Description("Returns the curated, multi-tenant list of canonical dynamic-field names for the asset-template authoring UI, grouped by category in a fixed order. Each field hint and group label are resolved to the requested language (en-US fallback).").
 		Returns(&dtos.FieldVocabularyResponse{})
 
+	/** Migration Routes */
+
+	// Registered before the /:assetTemplateId wildcard routes so the static
+	// /migrations prefix is not captured as an assetTemplateId. Within the group,
+	// the static /migrations paths precede the /migrations/:id parameterized ones.
+
+	// Create a migration plan. coverage middleware scopes the plan to the caller's org.
+	createMigrationDto := validation.NewValidation(&dtos.MigrationPlanCreateRequest{}, nil, nil)
+	r.Post("/migrations", createMigrationDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.TemplateMigrationCreate),
+		coverageMw.InjectRequestContext(),
+		handlers.CreateMigrationPlan(service),
+	).
+		Summary("Create migration plan").
+		Description("Creates a scheduled template migration plan and one pending execution per affected asset. Organization scoping is applied automatically from the request context.").
+		Returns(&dtos.MigrationPlanResponse{})
+
+	// List migration plans. coverage middleware injects context-aware org filtering.
+	listMigrationsDto := validation.NewValidation(nil, &dtos.MigrationPlanQueryDTO{}, nil)
+	r.Get("/migrations", listMigrationsDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.TemplateMigrationList),
+		coverageMw.InjectRequestContext(),
+		handlers.ListMigrationPlans(service),
+	).
+		Summary("List migration plans").
+		Description("Returns a paginated, filterable list of template migration plans scoped to the caller's organization.").
+		Returns(&model.PaginatedResult[dtos.MigrationPlanResponse]{})
+
+	// Get a migration plan by ID.
+	getMigrationDto := validation.NewValidation(nil, nil, &dtos.MigrationPlanIdDto{})
+	r.Get("/migrations/:id", getMigrationDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.TemplateMigrationRead),
+		handlers.GetMigrationPlan(service),
+	).
+		Summary("Get migration plan by ID").
+		Description("Retrieves a single template migration plan by its MongoDB ObjectId.").
+		Returns(&dtos.MigrationPlanResponse{})
+
+	// Update a migration plan by ID.
+	updateMigrationDto := validation.NewValidation(&dtos.MigrationPlanUpdateRequest{}, nil, &dtos.MigrationPlanIdDto{})
+	r.Patch("/migrations/:id", updateMigrationDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.TemplateMigrationUpdate),
+		handlers.UpdateMigrationPlan(service),
+	).
+		Summary("Update migration plan").
+		Description("Partially updates an editable migration plan and re-arms the start timer when the schedule changes. All body fields are optional; only provided fields are changed. Returns 409 when the plan is no longer editable.").
+		Returns(&dtos.MigrationPlanResponse{})
+
+	// Cancel a migration plan by ID.
+	cancelMigrationDto := validation.NewValidation(nil, nil, &dtos.MigrationPlanIdDto{})
+	r.Delete("/migrations/:id", cancelMigrationDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.TemplateMigrationDelete),
+		handlers.CancelMigrationPlan(service),
+	).
+		Summary("Cancel migration plan").
+		Description("Cancels a pending or scheduled migration plan by its MongoDB ObjectId. Returns 409 when the plan is already running or in a terminal state.").
+		Returns(map[string]bool{})
+
+	// List the per-asset executions of a migration plan.
+	listMigrationExecutionsDto := validation.NewValidation(nil, &dtos.MigrationExecutionQueryDTO{}, &dtos.MigrationPlanIdDto{})
+	r.Get("/migrations/:id/executions", listMigrationExecutionsDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.TemplateMigrationRead),
+		handlers.ListMigrationExecutions(service),
+	).
+		Summary("List migration executions").
+		Description("Returns a paginated, filterable list of the per-asset executions for a migration plan.").
+		Returns(&model.PaginatedResult[dtos.MigrationExecutionResponse]{})
+
 	/** CRUD Routes */
 
 	// Create a new asset template. coverage middleware populates orgId and pathKey.

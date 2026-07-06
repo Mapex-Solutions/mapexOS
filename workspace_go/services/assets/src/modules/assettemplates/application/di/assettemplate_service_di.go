@@ -65,4 +65,16 @@ type AssetTemplateServiceDependenciesInjection struct {
 	// concern is the same; only the subject/MsgId prefix varies per
 	// module.
 	L2WritesPublisher assetsPorts.L2WritesPublisherPort
+
+	// MigrationPlanRepo persists template migration plans.
+	MigrationPlanRepo repositories.MigrationPlanRepository
+
+	// MigrationExecutionRepo persists per-asset migration executions.
+	MigrationExecutionRepo repositories.MigrationExecutionRepository
+
+	// MigrationScheduler schedules a plan's start timer via native NATS message scheduling.
+	MigrationScheduler ports.MigrationSchedulerPort
+
+	// TemplateSwitcher rebinds one asset to a target template through the assets module.
+	TemplateSwitcher ports.TemplateSwitcherPort
 }

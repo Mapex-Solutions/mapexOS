@@ -202,4 +202,90 @@ type AssetTemplateServicePort interface {
 	//   - FieldVocabularyResponse: Groups (category, label, fields) in fixed order, empty groups omitted
 	//   - error: If the repository query fails
 	GetFieldVocabulary(ctx ctx.Context, requestContext *reqCtx.RequestContext, lang string) (*dtos.FieldVocabularyResponse, error)
+
+	// CreateMigrationPlan validates the source/target templates, persists a
+	// scheduled plan plus one pending execution per asset, and arms the plan's
+	// start timer.
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - requestContext: Contains OrgContext used to scope the plan
+	//   - dto: Migration plan creation data
+	//
+	// Returns:
+	//   - MigrationPlanResponse: The created plan
+	//   - error: If a template is missing or persistence fails
+	CreateMigrationPlan(ctx ctx.Context, requestContext *reqCtx.RequestContext, dto *dtos.MigrationPlanCreateRequest) (*dtos.MigrationPlanResponse, error)
+
+	// GetMigrationPlans returns the org-scoped, filtered, paginated list of
+	// migration plans.
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - requestContext: Org access data used for automatic org filtering
+	//   - query: Name/status filters and pagination
+	//
+	// Returns:
+	//   - PaginatedResult: Matching plans and pagination metadata
+	//   - error: If the query fails
+	GetMigrationPlans(ctx ctx.Context, requestContext *reqCtx.RequestContext, query *dtos.MigrationPlanQueryDTO) (*model.PaginatedResult[dtos.MigrationPlanResponse], error)
+
+	// GetMigrationPlanById retrieves a single migration plan by id.
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - planId: The plan id (MongoDB ObjectId as string)
+	//
+	// Returns:
+	//   - MigrationPlanResponse: The plan if found
+	//   - error: If not found or retrieval fails
+	GetMigrationPlanById(ctx ctx.Context, planId *string) (*dtos.MigrationPlanResponse, error)
+
+	// UpdateMigrationPlanById applies a partial update to an editable plan and
+	// re-arms the start timer when ScheduleAt changes.
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - planId: The plan id (MongoDB ObjectId as string)
+	//   - dto: Update data (only provided fields are applied)
+	//
+	// Returns:
+	//   - MigrationPlanResponse: The updated plan
+	//   - error: 409 when the plan is no longer editable, 404 when missing
+	UpdateMigrationPlanById(ctx ctx.Context, planId *string, dto *dtos.MigrationPlanUpdateRequest) (*dtos.MigrationPlanResponse, error)
+
+	// CancelMigrationPlanById cancels an editable plan.
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - planId: The plan id (MongoDB ObjectId as string)
+	//
+	// Returns:
+	//   - error: 409 when the plan is no longer editable, 404 when missing
+	CancelMigrationPlanById(ctx ctx.Context, planId *string) error
+
+	// GetMigrationExecutions returns the paginated per-asset executions of a plan.
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - planId: The plan id (MongoDB ObjectId as string)
+	//   - query: Status/assetId filters and pagination
+	//
+	// Returns:
+	//   - PaginatedResult: Matching executions and pagination metadata
+	//   - error: If the query fails
+	GetMigrationExecutions(ctx ctx.Context, planId *string, query *dtos.MigrationExecutionQueryDTO) (*model.PaginatedResult[dtos.MigrationExecutionResponse], error)
+
+	// RunMigrationPlan executes a scheduled migration plan. Invoked by the
+	// migration start-timer consumer. Idempotent: non-runnable states and stale
+	// timers are no-ops.
+	//
+	// Parameters:
+	//   - ctx: Context for controlling cancellation and timeouts
+	//   - planId: The plan id (MongoDB ObjectId as string)
+	//
+	// Returns:
+	//   - error: If the transition or finalization write fails; per-asset
+	//     failures never abort the run.
+	RunMigrationPlan(ctx ctx.Context, planId string) error
 }

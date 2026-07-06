@@ -295,3 +295,100 @@ func GetFieldVocabulary(service ports.AssetTemplateServicePort) web.Handler {
 		return response.Success(c, result)
 	}
 }
+
+// CreateMigrationPlan creates a scheduled template migration plan.
+// Uses RequestContext (coverage middleware) to scope the plan to the caller's org.
+func CreateMigrationPlan(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found in request context", nil)
+		}
+
+		bodyData, _ := requestValidation.GetDTO[*dtos.MigrationPlanCreateRequest](c, "bodyDTO")
+		retData, err := service.CreateMigrationPlan(ctx, requestContext, bodyData)
+		if err != nil {
+			return err
+		}
+		return response.Created(c, retData)
+	}
+}
+
+// ListMigrationPlans returns a paginated, filtered list of migration plans.
+// Uses RequestContext (coverage middleware) for automatic org filtering.
+func ListMigrationPlans(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found in request context", nil)
+		}
+
+		queryData, _ := requestValidation.GetDTO[*dtos.MigrationPlanQueryDTO](c, "queryDTO")
+		retData, err := service.GetMigrationPlans(ctx, requestContext, queryData)
+		if err != nil {
+			return err
+		}
+		return response.Success(c, retData)
+	}
+}
+
+// GetMigrationPlan returns a single migration plan by its id.
+func GetMigrationPlan(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		params, _ := requestValidation.GetDTO[*dtos.MigrationPlanIdDto](c, "paramsDTO")
+		retData, err := service.GetMigrationPlanById(ctx, &params.Id)
+		if err != nil {
+			return err
+		}
+		return response.Success(c, retData)
+	}
+}
+
+// UpdateMigrationPlan partially updates an editable migration plan.
+func UpdateMigrationPlan(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		params, _ := requestValidation.GetDTO[*dtos.MigrationPlanIdDto](c, "paramsDTO")
+		bodyData, _ := requestValidation.GetDTO[*dtos.MigrationPlanUpdateRequest](c, "bodyDTO")
+		retData, err := service.UpdateMigrationPlanById(ctx, &params.Id, bodyData)
+		if err != nil {
+			return err
+		}
+		return response.Success(c, retData)
+	}
+}
+
+// CancelMigrationPlan cancels a pending or scheduled migration plan.
+func CancelMigrationPlan(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		params, _ := requestValidation.GetDTO[*dtos.MigrationPlanIdDto](c, "paramsDTO")
+		if err := service.CancelMigrationPlanById(ctx, &params.Id); err != nil {
+			return err
+		}
+		return response.Success(c, map[string]bool{"success": true})
+	}
+}
+
+// ListMigrationExecutions returns the per-asset executions of a migration plan.
+func ListMigrationExecutions(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		params, _ := requestValidation.GetDTO[*dtos.MigrationPlanIdDto](c, "paramsDTO")
+		queryData, _ := requestValidation.GetDTO[*dtos.MigrationExecutionQueryDTO](c, "queryDTO")
+		retData, err := service.GetMigrationExecutions(ctx, &params.Id, queryData)
+		if err != nil {
+			return err
+		}
+		return response.Success(c, retData)
+	}
+}
