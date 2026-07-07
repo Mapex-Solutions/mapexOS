@@ -14,6 +14,7 @@ require (
 require (
 	github.com/ClickHouse/ch-go v0.69.0 // indirect
 	github.com/ClickHouse/clickhouse-go/v2 v2.42.0 // indirect
+	github.com/Mapex-Solutions/mapexGoKit/config v0.0.0 // indirect
 	github.com/MicahParks/keyfunc v1.9.0 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -93,3 +94,5 @@ replace github.com/Mapex-Solutions/mapexGoKit/utils => ../../../../mapexGoKit/ut
 replace github.com/Mapex-Solutions/MapexOS/contracts => ../../packages/contracts
 
 replace github.com/Mapex-Solutions/MapexOS/permissions => ../../packages/permissions
+
+replace github.com/Mapex-Solutions/mapexGoKit/config => ../../../../mapexGoKit/config

@@ -21,6 +21,7 @@ require (
 require (
 	github.com/ClickHouse/ch-go v0.69.0 // indirect
 	github.com/ClickHouse/clickhouse-go/v2 v2.42.0 // indirect
+	github.com/Mapex-Solutions/mapexGoKit/config v0.0.0 // indirect
 	github.com/MicahParks/keyfunc v1.9.0 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -72,7 +73,7 @@ require (
 	github.com/xdg-go/scram v1.2.0 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
-	go.mongodb.org/mongo-driver/v2 v2.5.0 // indirect
+	go.mongodb.org/mongo-driver/v2 v2.5.0
 	go.opentelemetry.io/otel v1.39.0 // indirect
 	go.opentelemetry.io/otel/trace v1.39.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
@@ -94,3 +95,5 @@ replace github.com/Mapex-Solutions/mapexGoKit/utils => ../../../../mapexGoKit/ut
 replace github.com/Mapex-Solutions/MapexOS/contracts => ../../packages/contracts
 
 replace github.com/Mapex-Solutions/MapexOS/permissions => ../../packages/permissions
+
+replace github.com/Mapex-Solutions/mapexGoKit/config => ../../../../mapexGoKit/config
