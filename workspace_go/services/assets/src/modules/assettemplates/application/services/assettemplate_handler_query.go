@@ -75,6 +75,7 @@ func (s *AssetTemplateService) mapTemplateEntitiesToDtos(items []entities.Assett
 	for i := range items {
 		entity := items[i]
 		dto, _ := mapper.EntityToDto[entities.Assettemplate, dtos.AssetTemplateResponse](&entity)
+		applyMarketplaceSource(dto, &entity)
 		out[i] = *dto
 	}
 	return out

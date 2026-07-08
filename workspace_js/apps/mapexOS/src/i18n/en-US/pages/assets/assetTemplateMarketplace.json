@@ -66,6 +66,8 @@
     "installed": "installed",
     "success": "template installed",
     "checksumError": "the template could not be verified and was not installed",
-    "genericError": "failed to install the template"
+    "genericError": "failed to install the template",
+    "shareWithChildren": "share with child organizations",
+    "shareWithChildrenHint": "when enabled, child organizations can also use this installed template"
   }
 }

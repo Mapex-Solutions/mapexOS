@@ -288,4 +288,16 @@ type AssetTemplateServicePort interface {
 	//   - error: If the transition or finalization write fails; per-asset
 	//     failures never abort the run.
 	RunMigrationPlan(ctx ctx.Context, planId string) error
+
+	// InstallFromMarketplace installs a marketplace template into the caller's org:
+	// fetches + hard-verifies the bundle, resolves org-scoped classification,
+	// caches the shared content, and creates the per-org link record (always
+	// org-scoped, never isSystem). Idempotent. shareWithChildren makes descendant
+	// orgs inherit the template via the org hierarchy.
+	InstallFromMarketplace(ctx ctx.Context, requestContext *reqCtx.RequestContext, vendor, slug string, shareWithChildren bool) (*dtos.AssetTemplateResponse, error)
+
+	// UninstallFromMarketplace removes only the caller org's link to a marketplace
+	// template; the shared content and other orgs' links are untouched. Returns a
+	// 404-mapped error when the org has not installed it.
+	UninstallFromMarketplace(ctx ctx.Context, requestContext *reqCtx.RequestContext, vendor, slug string) error
 }

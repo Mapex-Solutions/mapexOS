@@ -392,3 +392,37 @@ func ListMigrationExecutions(service ports.AssetTemplateServicePort) web.Handler
 		return response.Success(c, retData)
 	}
 }
+
+// InstallFromMarketplace returns a handler that installs a marketplace asset
+// template into the caller's organization (org-scoped, never system).
+func InstallFromMarketplace(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found in request context", nil)
+		}
+		params, _ := requestValidation.GetDTO[*dtos.InstallParams](c, "paramsDTO")
+		body, _ := requestValidation.GetDTO[*dtos.InstallBody](c, "bodyDTO")
+		result, err := service.InstallFromMarketplace(c.UserContext(), requestContext, params.MarketplaceVendor, params.MarketplaceSlug, body.ShareWithChildren)
+		if err != nil {
+			return err
+		}
+		return response.Success(c, result)
+	}
+}
+
+// UninstallFromMarketplace returns a handler that removes the caller org's
+// installation of a marketplace asset template. The shared content stays.
+func UninstallFromMarketplace(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found in request context", nil)
+		}
+		params, _ := requestValidation.GetDTO[*dtos.InstallParams](c, "paramsDTO")
+		if err := service.UninstallFromMarketplace(c.UserContext(), requestContext, params.MarketplaceVendor, params.MarketplaceSlug); err != nil {
+			return err
+		}
+		return response.Success(c, map[string]bool{"success": true})
+	}
+}

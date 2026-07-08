@@ -158,6 +158,28 @@ func RegisterRoutes(group web.Router, service ports.AssetTemplateServicePort) {
 		Description("Creates a new asset template, including its decode/validate/transform scripts. Organization scoping is applied automatically from the request context.").
 		Returns(&dtos.AssetTemplateResponse{})
 
+	// Install/uninstall a marketplace template into the caller's org. Registered
+	// before the /:assetTemplateId wildcard so a three-segment install path can
+	// never be captured as a template id.
+	installDto := validation.NewValidation(&dtos.InstallBody{}, nil, &dtos.InstallParams{})
+	r.Post("/:marketplaceVendor/:marketplaceSlug/install", installDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.AssetTemplateCreate),
+		coverageMw.InjectRequestContext(),
+		handlers.InstallFromMarketplace(service),
+	).
+		Summary("Install a marketplace asset template").
+		Description("Fetches a template from the mapexMarketplace catalog, hard-verifies its sha256, resolves org-scoped classification, caches the shared content, and creates the caller organization's per-org link. Rejects with 422 on a checksum mismatch.").
+		Returns(&dtos.AssetTemplateResponse{})
+
+	r.Delete("/:marketplaceVendor/:marketplaceSlug/install", installDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.AssetTemplateDelete),
+		coverageMw.InjectRequestContext(),
+		handlers.UninstallFromMarketplace(service),
+	).
+		Summary("Uninstall a marketplace asset template").
+		Description("Removes the caller organization's installation of a marketplace template. The shared content and other organizations' installs are untouched. Returns 404 when the organization has not installed it.").
+		Returns(map[string]bool{})
+
 	// Get asset template by ID.
 	getAssetTemplateById := validation.NewValidation(nil, nil, &dtos.AssetTemplateIdDto{})
 	r.Get("/:assetTemplateId", getAssetTemplateById, swagger.Expose,

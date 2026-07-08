@@ -20,6 +20,7 @@ import { DynamicFieldsTable } from '@components/assetTemplates/dynamicFieldsTabl
 import { AvailableFieldsList } from '@components/assetTemplates/availableFieldsList';
 import { ScriptViewerDialog } from '@components/dialogs/scriptViewer';
 import { DetailChip } from '@components/chips';
+import { AppTooltip } from '@components/tooltips';
 
 /** COMPOSABLES */
 import { useAssetTemplateMarketplaceTranslations } from '@composables/i18n';
@@ -46,6 +47,7 @@ const loading = ref(false);
 const loadError = ref(false);
 const installing = ref(false);
 const installError = ref<string | undefined>(undefined);
+const shareWithChildren = ref(false);
 const showScript = ref(false);
 const scriptTitle = ref('');
 const scriptContent = ref('');
@@ -129,8 +131,9 @@ async function fetchBundle(vendor: string, slug: string): Promise<void> {
   bundle.value = null;
 
   try {
-    const res = await apis.assetTemplatesMarketplace.marketplace.get({ vendor, slug });
-    bundle.value = res.data;
+    // The bundle endpoint serves the raw bundle (not a {status,errors,data}
+    // envelope), so the client returns it directly.
+    bundle.value = await apis.assetTemplatesMarketplace.marketplace.get({ vendor, slug });
   } catch (err) {
     logger.error('Failed to load the asset template bundle', err);
     loadError.value = true;
@@ -202,7 +205,10 @@ async function handleInstall(): Promise<void> {
   emit('install', { vendor: props.vendor, slug: props.slug });
 
   try {
-    await apis.assets.assetTemplate.install({ vendor: props.vendor, slug: props.slug });
+    await apis.assets.assetTemplate.install(
+      { vendor: props.vendor, slug: props.slug },
+      { shareWithChildren: shareWithChildren.value },
+    );
     notifySuccess({ message: t.install.success.value });
     emit('installed', { vendor: props.vendor, slug: props.slug });
     isOpen.value = false;
@@ -363,6 +369,15 @@ function close(): void {
 
       <!-- Footer -->
       <q-card-actions align="right" class="marketplace-detail__footer">
+        <q-toggle
+          v-model="shareWithChildren"
+          :label="t.install.shareWithChildren.value"
+          :disable="installing"
+          color="primary"
+          class="q-mr-auto"
+        >
+          <AppTooltip :text="t.install.shareWithChildrenHint.value" />
+        </q-toggle>
         <q-btn
           flat
           color="grey-7"

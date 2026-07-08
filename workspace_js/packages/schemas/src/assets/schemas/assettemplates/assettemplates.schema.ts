@@ -21,6 +21,14 @@ export const ZodAssetTemplateIdSchema = z.object({
 });
 
 /**
+ * Marketplace install body schema - the caller's only choice is whether the
+ * installed template is shared down to child organizations.
+ */
+export const ZodInstallBodySchema = z.object({
+	shareWithChildren: IsBoolean.optional(),
+});
+
+/**
  * Asset Template Create schema - Used for creating new asset templates
  */
 export const ZodAssetTemplateCreateSchema = z.object({
@@ -155,6 +163,10 @@ export const ZodAssetTemplateResponseSchema = z.object({
 
 	// Dynamic Fields (for typed event storage and querying)
 	dynamicFields: z.array(ZodDynamicFieldSchema).optional(),
+
+	// Origin of the record: "marketplace" when installed from the catalog
+	// (has a marketplaceGuid link), "local" when hand-created in the org.
+	source: z.enum(['local', 'marketplace']).optional(),
 
 	created: StringAndBeEmptyOrOptional,
 	updated: StringAndBeEmptyOrOptional,

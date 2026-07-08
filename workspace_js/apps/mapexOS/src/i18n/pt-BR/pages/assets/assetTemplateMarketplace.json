@@ -66,6 +66,8 @@
     "installed": "instalado",
     "success": "template instalado",
     "checksumError": "não foi possível verificar o template e ele não foi instalado",
-    "genericError": "falha ao instalar o template"
+    "genericError": "falha ao instalar o template",
+    "shareWithChildren": "compartilhar com organizações filhas",
+    "shareWithChildrenHint": "quando ativado, as organizações filhas também podem usar este template instalado"
   }
 }

@@ -71,6 +71,57 @@ func (s *AssetTemplateService) CreateAssetTemplate(c ctx.Context, requestContext
 	return resp, nil
 }
 
+// InstallFromMarketplace installs a marketplace template into the caller's org:
+// fetch + hard-verify the bundle, resolve the classification into org-scoped
+// lists, cache the shared content, then create (or reuse) the per-org link
+// record. Always org-scoped, never isSystem; idempotent.
+func (s *AssetTemplateService) InstallFromMarketplace(c ctx.Context, requestContext *reqCtx.RequestContext, vendor, slug string, shareWithChildren bool) (*dtos.AssetTemplateResponse, error) {
+	orgID, orgIdStr, pathKey, err := s.resolveInstallOrg(requestContext)
+	if err != nil {
+		return nil, err
+	}
+	fetch, err := s.fetchAndVerifyBundle(c, vendor, slug)
+	if err != nil {
+		return nil, err
+	}
+	categoryId, manufacturerId, modelId, err := s.resolveClassification(c, fetch, orgIdStr, pathKey, shareWithChildren)
+	if err != nil {
+		return nil, err
+	}
+	if err := s.cacheSharedContent(c, fetch.MarketplaceGuid, fetch.RawBytes); err != nil {
+		return nil, err
+	}
+	link := s.buildInstalledLink(fetch, orgID, pathKey, shareWithChildren, categoryId, manufacturerId, modelId)
+	record, err := s.upsertInstalledLink(c, orgID, fetch.MarketplaceGuid, link)
+	if err != nil {
+		return nil, err
+	}
+	return s.installResponse(record), nil
+}
+
+// UninstallFromMarketplace removes only the caller org's link record; the shared
+// content and other orgs' links stay. Returns a 404 when the org has not
+// installed the template.
+func (s *AssetTemplateService) UninstallFromMarketplace(c ctx.Context, requestContext *reqCtx.RequestContext, vendor, slug string) error {
+	orgID, _, _, err := s.resolveInstallOrg(requestContext)
+	if err != nil {
+		return err
+	}
+	fetch, err := s.fetchAndVerifyBundle(c, vendor, slug)
+	if err != nil {
+		return err
+	}
+	link, err := s.deps.AssetTemplateRepo.FindByMarketplaceGuidAndOrg(c, fetch.MarketplaceGuid, orgID)
+	if err != nil {
+		return err
+	}
+	if link == nil {
+		return &customErrors.ServerCustomError{Code: httpStatus.NOT_FOUND, Errors: []string{"template not installed for this organization"}}
+	}
+	id := link.ID.Hex()
+	return s.deps.AssetTemplateRepo.DeleteById(c, &id)
+}
+
 // GetAssetTemplateById fetches a template by id and returns its DTO.
 // Returns 404 when the id is unknown.
 func (s *AssetTemplateService) GetAssetTemplateById(c ctx.Context, templateId *string) (*dtos.AssetTemplateResponse, error) {
@@ -83,6 +134,8 @@ func (s *AssetTemplateService) GetAssetTemplateById(c ctx.Context, templateId *s
 	}
 	s.recordTemplateOp("read", "success", start)
 	resp, _ := mapper.EntityToDto[entities.Assettemplate, dtos.AssetTemplateResponse](template)
+	applyMarketplaceSource(resp, template)
+	s.hydrateSharedContent(c, resp, template)
 	return resp, nil
 }
 

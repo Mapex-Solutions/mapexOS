@@ -11,6 +11,8 @@ import (
 	service "assets/src/modules/assettemplates/application/services"
 	adapters "assets/src/modules/assettemplates/infrastructure/adapters"
 	redisCache "assets/src/modules/assettemplates/infrastructure/cache/redis"
+	listsclient "assets/src/modules/assettemplates/infrastructure/httpclient/listsclient"
+	marketplaceclient "assets/src/modules/assettemplates/infrastructure/httpclient/marketplaceclient"
 	natsAdapter "assets/src/modules/assettemplates/infrastructure/messaging/nats"
 	collection "assets/src/modules/assettemplates/infrastructure/persistence/mongo"
 	minioProvider "assets/src/modules/assettemplates/infrastructure/storage/minio"
@@ -56,6 +58,11 @@ func InitServices() {
 	c.Provide(func(svc assetsPorts.AssetServicePort) ports.TemplateSwitcherPort {
 		return adapters.NewTemplateSwitcherAdapter(svc)
 	})
+
+	// Marketplace catalog client (fetch bundle) + mapexIam lists client (resolve
+	// org-scoped classification) for the install flow.
+	c.Provide(marketplaceclient.NewMarketplaceClient)
+	c.Provide(listsclient.NewListsClient)
 
 	c.Provide(service.New)
 	logger.Info("[MODULE:AssetTemplates] Services registered")

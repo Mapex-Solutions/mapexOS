@@ -19,4 +19,15 @@ const (
 	// CounterCacheTTL is the lifetime for per-org asset template counter
 	// cache entries. 6 hours.
 	CounterCacheTTL = 6 * time.Hour
+
+	// AssetTemplateContentTTL bounds how long a marketplace template's shared,
+	// immutable content stays cached before a read re-fetches it from the
+	// marketplace. Long — the content never changes for a given marketplaceGuid.
+	AssetTemplateContentTTL = 24 * time.Hour
 )
+
+// AssetTemplateContentKeyPrefix namespaces the shared marketplace template
+// content (the immutable bundle body) in the tiered cache, keyed by
+// marketplaceGuid so every per-org install link hydrates one shared copy instead
+// of duplicating the heavy body per organization.
+const AssetTemplateContentKeyPrefix = "asset_template_content:"

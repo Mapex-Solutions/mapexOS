@@ -86,7 +86,12 @@
     "scripts": "scripts",
     "customScripts": "scripts personalizados",
     "templateType": "tipo de template",
-    "templateSource": "origem do template"
+    "templateSource": "origem do template",
+    "origin": "origem"
+  },
+  "origin": {
+    "marketplace": "instalado do marketplace",
+    "local": "criado localmente"
   },
   "menuColumns": {
     "organization": "organização",

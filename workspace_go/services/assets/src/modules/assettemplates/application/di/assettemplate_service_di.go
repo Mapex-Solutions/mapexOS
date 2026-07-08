@@ -77,4 +77,12 @@ type AssetTemplateServiceDependenciesInjection struct {
 
 	// TemplateSwitcher rebinds one asset to a target template through the assets module.
 	TemplateSwitcher ports.TemplateSwitcherPort
+
+	// MarketplaceClient fetches template bundles from the mapexMarketplace catalog
+	// for the install flow (the raw bytes + identity/integrity headers).
+	MarketplaceClient ports.MarketplaceClientPort
+
+	// ListsClient resolves a marketplace template's classification slugs into
+	// org-scoped mapexIam list ids during install (created when absent).
+	ListsClient ports.ListsClientPort
 }

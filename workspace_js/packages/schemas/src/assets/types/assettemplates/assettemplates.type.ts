@@ -5,6 +5,7 @@ import {
 	ZodAssetTemplateUpdateSchema,
 	ZodAssetTemplateQuerySchema,
 	ZodAssetTemplateResponseSchema,
+	ZodInstallBodySchema,
 } from '../../schemas/assettemplates';
 
 /**
@@ -16,3 +17,4 @@ export type AssetTemplateCreate = z.infer<typeof ZodAssetTemplateCreateSchema>;
 export type AssetTemplateUpdate = z.infer<typeof ZodAssetTemplateUpdateSchema>;
 export type AssetTemplateQuery = z.infer<typeof ZodAssetTemplateQuerySchema>;
 export type AssetTemplateResponse = z.infer<typeof ZodAssetTemplateResponseSchema>;
+export type InstallBody = z.infer<typeof ZodInstallBodySchema>;

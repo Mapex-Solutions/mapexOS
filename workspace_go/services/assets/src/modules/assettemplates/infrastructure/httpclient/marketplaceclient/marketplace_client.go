@@ -43,7 +43,7 @@ func (c *MarketplaceClient) FetchBundle(ctx context.Context, vendor, slug string
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusNotFound {
-		return nil, ErrTemplateNotFound
+		return nil, ports.ErrTemplateNotFound
 	}
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)

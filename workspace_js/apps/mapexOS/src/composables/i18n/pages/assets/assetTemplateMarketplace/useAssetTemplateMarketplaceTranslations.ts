@@ -91,6 +91,8 @@ export function useAssetTemplateMarketplaceTranslations() {
       success: computed(() => ts('pages.assets.assetTemplateMarketplace.install.success')),
       checksumError: computed(() => ts('pages.assets.assetTemplateMarketplace.install.checksumError')),
       genericError: computed(() => ts('pages.assets.assetTemplateMarketplace.install.genericError')),
+      shareWithChildren: computed(() => ts('pages.assets.assetTemplateMarketplace.install.shareWithChildren')),
+      shareWithChildrenHint: computed(() => ts('pages.assets.assetTemplateMarketplace.install.shareWithChildrenHint')),
     },
   };
 }

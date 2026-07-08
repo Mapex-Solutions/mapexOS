@@ -6,6 +6,7 @@ import type {
 	AssetTemplateResponse,
 	FieldVocabularyQuery,
 	FieldVocabularyResponse,
+	InstallBody,
 	PaginatedResponse,
 } from '@mapexos/schemas';
 import type { GetToken } from '@src/common';
@@ -17,6 +18,7 @@ import {
 	ZodAssetTemplateUpdateSchema,
 	ZodAssetTemplateQuerySchema,
 	ZodFieldVocabularyQuerySchema,
+	ZodInstallBodySchema,
 } from '@mapexos/schemas';
 
 /**
@@ -118,7 +120,17 @@ export function userApi(http: AxiosInstance, getToken: GetToken | undefined) {
 				method: 'POST',
 				path: '/:vendor/:slug/install',
 				pathParams: {} as { vendor: string; slug: string },
+				bodyParams: {} as InstallBody,
+				bodySchema: ZodInstallBodySchema,
 				responseType: {} as AssetTemplateResponse,
+			},
+
+			// UNINSTALL FROM MARKETPLACE - DELETE /:vendor/:slug/install
+			uninstall: {
+				method: 'DELETE',
+				path: '/:vendor/:slug/install',
+				pathParams: {} as { vendor: string; slug: string },
+				responseType: {} as { success: boolean },
 			},
 		},
 	});

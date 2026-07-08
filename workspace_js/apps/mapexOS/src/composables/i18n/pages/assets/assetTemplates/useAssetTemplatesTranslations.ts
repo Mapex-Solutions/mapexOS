@@ -221,6 +221,19 @@ export function useAssetTemplatesTranslations() {
         secondaryKey: 'description',
       },
       {
+        key: 'source',
+        label: ts('pages.assets.assetTemplates.columns.origin'),
+        type: 'icon',
+        visible: 'laptop',
+        width: 56,
+        align: 'center',
+        icon: (value: any) => value === 'marketplace' ? 'storefront' : 'folder',
+        color: (value: any) => value === 'marketplace' ? 'teal-6' : 'grey-6',
+        tooltip: (value: any) => value === 'marketplace'
+          ? ts('pages.assets.assetTemplates.origin.marketplace')
+          : ts('pages.assets.assetTemplates.origin.local'),
+      },
+      {
         key: 'organizationName',
         label: ts('pages.assets.assetTemplates.columns.organization'),
         type: 'chip',

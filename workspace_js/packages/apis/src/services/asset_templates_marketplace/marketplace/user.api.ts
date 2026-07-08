@@ -4,7 +4,7 @@ import type {
   AssetTemplateCatalogListResponse,
   AssetTemplateFacetsResponse,
   AssetTemplateFacetsQuery,
-  AssetTemplateBundleResponse,
+  AssetTemplateBundle,
 } from '@mapexos/schemas';
 import { createApiFactory } from '@src/common';
 
@@ -53,13 +53,16 @@ export function userApi(http: AxiosInstance) {
         afterRequest: (response: AxiosResponse) => response.data as AssetTemplateFacetsResponse,
       },
 
-      // GET BUNDLE - GET /:vendor/:slug (wrapped — caller unwraps .data)
+      // GET BUNDLE - GET /:vendor/:slug. Unlike list/facets, this endpoint serves
+      // the raw on-disk bundle verbatim (no {status,errors,data} envelope) so its
+      // published sha256 verifies against the exact served bytes; the body IS the
+      // bundle, so afterRequest returns it directly.
       get: {
         method: 'GET',
         path: '/:vendor/:slug',
         pathParams: {} as { vendor: string; slug: string },
-        responseType: {} as AssetTemplateBundleResponse,
-        afterRequest: (response: AxiosResponse) => response.data as AssetTemplateBundleResponse,
+        responseType: {} as AssetTemplateBundle,
+        afterRequest: (response: AxiosResponse) => response.data as AssetTemplateBundle,
       },
     },
   });

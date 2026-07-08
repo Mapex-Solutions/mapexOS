@@ -2,9 +2,16 @@ package ports
 
 import (
 	"context"
+	"errors"
 
 	v1 "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/assets_templates"
 )
+
+// ErrTemplateNotFound is returned by the marketplace client when the catalog has
+// no bundle for the requested (vendor, slug). The install maps it to an HTTP 404.
+// It lives on the port so the application layer can detect it without importing
+// the infrastructure adapter.
+var ErrTemplateNotFound = errors.New("marketplace template not found")
 
 // MarketplaceBundleFetch is the result of fetching one template bundle from the
 // marketplace: the decoded fields for building the local record, the EXACT raw
