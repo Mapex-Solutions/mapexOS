@@ -2,6 +2,7 @@ package payloads
 
 import (
 	"fmt"
+	"strings"
 
 	contracts "github.com/Mapex-Solutions/MapexOS/contracts/services/assets/assets"
 
@@ -25,7 +26,10 @@ const (
 // on the LNS. The JoinLorawanSensor step recomputes the same value to build the
 // matching simulated device.
 func SensorDevEUI(runID, label string) string {
-	return euiFromSeed(runID + "-sensor-" + label)
+	// Lowercase: it is the device's AssetUUID, which the LNS also uses as the TTS
+	// device_id (must match ^[a-z0-9...]) and as the uplink thread/assetUUID, so the
+	// whole join + presence + ingestion pipeline stays case-consistent.
+	return strings.ToLower(euiFromSeed(runID + "-sensor-" + label))
 }
 
 // lorawanHealthMonitor is the health config every saga LoRaWAN asset carries so the
@@ -43,9 +47,11 @@ func lorawanHealthMonitor() *contracts.HealthMonitorConfig {
 }
 
 // SagaLorawanSensorOTAAFor returns a LoRaWAN end-device (kind=device) OTAA asset
-// builder scoped to a label. AssetUUID is the deterministic public identity the
-// presence/ingestion pipeline keys on (the raw event threadId); DevEUI is the
-// separate radio identity. AppKey is request-only — the platform KEK-encrypts it.
+// builder scoped to a label. AssetUUID MUST equal the DevEUI: the platform keys the
+// device's L2 auth projection by AssetUUID, and mapexLNS looks the device up by
+// DevEUI on the OTAA join — so a device whose AssetUUID differs from its DevEUI is
+// never found (device_not_found), mirroring the gateway convention (AssetUUID=EUI).
+// AppKey is request-only — the platform KEK-encrypts it.
 func SagaLorawanSensorOTAAFor(label string) func(runID, templateID, routeGroupID string) *AssetCreateBuilder {
 	return func(runID, templateID, routeGroupID string) *AssetCreateBuilder {
 		return &AssetCreateBuilder{
@@ -53,7 +59,7 @@ func SagaLorawanSensorOTAAFor(label string) func(runID, templateID, routeGroupID
 				Name:            fmt.Sprintf("saga-lorawan-sensor-%s-%s", label, runID),
 				Enabled:         true,
 				DebugEnabled:    true,
-				AssetUUID:       fmt.Sprintf("saga-lorawan-sensor-%s-%s", label, runID),
+				AssetUUID:       SensorDevEUI(runID, label),
 				AssetTemplateID: templateID,
 				RouteGroupIds:   []string{routeGroupID},
 				Protocol: contracts.ProtocolType{
@@ -85,7 +91,7 @@ func SagaLorawanSensorABPFor(label string) func(runID, templateID, routeGroupID 
 				Name:            fmt.Sprintf("saga-lorawan-sensor-abp-%s-%s", label, runID),
 				Enabled:         true,
 				DebugEnabled:    true,
-				AssetUUID:       fmt.Sprintf("saga-lorawan-sensor-abp-%s-%s", label, runID),
+				AssetUUID:       SensorDevEUI(runID, label),
 				AssetTemplateID: templateID,
 				RouteGroupIds:   []string{routeGroupID},
 				Protocol: contracts.ProtocolType{
