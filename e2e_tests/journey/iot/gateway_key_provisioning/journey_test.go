@@ -1,3 +1,5 @@
+//go:build saga
+
 package gateway_key_provisioning
 
 import "testing"

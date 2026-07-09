@@ -18,7 +18,7 @@ const SagaGatewayFrequencyPlan = "EU_863_870"
 // device keys. The assetUUID is a 16-hex EUI derived from the runID so reruns do
 // not collide and the value is a valid gateway EUI.
 func SagaLorawanGateway(runID, templateID, routeGroupID string) *AssetCreateBuilder {
-	eui := euiFromRunID(runID)
+	eui := euiFromSeed(runID)
 	return &AssetCreateBuilder{
 		spec: contracts.AssetCreate{
 			Name:            fmt.Sprintf("saga-lorawan-gateway-%s", runID),
@@ -48,7 +48,7 @@ func SagaLorawanGateway(runID, templateID, routeGroupID string) *AssetCreateBuil
 // on the platform default and the cert metadata round-trip is exercised. Same EUI
 // derivation as the eui variant.
 func SagaLorawanGatewayCert(runID, templateID, routeGroupID string) *AssetCreateBuilder {
-	eui := euiFromRunID(runID)
+	eui := euiFromSeed(runID)
 	return &AssetCreateBuilder{
 		spec: contracts.AssetCreate{
 			Name:            fmt.Sprintf("saga-lorawan-gateway-cert-%s", runID),
@@ -83,7 +83,7 @@ const SagaGatewayAPIKey = "00112233445566778899AABBCCDDEEFF00112233445566778899A
 // projection carries only the bcrypt hash. Same EUI derivation as the other
 // variants.
 func SagaLorawanGatewayKey(runID, templateID, routeGroupID string) *AssetCreateBuilder {
-	eui := euiFromRunID(runID)
+	eui := euiFromSeed(runID)
 	return &AssetCreateBuilder{
 		spec: contracts.AssetCreate{
 			Name:            fmt.Sprintf("saga-lorawan-gateway-key-%s", runID),
@@ -154,21 +154,20 @@ func gatewayClearOptional(b *AssetCreateBuilder, templateID, routeGroupID string
 }
 
 // euiFromSeed derives a stable, collision-resistant uppercase 16-hex EUI (8 bytes)
-// from an arbitrary seed by hashing it — unlike euiFromRunID (which hex-encodes the
-// raw string and truncates, so it only reflects the seed's first 8 characters), all
-// 16 hex chars here carry entropy, so distinct seeds (labels, reruns) yield distinct
-// EUIs. Deterministic: the same seed always maps to the same EUI, so a sim-driving
-// step can recompute the exact identity an asset was provisioned with.
+// from an arbitrary seed by hashing it: all 16 hex chars carry entropy, so distinct
+// seeds (labels, reruns) yield distinct EUIs and never collide on the LNS.
+// Deterministic — the same seed always maps to the same EUI, so a sim-driving step
+// can recompute the exact identity an asset was provisioned with.
 func euiFromSeed(seed string) string {
 	sum := sha256.Sum256([]byte(seed))
 	return strings.ToUpper(hex.EncodeToString(sum[:8]))
 }
 
-// euiFromRunID maps the runID to a stable uppercase 16-hex EUI (pad/truncate).
-func euiFromRunID(runID string) string {
-	h := strings.ToUpper(hex.EncodeToString([]byte(runID)))
-	if len(h) >= 16 {
-		return h[:16]
-	}
-	return (h + "0000000000000000")[:16]
+// addrFromSeed derives a stable, collision-resistant uppercase 8-hex DevAddr (4
+// bytes) from an arbitrary seed by hashing it. Used by ABP sensors so two devices
+// provisioned in the same journey (per transport) get distinct DevAddrs and the
+// LNS never matches an uplink to the wrong session. Deterministic like euiFromSeed.
+func addrFromSeed(seed string) string {
+	sum := sha256.Sum256([]byte(seed))
+	return strings.ToUpper(hex.EncodeToString(sum[:4]))
 }

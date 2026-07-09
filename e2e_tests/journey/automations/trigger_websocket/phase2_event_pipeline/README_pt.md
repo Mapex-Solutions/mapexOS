@@ -42,7 +42,7 @@ O ponto de entrada é `TestJourney` em `journey_test.go`.
 ## Composição
 
 `Run` compõe a fase0 (bootstrap de IAM em
-`journey/iot/mqtt_broker_auth/phase0_iam_bootstrap`) antes dos
+`common/journey/iam_bootstrap`) antes dos
 `Items()` desta fase. A fase1 não é incluída — a fase2 sobe seu
 próprio sink WS, trigger WebSocket, route groups, data source,
 template e asset de conectividade, e então faz o POST de telemetria

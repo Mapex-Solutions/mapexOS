@@ -32,6 +32,14 @@ func SensorDevEUI(runID, label string) string {
 	return strings.ToLower(euiFromSeed(runID + "-sensor-" + label))
 }
 
+// SensorDevAddr derives a stable uppercase 8-hex DevAddr (4 bytes) unique to a
+// (runID, label) pair, so an ABP journey can provision more than one sensor
+// (per transport) without a DevAddr collision on the LNS. The ABP activation
+// step recomputes the same value to build the matching simulated device.
+func SensorDevAddr(runID, label string) string {
+	return addrFromSeed(runID + "-devaddr-" + label)
+}
+
 // lorawanHealthMonitor is the health config every saga LoRaWAN asset carries so the
 // healthmonitor tracks its presence (it drops advisories for assets whose
 // HealthMonitor is not active): implicit mode (each uplink / gateway connect is a
@@ -104,7 +112,7 @@ func SagaLorawanSensorABPFor(label string) func(runID, templateID, routeGroupID 
 						MacVersion: "1.0.3",
 						PhyVersion: "1.0.3",
 						Activation: contracts.LorawanActivationABP,
-						DevAddr:    SagaSensorDevAddr,
+						DevAddr:    SensorDevAddr(runID, label),
 						NwkSKey:    SagaSensorABPKey,
 						AppSKey:    SagaSensorABPKey,
 					},

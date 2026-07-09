@@ -10,12 +10,11 @@ journey cuida disso).
 
 | Journey                    | Fases                                                | O que a história cobre                                                       |
 |----------------------------|------------------------------------------------------|------------------------------------------------------------------------------|
-| mqtt_broker_auth           | phase0..phase3                                       | Lifecycle MQTT por senha + cert + cascata TieredStore                        |
+| mqtt_broker_auth           | phase1..phase3                                       | Lifecycle MQTT por senha + cert + cascata TieredStore                        |
 | connectivity_actions_http  | phase1_workflow, phase2_trigger                      | Healthmonitor de assets HTTP → workflow + trigger por route group            |
 | connectivity_actions_mqtt  | phase1_workflow, phase2_trigger                      | Healthmonitor de assets MQTT → workflow + trigger por route group            |
-| lorawan_uplink_ingest      | single                                               | Uplink real de GW + sensor → mapexLNS → ingestão no MapexOS (bytes crus + metadados), UDP + Basics Station |
-| lorawan_gateway_presence   | single                                               | Gateway asset online via connect real no LNS / offline via force, UDP + Basics Station |
-| lorawan_sensor_presence    | single                                               | Sensor asset online por dado (uplink) / offline via force, UDP + Basics Station |
+| lorawan_journey_otaa       | phase1_gateway_connectivity, phase2_sensor_uplink, phase3_sensor_presence | Ciclo LoRaWAN OTAA: conectividade do GW → join OTAA + ingestão de uplink real → presença do sensor, UDP + Basics Station |
+| lorawan_journey_bsp        | phase1_sensor_uplink, phase2_sensor_presence         | Ciclo LoRaWAN ABP: sensor de sessão fixa (sem join) → ingestão de uplink real → presença do sensor, UDP + Basics Station |
 
 Nomes de pasta de fase carregam o descritor; nomes de pacote dentro
 delas são curtos (`phase0`, `phase1`) para que o alias de import deixe
@@ -35,7 +34,7 @@ go test -tags=saga -v ./journey/iot/...
 go test -tags=saga -v ./journey/iot/mqtt_broker_auth/...
 
 # Uma fase só
-go test -tags=saga -v ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap/
+go test -tags=saga -v ./common/journey/iam_bootstrap/
 go test -tags=saga -v ./journey/iot/mqtt_broker_auth/phase1_password_user/
 ```
 

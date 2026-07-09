@@ -1,3 +1,5 @@
+//go:build saga
+
 package phase2_trigger
 
 import "testing"

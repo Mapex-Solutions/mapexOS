@@ -1,6 +1,6 @@
 //go:build saga
 
-package phase0
+package iam_bootstrap
 
 import "testing"
 

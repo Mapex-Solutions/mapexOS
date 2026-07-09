@@ -20,7 +20,7 @@ plugin's L1 (Pebble) tier.
 
 | Phase                  | What it covers                                                                |
 |------------------------|-------------------------------------------------------------------------------|
-| `phase0_iam_bootstrap` | Seed admin login → JWT validity → org-context coverage                        |
+| `common/journey/iam_bootstrap` | Seed admin login → JWT validity → org-context coverage (shared building block) |
 | `phase1_password_user` | Password auth full lifecycle (10 steps)                                       |
 | `phase2_cert_user`     | Cert (mTLS) auth full lifecycle (11 steps)                                    |
 
@@ -57,7 +57,7 @@ plugin's L1 (Pebble) tier.
 cd e2e_tests
 
 # Phase 0 only (smoke the IAM bootstrap)
-go test -tags=saga -v -count=1 ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap/
+go test -tags=saga -v -count=1 ./common/journey/iam_bootstrap/
 
 # Password lifecycle
 go test -tags=saga -v -count=1 ./journey/iot/mqtt_broker_auth/phase1_password_user/

@@ -42,7 +42,7 @@ The entry point is `TestJourney` in `journey_test.go`.
 ## Composition
 
 `Run` composes phase0 (IAM bootstrap from
-`journey/iot/mqtt_broker_auth/phase0_iam_bootstrap`) in front of this
+`common/journey/iam_bootstrap`) in front of this
 phase's `Items()`. Phase1 is not included — phase2 brings up its own
 WS sink, WebSocket trigger, route groups, data source, template, and
 connectivity asset, then POSTs the telemetry that fires the trigger.

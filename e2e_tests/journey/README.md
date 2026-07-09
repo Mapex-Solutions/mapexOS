@@ -23,17 +23,18 @@ journey/
   end-to-end narrative. Examples: `mqtt_full_pipeline`, `http_heartbeat`,
   `credential_refresh`, `dlq_collects_failed_messages`.
 
-- **Phase** is a named stage of the journey. Phases run in order (Phase 0
-  before Phase 1, etc). Each phase folder is a Go package; package name is
-  short (`phase0`, `phase1`) so consumers alias as `phase0 ".../phase0_iam_bootstrap"`.
-  Phase folders carry a descriptor suffix (`phase0_iam_bootstrap`) so the
-  folder name alone tells you what the phase does.
+- **Phase** is a named stage of the journey. Phases run in order (Phase 1
+  before Phase 2, etc). Each phase folder is a Go package with a descriptor
+  suffix (`phase1_uplink_ingest`) so the folder name alone tells you what the
+  phase does.
 
-- **Cross-journey reuse** never happens by importing another journey's
-  phase. Reuse lives in `services/{svc}/{mod}/{steps,asserts,payloads}` —
-  the building blocks every phase composes. Within a single journey,
-  phases CAN import each other (PhaseN+1 typically composes
-  PhaseN.BootstrapItems).
+- **Cross-journey reuse** never happens by importing another journey's phase —
+  that couples the two journeys and breaks the "one journey = one self-contained
+  story" model. Reuse lives in two places: the per-module building blocks under
+  `services/{svc}/{mod}/{steps,asserts,payloads}`, and shared whole-sequence
+  pieces (the IAM bootstrap, user creation) under `common/journey/`. Every
+  journey composes the shared bootstrap from `common/journey/iam_bootstrap`
+  (aliased `bootstrap`), never from a sibling journey.
 
 - **Each phase MUST carry an Outcome block** in both `journey.go` (package
   godoc) and `journey_test.go` (test func godoc) describing what passing
@@ -65,7 +66,10 @@ journey/
 | automations | trigger_websocket             | phase1_connectivity, phase2_event_pipeline                                            |
 | iot         | connectivity_actions_http     | phase1_workflow, phase2_trigger                                                       |
 | iot         | connectivity_actions_mqtt     | phase1_workflow, phase2_trigger                                                       |
-| iot         | mqtt_broker_auth              | phase0_iam_bootstrap, phase1_password_user, phase2_cert_user, phase3_cascade (skeleton) |
+| iot         | mqtt_broker_auth              | phase1_password_user, phase2_cert_user, phase3_cascade (skeleton)                     |
+
+The shared IAM bootstrap is not a journey — it is a building block every journey
+composes, living at `common/journey/iam_bootstrap` (imported as `bootstrap`).
 
 ## How to run
 

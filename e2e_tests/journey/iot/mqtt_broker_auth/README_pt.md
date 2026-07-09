@@ -20,7 +20,7 @@ FANOUT na camada L1 (Pebble) do plugin do broker.
 
 | Fase                   | O que cobre                                                                   |
 |------------------------|-------------------------------------------------------------------------------|
-| `phase0_iam_bootstrap` | Login do admin seed → validade do JWT → coverage de org-context               |
+| `common/journey/iam_bootstrap` | Login do admin seed → validade do JWT → coverage de org-context (bloco compartilhado) |
 | `phase1_password_user` | Ciclo de vida completo da auth por senha (10 passos)                          |
 | `phase2_cert_user`     | Ciclo de vida completo da auth por cert / mTLS (11 passos)                    |
 
@@ -57,7 +57,7 @@ FANOUT na camada L1 (Pebble) do plugin do broker.
 cd e2e_tests
 
 # Só a phase 0 (smoke do bootstrap IAM)
-go test -tags=saga -v -count=1 ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap/
+go test -tags=saga -v -count=1 ./common/journey/iam_bootstrap/
 
 # Ciclo por senha
 go test -tags=saga -v -count=1 ./journey/iot/mqtt_broker_auth/phase1_password_user/

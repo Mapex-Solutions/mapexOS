@@ -18,7 +18,7 @@ A fase:
 
 ```bash
 cd e2e_tests
-go test -tags=saga -count=1 ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap/
+go test -tags=saga -count=1 ./common/journey/iam_bootstrap/
 ```
 
 ## Requisitos

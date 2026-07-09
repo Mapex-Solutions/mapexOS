@@ -1,3 +1,5 @@
+//go:build saga
+
 package phase1_connectivity
 
 import "testing"

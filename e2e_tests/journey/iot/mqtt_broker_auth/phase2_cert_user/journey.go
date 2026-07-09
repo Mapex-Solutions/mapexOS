@@ -37,7 +37,7 @@ import (
 
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
-	phase0 "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/mqtt_broker_auth/phase0_iam_bootstrap"
+	bootstrap "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/iam_bootstrap"
 
 	assetAsserts "github.com/Mapex-Solutions/MapexOS/e2eTests/services/assets/assets/asserts"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/services/assets/assets/payloads"
@@ -110,8 +110,8 @@ func Run(t *testing.T) {
 	}
 
 	runID := random.NewRunID()
-	clients := phase0.NewClients()
+	clients := bootstrap.NewClients()
 
-	items := append(phase0.BootstrapItems(), Items()...)
+	items := append(bootstrap.BootstrapItems(), Items()...)
 	saga.Run(t, context.Background(), runID, clients, items...)
 }

@@ -56,7 +56,8 @@ e2e_tests/
     │   └── trigger_<type>/{phase1_connectivity,phase2_event_pipeline}/
     └── iot/
         ├── connectivity_actions_{http,mqtt}/{phase1_workflow,phase2_trigger}/
-        └── mqtt_broker_auth/{phase0_iam_bootstrap..phase3_cascade}/
+        └── mqtt_broker_auth/{phase1_password_user,phase2_cert_user,phase3_cascade}/
+                                # shared IAM bootstrap → common/journey/iam_bootstrap/
 ```
 
 ## How to run

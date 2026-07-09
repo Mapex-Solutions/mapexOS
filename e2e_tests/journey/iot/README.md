@@ -9,12 +9,11 @@ admin user is signed in (Phase 0 of every journey performs that).
 
 | Journey                    | Phases                                               | What the story covers                                                         |
 |----------------------------|------------------------------------------------------|-------------------------------------------------------------------------------|
-| mqtt_broker_auth           | phase0..phase3                                       | MQTT lifecycle with password + cert auth and TieredStore cascade              |
+| mqtt_broker_auth           | phase1..phase3                                       | MQTT lifecycle with password + cert auth and TieredStore cascade              |
 | connectivity_actions_http  | phase1_workflow, phase2_trigger                      | Healthmonitor of HTTP assets → workflow + trigger via route group             |
 | connectivity_actions_mqtt  | phase1_workflow, phase2_trigger                      | Healthmonitor of MQTT assets → workflow + trigger via route group             |
-| lorawan_uplink_ingest      | single                                               | Real GW + sensor uplink → mapexLNS → MapexOS ingestion (raw bytes + metadata), UDP + Basics Station |
-| lorawan_gateway_presence   | single                                               | Gateway asset online via real LNS connect / offline via force, UDP + Basics Station |
-| lorawan_sensor_presence    | single                                               | Sensor asset online by data (uplink) / offline via force, UDP + Basics Station |
+| lorawan_journey_otaa       | phase1_gateway_connectivity, phase2_sensor_uplink, phase3_sensor_presence | OTAA LoRaWAN lifecycle: gateway connectivity → OTAA join + real uplink ingest → sensor presence, UDP + Basics Station |
+| lorawan_journey_bsp        | phase1_sensor_uplink, phase2_sensor_presence         | ABP LoRaWAN lifecycle: fixed-session sensor (no join) → real uplink ingest → sensor presence, UDP + Basics Station |
 
 Phase folder names carry the descriptor; package names inside them are
 short (`phase0`, `phase1`) so the import alias makes intent obvious.
@@ -33,7 +32,7 @@ go test -tags=saga -v ./journey/iot/...
 go test -tags=saga -v ./journey/iot/mqtt_broker_auth/...
 
 # A single phase of one journey
-go test -tags=saga -v ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap/
+go test -tags=saga -v ./common/journey/iam_bootstrap/
 go test -tags=saga -v ./journey/iot/mqtt_broker_auth/phase1_password_user/
 ```
 

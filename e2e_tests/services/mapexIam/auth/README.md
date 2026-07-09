@@ -50,7 +50,7 @@ steps and asserts execute when a saga journey that imports them runs:
 
 ```bash
 cd e2e_tests
-go test -tags=saga ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap
+go test -tags=saga ./common/journey/iam_bootstrap
 ```
 
 To exercise the auth flow specifically inside a journey:

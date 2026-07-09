@@ -47,7 +47,7 @@ O step executa quando uma saga journey que o importa roda:
 
 ```bash
 cd e2e_tests
-go test -tags=saga ./journey/iot/mqtt_broker_auth/phase0_iam_bootstrap
+go test -tags=saga ./common/journey/iam_bootstrap
 ```
 
 Para mirar em uma journey específica:
