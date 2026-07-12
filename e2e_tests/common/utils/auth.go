@@ -14,7 +14,6 @@ import (
 )
 
 const (
-	tokenFileName      = ".test-token"
 	rootTokenFileName  = ".test-token-root"
 	adminTokenFileName = ".test-token-admin"
 )
@@ -100,12 +99,6 @@ func GetAdminToken() (string, error) {
 	return getOrRefreshTokenFor(constants.AdminUserEmail, constants.AdminUserPassword, adminTokenFileName)
 }
 
-// GetOrRefreshToken gets token from file or performs fresh login
-// Default behavior: uses ADMIN user for backward compatibility
-func GetOrRefreshToken() (string, error) {
-	return GetAdminToken()
-}
-
 // getOrRefreshTokenFor is the generic implementation
 func getOrRefreshTokenFor(email, password, tokenFile string) (string, error) {
 	// Try to read existing token
@@ -132,11 +125,6 @@ func getOrRefreshTokenFor(email, password, tokenFile string) (string, error) {
 	return token, nil
 }
 
-// saveTokenToFile saves the token to a file (backward compatibility)
-func saveTokenToFile(token string) error {
-	return saveTokenToFileByName(token, tokenFileName)
-}
-
 // saveTokenToFileByName saves the token to a specific file
 func saveTokenToFileByName(token, fileName string) error {
 	tokenPath := getTokenFilePathByName(fileName)
@@ -153,11 +141,6 @@ func saveTokenToFileByName(token, fileName string) error {
 	}
 
 	return nil
-}
-
-// readTokenFromFile reads the token from file (backward compatibility)
-func readTokenFromFile() (string, error) {
-	return readTokenFromFileByName(tokenFileName)
 }
 
 // readTokenFromFileByName reads the token from a specific file
@@ -193,11 +176,6 @@ func isTokenValid(token string) bool {
 	return resp.StatusCode >= 200 && resp.StatusCode < 400
 }
 
-// getTokenFilePath returns the path to the token file (backward compatibility)
-func getTokenFilePath() string {
-	return getTokenFilePathByName(tokenFileName)
-}
-
 // getTokenFilePathByName returns the path to a specific token file
 func getTokenFilePathByName(fileName string) string {
 	// Use temp directory
@@ -216,14 +194,3 @@ func GenerateAdminToken() (string, error) {
 	return GetAdminToken()
 }
 
-// GetAdminUserID returns the fixed ADMIN user ID from constants
-// No need to perform login - the ID is deterministic from seed script
-func GetAdminUserID() (string, error) {
-	return constants.AdminUserID, nil
-}
-
-// GetRootUserID returns the fixed ROOT user ID from constants
-// No need to perform login - the ID is deterministic from seed script
-func GetRootUserID() (string, error) {
-	return constants.RootUserID, nil
-}

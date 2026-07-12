@@ -49,7 +49,6 @@ import (
 	"github.com/Mapex-Solutions/mapexGoKit/utils/random"
 
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
 
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
@@ -91,13 +90,11 @@ func NewClients() saga.ClientSet {
 }
 
 // Run executes the bootstrap as a stand-alone saga (a smoke test that the seed
-// admin can sign in). Journeys do not invoke Run; they compose BootstrapItems
-// into their own saga.Run call instead.
+// admin can sign in), registered like every other journey in the suite runner. It
+// does NOT provision the environment: the runner's TestMain owns that once via
+// infra.EnsureAll, so Run just walks BootstrapItems under the standard rollback.
 func Run(t *testing.T) {
 	t.Helper()
-	if err := utils.SetupE2EEnvironment(); err != nil {
-		t.Fatalf("setup e2e environment: %v", err)
-	}
 	runID := random.NewRunID()
 	saga.Run(t, context.Background(), runID, NewClients(), BootstrapItems()...)
 }
