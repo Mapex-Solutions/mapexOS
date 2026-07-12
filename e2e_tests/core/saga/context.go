@@ -37,6 +37,19 @@ type Context struct {
 	mu  sync.Mutex
 }
 
+// ClientURLs groups the per-service base URLs the saga journey speaks to.
+// Each saga test derives this from common/constants so the URL configuration
+// stays in one place and journeys do not hard-code endpoints.
+type ClientURLs struct {
+	MapexIam string
+	Assets   string
+	Router   string
+	Gateway  string
+	Events   string
+	Triggers string
+	Workflow string
+}
+
 // ClientSet groups one HTTPClient per platform service. Steps invoke the
 // client matching the service whose endpoint they target. Authentication
 // state (JWT and X-Org-Context) is propagated to every client by the auth

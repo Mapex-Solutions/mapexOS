@@ -11,6 +11,8 @@ require (
 	github.com/stretchr/testify v1.11.1
 )
 
+require github.com/jacobsa/crypto v0.0.0-20190317225127-9f44e2d11115 // indirect
+
 require (
 	github.com/Mapex-Solutions/mapexGoKit/infrastructure v0.0.0
 	github.com/Mapex-Solutions/mapexGoKit/microservices v0.0.0 // indirect
@@ -21,6 +23,7 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20250102033503-faa5f7b0171c // indirect
 	github.com/ClickHouse/ch-go v0.69.0 // indirect
 	github.com/ClickHouse/clickhouse-go/v2 v2.42.0 // indirect
+	github.com/Mapex-Solutions/mapexGoKit/config v0.0.0 // indirect
 	github.com/MicahParks/keyfunc v1.9.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
@@ -50,7 +53,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
 	github.com/google/go-tpm v0.9.8 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/gorilla/websocket v1.5.3 // indirect
+	github.com/gorilla/websocket v1.5.3
 	github.com/klauspost/compress v1.18.6 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/magiconair/properties v1.8.10 // indirect
@@ -67,9 +70,9 @@ require (
 	github.com/moby/sys/user v0.4.0 // indirect
 	github.com/moby/sys/userns v0.1.0 // indirect
 	github.com/moby/term v0.5.2 // indirect
-	github.com/mochi-mqtt/server/v2 v2.7.9 // indirect
+	github.com/mochi-mqtt/server/v2 v2.7.9
 	github.com/nats-io/jwt/v2 v2.8.1 // indirect
-	github.com/nats-io/nats-server/v2 v2.14.1 // indirect
+	github.com/nats-io/nats-server/v2 v2.14.1
 	github.com/nats-io/nats.go v1.51.0 // indirect
 	github.com/nats-io/nkeys v0.4.15 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
@@ -89,7 +92,7 @@ require (
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/testcontainers/testcontainers-go v0.42.0 // indirect
-	github.com/testcontainers/testcontainers-go/modules/rabbitmq v0.42.0 // indirect
+	github.com/testcontainers/testcontainers-go/modules/rabbitmq v0.42.0
 	github.com/tklauser/go-sysconf v0.3.16 // indirect
 	github.com/tklauser/numcpus v0.11.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -107,7 +110,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.41.0 // indirect
 	go.opentelemetry.io/otel/trace v1.41.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.51.0 // indirect
+	golang.org/x/crypto v0.51.0
 	golang.org/x/net v0.53.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/sys v0.44.0 // indirect
@@ -125,3 +128,5 @@ replace (
 	github.com/Mapex-Solutions/mapexGoKit/microservices => ../../mapexGoKit/microservices
 	github.com/Mapex-Solutions/mapexGoKit/utils => ../../mapexGoKit/utils
 )
+
+replace github.com/Mapex-Solutions/mapexGoKit/config => ../../mapexGoKit/config
