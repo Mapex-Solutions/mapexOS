@@ -21,6 +21,9 @@ type triggerCreateResponse struct {
 // CreateTrigger POSTs the canonical SagaSimpleTrigger payload to the
 // triggers service and publishes the returned id on the bag.
 //
+// Reads (bag):
+//   - BagKeyTriggerSinkHost / Port  the HTTP sink address (StartTestSink).
+//
 // Writes (bag):
 //   - BagKeyTriggerID  string  Mongo ObjectID hex
 //
@@ -29,7 +32,11 @@ func CreateTrigger() saga.Step {
 	return saga.Step{
 		Name: "triggers/triggers.CreateTrigger",
 		Do: func(c *saga.Context) error {
-			spec := payloads.SagaSimpleTrigger(c.RunID)
+			url, err := httpSinkURL(c)
+			if err != nil {
+				return fmt.Errorf("create trigger: %w", err)
+			}
+			spec := payloads.SagaSimpleTrigger(c.RunID, url)
 			resp, err := c.Clients.Triggers.Raw(c.Stdctx, http.MethodPost, "/api/v1/triggers", spec)
 			if err != nil {
 				return fmt.Errorf("create trigger: %w", err)
@@ -49,23 +56,6 @@ func CreateTrigger() saga.Step {
 			c.Set(BagKeyTriggerID, out.Data.ID)
 			return nil
 		},
-		Compensate: func(c *saga.Context) error {
-			id, ok := c.Get(BagKeyTriggerID)
-			if !ok {
-				return nil
-			}
-			resp, err := c.Clients.Triggers.Raw(c.Stdctx, http.MethodDelete, "/api/v1/triggers/"+id.(string), nil)
-			if err != nil {
-				return fmt.Errorf("delete trigger: %w", err)
-			}
-			defer resp.Body.Close()
-			if resp.StatusCode == http.StatusNotFound {
-				return nil
-			}
-			if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-				return fmt.Errorf("delete trigger: unexpected status %d", resp.StatusCode)
-			}
-			return nil
-		},
+		Compensate: deleteTriggerOnCompensate("http"),
 	}
 }

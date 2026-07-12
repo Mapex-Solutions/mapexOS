@@ -3,8 +3,6 @@ package payloads
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
 )
 
 const sagaTeamsTriggerJSON = `{
@@ -25,9 +23,10 @@ const sagaTeamsTriggerJSON = `{
 }`
 
 // SagaTeamsTrigger returns the POST /api/v1/triggers body for the
-// Teams smoke. webhookUrl is rewritten to the HTTP sink and the text
-// embeds the runID.
-func SagaTeamsTrigger(runID string) map[string]any {
+// Teams smoke. webhookUrl is rewritten to sinkURL (the HTTP sink) and
+// the text embeds the runID. Pure: the create step reads the sink's
+// ephemeral address from the bag and passes it in.
+func SagaTeamsTrigger(runID, sinkURL string) map[string]any {
 	var payload map[string]any
 	if err := json.Unmarshal([]byte(sagaTeamsTriggerJSON), &payload); err != nil {
 		panic(fmt.Sprintf("SagaTeamsTrigger: literal payload is not valid JSON: %v", err))
@@ -36,7 +35,7 @@ func SagaTeamsTrigger(runID string) map[string]any {
 
 	cfg, _ := payload["config"].(map[string]any)
 	teamsCfg, _ := cfg["teams"].(map[string]any)
-	teamsCfg["webhookUrl"] = constants.TriggerSinkURL
+	teamsCfg["webhookUrl"] = sinkURL
 	teamsCfg["title"] = fmt.Sprintf("Saga teams smoke run=%s", runID)
 	teamsCfg["text"] = fmt.Sprintf("Saga teams smoke text run=%s", runID)
 	return payload

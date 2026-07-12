@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 	assetSteps "github.com/Mapex-Solutions/MapexOS/e2eTests/services/assets/assets/steps"
 )
@@ -37,7 +38,7 @@ type healthStatusResponse struct {
 // Reads (bag):
 //   - assetSteps.BagKeyAssetID  string  set by CreateAsset
 func AssertHealthStatusEventually(want string) saga.Assert {
-	return AssertHealthStatusEventuallyWithTimeout(want, 15*time.Second, 500*time.Millisecond)
+	return AssertHealthStatusEventuallyWithTimeout(want, constants.ScaleTimeout(15*time.Second), 500*time.Millisecond)
 }
 
 // AssertHealthStatusEventuallyWithTimeout overrides the polling
@@ -54,7 +55,7 @@ func AssertHealthStatusEventuallyWithTimeout(want string, timeout, tick time.Dur
 // Reads (bag):
 //   - assetSteps.AssetIDKey(label)  string  set by CreateAssetWithLabel
 func AssertHealthStatusByLabel(label, want string) saga.Assert {
-	return healthStatusAssert(assetSteps.AssetIDKey(label), want, 15*time.Second, 500*time.Millisecond)
+	return healthStatusAssert(assetSteps.AssetIDKey(label), want, constants.ScaleTimeout(15*time.Second), 500*time.Millisecond)
 }
 
 // healthStatusAssert is the shared polling body: it reads the asset id from idKey
@@ -66,17 +67,20 @@ func healthStatusAssert(idKey, want string, timeout, tick time.Duration) saga.As
 			id := c.MustGetString(idKey)
 			deadline := time.Now().Add(timeout)
 			var lastSeen string
+			var lastErr error
 
 			for {
 				status, err := fetchHealthStatus(c, id)
-				if err == nil {
+				if err != nil {
+					lastErr = err
+				} else {
 					lastSeen = status
 					if status == want {
 						return nil
 					}
 				}
 				if time.Now().After(deadline) {
-					return fmt.Errorf("asset %s healthStatus did not become %q within %v (last seen %q)", id, want, timeout, lastSeen)
+					return fmt.Errorf("asset %s healthStatus did not become %q within %v (last seen %q, last error: %v)", id, want, timeout, lastSeen, lastErr)
 				}
 				select {
 				case <-c.Stdctx.Done():

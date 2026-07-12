@@ -15,6 +15,11 @@ import (
 // production. The endpoint is gated by the assets internal API key —
 // the same key shared by every L3 fallback consumer.
 //
+// This is a documented ARRANGE-only test hook: it uses /internal purely
+// to simulate a device going offline immediately; the outcome is still
+// asserted through the public API (AssertHealthStatus). See the README
+// "Sanctioned internal endpoints" list.
+//
 // Reads (bag):
 //   - BagKeyAssetUUID  string  set by CreateAsset
 //

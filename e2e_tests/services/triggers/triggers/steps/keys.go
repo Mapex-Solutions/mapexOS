@@ -25,6 +25,12 @@ const (
 	// through the events service.
 	BagKeyTriggerSinkHits = "triggers.sinkHits"
 
+	// BagKeyTriggerSinkHost / Port carry the ephemeral bind address the
+	// HTTP sink listens on. The create-trigger step reads them to build
+	// the callback URL the triggers service POSTs against.
+	BagKeyTriggerSinkHost = "triggers.sinkHost"
+	BagKeyTriggerSinkPort = "triggers.sinkPort"
+
 	// SMTP sink — used by Email trigger smoke.
 
 	// BagKeySmtpServer holds the *smtp.Server the SMTP sink step
@@ -42,6 +48,12 @@ const (
 	// RFC 5322 parsing in every check.
 	BagKeySmtpLastMessage = "triggers.smtpLastMessage"
 
+	// BagKeySmtpHost / Port carry the ephemeral bind address the SMTP
+	// sink listens on. The create-email-trigger step reads them for the
+	// trigger config's smtpHost / smtpPort fields.
+	BagKeySmtpHost = "triggers.smtpHost"
+	BagKeySmtpPort = "triggers.smtpPort"
+
 	// WebSocket sink — used by WebSocket trigger smoke.
 
 	// BagKeyWsServer holds the *http.Server backing the WS upgrade so
@@ -57,14 +69,20 @@ const (
 	// can swap atomically without a mutex on the slot).
 	BagKeyWsLastMessage = "triggers.wsLastMessage"
 
+	// BagKeyWsHost / Port carry the ephemeral bind address the WS sink
+	// listens on. The create-websocket-trigger step reads them to build
+	// the ws:// URL the trigger config targets.
+	BagKeyWsHost = "triggers.wsHost"
+	BagKeyWsPort = "triggers.wsPort"
+
 	// MQTT in-process broker (mochi-mqtt) — used by MQTT trigger smoke.
 
 	// BagKeyMqttBroker holds the *mqtt.Server the saga started so
 	// Compensate can Close() it.
 	BagKeyMqttBroker = "triggers.mqttBroker"
 
-	// BagKeyMqttBrokerHost is the bind host the trigger config's
-	// broker field should target ("127.0.0.1").
+	// BagKeyMqttBrokerHost is the advertise host the trigger config's
+	// broker field should target (constants.SinkHost).
 	BagKeyMqttBrokerHost = "triggers.mqttBrokerHost"
 
 	// BagKeyMqttBrokerPort is the OS-assigned port the broker is

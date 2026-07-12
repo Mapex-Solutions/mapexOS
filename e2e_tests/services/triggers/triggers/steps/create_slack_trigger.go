@@ -13,6 +13,9 @@ import (
 // CreateSlackTrigger POSTs the SagaSlackTrigger payload to the
 // triggers service and publishes the returned id on the bag.
 //
+// Reads (bag):
+//   - BagKeyTriggerSinkHost / Port  the HTTP sink address (StartTestSink).
+//
 // Writes (bag):
 //   - BagKeyTriggerID  string  Mongo ObjectID hex.
 //
@@ -21,7 +24,11 @@ func CreateSlackTrigger() saga.Step {
 	return saga.Step{
 		Name: "triggers/triggers.CreateSlackTrigger",
 		Do: func(c *saga.Context) error {
-			spec := payloads.SagaSlackTrigger(c.RunID)
+			url, err := httpSinkURL(c)
+			if err != nil {
+				return fmt.Errorf("create slack trigger: %w", err)
+			}
+			spec := payloads.SagaSlackTrigger(c.RunID, url)
 			resp, err := c.Clients.Triggers.Raw(c.Stdctx, http.MethodPost, "/api/v1/triggers", spec)
 			if err != nil {
 				return fmt.Errorf("create slack trigger: %w", err)
@@ -41,23 +48,6 @@ func CreateSlackTrigger() saga.Step {
 			c.Set(BagKeyTriggerID, out.Data.ID)
 			return nil
 		},
-		Compensate: func(c *saga.Context) error {
-			id, ok := c.Get(BagKeyTriggerID)
-			if !ok {
-				return nil
-			}
-			resp, err := c.Clients.Triggers.Raw(c.Stdctx, http.MethodDelete, "/api/v1/triggers/"+id.(string), nil)
-			if err != nil {
-				return fmt.Errorf("delete slack trigger: %w", err)
-			}
-			defer resp.Body.Close()
-			if resp.StatusCode == http.StatusNotFound {
-				return nil
-			}
-			if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-				return fmt.Errorf("delete slack trigger: unexpected status %d", resp.StatusCode)
-			}
-			return nil
-		},
+		Compensate: deleteTriggerOnCompensate("slack"),
 	}
 }

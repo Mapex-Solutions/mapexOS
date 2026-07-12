@@ -13,6 +13,9 @@ import (
 // CreateEmailTrigger POSTs the SagaEmailTrigger payload to the
 // triggers service and publishes the returned id on the bag.
 //
+// Reads (bag):
+//   - BagKeySmtpHost / Port  the SMTP sink address (StartSmtpSink).
+//
 // Writes (bag):
 //   - BagKeyTriggerID  string  Mongo ObjectID hex.
 //
@@ -21,7 +24,11 @@ func CreateEmailTrigger() saga.Step {
 	return saga.Step{
 		Name: "triggers/triggers.CreateEmailTrigger",
 		Do: func(c *saga.Context) error {
-			spec := payloads.SagaEmailTrigger(c.RunID)
+			host, port, err := smtpSinkAddr(c)
+			if err != nil {
+				return fmt.Errorf("create email trigger: %w", err)
+			}
+			spec := payloads.SagaEmailTrigger(c.RunID, host, port)
 			resp, err := c.Clients.Triggers.Raw(c.Stdctx, http.MethodPost, "/api/v1/triggers", spec)
 			if err != nil {
 				return fmt.Errorf("create email trigger: %w", err)
@@ -41,23 +48,6 @@ func CreateEmailTrigger() saga.Step {
 			c.Set(BagKeyTriggerID, out.Data.ID)
 			return nil
 		},
-		Compensate: func(c *saga.Context) error {
-			id, ok := c.Get(BagKeyTriggerID)
-			if !ok {
-				return nil
-			}
-			resp, err := c.Clients.Triggers.Raw(c.Stdctx, http.MethodDelete, "/api/v1/triggers/"+id.(string), nil)
-			if err != nil {
-				return fmt.Errorf("delete email trigger: %w", err)
-			}
-			defer resp.Body.Close()
-			if resp.StatusCode == http.StatusNotFound {
-				return nil
-			}
-			if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-				return fmt.Errorf("delete email trigger: unexpected status %d", resp.StatusCode)
-			}
-			return nil
-		},
+		Compensate: deleteTriggerOnCompensate("email"),
 	}
 }

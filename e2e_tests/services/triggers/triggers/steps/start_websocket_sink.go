@@ -3,7 +3,6 @@ package steps
 import (
 	"context"
 	"fmt"
-	"net"
 	"net/http"
 	"sync/atomic"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/gorilla/websocket"
 
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
+	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/netx"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 )
 
@@ -18,8 +18,8 @@ var wsUpgrader = websocket.Upgrader{
 	CheckOrigin: func(_ *http.Request) bool { return true },
 }
 
-// StartWebsocketSink boots a minimal WebSocket server on
-// constants.WsSinkBindAddr. /ws is the upgrade endpoint; on each
+// StartWebsocketSink boots a minimal WebSocket server on an ephemeral
+// port (via netx.FreeListener). /ws is the upgrade endpoint; on each
 // successful handshake the sink increments the hit counter, reads
 // frames into the bag's last-message slot, and waits for the client
 // (the WebSocket trigger executor) to close. The smoke only needs
@@ -29,6 +29,8 @@ var wsUpgrader = websocket.Upgrader{
 //
 // Writes (bag):
 //   - BagKeyWsServer       *http.Server  for Compensate to stop.
+//   - BagKeyWsHost         string        ephemeral bind host.
+//   - BagKeyWsPort         int           ephemeral bind port.
 //   - BagKeyWsHits         *atomic.Int64 incremented on each handshake.
 //   - BagKeyWsLastMessage  **string      pointer slot for the most
 //     recently received frame payload (text or binary, encoded as the
@@ -64,14 +66,16 @@ func StartWebsocketSink() saga.Step {
 				_, _ = w.Write([]byte("ws-sink ok"))
 			})
 
-			ln, err := net.Listen("tcp", constants.WsSinkBindAddr)
+			ln, port, err := netx.FreeListener()
 			if err != nil {
-				return fmt.Errorf("listen %s: %w", constants.WsSinkBindAddr, err)
+				return fmt.Errorf("ws sink listen: %w", err)
 			}
 			srv := &http.Server{Handler: mux, ReadHeaderTimeout: 5 * time.Second}
 			go func() { _ = srv.Serve(ln) }()
 
 			c.Set(BagKeyWsServer, srv)
+			c.Set(BagKeyWsHost, constants.SinkHost)
+			c.Set(BagKeyWsPort, port)
 			c.Set(BagKeyWsHits, hits)
 			c.Set(BagKeyWsLastMessage, lastPtr)
 			return nil

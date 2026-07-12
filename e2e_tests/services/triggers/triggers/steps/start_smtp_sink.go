@@ -14,6 +14,7 @@ import (
 	"github.com/emersion/go-smtp"
 
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
+	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/netx"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 )
 
@@ -93,12 +94,14 @@ func (s *smtpSession) Data(r io.Reader) error {
 func (s *smtpSession) Reset()        { s.from = ""; s.to = "" }
 func (s *smtpSession) Logout() error { return nil }
 
-// StartSmtpSink boots an in-process SMTP server on
-// constants.SmtpSinkBindAddr that accepts any AUTH PLAIN and captures
-// the most recent message into the bag.
+// StartSmtpSink boots an in-process SMTP server on an ephemeral port
+// (via netx.FreeListener) that accepts any AUTH PLAIN and captures the
+// most recent message into the bag.
 //
 // Writes (bag):
 //   - BagKeySmtpServer       *smtp.Server
+//   - BagKeySmtpHost         string
+//   - BagKeySmtpPort         int
 //   - BagKeySmtpHits         *atomic.Int64
 //   - BagKeySmtpLastMessage  **SmtpCapturedMessage
 //
@@ -113,7 +116,6 @@ func StartSmtpSink() saga.Step {
 			be := &smtpBackend{mu: &sync.Mutex{}, hits: hits, lastMsg: lastPtr}
 
 			srv := smtp.NewServer(be)
-			srv.Addr = constants.SmtpSinkBindAddr
 			srv.Domain = "saga.test"
 			srv.ReadTimeout = 10 * time.Second
 			srv.WriteTimeout = 10 * time.Second
@@ -121,25 +123,18 @@ func StartSmtpSink() saga.Step {
 			srv.MaxRecipients = 10
 			srv.AllowInsecureAuth = true
 
-			ready := make(chan error, 1)
-			go func() {
-				if err := srv.ListenAndServe(); err != nil && err.Error() != "smtp: server closed" {
-					ready <- err
-					return
-				}
-				ready <- nil
-			}()
-
-			// Fail fast when the bind address is already taken.
-			select {
-			case err := <-ready:
-				if err != nil {
-					return fmt.Errorf("listen %s: %w", constants.SmtpSinkBindAddr, err)
-				}
-			case <-time.After(150 * time.Millisecond):
+			// Bind an ephemeral port up front so the address is known and
+			// free before the server serves; Serve takes the listener so no
+			// second bind (and no bind race) happens.
+			ln, port, err := netx.FreeListener()
+			if err != nil {
+				return fmt.Errorf("smtp sink listen: %w", err)
 			}
+			go func() { _ = srv.Serve(ln) }()
 
 			c.Set(BagKeySmtpServer, srv)
+			c.Set(BagKeySmtpHost, constants.SinkHost)
+			c.Set(BagKeySmtpPort, port)
 			c.Set(BagKeySmtpHits, hits)
 			c.Set(BagKeySmtpLastMessage, lastPtr)
 			return nil

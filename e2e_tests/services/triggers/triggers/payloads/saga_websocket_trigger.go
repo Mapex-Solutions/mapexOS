@@ -3,8 +3,6 @@ package payloads
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
 )
 
 const sagaWebsocketTriggerJSON = `{
@@ -23,12 +21,11 @@ const sagaWebsocketTriggerJSON = `{
   }
 }`
 
-// SagaWebsocketTrigger returns the POST /api/v1/triggers body for
-// the WebSocket smoke. The URL points at the in-process HTTP sink's
-// /ws path (a separate sink will be added when the assert needs to
-// validate frames; until then the events-trigger oracle is enough
-// since success=true requires the WS handshake to complete).
-func SagaWebsocketTrigger(runID string) map[string]any {
+// SagaWebsocketTrigger returns the POST /api/v1/triggers body for the
+// WebSocket smoke. The URL is rewritten to wsURL — the in-process WS
+// sink's /ws upgrade endpoint on its ephemeral port. Pure: the create
+// step reads the sink's ephemeral address from the bag and passes it in.
+func SagaWebsocketTrigger(runID, wsURL string) map[string]any {
 	var payload map[string]any
 	if err := json.Unmarshal([]byte(sagaWebsocketTriggerJSON), &payload); err != nil {
 		panic(fmt.Sprintf("SagaWebsocketTrigger: literal payload is not valid JSON: %v", err))
@@ -37,7 +34,7 @@ func SagaWebsocketTrigger(runID string) map[string]any {
 
 	cfg, _ := payload["config"].(map[string]any)
 	wsCfg, _ := cfg["websocket"].(map[string]any)
-	wsCfg["url"] = constants.WsSinkURL
+	wsCfg["url"] = wsURL
 	wsCfg["message"] = map[string]any{"saga": "websocket", "runID": runID}
 	return payload
 }

@@ -32,7 +32,7 @@ type templateCreateResponse struct {
 // from the bag rather than captured in a closure so Compensate stays
 // idempotent.
 func CreateTemplate() saga.Step {
-	return createTemplateStep("assets/assettemplates.CreateTemplate", payloads.SagaTemperatureTemplate)
+	return createTemplateStep("assets/assettemplates.CreateTemplate", BagKeyTemplateID, payloads.SagaTemperatureTemplate)
 }
 
 // CreateTemplateWith is the parametrized variant of CreateTemplate: it POSTs
@@ -41,12 +41,14 @@ func CreateTemplate() saga.Step {
 // Journeys that need a non-default template (e.g. the LoRaWAN codec template)
 // call this with the matching payload builder.
 func CreateTemplateWith(build func(runID string) *payloads.AssetTemplateCreateBuilder) saga.Step {
-	return createTemplateStep("assets/assettemplates.CreateTemplateWith", build)
+	return createTemplateStep("assets/assettemplates.CreateTemplateWith", BagKeyTemplateID, build)
 }
 
 // createTemplateStep is the shared body: build the spec from the injected builder,
-// POST it, publish the id on the bag, and delete it on Compensate.
-func createTemplateStep(name string, build func(runID string) *payloads.AssetTemplateCreateBuilder) saga.Step {
+// POST it, publish the id under bagKey, and delete it on Compensate. bagKey is a
+// parameter so both the default (BagKeyTemplateID) and the label-scoped
+// (TemplateIDKey(label)) callers reuse one implementation.
+func createTemplateStep(name, bagKey string, build func(runID string) *payloads.AssetTemplateCreateBuilder) saga.Step {
 	return saga.Step{
 		Name: name,
 		Do: func(c *saga.Context) error {
@@ -66,11 +68,11 @@ func createTemplateStep(name string, build func(runID string) *payloads.AssetTem
 			if out.Data.ID == "" {
 				return fmt.Errorf("create template: empty id in response")
 			}
-			c.Set(BagKeyTemplateID, out.Data.ID)
+			c.Set(bagKey, out.Data.ID)
 			return nil
 		},
 		Compensate: func(c *saga.Context) error {
-			id, ok := c.Get(BagKeyTemplateID)
+			id, ok := c.Get(bagKey)
 			if !ok {
 				return nil
 			}

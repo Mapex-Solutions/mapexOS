@@ -3,8 +3,6 @@ package payloads
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
 )
 
 const sagaSlackTriggerJSON = `{
@@ -24,9 +22,11 @@ const sagaSlackTriggerJSON = `{
 }`
 
 // SagaSlackTrigger returns the POST /api/v1/triggers body for the
-// Slack smoke. webhookUrl is rewritten to the HTTP sink and the
-// message embeds the runID for content-key validation.
-func SagaSlackTrigger(runID string) map[string]any {
+// Slack smoke. webhookUrl is rewritten to sinkURL (the HTTP sink) and
+// the message embeds the runID for content-key validation. Pure: the
+// create step reads the sink's ephemeral address from the bag and
+// passes it in.
+func SagaSlackTrigger(runID, sinkURL string) map[string]any {
 	var payload map[string]any
 	if err := json.Unmarshal([]byte(sagaSlackTriggerJSON), &payload); err != nil {
 		panic(fmt.Sprintf("SagaSlackTrigger: literal payload is not valid JSON: %v", err))
@@ -35,7 +35,7 @@ func SagaSlackTrigger(runID string) map[string]any {
 
 	cfg, _ := payload["config"].(map[string]any)
 	slackCfg, _ := cfg["slack"].(map[string]any)
-	slackCfg["webhookUrl"] = constants.TriggerSinkURL
+	slackCfg["webhookUrl"] = sinkURL
 	slackCfg["message"] = fmt.Sprintf("Saga slack smoke run=%s", runID)
 	return payload
 }

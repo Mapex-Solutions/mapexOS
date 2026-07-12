@@ -15,6 +15,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 	assetSteps "github.com/Mapex-Solutions/MapexOS/e2eTests/services/assets/assets/steps"
 )
@@ -48,7 +49,7 @@ type rawCursorEnvelope struct {
 //   - assetSteps.BagKeyAssetUUID  string     set by CreateAsset
 //   - <startTimeBagKey>           time.Time  set by the action that triggered the event
 func AssertRawEventReceivedAfter(startTimeBagKey string) saga.Assert {
-	return AssertRawEventReceivedAfterWithTimeout(startTimeBagKey, 15*time.Second, 500*time.Millisecond)
+	return AssertRawEventReceivedAfterWithTimeout(startTimeBagKey, constants.ScaleTimeout(15*time.Second), 500*time.Millisecond)
 }
 
 // AssertRawEventReceivedAfterWithTimeout overrides the polling budget.
@@ -77,17 +78,20 @@ func AssertRawEventReceivedAfterWithTimeout(startTimeBagKey string, timeout, tic
 
 			deadline := time.Now().Add(timeout)
 			lastCount := 0
+			var lastErr error
 			for {
 				items, err := fetchRawEvents(c, query.Encode())
-				if err == nil {
+				if err != nil {
+					lastErr = err
+				} else {
 					lastCount = len(items)
 					if lastCount > 0 {
 						return nil
 					}
 				}
 				if time.Now().After(deadline) {
-					return fmt.Errorf("no raw events for threadId=%s after %s within %v (last poll returned %d)",
-						uuid, startWithSlack, timeout, lastCount)
+					return fmt.Errorf("no raw events for threadId=%s after %s within %v (last poll returned %d, last error: %v)",
+						uuid, startWithSlack, timeout, lastCount, lastErr)
 				}
 				select {
 				case <-c.Stdctx.Done():

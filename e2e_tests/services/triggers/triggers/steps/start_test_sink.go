@@ -3,17 +3,17 @@ package steps
 import (
 	"context"
 	"fmt"
-	"net"
 	"net/http"
 	"sync/atomic"
 	"time"
 
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
+	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/netx"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 )
 
-// StartTestSink starts a local HTTP server bound to
-// constants.TriggerSinkBindAddr that responds 200 OK to every POST.
+// StartTestSink starts a local HTTP server on an ephemeral port (via
+// netx.FreeListener) that responds 200 OK to every POST.
 // The connectivity-action phase2_trigger journey adds this as its
 // first step so the triggers service has a real responder to POST
 // against — the resulting events_trigger row carries success=true,
@@ -21,6 +21,8 @@ import (
 //
 // Writes (bag):
 //   - BagKeyTriggerSinkServer  *http.Server   for Compensate to stop.
+//   - BagKeyTriggerSinkHost    string         ephemeral bind host.
+//   - BagKeyTriggerSinkPort    int            ephemeral bind port.
 //   - BagKeyTriggerSinkHits    *atomic.Int64  POST counter, optional
 //     fast path for asserts that want to confirm the sink saw the
 //     traffic without polling /api/v1/events/trigger.
@@ -29,10 +31,10 @@ import (
 // to call even when Do failed before publishing the server (the bag
 // lookup short-circuits).
 //
-// Linux note: when triggers MS runs in Docker, it must reach the
-// host-bound sink. Override SAGA_TRIGGER_SINK_URL to a host the
-// container can resolve (host.docker.internal — already exposed by
-// the standalone compose's `extra_hosts: host-gateway`).
+// Docker note: when the triggers service runs in Docker, it must reach
+// the host-bound sink. Set SAGA_SINK_HOST=host.docker.internal so the
+// advertised callback URL resolves from inside the container (the sink
+// binds 0.0.0.0 via netx, reachable over the bridge).
 func StartTestSink() saga.Step {
 	return saga.Step{
 		Name: "triggers/triggers.StartTestSink",
@@ -51,9 +53,9 @@ func StartTestSink() saga.Step {
 				_, _ = w.Write([]byte("ok"))
 			})
 
-			ln, err := net.Listen("tcp", constants.TriggerSinkBindAddr)
+			ln, port, err := netx.FreeListener()
 			if err != nil {
-				return fmt.Errorf("listen %s: %w", constants.TriggerSinkBindAddr, err)
+				return fmt.Errorf("http sink listen: %w", err)
 			}
 
 			srv := &http.Server{
@@ -63,6 +65,8 @@ func StartTestSink() saga.Step {
 			go func() { _ = srv.Serve(ln) }()
 
 			c.Set(BagKeyTriggerSinkServer, srv)
+			c.Set(BagKeyTriggerSinkHost, constants.SinkHost)
+			c.Set(BagKeyTriggerSinkPort, port)
 			c.Set(BagKeyTriggerSinkHits, hits)
 			return nil
 		},
