@@ -31,7 +31,6 @@ import (
 
 	bootstrap "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/iam_bootstrap"
 	gateway "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/lorawan_gateway"
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
 	assetAsserts "github.com/Mapex-Solutions/MapexOS/e2eTests/services/assets/assets/asserts"
@@ -78,12 +77,10 @@ func Items() []saga.Item {
 }
 
 // Run fronts the shared IAM bootstrap (common/journey/iam_bootstrap) and runs
-// this phase's items under one rollback chain.
+// this phase's items under one rollback chain. The suite runner (journey/suite)
+// provisions the stack once via infra.EnsureAll; Run never touches the environment.
 func Run(t *testing.T) {
 	t.Helper()
-	if err := utils.SetupE2EEnvironment(); err != nil {
-		t.Fatalf("setup e2e environment: %v", err)
-	}
 	runID := random.NewRunID()
 	clients := bootstrap.NewClients()
 	items := append(bootstrap.BootstrapItems(), Items()...)

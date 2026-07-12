@@ -11,7 +11,6 @@ import (
 
 	"github.com/Mapex-Solutions/mapexGoKit/utils/random"
 
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
 	bootstrap "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/iam_bootstrap"
@@ -105,9 +104,6 @@ func mqttConnectivityAsset() assetSteps.ConnectivityPayloadFn {
 // Run executes phase 0 (IAM bootstrap) + this phase as a single saga.
 func Run(t *testing.T) {
 	t.Helper()
-	if err := utils.SetupE2EEnvironment(); err != nil {
-		t.Fatalf("setup e2e environment: %v", err)
-	}
 	runID := random.NewRunID()
 	clients := bootstrap.NewClients()
 	items := append(bootstrap.BootstrapItems(), Items()...)

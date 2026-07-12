@@ -6,7 +6,7 @@
 // Outcome on PASS:
 //   - Asset is created with protocol=mqtt + authType=cert.
 //   - POST /api/v1/mqtt_certs returns a signed cert + private key
-//     + CA chain; assets MS persists asset.currentCert + emits the
+//   - CA chain; assets MS persists asset.currentCert + emits the
 //     fanout invalidation; the PEM bundle lands on the saga bag.
 //   - mTLS CONNECT (cert presented, username=assetUUID) succeeds
 //     against the broker's 8883 listener.
@@ -32,8 +32,6 @@ import (
 	"testing"
 
 	"github.com/Mapex-Solutions/mapexGoKit/utils/random"
-
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
 
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
@@ -105,9 +103,6 @@ func Items() []saga.Item {
 // Run executes phase 0 (IAM bootstrap) + this phase as a single saga.
 func Run(t *testing.T) {
 	t.Helper()
-	if err := utils.SetupE2EEnvironment(); err != nil {
-		t.Fatalf("setup e2e environment: %v", err)
-	}
 
 	runID := random.NewRunID()
 	clients := bootstrap.NewClients()

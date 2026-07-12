@@ -35,8 +35,6 @@ import (
 
 	"github.com/Mapex-Solutions/mapexGoKit/utils/random"
 
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
-
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
 	bootstrap "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/iam_bootstrap"
@@ -106,9 +104,6 @@ func Items() []saga.Item {
 // then template + route group cleanups run as usual.
 func Run(t *testing.T) {
 	t.Helper()
-	if err := utils.SetupE2EEnvironment(); err != nil {
-		t.Fatalf("setup e2e environment: %v", err)
-	}
 
 	runID := random.NewRunID()
 	clients := bootstrap.NewClients()

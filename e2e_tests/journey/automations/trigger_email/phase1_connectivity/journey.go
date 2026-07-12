@@ -33,7 +33,7 @@
 //     points at the breaking integration.
 //   - "smtp hits: want >=1, got 0" typically means either the trigger
 //     never matched the route group (router config), the executor
-//     can't reach the sink (host/port resolution, see SmtpSinkHost),
+//     can't reach the sink (host/port resolution, see SinkHost),
 //     or the SMTP server rejected the message (check SmtpServer logs).
 package phase1_connectivity
 
@@ -43,7 +43,6 @@ import (
 
 	"github.com/Mapex-Solutions/mapexGoKit/utils/random"
 
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
 	bootstrap "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/iam_bootstrap"
@@ -65,7 +64,7 @@ import (
 // why this item is in the chain.
 func Items() []saga.Item {
 	return []saga.Item{
-		// Boot an in-process SMTP server on SmtpSinkBindAddr; captures every successful delivery.
+		// Boot an in-process SMTP server on an ephemeral port; captures every successful delivery.
 		triggerSteps.StartSmtpSink(),
 
 		// Create an Email trigger pointing at the SMTP sink (overrides smtpHost/smtpPort to the saga sink).
@@ -152,9 +151,6 @@ func httpConnectivityAsset() assetSteps.ConnectivityPayloadFn {
 // and executes the resulting saga under one rollback chain.
 func Run(t *testing.T) {
 	t.Helper()
-	if err := utils.SetupE2EEnvironment(); err != nil {
-		t.Fatalf("setup e2e environment: %v", err)
-	}
 	runID := random.NewRunID()
 	clients := bootstrap.NewClients()
 	items := append(bootstrap.BootstrapItems(), Items()...)

@@ -20,7 +20,6 @@ import (
 
 	"github.com/Mapex-Solutions/mapexGoKit/utils/random"
 
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
 	bootstrap "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/iam_bootstrap"
@@ -39,10 +38,10 @@ import (
 // Items is the ordered slice of saga Items the phase runs.
 func Items() []saga.Item {
 	return []saga.Item{
-		// Boot an in-process HTTP server on TriggerSinkBindAddr; counts POSTs into BagKeyTriggerSinkHits.
+		// Boot an in-process HTTP server on an ephemeral port; counts POSTs into BagKeyTriggerSinkHits.
 		triggerSteps.StartTestSink(),
 
-		// Create an HTTP-kind trigger pointing at the sink URL (overrides endpoint to TriggerSinkURL).
+		// Create an HTTP-kind trigger pointing at the sink URL (overrides endpoint to the ephemeral sink address).
 		triggerSteps.CreateTrigger(),
 
 		// Route group that matches asset.health "online" transitions and points at the HTTP trigger.
@@ -123,9 +122,6 @@ func httpConnectivityAsset() assetSteps.ConnectivityPayloadFn {
 // and executes the resulting saga under one rollback chain.
 func Run(t *testing.T) {
 	t.Helper()
-	if err := utils.SetupE2EEnvironment(); err != nil {
-		t.Fatalf("setup e2e environment: %v", err)
-	}
 	runID := random.NewRunID()
 	clients := bootstrap.NewClients()
 	items := append(bootstrap.BootstrapItems(), Items()...)

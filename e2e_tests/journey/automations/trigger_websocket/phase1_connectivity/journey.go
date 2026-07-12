@@ -10,7 +10,6 @@ import (
 
 	"github.com/Mapex-Solutions/mapexGoKit/utils/random"
 
-	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/utils"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
 	bootstrap "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/iam_bootstrap"
@@ -29,7 +28,7 @@ import (
 // Items is the ordered slice of saga Items the phase runs.
 func Items() []saga.Item {
 	return []saga.Item{
-		// Boot an in-process WS server on WsSinkBindAddr; /ws is the upgrade endpoint.
+		// Boot an in-process WS server on an ephemeral port; /ws is the upgrade endpoint.
 		triggerSteps.StartWebsocketSink(),
 
 		// Create a WebSocket trigger pointing at the sink's /ws endpoint.
@@ -108,9 +107,6 @@ func httpConnectivityAsset() assetSteps.ConnectivityPayloadFn {
 // Run wires Phase 0 (IAM bootstrap) in front of this phase's items.
 func Run(t *testing.T) {
 	t.Helper()
-	if err := utils.SetupE2EEnvironment(); err != nil {
-		t.Fatalf("setup e2e environment: %v", err)
-	}
 	runID := random.NewRunID()
 	clients := bootstrap.NewClients()
 	items := append(bootstrap.BootstrapItems(), Items()...)

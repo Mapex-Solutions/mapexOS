@@ -1,5 +1,9 @@
 # Journey: atualização de firmware OTA — MQTT (push)
 
+> **Status: SPEC — não implementado.** Descreve o fluxo pretendido da journey de OTA.
+> Ainda não existe `journey.go` nem entrada no registry do `journey/suite` (rastreado
+> no ticket de OTA e2e). Por enquanto é doc de design, não uma journey executável.
+
 Cobertura ponta a ponta do rollout de firmware OTA para um device **MQTT** contra
 o stack vivo: o broker **empurra** o comando `ota_update` para um device
 conectado e com presence-gate, o device baixa + verifica + aplica o firmware,

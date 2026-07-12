@@ -1,5 +1,9 @@
 # Journey: atualização de firmware OTA — HTTP (poll)
 
+> **Status: SPEC — não implementado.** Descreve o fluxo pretendido da journey de OTA.
+> Ainda não existe `journey.go` nem entrada no registry do `journey/suite` (rastreado
+> no ticket de OTA e2e). Por enquanto é doc de design, não uma journey executável.
+
 Cobertura ponta a ponta do rollout de firmware OTA para um device **HTTP** contra
 o stack vivo: o device **consulta** o gateway pelo seu job, baixa + verifica +
 aplica o firmware, reporta o progresso via `POST /api/v1/ota/status`, e o plano

@@ -1,5 +1,9 @@
 # Journey: OTA firmware update — HTTP (poll)
 
+> **Status: SPEC — not implemented.** This describes the intended OTA journey flow.
+> There is no `journey.go` or `journey/suite` registry entry yet (tracked under the
+> OTA e2e ticket). Until then this is a design doc, not a runnable journey.
+
 End-to-end coverage of the OTA firmware rollout for an **HTTP** device against the
 live stack: the device **polls** the gateway for its job, downloads + verifies +
 applies the firmware, reports its progress via `POST /api/v1/ota/status`, and the
