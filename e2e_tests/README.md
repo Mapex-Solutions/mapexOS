@@ -76,19 +76,20 @@ go test ./services/mapexos/organizations -v
 # A single test
 go test ./services/mapexos/organizations -v -run TestCreateOrganization_Customer
 
-# All saga journeys (saga tag REQUIRED)
-go test -tags=saga ./journey/...
+# All saga journeys — ONE runner (journey/suite) brings the stack up once via
+# infra.EnsureAll and runs every journey as a parallel subtest on ephemeral ports.
+go test -tags=saga ./journey/suite/... -parallel 4
 
-# A single journey context / journey / phase
-go test -tags=saga ./journey/automations/...
-go test -tags=saga ./journey/automations/trigger_http/...
-go test -tags=saga ./journey/automations/trigger_http/phase1_connectivity
+# A single journey — filter by its registry name.
+go test -tags=saga ./journey/suite/... -run 'TestSuite/automations/trigger_http/connectivity'
 ```
 
-For longer-running suites, set `-timeout`:
+There is no per-journey test file: journeys are registered once in
+`journey/suite/suite_test.go` and driven by `TestSuite`. For longer-running suites,
+set `-timeout`:
 
 ```bash
-go test -tags=saga -timeout 15m ./journey/...
+go test -tags=saga -timeout 20m ./journey/suite/...
 ```
 
 ## Service ports
@@ -103,8 +104,10 @@ go test -tags=saga -timeout 15m ./journey/...
 | triggers       | 5006  | trigger journeys                   |
 | workflow       | 5007  | workflow tests + IoT actions       |
 
-Saga journeys also bind in-process sinks on the host: `11010` (HTTP),
-`11025` (SMTP), `11026` (WebSocket). Make sure those ports are free.
+Saga journeys bind their in-process sinks (HTTP/WS/SMTP, broker, NATS) on
+OS-assigned **ephemeral** ports, so no fixed port needs to be free. The advertise
+host defaults to `localhost`; set `SAGA_SINK_HOST=host.docker.internal` when the
+services run in Docker and must reach a host-side sink.
 
 ## Environment overrides
 
@@ -123,8 +126,11 @@ export WORKFLOW_URL=http://localhost:5007
 
 ## Conventions
 
-- **Tests use only the public API.** Internal routes (`/internal/*`) are
-  cache-rebuild fallbacks and are never invoked by tests.
+- **Single-tenant by design.** Every journey runs as the seed admin in one org;
+  `runID` isolates entity data across parallel journeys. This is intentional —
+  multi-tenant isolation is not what these tests cover.
+- **Asserts use only the public API.** `/internal/*` is never used to ASSERT, with
+  the two documented exceptions in the sanctioned list below.
 - **The seed admin is the bootstrap actor.** Any additional users a test
   needs are provisioned at runtime through the onboarding orchestrator
   (`POST /api/v1/onboarding/users`). The seed JSON is never modified by
@@ -134,6 +140,20 @@ export WORKFLOW_URL=http://localhost:5007
   `0000000000000000000aa201` for the SuperAdmin role).
 - **Cleanup is mandatory.** Every mutating test registers `t.Cleanup` or
   `defer` to delete what it created.
+
+## Sanctioned internal endpoints
+
+`/internal/*` is off-limits for asserts, with two documented exceptions:
+
+| Endpoint | Kind | Why |
+|---|---|---|
+| `POST /internal/health_monitor/{uuid}/force_offline` | arrange hook | simulate a device going offline without the scheduler+threshold wait; the outcome is still asserted publicly |
+| `GET /internal/asset_auth/:uuid` | assert allow-list | validates the LoRaWAN auth projection whose `apiKeyHash` / `currentCertSerial` are security-internal by design (no public equivalent) |
+
+This is NOT "asserts may use any `/internal`" — config fields (type/kind/authMode/
+frequencyPlanId) are public; only security-derived material justifies the exception.
+The committed internal API key is acceptable because the suite runs only against
+throwaway local/CI stacks.
 
 ## Documentation
 

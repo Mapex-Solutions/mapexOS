@@ -1,170 +1,56 @@
-# 🚀 Quick Start - E2E Tests
+# Quick Start — E2E Tests
 
-Guia rápido para rodar testes E2E no MapexOS.
+Fast path to running the MapexOS e2e tests. Everything runs from `e2e_tests/` with
+plain `go test`. See `README.md` for the full layout and conventions.
 
-## 📖 TL;DR
+## Prerequisites
 
-```bash
-cd workspace_go/packages/e2eTests
+The stack must be reachable. Run the app services locally (`go run` via the CLI) or
+bring them up with the deploy compose. The saga runner also brings up any missing
+infra itself (`infra.EnsureAll`), reusing whatever is already running and tearing
+down only what it started — so a fully-up local stack needs no extra setup.
 
-# Rodar teste específico
-./run-tests.sh mapexos organizations
-
-# Ver ajuda
-./run-tests.sh help
-
-# Ver módulos disponíveis
-./run-tests.sh list
-```
-
-## 🎯 Formato do Comando
+## TL;DR
 
 ```bash
-./run-tests.sh [SERVICE] [MODULE] [OPTIONS]
+cd e2e_tests
+
+# Module e2e — HTTP contract of one module (no build tag)
+go test ./services/...
+go test ./services/mapexos/organizations -v
+
+# Saga journeys — ONE runner brings the stack up once and runs every journey as a
+# parallel subtest on ephemeral ports.
+go test -tags=saga ./journey/suite/... -parallel 4
+
+# A single journey — filter by its registry name (see journey/suite/suite_test.go)
+go test -tags=saga ./journey/suite/... -run 'TestSuite/iot/gateway_provisioning'
 ```
 
-### Serviços Disponíveis:
-- `mapexos` - organizations, roles, groups, users, memberships
-- `assets` - assets, assettemplates
-- `router` - routegroups
-- `http_gateway` - datasources
+## Two test families
 
-## 📝 Exemplos Práticos
+| Family | Command | Notes |
+|---|---|---|
+| **Module e2e** | `go test ./services/{svc}/{mod}` | one module's HTTP contract; own `TestMain` login |
+| **Saga journey** | `go test -tags=saga ./journey/suite/... -run TestSuite/<name>` | cross-service flow with rollback, run via the single runner |
 
-### Rodar um módulo específico
-```bash
-./run-tests.sh mapexos organizations   # ✅ Organizations do mapexos
-./run-tests.sh mapexos roles           # ✅ Roles do mapexos
-./run-tests.sh mapexos users           # Users do mapexos
-./run-tests.sh assets assets           # Assets do serviço assets
-./run-tests.sh router routegroups      # Routegroups do router
-```
+There is **no per-journey test file** — journeys are registered once in
+`journey/suite/suite_test.go`. Adding a journey is one aliased import + one registry
+line.
 
-### Rodar todos os testes de um serviço
-```bash
-./run-tests.sh mapexos                 # Todos os módulos do mapexos
-./run-tests.sh assets                  # Todos os módulos do assets
-```
+## Config knobs
 
-### Rodar TODOS os testes
-```bash
-./run-tests.sh all                     # Todos os testes E2E
-```
+| Env | Default | Use |
+|---|---|---|
+| `MAPEXOS_URL`, `ASSETS_URL`, … | `localhost:500x` | service base URLs |
+| `SAGA_SINK_HOST` | `localhost` | set to `host.docker.internal` when a Dockerized service must reach a host-side sink |
+| `SAGA_TIMEOUT_MULTIPLIER` | `1.0` | stretch poll timeouts on a slow stack (only extends) |
+| `MAPEX_COMPOSE_FILE` | discovered | point EnsureAll at the deploy compose |
 
-### Com opções
-```bash
-./run-tests.sh mapexos users -q        # Sem verbose (quieto)
-./run-tests.sh mapexos users -p 4      # 4 workers paralelos
-./run-tests.sh mapexos users -t 10m    # Timeout de 10 minutos
-```
+## Notes
 
-## 🔧 Comandos Úteis
-
-```bash
-./run-tests.sh check    # Verificar se serviços estão rodando
-./run-tests.sh list     # Listar serviços/módulos disponíveis
-./run-tests.sh help     # Ajuda completa
-```
-
-## 🎯 Autocompletar (TAB)
-
-### Habilitar temporariamente
-```bash
-cd /path/to/e2eTests
-source .run-tests-completion.bash
-
-# Agora use TAB:
-./run-tests.sh [TAB]           # Lista: all login check list mapexos assets...
-./run-tests.sh mapexos [TAB]   # Lista: organizations roles groups users...
-```
-
-### Habilitar permanentemente
-Adicione ao seu `~/.bashrc`:
-```bash
-source /path/to/e2eTests/.run-tests-completion.bash
-```
-
-## ⚙️ Opções
-
-| Opção | Descrição | Exemplo |
-|-------|-----------|---------|
-| `-q, --quiet` | Sem verbose | `./run-tests.sh mapexos users -q` |
-| `-p N` | N workers paralelos | `./run-tests.sh mapexos users -p 4` |
-| `-t TIME` | Timeout customizado | `./run-tests.sh mapexos users -t 10m` |
-
-## 📊 Status dos Testes
-
-| Módulo | Status | Testes |
-|--------|--------|--------|
-| organizations | ✅ | 16 passing, 1 skipped |
-| roles | ✅ | 15 passing, 1 skipped |
-| groups | ✅ | ~15 tests |
-| users | ✅ | ~12 tests |
-| memberships | 🚧 | TODO |
-| assets | 🚧 | TODO |
-| assettemplates | 🚧 | TODO |
-| routegroups | 🚧 | TODO |
-| datasources | 🚧 | TODO |
-
-## 🐛 Troubleshooting
-
-### Erro: "mapexos (5000) is NOT running"
-```bash
-cd workspace_go
-make run
-```
-
-### Erro: "Failed to generate admin token"
-```bash
-# Verificar se o usuário admin existe
-# Email: admin@mapex.global
-# Password: mapex123
-```
-
-### Ver logs detalhados
-```bash
-./run-tests.sh mapexos organizations -v
-```
-
-## 📚 Links Úteis
-
-- [README Completo](./README.md) - Documentação completa
-- [Conventions](./README.md#convenções) - Convenções de código
-- [Fixtures](./README.md#fixtures) - Como usar fixtures
-
-## 💡 Dicas
-
-1. **Use `list`** para ver módulos disponíveis:
-   ```bash
-   ./run-tests.sh list
-   ```
-
-2. **Use TAB** para autocompletar (depois de `source .run-tests-completion.bash`)
-
-3. **Use `-q`** para menos output quando rodar múltiplos testes
-
-4. **Use `-p 4`** para rodar mais rápido em paralelo
-
-5. **Sempre rode `check`** antes de rodar testes:
-   ```bash
-   ./run-tests.sh check
-   ```
-
-## 🚀 Workflow Recomendado
-
-```bash
-# 1. Verificar serviços
-./run-tests.sh check
-
-# 2. Ver módulos disponíveis (se necessário)
-./run-tests.sh list
-
-# 3. Rodar teste específico
-./run-tests.sh mapexos organizations
-
-# 4. Rodar todos os testes do serviço
-./run-tests.sh mapexos
-
-# 5. (Opcional) Rodar todos os testes E2E
-./run-tests.sh all
-```
+- **Single-tenant by design** — every journey runs as the seed admin; `runID`
+  isolates data across parallel journeys. Not a defect.
+- **Ephemeral ports** — sinks/servers bind OS-assigned free ports, so nothing needs a
+  fixed port free.
+- Longer runs: add `-timeout 20m`.
