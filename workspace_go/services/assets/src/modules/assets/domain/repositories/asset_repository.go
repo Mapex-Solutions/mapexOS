@@ -13,6 +13,7 @@ type AssetRepository interface {
 	FindById(ctx context.Context, assetId *string) (*entities.Asset, error)
 	FindByAssetUUID(ctx context.Context, assetUUID *string) (*entities.Asset, error)
 	FindByMqttUsername(ctx context.Context, username string) (*entities.Asset, error)
+	FindByDevAddr(ctx context.Context, devAddr string) ([]*entities.Asset, error)
 	FindByIdAndUpdate(ctx context.Context, assetId *string, payload map[string]any) (*entities.Asset, error)
 	DeleteById(ctx context.Context, assetId *string) error
 	FindWithFilters(

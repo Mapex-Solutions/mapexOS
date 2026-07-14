@@ -84,6 +84,27 @@ func (r *repository) FindByMqttUsername(ctx context.Context, username string) (*
 	return retData, err
 }
 
+// FindByDevAddr returns every LoRaWAN device asset whose plaintext DevAddr matches.
+// A DevAddr is not unique (it is not a device identity), so the LNS receives a list
+// and disambiguates against the session keys.
+func (r *repository) FindByDevAddr(ctx context.Context, devAddr string) ([]*entities.Asset, error) {
+	filter := model.Map{"protocol.lorawan.devAddr": devAddr}
+	cur, err := r.model.DIRECT().Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+	var rows []*entities.Asset
+	for cur.Next(ctx) {
+		var e entities.Asset
+		if err := cur.Decode(&e); err != nil {
+			return nil, err
+		}
+		rows = append(rows, &e)
+	}
+	return rows, nil
+}
+
 // FindByIdAndUpdate updates a Asset entity in the repository by its ID.
 // It accepts a context for cancellation and timeouts, a pointer to the event ID,
 // and a map containing the fields to be updated.

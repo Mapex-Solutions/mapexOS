@@ -66,6 +66,12 @@ type LorawanConfig struct {
 	PhyVersion string `bson:"phyVersion,omitempty"`
 	Activation string `bson:"activation,omitempty"`
 
+	// DevAddr is the ABP session network address, persisted in PLAINTEXT and indexed
+	// so the LNS can resolve a device by the DevAddr carried in every uplink. It is
+	// the over-the-air network address, not a secret — unlike the session keys, which
+	// stay sealed in Keys. Empty for OTAA (the DevAddr is assigned at join time).
+	DevAddr string `bson:"devAddr,omitempty"`
+
 	Keys EncryptedKeys `bson:"keys,omitempty"`
 
 	// Gateway profile + auth (Kind == gateway). Nil for devices.

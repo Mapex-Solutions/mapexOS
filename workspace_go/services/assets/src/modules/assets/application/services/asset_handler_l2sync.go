@@ -93,6 +93,19 @@ func (s *AssetService) fetchAssetByID(ctx ctx.Context, assetId string) (*entitie
 // repository access, no logging. Lives at file scope so the L3
 // internal endpoint handler can reuse it without going through
 // the service struct.
+// buildAuthProjectionsForDevices maps a set of device assets to their auth
+// projections, reusing the single-asset builder. Nil entries are skipped.
+func buildAuthProjectionsForDevices(assets []*entities.Asset) []assetsAuthContract.AuthProjection {
+	out := make([]assetsAuthContract.AuthProjection, 0, len(assets))
+	for _, a := range assets {
+		if a == nil {
+			continue
+		}
+		out = append(out, buildAuthProjection(a))
+	}
+	return out
+}
+
 func buildAuthProjection(asset *entities.Asset) assetsAuthContract.AuthProjection {
 	proj := assetsAuthContract.AuthProjection{
 		AssetUUID: asset.AssetUUID,

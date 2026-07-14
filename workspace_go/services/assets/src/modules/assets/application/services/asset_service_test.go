@@ -67,6 +67,10 @@ func (r *fakeAssetRepo) FindByAssetUUID(ctx context.Context, uuid *string) (*ent
 	}
 	return nil, nil
 }
+func (r *fakeAssetRepo) FindByDevAddr(_ context.Context, _ string) ([]*entities.Asset, error) {
+	return nil, nil
+}
+
 func (r *fakeAssetRepo) FindByMqttUsername(ctx context.Context, username string) (*entities.Asset, error) {
 	if r.findByMqttUsernameFn != nil {
 		return r.findByMqttUsernameFn(ctx, username)

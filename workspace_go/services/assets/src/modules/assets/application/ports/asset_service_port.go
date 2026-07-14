@@ -149,6 +149,11 @@ type AssetServicePort interface {
 	// does not wait for the warm-up.
 	GetAuthProjectionByUUID(ctx ctx.Context, assetUUID string) (*assetsAuthContract.AuthProjection, error)
 
+	// GetLorawanDevicesByDevAddr returns the auth projections of every LoRaWAN
+	// device sharing a DevAddr, so the LNS can resolve the device an uplink belongs
+	// to and hydrate its session. DevAddr is not unique, hence a list.
+	GetLorawanDevicesByDevAddr(ctx ctx.Context, devAddr string) ([]assetsAuthContract.AuthProjection, error)
+
 	// ProcessL2WriteRetry is invoked by the L2 sync fallback consumer
 	// when a previous synchronous L2 write failed. The method re-fetches
 	// the asset from Mongo by ID (NOT trusting the event payload — Mongo

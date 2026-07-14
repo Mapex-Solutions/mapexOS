@@ -294,6 +294,17 @@ func (s *AssetService) GetAuthProjectionByUUID(c ctx.Context, assetUUID string) 
 	return &projection, nil
 }
 
+// GetLorawanDevicesByDevAddr resolves the auth projections of the LoRaWAN devices
+// sharing a DevAddr. The LNS reads it directly on an uplink to hydrate the session,
+// so (unlike the by-UUID path) it does not warm the L2 cache.
+func (s *AssetService) GetLorawanDevicesByDevAddr(c ctx.Context, devAddr string) ([]assetsAuthContract.AuthProjection, error) {
+	assets, err := s.deps.AssetRepo.FindByDevAddr(c, devAddr)
+	if err != nil {
+		return nil, err
+	}
+	return buildAuthProjectionsForDevices(assets), nil
+}
+
 // ProcessL2WriteRetry is the public entry point for the L2 sync
 // fallback consumer (asset_l2sync). On receipt of a retry hint the
 // service re-fetches the current asset state from Mongo (never

@@ -167,6 +167,10 @@ func (m *mockAssetRepo) FindByMqttUsername(_ context.Context, _ string) (*assetP
 	panic("mockAssetRepo.FindByMqttUsername not expected on heartbeat path")
 }
 
+func (m *mockAssetRepo) FindByDevAddr(_ context.Context, _ string) ([]*assetPorts.Asset, error) {
+	panic("mockAssetRepo.FindByDevAddr not expected on heartbeat path")
+}
+
 func (m *mockAssetRepo) FindByIdAndUpdate(_ context.Context, _ *string, _ map[string]any) (*assetPorts.Asset, error) {
 	panic("mockAssetRepo.FindByIdAndUpdate not expected on heartbeat path")
 }

@@ -105,6 +105,9 @@ func (s *AssetService) encryptLorawanKeysIfNeeded(asset *entities.Asset, dto *dt
 		return err
 	}
 	asset.Protocol.Lorawan.Keys = sealed
+	// The DevAddr also stays in plaintext (indexed) so the LNS can resolve the
+	// device by the address every uplink carries; the session keys remain sealed.
+	asset.Protocol.Lorawan.DevAddr = lw.DevAddr
 	return nil
 }
 
@@ -212,9 +215,10 @@ func (s *AssetService) applyAssetPatch(c ctx.Context, assetId *string, dto *dtos
 	}
 	delete(fields, "protocol.lorawan.appKey")
 	delete(fields, "protocol.lorawan.nwkKey")
-	delete(fields, "protocol.lorawan.devAddr")
 	delete(fields, "protocol.lorawan.nwkSKey")
 	delete(fields, "protocol.lorawan.appSKey")
+	// protocol.lorawan.devAddr is intentionally kept: it is the plaintext, indexed
+	// address the LNS resolves the device by. Only the secret session keys are stripped.
 	delete(fields, "protocol.lorawan.gateway.apiKey")
 	fields["updated"] = time.Now()
 	updated, _ := s.deps.AssetRepo.FindByIdAndUpdate(c, assetId, fields)

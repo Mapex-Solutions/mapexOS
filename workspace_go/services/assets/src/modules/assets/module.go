@@ -12,11 +12,11 @@ import (
 	mapexvaultProvider "assets/src/modules/assets/infrastructure/httpclient/mapexvault"
 	routerProvider "assets/src/modules/assets/infrastructure/httpclient/router"
 	natsProvider "assets/src/modules/assets/infrastructure/messaging/nats"
+	collection "assets/src/modules/assets/infrastructure/persistence/mongo"
 	ramProvider "assets/src/modules/assets/infrastructure/ram"
 	minioProvider "assets/src/modules/assets/infrastructure/storage/minio"
-	collection "assets/src/modules/assets/infrastructure/persistence/mongo"
-	consumers "assets/src/modules/assets/interfaces/message/consumers"
 	routes "assets/src/modules/assets/interfaces/http/routes"
+	consumers "assets/src/modules/assets/interfaces/message/consumers"
 
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	common "github.com/Mapex-Solutions/mapexGoKit/microservices/common"
@@ -34,12 +34,12 @@ import (
 func InitRepositories() {
 	c := container.GetContainer()
 	c.Provide(collection.New)
-	c.Provide(routerProvider.NewRouteGroupPort)         // Register RouteGroupPort for Router service communication
-	c.Provide(minioProvider.NewAssetStoragePort)        // Register AssetStoragePort for object storage operations
-	c.Provide(redisCache.NewCacheKeyBuilderAdapter)     // Register CacheKeyBuilderPort for Redis key construction
-	c.Provide(mapexvaultProvider.NewKEKClient)          // LoRaWAN device-keys KEK client (mapexVault)
-	c.Provide(ramProvider.NewInMemoryKEKCipher)         // in-RAM KEK cipher (envelope encryption, hot path)
-	
+	c.Provide(routerProvider.NewRouteGroupPort)     // Register RouteGroupPort for Router service communication
+	c.Provide(minioProvider.NewAssetStoragePort)    // Register AssetStoragePort for object storage operations
+	c.Provide(redisCache.NewCacheKeyBuilderAdapter) // Register CacheKeyBuilderPort for Redis key construction
+	c.Provide(mapexvaultProvider.NewKEKClient)      // LoRaWAN device-keys KEK client (mapexVault)
+	c.Provide(ramProvider.NewInMemoryKEKCipher)     // in-RAM KEK cipher (envelope encryption, hot path)
+
 	// L2 writes retry publisher — feeds the durable fallback stream
 	// when synchronous MinIO writes fail; the in-module consumer
 	// drains it back against current Mongo state.
@@ -109,6 +109,16 @@ func InitInterfaces() {
 			apikeymw.ApiKeyAuthMiddleware(internalApiKey),
 		)
 		routes.RegisterAssetAuthInternalRoutes(assetAuthInternalRoutes, service)
+
+		// Internal LoRaWAN routes (API Key auth) — the LNS resolves a device by the
+		// DevAddr an uplink carries. Sibling group so it does not collide with the
+		// read-model or asset-auth internal endpoints.
+		lorawanInternalRoutes := app.Group(
+			"/internal/lorawan",
+			ctxInjector.ContextInjector(ctxTimeout),
+			apikeymw.ApiKeyAuthMiddleware(internalApiKey),
+		)
+		routes.RegisterLorawanInternalRoutes(lorawanInternalRoutes, service)
 
 		// Fire the OnMount lifecycle hook: load the LoRaWAN device-keys KEK from
 		// mapexVault into RAM (sync attempt + retry goroutine on failure).
