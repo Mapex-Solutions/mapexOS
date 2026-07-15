@@ -57,7 +57,7 @@ All service‑specific metrics are prefixed with `httpgw_`.
 - `result`: `success`, `failure` (auth metrics) / `hit`, `miss` (cache metric)
 - `status`: `success`, `error`
 - `operation`: `list`, `create`, `read`, `update`, `delete`
-- `subject`: `processor.js.execute`
+- `subject`: `http.data`
 
 ### Go runtime + process collectors
 Controlled by:

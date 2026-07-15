@@ -19,7 +19,7 @@ High-performance HTTP gateway for MapexOS event ingestion — receives webhooks 
 |---|---|---|
 | app | `src/modules/app/` | Module orchestrator — initializes all business modules in 3 phases (repositories, services, interfaces) following the order defined in `modules/config.go` |
 | datasources | `src/modules/datasources/` | CRUD management of Data Source entities (name, auth, rate limit, asset binding, working hours). Exposes REST API at `/api/v1/data_sources`. Uses Redis cache-aside pattern for fast lookups. Auth strategies per Data Source: `apiKey`, `jwt`, `oauth2`, `ip_whitelist`, `none`. Multi-tenant with hierarchical org filtering via PathKey |
-| events | `src/modules/events/` | Webhook event ingestion at `POST /api/v1/events?ds={id}`. Applies per-Data-Source authentication via custom middleware (delegates to datasources module for config lookup). On success, publishes event to `processor.js.execute` NATS subject for JS-Executor pipeline. On auth failure, publishes security event to `events.raw` for monitoring. No own repository — stateless processing only |
+| events | `src/modules/events/` | Webhook event ingestion at `POST /api/v1/events?ds={id}`. Applies per-Data-Source authentication via custom middleware (delegates to datasources module for config lookup). On success, publishes event to `http.data` NATS subject for JS-Executor pipeline. On auth failure, publishes security event to `events.raw` for monitoring. No own repository — stateless processing only |
 
 ## Key Decisions
 

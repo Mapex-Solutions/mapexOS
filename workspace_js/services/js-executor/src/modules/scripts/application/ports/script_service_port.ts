@@ -97,7 +97,7 @@ export interface ScriptServicePort {
 	 * Parses JSON payloads with dataSource/event fields, resolves assetUUID,
 	 * normalizes into common batch contract, then runs the shared processing pipeline.
 	 *
-	 * @param messages - Raw NATS messages from PROCESSOR-JS-EXECUTE stream
+	 * @param messages - Raw NATS messages from JSEXECUTOR-HTTPDATA stream
 	 * @returns Per-message results (consumer uses for ACK/Nack decisions)
 	 */
 	handleHttpBatch(messages: Message[]): Promise<BatchMessageResult[]>;

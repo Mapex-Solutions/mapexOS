@@ -1,3 +1,3 @@
-export * from './JsExecuteConsumer';
-export * from './JsExecuteConsumer.types';
+export * from './HttpDataConsumer';
+export * from './HttpDataConsumer.types';
 export * from './constants';

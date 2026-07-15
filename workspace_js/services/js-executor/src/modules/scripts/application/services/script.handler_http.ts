@@ -10,7 +10,7 @@ import { processBatch } from './script.handler_batch';
  * normalizes into BatchMessageInput[], then delegates to processBatch().
  *
  * @param deps - Service internal dependencies
- * @param messages - Raw NATS messages from PROCESSOR-JS-EXECUTE stream
+ * @param messages - Raw NATS messages from JSEXECUTOR-HTTPDATA stream
  * @param resolveAssetUUID - Function to resolve assetUUID from message (injected from ScriptService)
  * @returns Per-message results for ACK/Nack
  */

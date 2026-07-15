@@ -1,4 +1,4 @@
-export * from './JsExecuteConsumer';
+export * from './HttpDataConsumer';
 export * from './MqttDataConsumer';
 export * from './LorawanDataConsumer';
 export { initAssetInvalidateConsumer } from './AssetInvalidateConsumer';

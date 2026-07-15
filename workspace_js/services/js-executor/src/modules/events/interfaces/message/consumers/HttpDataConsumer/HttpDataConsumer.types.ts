@@ -4,11 +4,11 @@ import type { NatsBus } from '@mapexos/infrastructure';
 import type { ScriptServicePort } from '@modules/scripts/application/ports';
 
 /**
- * Dependencies for JsExecuteConsumer.
+ * Dependencies for HttpDataConsumer.
  *
  * Consumer validates and delegates to ScriptService — no engine, no publisher, no cache.
  */
-export interface JsExecuteConsumerDeps {
+export interface HttpDataConsumerDeps {
 	/** NATS bus for consumer registration */
 	natsBus: NatsBus;
 	/** Logger instance */

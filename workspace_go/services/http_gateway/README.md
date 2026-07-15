@@ -10,7 +10,7 @@ to minimize database lookups on the hot path.
 ## Responsibilities
 - Ingest events via `POST /api/v1/events`
 - Manage Data Sources (auth, rate limit, asset binding) via REST CRUD API
-- Publish events to NATS (`processor.js.execute`)
+- Publish events to NATS (`http.data`)
 - Publish auth failure security events to NATS (`events.raw`) for monitoring
 - Cache Data Source lookups in Redis (cache-aside)
 

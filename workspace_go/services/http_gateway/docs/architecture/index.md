@@ -23,7 +23,7 @@ src/
 3. Data Source configuration is resolved (from cache or database)
 4. Request is authenticated according to the Data Source auth type
    - On failure: publishes auth failure event to `events.raw` and returns 401
-   - On success: event is published to `processor.js.execute` via NATS
+   - On success: event is published to `http.data` via NATS
 5. Returns 201 Created
 
 ## Request Flow: Data Source CRUD

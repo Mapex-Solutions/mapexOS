@@ -22,7 +22,7 @@ import (
 // Routes registered:
 //
 //	POST /api/v1/events     - Telemetry webhook receiver (publishes to
-//	                          processor.js.execute). Body is arbitrary device
+//	                          http.data). Body is arbitrary device
 //	                          telemetry; only the query (?ds={dataSourceId}) is
 //	                          validated.
 //	POST /api/v1/heartbeat  - Explicit-mode HTTP heartbeat (publishes to

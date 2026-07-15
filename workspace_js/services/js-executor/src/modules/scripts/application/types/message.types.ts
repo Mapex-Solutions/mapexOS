@@ -70,7 +70,7 @@ export interface ScriptProcessorMessage {
 
 /**
  * LorawanUplinkEnvelope is the wire contract js-executor expects on
- * ${env}.mapexos.lorawan.data.> — published by the mapexLNS adapter (the
+ * ${env}.mapexos.lorawan.data — published by the mapexLNS adapter (the
  * Anti-Corruption Layer over The Things Stack). Mirrors the broker's
  * IngressMessage style: every routing field travels in the JSON body, the
  * subject stays agnostic.

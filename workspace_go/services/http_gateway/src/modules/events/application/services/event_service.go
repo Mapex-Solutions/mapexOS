@@ -41,7 +41,7 @@ func New(deps di.EventServiceDependenciesInjection) ports.EventServicePort {
 // This method receives event data from external sources (webhooks, APIs) and forwards
 // it to the processing pipeline via NATS messaging for asynchronous processing.
 //
-// The event is published to processor.js.execute where JS-Executor will:
+// The event is published to http.data where JS-Executor will:
 //   - Execute configured JavaScript transforms
 //   - Route to appropriate route groups
 //   - Forward to downstream services
@@ -65,13 +65,13 @@ func (s *EventService) ProcessEvent(ctx context.Context, event map[string]any, d
 	if err := s.publishToJSExecutor(ctx, dataSource, event, eventTrackerId); err != nil {
 		// Metrics: NATS publish failed — count processed+published as error
 		s.deps.Metrics.EventsProcessed.WithLabelValues("error").Inc()
-		s.deps.Metrics.EventsPublished.WithLabelValues("processor.js.execute", "error").Inc()
+		s.deps.Metrics.EventsPublished.WithLabelValues("http.data", "error").Inc()
 		return nil, err
 	}
 
 	// Metrics: event fully processed — count success, record handler-only latency (excludes auth)
 	s.deps.Metrics.EventsProcessed.WithLabelValues("success").Inc()
-	s.deps.Metrics.EventsPublished.WithLabelValues("processor.js.execute", "success").Inc()
+	s.deps.Metrics.EventsPublished.WithLabelValues("http.data", "success").Inc()
 	s.deps.Metrics.EventProcessingDuration.Observe(time.Since(start).Seconds())
 
 	return map[string]bool{"success": true}, nil

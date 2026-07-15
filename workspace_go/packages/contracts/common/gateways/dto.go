@@ -15,7 +15,7 @@ package gateways
  *   - LoRaWAN Gateway: Converts AssetReadModel → GatewayMessage
  *
  * CONSUMER:
- *   - JS-Executor: Receives GatewayMessage on "processor.js.execute" subject
+ *   - JS-Executor: Receives GatewayMessage on "http.data" subject
  */
 
 // SourceType identifies the origin gateway

@@ -1,20 +1,21 @@
 import { streamName, subject, durable } from '@shared/configuration/naming';
 
 /**
- * Constants for JsExecuteConsumer.
+ * Constants for the HTTP-telemetry consumer (http_gateway -> js-executor).
  *
+ * Mirrors MqttData / LorawanData: STATIC subject, identity in the payload.
  * Stream and subject names resolve at module load from GO_ENV via the local
  * naming helpers.
  */
 
-/** Stream name for script execution — resolves to e.g. "DEV-MAPEXOS-JSEXECUTOR-PROCESS". */
-export const JS_EXECUTE_STREAM = streamName('JSEXECUTOR', 'PROCESS');
+/** Stream name for HTTP telemetry data — resolves to e.g. "DEV-MAPEXOS-JSEXECUTOR-HTTPDATA". */
+export const HTTP_DATA_STREAM = streamName('JSEXECUTOR', 'HTTPDATA');
 
-/** Subject for script execution — resolves to e.g. "dev.mapexos.processor.js.execute". */
-export const JS_EXECUTE_SUBJECT = subject('processor', 'js.execute');
+/** STATIC subject for HTTP data — resolves to e.g. "dev.mapexos.http.data". */
+export const HTTP_DATA_SUBJECT = subject('http', 'data');
 
-/** Durable consumer name for script execution. */
-export const JS_EXECUTE_DURABLE = durable('jsexecutor', 'process');
+/** Durable consumer name for HTTP data. */
+export const HTTP_DATA_DURABLE = durable('jsexecutor', 'httpdata');
 
 /** Event type for DLQ metadata. */
-export const JS_EXECUTE_EVENT_TYPE = 'js.execute';
+export const HTTP_DATA_EVENT_TYPE = 'http.data';

@@ -6,7 +6,7 @@ import (
 	dsDto "http_gateway/src/modules/datasources/application/dtos"
 	eventsConstants "http_gateway/src/modules/events/application/constants"
 
-	processorContracts "github.com/Mapex-Solutions/MapexOS/contracts/services/http_gateway/events"
+	httpEvents "github.com/Mapex-Solutions/MapexOS/contracts/services/http_gateway/events"
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/customErrors"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/http/status"
@@ -42,11 +42,11 @@ func (s *EventService) publishToJSExecutor(ctx context.Context, dataSource *dsDt
 	// Other fields (name, description, pathKey) are fetched from Asset cache.
 	//
 	// Payload is typed via the cross-service contract
-	// packages/contracts/services/http_gateway/events.ProcessorExecutePayload;
+	// packages/contracts/services/http_gateway/events.HttpDataPayload;
 	// JSON wire shape is identical to the previous ad-hoc map[string]any.
-	payload := processorContracts.ProcessorExecutePayload{
+	payload := httpEvents.HttpDataPayload{
 		SourceType: "http",
-		DataSource: processorContracts.ProcessorExecuteDataSource{
+		DataSource: httpEvents.HttpDataSource{
 			OrgId:     dataSource.OrgId,
 			AssetBind: dataSource.AssetBind,
 		},
@@ -56,7 +56,7 @@ func (s *EventService) publishToJSExecutor(ctx context.Context, dataSource *dsDt
 
 	if err := s.deps.NatsBus.Publish(natsModel.PublishConfig{
 		Ctx:     ctx,
-		Subject: eventsConstants.ProcessorJsExecuteSubject,
+		Subject: eventsConstants.HttpDataSubject,
 		Data:    payload,
 		Headers: nil,
 	}); err != nil {

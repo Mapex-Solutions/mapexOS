@@ -10,7 +10,7 @@ import { processBatch } from './script.handler_batch';
  * Mapex contract: NATS subjects are agnostic, every routing field
  * (orgId, assetUUID) lives in the JSON payload the LNS adapter (the
  * Anti-Corruption Layer over The Things Stack) publishes on
- * ${env}.mapexos.lorawan.data.> — the same convention the broker plugin
+ * ${env}.mapexos.lorawan.data — the same convention the broker plugin
  * follows for MQTT. Unlike MQTT, the device sends raw bytes (FRMPayload),
  * not JSON: we hand the decode step the bytes + frame metadata so the
  * device codec (decodeUplink-style) turns them into structured data.

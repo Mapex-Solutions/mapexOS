@@ -198,7 +198,7 @@ export class ScriptEngineService implements ScriptEngineServicePort {
 	 * Each event is processed by one worker thread independently.
 	 * Returns results in the same order as the input array.
 	 *
-	 * Used by: NATS consumers (JsExecuteConsumer, MqttDataConsumer) for batch processing.
+	 * Used by: NATS consumers (HttpDataConsumer, MqttDataConsumer) for batch processing.
 	 *
 	 * @param events - Array of worker inputs (scripts + payload per event)
 	 * @returns Array of worker outputs in the same order as input

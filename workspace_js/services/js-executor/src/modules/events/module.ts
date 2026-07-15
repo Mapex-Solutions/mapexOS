@@ -16,7 +16,7 @@ import { ASSET_CACHE_PORT_TOKEN, TEMPLATE_CACHE_PORT_TOKEN } from '@modules/scri
 import type { JsExecutorMetrics } from '@/bootstrap/metrics';
 
 import {
-	initJsExecuteConsumer,
+	initHttpDataConsumer,
 	initMqttDataConsumer,
 	initLorawanDataConsumer,
 	initAssetInvalidateConsumer,
@@ -33,7 +33,7 @@ const FANOUT_SUBJECTS = [subject('fanout', '') + '>'];
  * InitListeners starts NATS event listeners for the events module.
  *
  * Consumer Types:
- * - Queue consumers (JsExecute, MqttData, LorawanData): Load-balanced, full lifecycle
+ * - Queue consumers (HttpData, MqttData, LorawanData): Load-balanced, full lifecycle
  * - FANOUT consumers (AssetInvalidate, TemplateInvalidate): Broadcast, cache invalidation
  */
 export async function initListeners(): Promise<void> {
@@ -51,7 +51,7 @@ export async function initListeners(): Promise<void> {
 	logger.info({ tuning }, '[MODULE:EVENTS] Auto-tuning resolved from CPU_LIMIT');
 
 	// Queue consumers (validate + delegate to service)
-	void initJsExecuteConsumer({
+	void initHttpDataConsumer({
 		natsBus, logger, scriptService, config,
 		batchSize: metrics.batchSize,
 		eventsProcessed: metrics.eventsProcessed,

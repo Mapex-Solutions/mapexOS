@@ -33,7 +33,7 @@ describe('script.handler_lorawan — handleLorawanBatch', () => {
 		const json = typeof body === 'string' ? body : JSON.stringify(body);
 		return {
 			data: new TextEncoder().encode(json),
-			subject: opts.subject ?? 'dev.mapexos.lorawan.data.org-1.dev-eui-1',
+			subject: opts.subject ?? 'dev.mapexos.lorawan.data',
 			streamSequence: opts.streamSequence ?? 42,
 		} as unknown as Message;
 	};

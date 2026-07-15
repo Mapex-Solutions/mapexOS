@@ -9,7 +9,7 @@ import (
 // interfaces actually used by EventService:
 //
 //   - Publisher.Publish      — JetStream-acknowledged publishes
-//     (e.g., events.raw audit trail, processor.js.execute pipeline).
+//     (e.g., events.raw audit trail, http.data pipeline).
 //   - CorePublisher.PublishCore — fire-and-forget core publishes
 //     (e.g., asset.heartbeat.{orgId} per-batch).
 //

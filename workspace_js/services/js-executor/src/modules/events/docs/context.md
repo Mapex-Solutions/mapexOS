@@ -28,8 +28,9 @@ This module does not publish. Downstream publishes (`mapexos.route.execute`, `ma
 ## Consumed Events (inbound)
 | Event | Subject | Payload (ref) | Publishers |
 | --- | --- | --- | --- |
-| JS execute (HTTP datasource) | `mapexos.processor.js.execute` (stream `PROCESSOR-JS-EXECUTE`, durable `processor-js-execute`) | `ScriptProcessorMessage` JSON — `scripts/application/types/message.types.ts` | http_gateway service |
-| MQTT telemetry | `mapexos.mqtt.data.>` (stream `MQTT-DATA`, durable `mqtt-data-processor`) | Raw device JSON; orgId + assetUUID parsed from subject `mapexos.mqtt.data.{orgId}.{assetUUID}.>` | NATS MQTT leaf → core republish |
+| HTTP telemetry | `mapexos.http.data` (stream `{ENV}-MAPEXOS-JSEXECUTOR-HTTPDATA`, durable `jsexecutor-httpdata`) | `ScriptProcessorMessage` JSON — `scripts/application/types/message.types.ts`; orgId + assetUUID in payload | http_gateway service |
+| MQTT telemetry | `mapexos.mqtt.data` (stream `{ENV}-MAPEXOS-JSEXECUTOR-MQTTDATA`, durable `jsexecutor-mqttdata`) | Raw device JSON (IngressMessage); orgId + assetUUID in payload | mapexMQTTBroker |
+| LoRaWAN telemetry | `mapexos.lorawan.data` (stream `{ENV}-MAPEXOS-JSEXECUTOR-LORAWANDATA`, durable `jsexecutor-lorawandata`) | LorawanUplinkEnvelope; orgId + assetUUID in payload | mapexLNS |
 | Asset cache invalidate | `mapexos.fanout.asset.invalidate` (stream `FANOUT`, ephemeral) | `{ orgId, assetUUID }` | assets service |
 | Template cache invalidate | `mapexos.fanout.template.invalidate` (stream `FANOUT`, ephemeral) | `{ orgId, templateId }` | assets service (templates) |
 
@@ -56,14 +57,15 @@ None. `module.ts::initListeners()` is invoked by the bootstrap phase 4; from the
   - otherwise → `nack`, status=`failure`.
 - The service returns results BEFORE acks happen, which means publishes in `NatsEventPublisherAdapter` must have flushed — ACK safety depends on that flush ordering.
 - FANOUT consumers must be idempotent and best-effort: invalid payloads (missing orgId / assetUUID / templateId) are logged and dropped silently; parsing errors are caught and never crash the handler.
-- MQTT subject MUST match `mapexos.mqtt.data.{orgId}.{assetUUID}.*` — otherwise parse fails upstream and the HTTP/MQTT batch handler flags the message as permanent.
+- Telemetry subjects are STATIC (`mapexos.{proto}.data`); device identity (orgId, assetUUID) is read from the message payload, never parsed from the subject.
 - FANOUT stream is created by this module if absent; other services may also declare it (idempotent).
 - Durable names and stream names are constants — changing them is a breaking migration, not a config tweak.
 
 ## Known Cross-Context Interactions
 - Scripts module: consumes its `ScriptServicePort`, `AssetCachePort`, `TemplateCachePort`. This module lives in `interfaces/` of js-executor and depends on `application/` of scripts — that's the DDD inbound-adapter direction.
 - Engine module: indirectly, via `ScriptService` → `ScriptEngineServicePort`. OOM propagation round-trip is: engine worker → `OOMError` → `ScriptService` batch handler → `BatchMessageResult.isOOM` → this module's consumer → `msg.nack`.
-- http_gateway service: upstream publisher of `mapexos.processor.js.execute`.
-- NATS MQTT leaf (external): upstream source of `mapexos.mqtt.data.>` (republished from `dt/{orgId}/{assetUUID}/telemetry`).
+- http_gateway service: upstream publisher of `mapexos.http.data`.
+- mapexMQTTBroker: upstream publisher of `mapexos.mqtt.data` (republished from the device topic).
+- mapexLNS: upstream publisher of `mapexos.lorawan.data`.
 - assets service: upstream publisher of both FANOUT invalidation subjects after mutating its read models in MinIO (L2).
 - Router service: indirect downstream — receives `mapexos.route.execute` published by the scripts module after this module's consumers complete.

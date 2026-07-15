@@ -6,7 +6,7 @@ The HTTP Gateway is the HTTP entrypoint of MapexOS. It receives external webhook
 ## Responsibilities
 - Ingest events via `POST /api/v1/events`
 - Authenticate each event using the Data Source configuration (JWT, OAuth2, API Key, IP whitelist, or none)
-- Publish events to NATS JetStream (`processor.js.execute`)
+- Publish events to NATS JetStream (`http.data`)
 - Publish auth failure security events to NATS (`events.raw`) for monitoring
 - Manage Data Sources via REST API (create/read/update/delete)
 - Cache Data Source lookups in Redis (cache-aside pattern)
@@ -21,7 +21,7 @@ The HTTP Gateway is the HTTP entrypoint of MapexOS. It receives external webhook
 2. Gateway resolves the Data Source (cache-aside in Redis)
 3. Gateway validates auth based on the Data Source auth type
    - On auth failure: publishes a security event to `events.raw` (fire-and-forget) and returns 401
-4. Gateway publishes event to NATS JetStream (`processor.js.execute`)
+4. Gateway publishes event to NATS JetStream (`http.data`)
 
 ## Docs Map
 - [Architecture](architecture/index.md)

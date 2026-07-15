@@ -16,7 +16,7 @@
 | MongoDB | yes | Data Source persistence |
 | Redis (app) | yes | Data Source cache (cache-aside) |
 | Redis (shared) | yes | Permission and coverage cache |
-| NATS | yes | Event publishing (`processor.js.execute`, `events.raw`) |
+| NATS | yes | Event publishing (`http.data`, `events.raw`) |
 | MapexOS API | yes | Permission and coverage resolution (`MAPEXOS_URL`) |
 
 ## Benchmarks

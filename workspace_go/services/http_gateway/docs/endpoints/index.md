@@ -34,5 +34,5 @@
 ## NATS (outbound)
 | Subject | Direction | Description |
 |---|---|---|
-| `processor.js.execute` | publish | Forward authenticated event to JS-Executor pipeline |
+| `http.data` | publish | Forward authenticated event to JS-Executor pipeline |
 | `events.raw` | publish (fire-and-forget) | Auth failure security event with `success=false` |

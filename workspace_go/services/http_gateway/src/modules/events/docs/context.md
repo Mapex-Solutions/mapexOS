@@ -22,7 +22,7 @@ Ingestion edge for HTTP-delivered IoT events. Accepts webhook/API payloads on `P
 
 | Event | Subject | Payload (ref) | Consumers |
 |-------|---------|----------------|-----------|
-| ProcessorExecute | `mapexos.processor.js.execute` | `contracts/services/http_gateway/events.ProcessorExecutePayload` | js-executor |
+| HTTP telemetry | `mapexos.http.data` | `contracts/services/http_gateway/events.HttpDataPayload` | js-executor |
 | RawEvent (auth failure) | `mapexos.events.raw` | `contracts/services/events/events.RawEventDTO` with `Success=false` | events service (ClickHouse `events_raw`) |
 | AssetHeartbeatV1 (TKT-2026-0034) | `mapexos.asset.heartbeat.{orgId}` (constant `hmContract.SubjectAssetHeartbeat` + `.{orgId}`) | `{orgId, assetUUID, pathKey, ts}` (matches js-executor's implicit publish shape so the consumer is origin-agnostic) | assets/healthmonitor consumer |
 
@@ -42,13 +42,13 @@ No NATS consumers. All input arrives over HTTP.
 
 ## Driven Ports (what this module requires)
 
-- `NatsBus` (`packages/infrastructure/nats`) — publishes to `mapexos.processor.js.execute` and `mapexos.events.raw`.
+- `NatsBus` (`packages/infrastructure/nats`) — publishes to `mapexos.http.data` and `mapexos.events.raw`.
 - `dsPorts.DataSourceServicePort` (cross-module, in-process) — loads the DataSource config in the auth middleware.
 - `bootstrap.HttpGatewayMetrics` — Prometheus counters/histograms for `EventsProcessed`, `EventsPublished`, `EventAuthTotal/Duration/Failures`, `EventPayloadSize`, `EventProcessingDuration`, plus `HeartbeatsTotal{status}` and `HeartbeatDuration` (TKT-2026-0034).
 
 ## Invariants and Business Rules
 
-- Every successful request publishes exactly once to `mapexos.processor.js.execute`; publish failure surfaces as `INTERNAL_SERVER_ERROR` and increments error counters — no retries in this layer.
+- Every successful request publishes exactly once to `mapexos.http.data`; publish failure surfaces as `INTERNAL_SERVER_ERROR` and increments error counters — no retries in this layer.
 - Auth failures MUST fire-and-forget a `RawEventDTO{Success:false}` to `mapexos.events.raw` (goroutine, best-effort) before returning `401`.
 - Payload sent to js-executor is minimized to `orgId` + `assetBind`; `name`, `description`, `pathKey` are deliberately omitted because js-executor reads them from the Asset cache (source of truth).
 - `eventTrackerId` is a fresh UUID v4 per request and is the only cross-pipeline correlation id generated here.
@@ -60,6 +60,6 @@ No NATS consumers. All input arrives over HTTP.
 ## Known Cross-Context Interactions
 
 - Depends on `datasources` (same service) for every request to resolve auth config and asset-bind.
-- Feeds the `js-executor` (workspace_js) pipeline on `mapexos.processor.js.execute`. The Go-side contract is declared in `packages/contracts/services/http_gateway/events` (`ProcessorExecutePayload`, `SubjectProcessorJSExecute`). TS-side reciprocity in `workspace_js/packages/schemas/src/services/http_gateway/events/` is pending (tracked as follow-up).
+- Feeds the `js-executor` (workspace_js) pipeline on `mapexos.http.data`. The Go-side contract is declared in `packages/contracts/services/http_gateway/events` (`HttpDataPayload`, `SubjectHTTPData`). TS-side reciprocity in `workspace_js/packages/schemas/src/services/http_gateway/events/` is pending (tracked as follow-up).
 - Feeds the `events` service `events_raw` ClickHouse storage via `mapexos.events.raw` using `contracts/services/events/events.RawEventDTO` (authoritative cross-service contract).
 - Metrics are scraped by the platform Prometheus stack; label cardinality is bounded by `authType`, `status`, and fixed subject strings.
