@@ -26,6 +26,11 @@ func ConnectUDPItems(gwLabel string) []saga.Item {
 		assetSteps.CreateAssetWithLabel(assetPayloads.SagaLorawanGatewayFor(gwLabel), gwLabel),
 		assetAsserts.AssertAuthProjectionGatewayByLabel(gwLabel, assetPayloads.SagaGatewayFrequencyPlan),
 		assetSteps.ConnectLorawanGatewayUDP(gwLabel),
+		// Gate on the gateway going online before any sensor rides it. The Semtech-UDP
+		// frontend drops packets that arrive while the gateway connection is still being
+		// registered (no retry, no queue), so an uplink fired in that window is lost. The
+		// gateway flips online only after the LNS has registered the connection.
+		assetAsserts.AssertHealthStatusByLabel(gwLabel, "online"),
 	}
 }
 
@@ -37,6 +42,10 @@ func ConnectBasicStationItems(gwLabel string) []saga.Item {
 		assetSteps.CreateAssetWithLabel(assetPayloads.SagaLorawanGatewayKeyFor(gwLabel), gwLabel),
 		assetAsserts.AssertAuthProjectionGatewayByLabel(gwLabel, assetPayloads.SagaGatewayFrequencyPlan),
 		assetSteps.ConnectLorawanGatewayBasicStation(gwLabel),
+		// Same readiness gate as the UDP path: wait until the LNS has registered the
+		// gateway (online) before a sensor rides it, so the first uplink is not raced
+		// against connection setup.
+		assetAsserts.AssertHealthStatusByLabel(gwLabel, "online"),
 	}
 }
 
