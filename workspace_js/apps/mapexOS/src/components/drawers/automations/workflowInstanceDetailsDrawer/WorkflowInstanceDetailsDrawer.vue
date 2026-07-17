@@ -13,6 +13,7 @@ import { ref, watch } from 'vue';
 /** COMPONENTS */
 import { GenericDrawer } from '@components/drawers/common/genericDrawer';
 import { DetailChip } from '@components/chips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useWorkflowInstanceListPageTranslations } from '@composables/i18n';
@@ -116,12 +117,9 @@ function getExternalInputsList(): Array<{ key: string; value: string }> {
 
     <!-- Error -->
     <div v-else-if="error" class="q-pa-lg">
-      <q-banner rounded class="bg-negative text-white">
-        <template #avatar>
-          <q-icon name="error" color="white" />
-        </template>
+      <InfoBanner variant="danger">
         {{ t.drawer.error.value }}
-      </q-banner>
+      </InfoBanner>
     </div>
 
     <!-- Content -->

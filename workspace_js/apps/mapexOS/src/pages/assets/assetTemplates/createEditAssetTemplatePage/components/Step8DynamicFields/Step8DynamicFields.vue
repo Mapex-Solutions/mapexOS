@@ -14,6 +14,7 @@ import { computed, ref } from 'vue';
 /** COMPONENTS */
 import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useAddAssetTemplateTranslations } from '@src/composables/i18n/pages/assets/addAssetTemplate/useAddAssetTemplateTranslations';
@@ -362,17 +363,9 @@ function commitCustomFieldName(): void {
 		</div>
 
 		<!-- Info Banner -->
-		<q-banner rounded class="bg-blue-1 text-primary q-mb-md">
-			<template v-slot:avatar>
-				<q-icon name="info" color="primary" />
-			</template>
-			<div class="text-subtitle2 text-weight-medium q-mb-xs">
-				{{ t.steps.step8.banner.title.value }}
-			</div>
-			<div class="text-body2">
-				{{ t.steps.step8.banner.description.value }}
-			</div>
-		</q-banner>
+		<InfoBanner variant="info" :title="t.steps.step8.banner.title.value" class="q-mb-md">
+			{{ t.steps.step8.banner.description.value }}
+		</InfoBanner>
 
 		<!-- Field Count Progress -->
 		<div class="row items-center q-mb-md">
@@ -396,43 +389,19 @@ function commitCustomFieldName(): void {
 		</div>
 
 		<!-- Warning: Limit Reached -->
-		<q-banner v-if="isAtLimit" rounded class="bg-red-1 text-negative q-mb-md">
-			<template v-slot:avatar>
-				<q-icon name="error" color="negative" />
-			</template>
-			<div class="text-subtitle2 text-weight-medium q-mb-xs">
-				{{ t.steps.step8.limitReached.title.value }}
-			</div>
-			<div class="text-body2">
-				{{ t.steps.step8.limitReached.description(DYNAMIC_FIELDS_MAX) }}
-			</div>
-		</q-banner>
+		<InfoBanner v-if="isAtLimit" variant="danger" :title="t.steps.step8.limitReached.title.value" class="q-mb-md">
+			{{ t.steps.step8.limitReached.description(DYNAMIC_FIELDS_MAX) }}
+		</InfoBanner>
 
 		<!-- Warning: Near Limit -->
-		<q-banner v-else-if="isNearLimit" rounded class="bg-orange-1 text-warning q-mb-md">
-			<template v-slot:avatar>
-				<q-icon name="warning" color="warning" />
-			</template>
-			<div class="text-subtitle2 text-weight-medium q-mb-xs">
-				{{ t.steps.step8.nearLimit.title.value }}
-			</div>
-			<div class="text-body2">
-				{{ t.steps.step8.nearLimit.description(fieldCount, DYNAMIC_FIELDS_MAX, remainingFields) }}
-			</div>
-		</q-banner>
+		<InfoBanner v-else-if="isNearLimit" variant="warning" :title="t.steps.step8.nearLimit.title.value" class="q-mb-md">
+			{{ t.steps.step8.nearLimit.description(fieldCount, DYNAMIC_FIELDS_MAX, remainingFields) }}
+		</InfoBanner>
 
 		<!-- Warning if no available fields -->
-		<q-banner v-else-if="!hasAvailableFields" rounded class="bg-orange-1 text-warning q-mb-md">
-			<template v-slot:avatar>
-				<q-icon name="warning" color="warning" />
-			</template>
-			<div class="text-subtitle2 text-weight-medium q-mb-xs">
-				{{ t.steps.step8.noFieldsWarning.title.value }}
-			</div>
-			<div class="text-body2">
-				{{ t.steps.step8.noFieldsWarning.description.value }}
-			</div>
-		</q-banner>
+		<InfoBanner v-else-if="!hasAvailableFields" variant="info" :title="t.steps.step8.noFieldsWarning.title.value" class="q-mb-md">
+			{{ t.steps.step8.noFieldsWarning.description.value }}
+		</InfoBanner>
 
 		<!-- Add New Field Form -->
 		<q-card flat bordered class="q-mb-md">

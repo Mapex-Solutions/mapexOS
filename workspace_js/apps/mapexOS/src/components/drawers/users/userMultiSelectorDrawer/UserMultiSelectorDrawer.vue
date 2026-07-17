@@ -19,6 +19,7 @@ import { apis } from '@services/mapex';
 
 /** COMPONENTS */
 import { SelectableChip } from '@components/chips';
+import { InfoBanner } from '@components/banners';
 
 /** UTILS */
 import { handleApiError } from '@utils/error';
@@ -350,14 +351,11 @@ onBeforeUnmount(() => {
 
       <!-- Info Banner -->
       <q-card-section class="q-pt-none q-pb-md">
-        <q-banner dense class="bg-teal-1 text-teal-9 rounded-borders">
-          <template #avatar>
-            <q-icon name="info" color="teal-6" size="sm" />
-          </template>
+        <InfoBanner variant="info" dense>
           <div class="text-caption">
             Select users to add as members. Use the toggle to switch between searching by name or email.
           </div>
-        </q-banner>
+        </InfoBanner>
       </q-card-section>
 
       <!-- Selected Users Preview -->

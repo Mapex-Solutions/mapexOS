@@ -29,14 +29,11 @@
     <!-- API Key Authentication -->
     <template v-if="localData.authType === 'apiKey'">
       <div class="col-12">
-        <q-banner dense class="bg-blue-1 text-blue-9 rounded-borders q-mb-md">
-          <template #avatar>
-            <q-icon name="key" color="blue-6" />
-          </template>
+        <InfoBanner variant="info" dense class="q-mb-md">
           <div class="text-caption">
             {{ t.authentication.apiKey.banner.value }}
           </div>
-        </q-banner>
+        </InfoBanner>
       </div>
 
       <div class="col-12 col-sm-6">
@@ -95,14 +92,11 @@
     <!-- JWT Authentication -->
     <template v-if="localData.authType === 'jwt'">
       <div class="col-12">
-        <q-banner dense class="bg-purple-1 text-purple-9 rounded-borders q-mb-md">
-          <template #avatar>
-            <q-icon name="badge" color="purple-6" />
-          </template>
+        <InfoBanner variant="info" dense class="q-mb-md">
           <div class="text-caption">
             {{ t.authentication.jwt.banner.value }}
           </div>
-        </q-banner>
+        </InfoBanner>
       </div>
 
       <div class="col-12 col-sm-6">
@@ -162,14 +156,11 @@
     <!-- IP Whitelist Authentication -->
     <template v-if="localData.authType === 'ip_whitelist'">
       <div class="col-12">
-        <q-banner dense class="bg-green-1 text-green-9 rounded-borders q-mb-md">
-          <template #avatar>
-            <q-icon name="public" color="green-6" />
-          </template>
+        <InfoBanner variant="success" dense class="q-mb-md">
           <div class="text-caption">
             {{ t.authentication.ipWhitelist.banner.value }}
           </div>
-        </q-banner>
+        </InfoBanner>
       </div>
 
       <!-- IP Address and CIDR Mask Input -->
@@ -260,28 +251,22 @@
 
       <!-- Empty State -->
       <div v-else class="col-12">
-        <q-banner dense class="bg-grey-2 text-grey-8 rounded-borders">
-          <template #avatar>
-            <q-icon name="info" color="grey-6" />
-          </template>
+        <InfoBanner variant="neutral" dense>
           <div class="text-caption">
             {{ t.authentication.ipWhitelist.emptyMessage.value }}
           </div>
-        </q-banner>
+        </InfoBanner>
       </div>
     </template>
 
     <!-- OAuth2 Authentication -->
     <template v-if="localData.authType === 'oauth2'">
       <div class="col-12">
-        <q-banner dense class="bg-orange-1 text-orange-9 rounded-borders q-mb-md">
-          <template #avatar>
-            <q-icon name="verified_user" color="orange-6" />
-          </template>
+        <InfoBanner variant="warning" dense class="q-mb-md">
           <div class="text-caption">
             {{ t.authentication.oauth2.banner.value }}
           </div>
-        </q-banner>
+        </InfoBanner>
       </div>
 
       <div class="col-12">
@@ -309,14 +294,11 @@
     <!-- None Authentication -->
     <template v-if="localData.authType === 'none'">
       <div class="col-12">
-        <q-banner dense class="bg-red-1 text-red-9 rounded-borders">
-          <template #avatar>
-            <q-icon name="warning" color="red-6" />
-          </template>
+        <InfoBanner variant="danger" dense>
           <div class="text-caption">
             {{ t.authentication.none.banner.value }}
           </div>
-        </q-banner>
+        </InfoBanner>
       </div>
     </template>
   </div>
@@ -346,6 +328,7 @@ import { notifySuccess, notifyInfo } from '@utils/alert/notify';
 
 /** COMPONENTS */
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** LOCAL IMPORTS */
 import { AUTH_TYPE_OPTIONS } from '../../constants/httpDataSourceConstants';

@@ -27,9 +27,9 @@
 			</q-card-section>
 		</q-card>
 
-		<q-banner v-if="error" class="bg-red-2 text-red-9 q-mt-md" rounded>
+		<InfoBanner v-if="error" variant="danger" class="q-mt-md">
 			{{ error }}
-		</q-banner>
+		</InfoBanner>
 	</q-page>
 </template>
 

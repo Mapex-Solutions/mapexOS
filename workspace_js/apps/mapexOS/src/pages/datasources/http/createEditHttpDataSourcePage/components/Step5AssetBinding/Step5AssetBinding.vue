@@ -31,14 +31,11 @@
     <!-- ========================================== -->
     <template v-if="localData.bindingMode === 'fixedAssetId'">
       <div class="col-12">
-        <q-banner dense class="bg-blue-1 text-blue-9 rounded-borders q-mb-md">
-          <template #avatar>
-            <q-icon name="info" color="blue-6" />
-          </template>
+        <InfoBanner variant="info" dense class="q-mb-md">
           <div class="text-caption">
             {{ t.assetBinding.fixedAsset.banner.value }}
           </div>
-        </q-banner>
+        </InfoBanner>
 
         <AssetSelector
           v-model="localData.directAssetId"
@@ -55,14 +52,11 @@
     <!-- ========================================== -->
     <template v-if="localData.bindingMode === 'uuidField'">
       <div class="col-12">
-        <q-banner dense class="bg-purple-1 text-purple-9 rounded-borders q-mb-md">
-          <template #avatar>
-            <q-icon name="info" color="purple-6" />
-          </template>
+        <InfoBanner variant="info" dense class="q-mb-md">
           <div class="text-caption">
             {{ t.assetBinding.uuidField.banner.value }}
           </div>
-        </q-banner>
+        </InfoBanner>
       </div>
 
       <!-- Path entries -->
@@ -164,6 +158,7 @@ import { reactive, watch, computed, ref } from 'vue';
 import AssetSelector from '@components/selectors/assetSelector/AssetSelector.vue';
 import { AssetTemplateSelectorDrawer } from '@components/drawers';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useHttpDataSourceCreateEditTranslations } from '@composables/i18n/pages/datasources/http';

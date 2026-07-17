@@ -10,15 +10,11 @@
       </div>
     </div>
 
-    <q-banner rounded class="bg-blue-1 text-primary q-mb-md">
-      <template #avatar>
-        <q-icon name="info" color="primary" />
-      </template>
-      <div class="text-subtitle2 text-weight-medium q-mb-xs">{{ t.steps.step3.banner.title.value }}</div>
+    <InfoBanner variant="info" :title="t.steps.step3.banner.title.value" class="q-mb-md">
       <div class="text-body2">
         {{ t.steps.step3.banner.description.value }}
       </div>
-    </q-banner>
+    </InfoBanner>
 
     <!-- Selected Route Groups Display -->
     <div class="q-mb-sm">
@@ -119,6 +115,7 @@ import { SelectableChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
 import { useAddAssetTranslations } from '@src/composables/i18n/pages/assets/addAsset/useAddAssetTranslations';
 import { RouteGroupSelectorDrawer } from '@components/drawers';
+import { InfoBanner } from '@components/banners';
 
 const props = defineProps<Step3RouteGroupsProps>();
 const emit = defineEmits<Step3RouteGroupsEmits>();

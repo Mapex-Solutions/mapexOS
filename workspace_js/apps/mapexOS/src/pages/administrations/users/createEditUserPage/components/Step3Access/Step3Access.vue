@@ -80,14 +80,11 @@
       <template v-if="localData.accessType === 'group'">
         <!-- No Organization Context Warning -->
         <div v-if="!hasOrgContext" class="col-12">
-          <q-banner rounded class="bg-negative text-white">
-            <template #avatar>
-              <q-icon name="error" color="white" />
-            </template>
+          <InfoBanner variant="danger">
             <div class="text-body2">
               {{ t.messages.noOrgContext.value }}
             </div>
-          </q-banner>
+          </InfoBanner>
         </div>
 
         <!-- Organization (from context - fixed) -->
@@ -302,14 +299,11 @@
 
           <!-- Info Banner for Existing Group -->
           <div class="col-12">
-            <q-banner rounded class="bg-blue-1 text-blue-9">
-              <template #avatar>
-                <q-icon name="info" color="blue-6" />
-              </template>
+            <InfoBanner variant="info">
               <div class="text-body2">
                 {{ t.hints.groupInheritance.value }}
               </div>
-            </q-banner>
+            </InfoBanner>
           </div>
         </template>
 
@@ -410,14 +404,11 @@
 
           <!-- Info Banner for New Group -->
           <div class="col-12">
-            <q-banner rounded class="bg-amber-1 text-amber-9">
-              <template #avatar>
-                <q-icon name="info" color="amber-6" />
-              </template>
+            <InfoBanner variant="warning">
               <div class="text-body2">
                 A new group will be created with the specified roles. The user will be automatically added to this group.
               </div>
-            </q-banner>
+            </InfoBanner>
           </div>
         </template>
       </template>
@@ -426,26 +417,20 @@
       <template v-if="localData.accessType === 'direct'">
         <!-- Warning Banner -->
         <div class="col-12">
-          <q-banner rounded class="bg-warning text-white">
-            <template #avatar>
-              <q-icon name="warning" color="white" />
-            </template>
+          <InfoBanner variant="warning">
             <div class="text-body2">
               {{ t.hints.directWarning.value }}
             </div>
-          </q-banner>
+          </InfoBanner>
         </div>
 
         <!-- No Organization Context Warning -->
         <div v-if="!hasOrgContext" class="col-12">
-          <q-banner rounded class="bg-negative text-white">
-            <template #avatar>
-              <q-icon name="error" color="white" />
-            </template>
+          <InfoBanner variant="danger">
             <div class="text-body2">
               {{ t.messages.noOrgContext?.value || 'No organization selected. Please select an organization from the sidebar first.' }}
             </div>
-          </q-banner>
+          </InfoBanner>
         </div>
 
         <!-- Organization (from context - fixed) -->
@@ -838,6 +823,7 @@ import { RoleMultiSelectorDrawer } from '@components/drawers/roles';
 import { GroupSelectorDrawer } from '@components/drawers/groups';
 import { DetailChip } from '@components/chips/DetailChip';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** STORES */
 import { useOrganizationStore } from '@stores/organization';

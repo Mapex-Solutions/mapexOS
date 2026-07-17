@@ -126,14 +126,11 @@ function selectType(type: TriggerTypeOption): void {
     </div>
 
     <!-- Info box -->
-    <q-banner rounded class="bg-blue-1 text-blue-9 q-mt-lg">
-      <template v-slot:avatar>
-        <q-icon name="info" color="blue-7" />
-      </template>
+    <InfoBanner variant="info" class="q-mt-lg">
       <div class="text-body2">
         <strong>{{ t.steps.step2.note.prefix.value }}:</strong> {{ t.steps.step2.note.text.value }}
       </div>
-    </q-banner>
+    </InfoBanner>
   </div>
 </template>
 

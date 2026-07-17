@@ -14,6 +14,7 @@ import { computed } from 'vue';
 import { FormReview } from '@components/forms';
 import { AvailableFieldsList } from '@components/lists/availableFieldsList';
 import { DetailChip } from '@components/chips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useCommonActions } from '@composables/i18n';
@@ -310,13 +311,10 @@ function handleEditSection(stepNumber: number): void {
 		</q-card>
 
 		<!-- Success Banner -->
-		<q-banner rounded class="bg-green-1 text-green-9 q-mt-lg">
-			<template #avatar>
-				<q-icon name="check_circle" color="green-7" />
-			</template>
+		<InfoBanner variant="success" class="q-mt-lg">
 			<div class="text-body2">
 				<strong>{{ t.steps.step9.completeBanner.value }}</strong>
 			</div>
-		</q-banner>
+		</InfoBanner>
 	</div>
 </template>

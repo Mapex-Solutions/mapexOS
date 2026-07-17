@@ -96,17 +96,14 @@ watch(() => props.modelValue, (newValue) => {
     </div>
 
     <!-- Result-assignment convention: visible across every script step -->
-    <q-banner dense rounded class="bg-amber-1 text-amber-10 q-mb-sm script-convention-banner">
-      <template v-slot:avatar>
-        <q-icon name="rule" color="amber-9" size="sm" />
-      </template>
+    <InfoBanner variant="warning" dense icon="rule" class="q-mb-sm script-convention-banner">
       <div class="text-body2">
         <span class="text-weight-medium">{{ t.scriptConvention.title.value }}</span>
         — {{ t.scriptConvention.textPrefix.value }}
         <code>const result = …;</code>
         {{ t.scriptConvention.textSuffix.value }}
       </div>
-    </q-banner>
+    </InfoBanner>
 
     <q-card flat bordered class="code-editor-card">
       <div

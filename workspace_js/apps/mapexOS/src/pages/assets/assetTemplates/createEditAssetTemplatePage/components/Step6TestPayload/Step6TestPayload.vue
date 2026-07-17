@@ -8,6 +8,7 @@ defineOptions({
 
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 import { useAddAssetTemplateTranslations } from '@src/composables/i18n/pages/assets/addAssetTemplate/useAddAssetTemplateTranslations';
 import { createMonacoEditorManager } from '../../handlers';
 import type { MonacoEditorManager } from '../../handlers';
@@ -122,14 +123,11 @@ watch(() => props.modelValue.scriptTest, (newValue) => {
     </div>
 
     <div class="q-mt-md">
-      <q-banner dense rounded class="bg-blue-1 text-primary">
-        <template v-slot:avatar>
-          <q-icon name="info" color="primary" size="sm" />
-        </template>
+      <InfoBanner variant="info" dense>
         <div class="text-body2">
           {{ t.steps.step6.banner.info.value }}
         </div>
-      </q-banner>
+      </InfoBanner>
     </div>
   </div>
 </template>

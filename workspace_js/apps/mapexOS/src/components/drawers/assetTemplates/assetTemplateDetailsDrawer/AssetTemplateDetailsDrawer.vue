@@ -40,12 +40,9 @@
 
         <!-- Error State -->
         <div v-else-if="error" class="q-pa-lg">
-          <q-banner rounded class="bg-negative text-white">
-            <template #avatar>
-              <q-icon name="error" color="white" />
-            </template>
+          <InfoBanner variant="danger">
             {{ t.drawer.error.value }}
-          </q-banner>
+          </InfoBanner>
         </div>
 
         <!-- Template Data -->
@@ -53,12 +50,9 @@
 
           <!-- System Template Warning -->
           <div v-if="template.isSystem" class="q-mb-md">
-            <q-banner rounded class="bg-warning text-white">
-              <template #avatar>
-                <q-icon name="lock" color="white" />
-              </template>
+            <InfoBanner variant="warning">
               {{ t.drawer.systemTemplateWarning.value }}
-            </q-banner>
+            </InfoBanner>
           </div>
 
           <!-- Basic Information Section -->
@@ -452,6 +446,7 @@ import { ContentModal } from '@components/dialogs/common';
 import { DynamicFieldsTable, AvailableFieldsList } from '@components/assetTemplates';
 import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useAssetTemplatesTranslations, useCommonErrors } from '@composables/i18n';

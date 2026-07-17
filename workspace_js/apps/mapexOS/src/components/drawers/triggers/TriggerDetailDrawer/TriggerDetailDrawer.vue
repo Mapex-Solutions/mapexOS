@@ -40,12 +40,9 @@
 
         <!-- Error State -->
         <div v-else-if="error" class="q-pa-lg">
-          <q-banner rounded class="bg-negative text-white">
-            <template #avatar>
-              <q-icon name="error" color="white" />
-            </template>
+          <InfoBanner variant="danger">
             Failed to load trigger details
-          </q-banner>
+          </InfoBanner>
         </div>
 
         <!-- Trigger Data -->
@@ -53,12 +50,9 @@
 
           <!-- System Trigger Warning -->
           <div v-if="trigger.isSystem" class="q-mb-md">
-            <q-banner rounded class="bg-warning text-white">
-              <template #avatar>
-                <q-icon name="lock" color="white" />
-              </template>
+            <InfoBanner variant="warning">
               This is a system trigger and cannot be modified
-            </q-banner>
+            </InfoBanner>
           </div>
 
           <!-- Basic Information Section -->
@@ -226,6 +220,7 @@ import { date } from 'quasar';
 /** COMPONENTS */
 import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useCommonErrors } from '@composables/i18n';

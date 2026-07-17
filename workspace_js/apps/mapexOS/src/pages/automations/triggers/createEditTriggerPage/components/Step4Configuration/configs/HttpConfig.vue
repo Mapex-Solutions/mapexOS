@@ -271,9 +271,9 @@ function formatJson(): void {
           </div>
         </div>
 
-        <q-banner v-else rounded class="bg-grey-2 text-grey-7">
+        <InfoBanner v-else variant="neutral">
           <div class="text-body2">{{ translations.step4Configs.http.noHeadersMessage.value }}</div>
-        </q-banner>
+        </InfoBanner>
       </div>
 
       <!-- Body Section -->

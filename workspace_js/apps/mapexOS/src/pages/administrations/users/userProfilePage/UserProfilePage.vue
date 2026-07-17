@@ -20,6 +20,7 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import { StepperVertical } from '@components/steppers';
 import { PageHeader } from '@components/headers';
 import { FormReview } from '@components/forms';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useUserProfileTranslations } from '@composables/i18n';
@@ -308,15 +309,12 @@ onMounted(() => {
     </div>
 
     <!-- Error State -->
-    <q-banner v-else-if="errorMessage" class="bg-negative text-white q-mb-lg rounded-borders">
-      <template #avatar>
-        <q-icon name="error" color="white" />
-      </template>
+    <InfoBanner v-else-if="errorMessage" variant="danger" class="q-mb-lg">
       {{ errorMessage }}
       <template #action>
         <q-btn flat color="white" :label="t.buttons.save.value" @click="fetchUserProfile" />
       </template>
-    </q-banner>
+    </InfoBanner>
 
     <!-- Content -->
     <div v-else class="row q-col-gutter-lg">

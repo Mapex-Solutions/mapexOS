@@ -120,25 +120,19 @@ defineExpose({
       />
 
       <!-- Fallback if no config component -->
-      <q-banner v-else rounded class="bg-orange-1 text-orange-9">
-        <template v-slot:avatar>
-          <q-icon name="warning" color="orange-7" />
-        </template>
+      <InfoBanner v-else variant="warning">
         <div class="text-body2">
           Configuration component for <strong>{{ modelValue.triggerType }}</strong> is not yet implemented.
         </div>
-      </q-banner>
+      </InfoBanner>
 
       <!-- Info box about placeholders -->
-      <q-banner rounded class="bg-blue-1 text-blue-9 q-mt-lg">
-        <template v-slot:avatar>
-          <q-icon name="info" color="blue-7" />
-        </template>
+      <InfoBanner variant="info" class="q-mt-lg">
         <div class="text-body2">
           <strong>{{ t.steps.step4.placeholderSyntaxTitle.value }}</strong>
           {{ t.steps.step4.placeholderSyntaxDescription(PLACEHOLDER_SAMPLE) }}
         </div>
-      </q-banner>
+      </InfoBanner>
     </q-form>
   </div>
 </template>

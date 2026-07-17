@@ -339,14 +339,11 @@ function formatJson(): void {
 
         <!-- Info Banner -->
         <div class="col-12">
-          <q-banner rounded class="bg-blue-1 text-blue-9">
-            <template v-slot:avatar>
-              <q-icon name="info" color="blue-7" />
-            </template>
+          <InfoBanner variant="info">
             <div class="text-body2">
               <strong>{{ translations.step4Configs.rabbitmq.directQueueBannerPrefix.value }}</strong> {{ translations.step4Configs.rabbitmq.directQueueBannerText.value }}
             </div>
-          </q-banner>
+          </InfoBanner>
         </div>
       </template>
 

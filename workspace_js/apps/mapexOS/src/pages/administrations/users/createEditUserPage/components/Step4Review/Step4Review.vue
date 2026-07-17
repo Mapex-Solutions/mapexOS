@@ -189,14 +189,11 @@
                 </div>
               </div>
               <div class="col-12">
-                <q-banner rounded class="bg-blue-1 text-blue-9">
-                  <template #avatar>
-                    <q-icon name="info" color="blue-6" size="sm" />
-                  </template>
+                <InfoBanner variant="info">
                   <div class="text-caption">
                     User will inherit all roles from this group
                   </div>
-                </q-banner>
+                </InfoBanner>
               </div>
             </template>
 
@@ -300,14 +297,11 @@
     </q-card>
 
     <!-- Summary Banner -->
-    <q-banner rounded class="bg-primary-subtle">
-      <template #avatar>
-        <q-icon name="info" color="primary" />
-      </template>
+    <InfoBanner variant="info">
       <div class="text-body2">
         {{ isEditMode ? t.messages.reviewEditSummary.value : t.messages.reviewCreateSummary.value }}
       </div>
-    </q-banner>
+    </InfoBanner>
   </div>
 </template>
 
@@ -321,6 +315,7 @@ import type { Step4ReviewProps } from './interfaces/Step4Review.interface';
 
 /** COMPONENTS */
 import { DetailChip } from '@components/chips/DetailChip';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useAddUserTranslations } from '@composables/i18n';

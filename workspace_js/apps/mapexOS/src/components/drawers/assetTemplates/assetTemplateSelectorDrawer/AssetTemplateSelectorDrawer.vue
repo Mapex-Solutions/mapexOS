@@ -14,6 +14,7 @@ import { ref, computed, watch } from 'vue';
 /** COMPONENTS */
 import { GenericDrawer } from '@components/drawers/common/genericDrawer';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useAssetTemplates } from '@composables/assets/assetTemplates';
@@ -206,14 +207,11 @@ function handleCancel(): void {
     @close="handleCancel"
   >
     <!-- Info Banner -->
-    <q-banner dense class="bg-teal-1 text-teal-9 rounded-borders q-mb-md">
-      <template #avatar>
-        <q-icon name="info" color="teal-6" size="sm" />
-      </template>
+    <InfoBanner variant="info" dense class="q-mb-md">
       <div class="text-caption">
         {{ multiSelect ? 'Select one or more asset templates. Click Confirm when done.' : 'Click on a template to select it.' }}
       </div>
-    </q-banner>
+    </InfoBanner>
 
     <!-- Filters -->
     <div class="q-mb-md">

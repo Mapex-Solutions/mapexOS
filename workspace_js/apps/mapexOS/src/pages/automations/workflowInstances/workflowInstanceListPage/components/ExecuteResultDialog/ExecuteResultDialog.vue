@@ -67,12 +67,9 @@ function navigateToExecutions(): void {
 
       <!-- Error -->
       <q-card-section v-else-if="error">
-        <q-banner class="bg-red-1 text-red-8" rounded>
-          <template #avatar>
-            <q-icon name="error" color="red" />
-          </template>
+        <InfoBanner variant="danger">
           {{ error }}
-        </q-banner>
+        </InfoBanner>
       </q-card-section>
 
       <!-- Result -->
@@ -90,13 +87,10 @@ function navigateToExecutions(): void {
           <code class="text-body2">{{ result.workflowUUID }}</code>
         </div>
 
-        <q-banner v-if="result.errorInfo" class="bg-red-1 text-red-8 q-mb-md" rounded>
-          <template #avatar>
-            <q-icon name="error" color="red" />
-          </template>
+        <InfoBanner v-if="result.errorInfo" variant="danger" class="q-mb-md">
           <div class="text-weight-medium">{{ result.errorInfo.code }}</div>
           <div>{{ result.errorInfo.message }}</div>
-        </q-banner>
+        </InfoBanner>
 
         <q-btn
           flat

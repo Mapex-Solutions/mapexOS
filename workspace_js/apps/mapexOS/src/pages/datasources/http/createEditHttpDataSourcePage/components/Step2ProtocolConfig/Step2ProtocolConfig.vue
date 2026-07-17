@@ -2,14 +2,11 @@
   <div class="row q-col-gutter-md">
     <!-- Info Banner -->
     <div class="col-12">
-      <q-banner dense class="bg-blue-1 text-blue-9 rounded-borders">
-        <template #avatar>
-          <q-icon name="info" color="blue-6" />
-        </template>
+      <InfoBanner variant="info" dense>
         <div class="text-caption">
           <strong>{{ t.protocolConfig.gatewayBannerTitle.value }}</strong> {{ t.protocolConfig.gatewayBannerBody.value }}
         </div>
-      </q-banner>
+      </InfoBanner>
     </div>
 
     <!-- Mode Selection (Only Push) -->

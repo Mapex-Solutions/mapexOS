@@ -37,18 +37,14 @@ const data = computed({
       </div>
     </div>
 
-    <q-banner rounded class="bg-blue-1 text-primary q-mb-md">
-      <template v-slot:avatar>
-        <q-icon name="info" color="primary" />
-      </template>
-      <div class="text-subtitle2 text-weight-medium q-mb-xs">{{ t.steps.step2.banner.title.value }}</div>
+    <InfoBanner variant="info" :title="t.steps.step2.banner.title.value" class="q-mb-md">
       <div class="text-body2">
         {{ t.steps.step2.banner.description.value }}
       </div>
       <div class="text-body2 q-mt-sm">
         <strong>{{ t.steps.step2.banner.examplesTitle.value }}</strong> {{ t.steps.step2.banner.examples.value.join(', ') }}
       </div>
-    </q-banner>
+    </InfoBanner>
 
     <q-input
       v-model="data.assetIdPath"

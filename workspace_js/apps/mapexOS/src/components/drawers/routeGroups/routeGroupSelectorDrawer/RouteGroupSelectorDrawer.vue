@@ -12,6 +12,7 @@ import { ref, computed, watch } from 'vue';
 
 /** COMPONENTS */
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useRouters } from '@composables/routing/routers';
@@ -175,14 +176,11 @@ function handleCancel(): void {
 
       <!-- Info Banner -->
       <q-card-section class="q-pt-none q-pb-md">
-        <q-banner dense class="bg-teal-1 text-teal-9 rounded-borders">
-          <template #avatar>
-            <q-icon name="info" color="teal-6" size="sm" />
-          </template>
+        <InfoBanner variant="info" dense>
           <div class="text-caption">
             {{ multiSelect ? 'Select one or more route groups. Click Confirm when done.' : 'Click on a route group to select it.' }}
           </div>
-        </q-banner>
+        </InfoBanner>
       </q-card-section>
 
       <!-- Filters -->

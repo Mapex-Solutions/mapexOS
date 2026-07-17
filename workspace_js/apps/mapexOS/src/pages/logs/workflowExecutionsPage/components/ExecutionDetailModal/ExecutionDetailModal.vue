@@ -591,9 +591,9 @@ watch(() => props.execution, (exec) => {
             <!-- Error -->
             <div v-if="selectedNodeDetail.error" class="q-mb-md">
               <div class="text-caption text-grey-6 q-mb-xs">{{ t.modal.drawer.error.value }}</div>
-              <q-banner dense rounded class="bg-red-1 text-negative text-caption">
+              <InfoBanner variant="danger" dense>
                 {{ selectedNodeDetail.error }}
-              </q-banner>
+              </InfoBanner>
             </div>
 
             <!-- Outputs -->
@@ -609,10 +609,9 @@ watch(() => props.execution, (exec) => {
     <!-- ═══ Event Tab ═══ -->
     <div v-if="activeTab === 'event'" class="exec-viewer__scroll q-pa-md">
       <!-- Error banner -->
-      <q-banner v-if="errorInfo" rounded class="bg-red-1 text-negative q-mb-md">
-        <template #avatar><q-icon name="error" color="negative" /></template>
+      <InfoBanner v-if="errorInfo" variant="danger" class="q-mb-md">
         <div class="text-weight-medium">{{ errorInfo.code }}: {{ errorInfo.message }}</div>
-      </q-banner>
+      </InfoBanner>
 
       <!-- Event Payload -->
       <q-card v-if="eventPayload" flat bordered class="q-mb-md">

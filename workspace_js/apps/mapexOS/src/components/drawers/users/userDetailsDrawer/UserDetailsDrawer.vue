@@ -40,12 +40,9 @@
 
         <!-- Error State -->
         <div v-else-if="error" class="q-pa-lg">
-          <q-banner rounded class="bg-negative text-white">
-            <template #avatar>
-              <q-icon name="error" color="white" />
-            </template>
+          <InfoBanner variant="danger">
             {{ t.drawer.error.value }}
-          </q-banner>
+          </InfoBanner>
         </div>
 
         <!-- User Data -->
@@ -394,6 +391,7 @@ import { date } from 'quasar';
 /** COMPONENTS */
 import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useUsersTranslations, useCommonErrors } from '@composables/i18n';

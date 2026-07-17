@@ -73,14 +73,11 @@ const guidelines = computed(() => ({
 <template>
   <div>
     <!-- Important Banner -->
-    <q-banner dense rounded class="bg-blue-1 text-primary q-mb-md">
-      <template v-slot:avatar>
-        <q-icon name="info" color="primary" size="sm" />
-      </template>
+    <InfoBanner variant="info" dense class="q-mb-md">
       <div class="text-body2">
         {{ t.steps.step5.banner.important.value }}
       </div>
-    </q-banner>
+    </InfoBanner>
 
     <MonacoScriptEditor
       v-model="scriptConversion"

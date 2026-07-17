@@ -8,6 +8,7 @@ import type { FormReviewProps, FormReviewEmits, ReviewFieldDef } from './interfa
 
 /** COMPONENTS */
 import { DetailChip } from '@components/chips';
+import { InfoBanner } from '@components/banners';
 
 /** VUE IMPORTS */
 
@@ -250,14 +251,11 @@ function formatJson(value: unknown): string {
     </div>
 
     <!-- Success Banner -->
-    <q-banner v-if="showSuccessBanner && sections.length" rounded class="bg-green-1 text-green-9 q-mt-lg">
-      <template #avatar>
-        <q-icon name="check_circle" color="green-7" />
-      </template>
+    <InfoBanner v-if="showSuccessBanner && sections.length" variant="success" class="q-mt-lg">
       <div class="text-body2">
         <strong>{{ successMessage }}</strong>
       </div>
-    </q-banner>
+    </InfoBanner>
   </div>
 </template>
 

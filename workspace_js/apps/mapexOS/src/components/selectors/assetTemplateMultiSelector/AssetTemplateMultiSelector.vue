@@ -12,6 +12,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 
 /** COMPONENTS */
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** SERVICES */
 import { apis } from '@services/mapex';
@@ -341,14 +342,11 @@ onMounted(async () => {
 
         <!-- Info Banner -->
         <q-card-section class="q-pt-none q-pb-md">
-          <q-banner dense class="bg-purple-1 text-purple-9 rounded-borders">
-            <template #avatar>
-              <q-icon name="info" color="purple-6" size="sm" />
-            </template>
+          <InfoBanner variant="info" dense>
             <div class="text-caption">
               Select one or more asset templates. Click Done when finished.
             </div>
-          </q-banner>
+          </InfoBanner>
         </q-card-section>
 
         <!-- Filters -->

@@ -12,6 +12,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 
 /** COMPONENTS */
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 
 /** UTILS */
 import { handleApiError } from '@utils/error';
@@ -374,14 +375,11 @@ onMounted(async () => {
 
         <!-- Info Banner -->
         <q-card-section class="q-pt-none q-pb-md">
-          <q-banner dense class="bg-blue-1 text-blue-9 rounded-borders">
-            <template #avatar>
-              <q-icon name="info" color="blue-6" size="sm" />
-            </template>
+          <InfoBanner variant="info" dense>
             <div class="text-caption">
               Use filters below to narrow down your search. Select an asset to continue.
             </div>
-          </q-banner>
+          </InfoBanner>
         </q-card-section>
 
         <!-- Filters -->

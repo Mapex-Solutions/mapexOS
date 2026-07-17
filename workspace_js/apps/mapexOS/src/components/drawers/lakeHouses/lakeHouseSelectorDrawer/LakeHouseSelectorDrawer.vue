@@ -11,6 +11,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 
 /** COMPONENTS */
 import { DetailChip } from '@components/chips';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useCommonPlaceholders } from '@composables/i18n';
@@ -329,14 +330,11 @@ onBeforeUnmount(() => {
 
       <!-- Info Banner -->
       <q-card-section class="q-pt-none q-pb-md">
-        <q-banner dense class="bg-purple-1 text-purple-9 rounded-borders">
-          <template #avatar>
-            <q-icon name="info" color="purple-6" size="sm" />
-          </template>
+        <InfoBanner variant="info" dense>
           <div class="text-caption">
             Data Lakes are cloud storage destinations for processed event data, supporting AWS S3, Azure Blob, GCP Storage, and MinIO.
           </div>
-        </q-banner>
+        </InfoBanner>
       </q-card-section>
 
       <!-- Filters -->

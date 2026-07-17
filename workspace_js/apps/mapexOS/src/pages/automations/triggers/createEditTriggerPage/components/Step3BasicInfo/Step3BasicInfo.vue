@@ -193,14 +193,11 @@ defineExpose({
     </q-form>
 
     <!-- Info box -->
-    <q-banner rounded class="bg-blue-1 text-blue-9 q-mt-lg">
-      <template v-slot:avatar>
-        <q-icon name="info" color="blue-7" />
-      </template>
+    <InfoBanner variant="info" class="q-mt-lg">
       <div class="text-body2">
         <strong>{{ translations.steps.step3.tip.prefix.value }}</strong> {{ translations.steps.step3.tip.text.value }}
       </div>
-    </q-banner>
+    </InfoBanner>
   </div>
 </template>
 

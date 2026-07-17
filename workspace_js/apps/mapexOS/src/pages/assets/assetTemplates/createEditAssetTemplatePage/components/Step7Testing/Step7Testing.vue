@@ -12,6 +12,7 @@ import { ref, computed, watch } from 'vue';
 
 /** COMPONENTS */
 import { AvailableFieldsList } from '@components/lists/availableFieldsList';
+import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useAddAssetTemplateTranslations } from '@src/composables/i18n/pages/assets/addAssetTemplate/useAddAssetTemplateTranslations';
@@ -98,10 +99,7 @@ function openHelpModal() {
 <template>
   <div>
     <!-- Info Banner -->
-    <q-banner dense rounded class="bg-blue-1 text-primary q-mb-md">
-      <template v-slot:avatar>
-        <q-icon name="info" color="primary" />
-      </template>
+    <InfoBanner variant="info" dense class="q-mb-md">
       <div class="text-body2">
         {{ t.steps.step7.banner.standardizedPayloadInfo.value }}
         <q-btn
@@ -115,7 +113,7 @@ function openHelpModal() {
           @click="openHelpModal"
         />
       </div>
-    </q-banner>
+    </InfoBanner>
 
     <!-- Test Execution Card -->
     <q-card flat bordered class="q-mb-md">

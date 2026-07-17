@@ -213,14 +213,11 @@ onBeforeUnmount(() => {
 
       <!-- Info Banner -->
       <q-card-section class="q-pt-none q-pb-md">
-        <q-banner dense class="bg-teal-1 text-teal-9 rounded-borders">
-          <template #avatar>
-            <q-icon name="info" color="teal-6" size="sm" />
-          </template>
+        <InfoBanner variant="info" dense>
           <div class="text-caption">
             Select the organization where the user will have access. Click on an organization to select it.
           </div>
-        </q-banner>
+        </InfoBanner>
       </q-card-section>
 
       <!-- Filters -->

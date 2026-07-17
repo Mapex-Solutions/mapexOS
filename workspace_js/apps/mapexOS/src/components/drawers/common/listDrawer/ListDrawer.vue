@@ -11,6 +11,7 @@ import { date } from 'quasar';
 
 import { DetailChip } from '@components/chips';
 import { AppTooltip } from '@components/tooltips';
+import { InfoBanner } from '@components/banners';
 import { apis } from '@services/mapex';
 import { useListDrawerTranslations } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
@@ -130,12 +131,9 @@ function close() {
 
         <!-- Error State -->
         <div v-else-if="error" class="q-pa-lg">
-          <q-banner rounded class="bg-negative text-white">
-            <template #avatar>
-              <q-icon name="error" color="white" />
-            </template>
+          <InfoBanner variant="danger">
             {{ t.drawer.error.value }}
-          </q-banner>
+          </InfoBanner>
         </div>
 
         <!-- Data Content -->
