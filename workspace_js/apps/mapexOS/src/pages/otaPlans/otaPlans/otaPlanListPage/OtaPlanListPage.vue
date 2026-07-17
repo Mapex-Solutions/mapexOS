@@ -256,6 +256,7 @@ useOrgChangeRefresh(async () => {
       iconColor="primary"
       :title="t.page.title.value"
       :description="t.page.description.value"
+      :info="t.page.info.value"
       :button="canCreatePlan ? { label: t.page.addButton.value, icon: 'add', to: '/ota_plans/add', color: 'primary' } : undefined"
     />
 

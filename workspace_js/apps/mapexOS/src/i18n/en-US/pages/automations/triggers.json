@@ -1,6 +1,28 @@
 {
   "title": "triggers",
   "description": "manage your global triggers to be used on rules or external triggers",
+  "info": {
+    "title": "What is a Trigger?",
+    "description": "A Trigger is how MapexOS reaches the outside world — the single egress point where an event becomes a real action against an external system: an HTTP webhook, an MQTT publish, an email, or a Slack message. It is the only place the platform performs outbound I/O.",
+    "items": {
+      "egress": {
+        "title": "Single Egress Point",
+        "text": "Every outbound action — HTTP, MQTT, email, chat — leaves through one place, so integrations stay consistent and observable"
+      },
+      "connectors": {
+        "title": "8 Connectors, One Port",
+        "text": "HTTP, MQTT, NATS, email, Slack, Teams and more, each a pluggable executor — a new integration is a new connector, not a new service"
+      },
+      "fired": {
+        "title": "Fired by Rules or Workflows",
+        "text": "The Router fires a trigger when a match rule passes (event → action), or a workflow node hands over a resolved action and waits for the result"
+      },
+      "stored": {
+        "title": "Stored or On-the-Fly",
+        "text": "Reuse a stored, configured trigger by id, or run a fully-resolved action handed over on the wire — the path that powers plugins"
+      }
+    }
+  },
   "listTitle": "triggers list",
   "button": {
     "add": "add trigger"

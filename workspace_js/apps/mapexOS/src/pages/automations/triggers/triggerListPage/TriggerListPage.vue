@@ -473,6 +473,7 @@ onMounted(() => {
         iconColor="primary"
         :title="translations.page.title.value"
         :description="translations.page.description.value"
+        :info="translations.page.info.value"
         :button="canCreateTrigger ? { label: translations.page.button.add.value, icon: 'add', to: '/triggers/add', color: 'primary' } : undefined"
     />
 

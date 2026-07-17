@@ -1,3 +1,5 @@
+import type { PageHeaderInfo } from '@components/headers';
+
 import { computed } from 'vue';
 import { useTS } from '@utils/translation';
 
@@ -23,6 +25,30 @@ export function useOtaPlanListTranslations() {
 		page: {
 			title: computed(() => tsTitle(`${base}.title`)),
 			description: computed(() => ts(`${base}.description`)),
+			info: computed((): PageHeaderInfo => ({
+				title: ts(`${base}.info.title`),
+				description: ts(`${base}.info.description`),
+				items: [
+					{
+						icon: 'sync_alt',
+						color: 'primary',
+						title: ts(`${base}.info.items.migration.title`),
+						text: ts(`${base}.info.items.migration.text`),
+					},
+					{
+						icon: 'shield',
+						color: 'green-6',
+						title: ts(`${base}.info.items.paced.title`),
+						text: ts(`${base}.info.items.paced.text`),
+					},
+					{
+						icon: 'schedule',
+						color: 'indigo-6',
+						title: ts(`${base}.info.items.window.title`),
+						text: ts(`${base}.info.items.window.text`),
+					},
+				],
+			})),
 			addButton: computed(() => ts(`${base}.addButton`)),
 			listTitle: computed(() => ts(`${base}.listTitle`)),
 			itemLabel: computed(() => tsRaw(`${base}.itemLabel`)),

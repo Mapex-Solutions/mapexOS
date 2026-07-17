@@ -1,6 +1,28 @@
 {
   "title": "gatilhos",
   "description": "gerencie seus gatilhos globais para serem usados em regras ou gatilhos externos",
+  "info": {
+    "title": "O que é um Gatilho?",
+    "description": "Um Gatilho é como o MapexOS alcança o mundo externo — o único ponto de saída onde um evento vira uma ação real contra um sistema externo: um webhook HTTP, uma publicação MQTT, um e-mail ou uma mensagem no Slack. É o único lugar onde a plataforma faz I/O de saída.",
+    "items": {
+      "egress": {
+        "title": "Ponto Único de Saída",
+        "text": "Toda ação externa — HTTP, MQTT, e-mail, chat — sai por um só lugar, mantendo as integrações consistentes e observáveis"
+      },
+      "connectors": {
+        "title": "8 Conectores, Uma Porta",
+        "text": "HTTP, MQTT, NATS, e-mail, Slack, Teams e mais, cada um um executor plugável — uma nova integração é um novo conector, não um novo serviço"
+      },
+      "fired": {
+        "title": "Disparado por Regras ou Workflows",
+        "text": "O Router dispara um gatilho quando uma regra de correspondência passa (evento → ação), ou um nó de workflow entrega uma ação resolvida e aguarda o resultado"
+      },
+      "stored": {
+        "title": "Armazenado ou Em Tempo Real",
+        "text": "Reutilize um gatilho armazenado e configurado por id, ou execute uma ação totalmente resolvida entregue na wire — o caminho que alimenta os plugins"
+      }
+    }
+  },
   "listTitle": "lista de gatilhos",
   "button": {
     "add": "adicionar gatilho"

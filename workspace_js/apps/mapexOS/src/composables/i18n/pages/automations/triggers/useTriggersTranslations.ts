@@ -1,6 +1,6 @@
 import type { FilterField } from '@components/drawers';
 import type { DataRowColumn } from '@components/cards';
-import type { ListHeaderMenuColumn } from '@components/headers';
+import type { ListHeaderMenuColumn, PageHeaderInfo } from '@components/headers';
 
 import { computed } from 'vue';
 import { useTS } from '@utils/translation';
@@ -14,6 +14,36 @@ export function useTriggersTranslations() {
     page: {
       title: computed(() => tsTitle('pages.automations.triggers.title')),
       description: computed(() => tsRaw('pages.automations.triggers.description')),
+      info: computed((): PageHeaderInfo => ({
+        title: ts('pages.automations.triggers.info.title'),
+        description: ts('pages.automations.triggers.info.description'),
+        items: [
+          {
+            icon: 'send',
+            color: 'primary',
+            title: ts('pages.automations.triggers.info.items.egress.title'),
+            text: ts('pages.automations.triggers.info.items.egress.text'),
+          },
+          {
+            icon: 'hub',
+            color: 'teal-6',
+            title: ts('pages.automations.triggers.info.items.connectors.title'),
+            text: ts('pages.automations.triggers.info.items.connectors.text'),
+          },
+          {
+            icon: 'bolt',
+            color: 'orange-6',
+            title: ts('pages.automations.triggers.info.items.fired.title'),
+            text: ts('pages.automations.triggers.info.items.fired.text'),
+          },
+          {
+            icon: 'bookmark',
+            color: 'indigo-6',
+            title: ts('pages.automations.triggers.info.items.stored.title'),
+            text: ts('pages.automations.triggers.info.items.stored.text'),
+          },
+        ],
+      })),
       listTitle: computed(() => tsTitle('pages.automations.triggers.listTitle')),
       button: {
         add: computed(() => ts('pages.automations.triggers.button.add')),
