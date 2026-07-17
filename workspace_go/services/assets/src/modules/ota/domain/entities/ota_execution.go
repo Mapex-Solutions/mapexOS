@@ -47,3 +47,20 @@ func (e *OTAExecution) GetCreated() time.Time { return e.QueuedAt }
 func (e *OTAExecution) IsTerminal() bool {
 	return e.State == ExecUpdated || e.State == ExecFailed || e.State == ExecTimedOut
 }
+
+// TerminalStates is the set of final execution states — the single source used
+// to build the "advance only if not already terminal" precondition on conditional
+// updates and the terminal-count close decision.
+func TerminalStates() []ExecutionState {
+	return []ExecutionState{ExecUpdated, ExecFailed, ExecTimedOut}
+}
+
+// TerminalStateStrings returns the terminal states as strings for query filters.
+func TerminalStateStrings() []string {
+	states := TerminalStates()
+	out := make([]string, len(states))
+	for i, s := range states {
+		out[i] = string(s)
+	}
+	return out
+}

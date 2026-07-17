@@ -81,12 +81,14 @@ func (m *mockPlanRepo) IncrementCounter(_ context.Context, _ string, field strin
 }
 
 type mockExecutionRepo struct {
-	byID        map[string]*entities.OTAExecution
-	bulk        [][]*entities.OTAExecution
-	updates     []map[string]any
-	byPlan      []entities.OTAExecution
-	byFilters   []entities.OTAExecution
-	updatedMany []model.Map
+	byID         map[string]*entities.OTAExecution
+	bulk         [][]*entities.OTAExecution
+	updates      []map[string]any
+	byPlan       []entities.OTAExecution
+	byFilters    []entities.OTAExecution
+	updatedMany  []model.Map
+	updatedWhere []map[string]any
+	counts       map[entities.ExecutionState]int64
 }
 
 func (m *mockExecutionRepo) BulkInsert(_ context.Context, execs []*entities.OTAExecution) (int64, error) {
@@ -111,8 +113,32 @@ func (m *mockExecutionRepo) FindWithFilters(_ context.Context, _ model.Map, _ *m
 	return &model.PaginatedResult[entities.OTAExecution]{Items: m.byFilters}, nil
 }
 
-func (m *mockExecutionRepo) CountByState(_ context.Context, _ *string, _ entities.ExecutionState) (int64, error) {
-	return 0, nil
+func (m *mockExecutionRepo) CountByState(_ context.Context, _ *string, state entities.ExecutionState) (int64, error) {
+	return m.counts[state], nil
+}
+
+// FindOneAndUpdateWhere mimics the atomic conditional update: it applies the $set
+// only when the stored execution satisfies the precondition (non-terminal, and —
+// for progress advisories — stored percentage below the incoming $lt), else no-op.
+func (m *mockExecutionRepo) FindOneAndUpdateWhere(_ context.Context, filter model.Map, payload map[string]any) (*entities.OTAExecution, error) {
+	id, _ := filter["_id"].(model.ObjectId)
+	exec := m.byID[id.Hex()]
+	if exec == nil || exec.IsTerminal() {
+		return nil, nil
+	}
+	if pc, ok := filter["percentage"].(model.Map); ok {
+		if lt, ok := pc["$lt"].(int32); ok && exec.Percentage >= lt {
+			return nil, nil
+		}
+	}
+	if s, ok := payload["state"].(string); ok {
+		exec.State = entities.ExecutionState(s)
+	}
+	if p, ok := payload["percentage"].(int32); ok {
+		exec.Percentage = p
+	}
+	m.updatedWhere = append(m.updatedWhere, payload)
+	return exec, nil
 }
 
 func (m *mockExecutionRepo) UpdateMany(_ context.Context, filter model.Map, _ model.Map) (int64, error) {
@@ -170,7 +196,6 @@ func (m *mockFirmwareScheduler) PurgeAbandonCheck(id string) error {
 type mockOTAScheduler struct {
 	starts []string
 	closes []string
-	scans  int
 }
 
 func (m *mockOTAScheduler) ScheduleStart(planID string, _ time.Time) error {
@@ -180,11 +205,6 @@ func (m *mockOTAScheduler) ScheduleStart(planID string, _ time.Time) error {
 
 func (m *mockOTAScheduler) ScheduleClose(planID string, _ time.Time) error {
 	m.closes = append(m.closes, planID)
-	return nil
-}
-
-func (m *mockOTAScheduler) ScheduleScan(_ time.Time) error {
-	m.scans++
 	return nil
 }
 

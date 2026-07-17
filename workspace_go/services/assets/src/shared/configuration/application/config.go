@@ -46,6 +46,7 @@ var DefaultConfiguration = []config.ConfigDefinition{
 	{Key: "nats_username", Env: "NATS_USERNAME", Type: "string", Default: "service"},
 	{Key: "nats_password", Env: "NATS_PASSWORD", Type: "string", Default: "service_secret", Sensitive: true},
 	{Key: "nats_client_name", Env: "NATS_CLIENT_NAME", Type: "string", Default: "assets-service"},
+	{Key: "nats_kv_replicas", Env: "NATS_KV_REPLICAS", Type: "int", Default: 1}, // 1 = single-node safe; a NATS cluster can raise it for KV/lease HA
 
 	/**
 	* Defines the authentication strategy used by the platform (jwt or oauth2) and
@@ -138,12 +139,12 @@ var DefaultConfiguration = []config.ConfigDefinition{
 	 * OTA behavior (remote firmware update). TTLs and intervals are in SECONDS;
 	 * pacing/retry are counts. All overridable per environment.
 	 */
-	{Key: "ota_presigned_url_ttl", Env: "OTA_PRESIGNED_URL_TTL", Type: "int", Default: 1800},   // presigned PUT/GET TTL (30m)
-	{Key: "ota_orphan_gc_ttl", Env: "OTA_ORPHAN_GC_TTL", Type: "int", Default: 86400},           // abandon-check for never-finalized uploads (24h)
-	{Key: "ota_scan_interval", Env: "OTA_SCAN_INTERVAL", Type: "int", Default: 60},              // global pacing scan tick (1m)
-	{Key: "ota_rate_per_minute", Env: "OTA_RATE_PER_MINUTE", Type: "int", Default: 60},          // default dispatch rate when a plan omits it
-	{Key: "ota_max_attempts", Env: "OTA_MAX_ATTEMPTS", Type: "int", Default: 2},                 // retry cap per execution
-	{Key: "ota_live_state_ttl", Env: "OTA_LIVE_STATE_TTL", Type: "int", Default: 86400},         // Redis live execution state TTL (24h)
+	{Key: "ota_presigned_url_ttl", Env: "OTA_PRESIGNED_URL_TTL", Type: "int", Default: 1800}, // presigned PUT/GET TTL (30m)
+	{Key: "ota_orphan_gc_ttl", Env: "OTA_ORPHAN_GC_TTL", Type: "int", Default: 86400},        // abandon-check for never-finalized uploads (24h)
+	{Key: "ota_scan_interval", Env: "OTA_SCAN_INTERVAL", Type: "int", Default: 60},           // global pacing scan tick (1m)
+	{Key: "ota_rate_per_minute", Env: "OTA_RATE_PER_MINUTE", Type: "int", Default: 60},       // default dispatch rate when a plan omits it
+	{Key: "ota_max_attempts", Env: "OTA_MAX_ATTEMPTS", Type: "int", Default: 2},              // retry cap per execution
+	{Key: "ota_live_state_ttl", Env: "OTA_LIVE_STATE_TTL", Type: "int", Default: 86400},      // Redis live execution state TTL (24h)
 
 	/** TieredCache Configuration (L0=RAM, L1=Disk, L2=MinIO) */
 	{Key: "cache_l0_max_size", Env: "CACHE_L0_MAX_SIZE", Type: "int", Default: 268435456}, // 256MB

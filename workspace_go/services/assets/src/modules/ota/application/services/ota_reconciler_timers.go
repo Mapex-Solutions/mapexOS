@@ -37,25 +37,36 @@ func (t *ReconcilerTimers) OnClose(c context.Context, planID string) error {
 	return t.ClosePlan(c, planID, CloseReasonMaxTime)
 }
 
-// OnScanTick handles the single global pacing scan: reconcile every IN_PROGRESS
-// plan, early-close the ones whose executions are all terminal, then reschedule
-// the next scan (self-perpetuating).
-func (t *ReconcilerTimers) OnScanTick(c context.Context) error {
+// RunScan performs one pacing sweep, driven by the elected leader's ticker:
+// reconcile every IN_PROGRESS plan, then early-close the ones whose executions
+// are all terminal. It schedules nothing — the leader owns the cadence.
+func (t *ReconcilerTimers) RunScan(c context.Context) {
 	result, err := t.deps.PlanRepo.FindWithFilters(c,
 		model.Map{"status": string(entities.PlanInProgress)},
 		&model.PaginationOpts{Page: 1, PerPage: 1000}, nil)
-	if err == nil {
-		for i := range result.Items {
-			plan := &result.Items[i]
-			planID := plan.ID.Hex()
-			_ = t.deps.Reconciler.Tick(c, planID)
-			if plan.Counters.Total > 0 &&
-				plan.Counters.Succeeded+plan.Counters.Failed+plan.Counters.TimedOut >= plan.Counters.Total {
-				_ = t.ClosePlan(c, planID, CloseReasonAllTerminal)
-			}
+	if err != nil {
+		return
+	}
+	for i := range result.Items {
+		plan := &result.Items[i]
+		planID := plan.ID.Hex()
+		_ = t.deps.Reconciler.Tick(c, planID)
+		if plan.Counters.Total > 0 && t.terminalCount(c, planID) >= int64(plan.Counters.Total) {
+			_ = t.ClosePlan(c, planID, CloseReasonAllTerminal)
 		}
 	}
-	return t.deps.Scheduler.ScheduleScan(time.Now().Add(t.deps.ScanInterval))
+}
+
+// terminalCount counts the plan's executions in a terminal state, read from the
+// executions (the source of truth) rather than the denormalized plan counters —
+// so a missed counter increment cannot skew the close decision.
+func (t *ReconcilerTimers) terminalCount(c context.Context, planID string) int64 {
+	var total int64
+	for _, s := range entities.TerminalStates() {
+		n, _ := t.deps.ExecutionRepo.CountByState(c, &planID, s)
+		total += n
+	}
+	return total
 }
 
 // ClosePlan is the single idempotent close routine: mark stragglers TIMED_OUT
@@ -72,25 +83,26 @@ func (t *ReconcilerTimers) ClosePlan(c context.Context, planID, reason string) e
 
 	// Mark non-terminal executions as TIMED_OUT.
 	_, _ = t.deps.ExecutionRepo.UpdateMany(c,
-		model.Map{"planId": plan.ID, "state": model.Map{"$nin": []string{
-			string(entities.ExecUpdated), string(entities.ExecFailed), string(entities.ExecTimedOut),
-		}}},
+		model.Map{"planId": plan.ID, "state": model.Map{"$nin": entities.TerminalStateStrings()}},
 		model.Map{"$set": model.Map{"state": string(entities.ExecTimedOut), "updated": time.Now()}},
 	)
 
+	// Final status is derived from the executions (count of UPDATED), not the
+	// denormalized counter cache — a missed increment cannot force a wrong COMPLETED.
+	succeeded, _ := t.deps.ExecutionRepo.CountByState(c, &planID, entities.ExecUpdated)
 	_, err = t.deps.PlanRepo.FindByIdAndUpdate(c, &planID, map[string]any{
-		"status": string(deriveFinalStatus(plan, reason)), "updated": time.Now(),
+		"status": string(deriveFinalStatus(plan, reason, succeeded)), "updated": time.Now(),
 	})
 	return err
 }
 
-// deriveFinalStatus picks the plan's terminal status from the close reason and
-// the success tally.
-func deriveFinalStatus(plan *entities.OTAPlan, reason string) entities.PlanStatus {
+// deriveFinalStatus picks the plan's terminal status from the close reason and the
+// success tally (succeeded = count of UPDATED executions, from the source of truth).
+func deriveFinalStatus(plan *entities.OTAPlan, reason string, succeeded int64) entities.PlanStatus {
 	if reason == CloseReasonCancel {
 		return entities.PlanCanceled
 	}
-	if plan.Counters.Total > 0 && plan.Counters.Succeeded >= plan.Counters.Total {
+	if plan.Counters.Total > 0 && succeeded >= int64(plan.Counters.Total) {
 		return entities.PlanCompleted
 	}
 	return entities.PlanClosed

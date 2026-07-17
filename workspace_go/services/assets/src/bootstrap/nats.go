@@ -77,6 +77,28 @@ func InitNATS(c *dig.Container) {
 		return params.Bus
 	}, container.Name("core"))
 
+	// OTA leader-election KV store — the dedicated lease bucket that elects the
+	// single pod running the OTA pacing scan. Short TTL is only a backstop; the
+	// helper fails over on a stale revision (see infrastructure/nats leaderelection).
+	// Replicas default to 1 (safe on a single-node NATS, like every other stream
+	// here); a clustered deployment can raise it via NATS_KV_REPLICAS for lease HA.
+	c.Provide(func(params struct {
+		container.In
+		Client *natsModel.Client `name:"core"`
+	}) natsModel.KeyValueStore {
+		replicas, _ := config.GetIntValue("nats_kv_replicas")
+		store, err := params.Client.CreateKeyValue(natsModel.KVConfig{
+			Bucket:   otaMessage.OTALeaderBucket,
+			Replicas: replicas, // config default 1; the kit also floors any 0 to 1
+			TTL:      20 * time.Second,
+		})
+		if err != nil {
+			logger.Panic("[INFRA:NATS] Failed to create OTA leader-election KV bucket: " + err.Error())
+		}
+		logger.Info("[INFRA:NATS] OTA leader-election KV bucket ready (TTL=20s)")
+		return store
+	}, container.Name("ota-leader"))
+
 	// Health monitoring streams (created on the same core connection).
 	c.Invoke(func(params struct {
 		container.In

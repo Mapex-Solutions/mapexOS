@@ -91,7 +91,6 @@ type ReconcilerTimersDeps struct {
 	Store         ports.FirmwareStorePort
 	Scheduler     ports.OTASchedulerPort
 	Reconciler    *Reconciler
-	ScanInterval  time.Duration
 }
 
 // ReconcilerTimers drives the plan timers and the global pacing scan.

@@ -35,6 +35,10 @@ type OTAExecutionRepository interface {
 	BulkInsert(ctx context.Context, execs []*entities.OTAExecution) (int64, error)
 	FindById(ctx context.Context, id *string) (*entities.OTAExecution, error)
 	FindByIdAndUpdate(ctx context.Context, id *string, payload map[string]any) (*entities.OTAExecution, error)
+	// FindOneAndUpdateWhere applies a conditional $set to a single execution: it
+	// updates only when the document matches `filter` (id + state/percentage
+	// precondition) and returns the updated doc, or nil when nothing matched.
+	FindOneAndUpdateWhere(ctx context.Context, filter model.Map, payload map[string]any) (*entities.OTAExecution, error)
 	FindByPlan(ctx context.Context, planID *string, filters model.Map, pagination *model.PaginationOpts) (*model.PaginatedResult[entities.OTAExecution], error)
 	FindWithFilters(ctx context.Context, filters model.Map, pagination *model.PaginationOpts, projection model.Map) (*model.PaginatedResult[entities.OTAExecution], error)
 	CountByState(ctx context.Context, planID *string, state entities.ExecutionState) (int64, error)

@@ -15,7 +15,6 @@ var (
 	// Target subjects the scheduled messages are delivered to when they fire.
 	SubjectOTATimerStart = config.Subject("ota", "timer.start")
 	SubjectOTATimerClose = config.Subject("ota", "timer.close")
-	SubjectOTATimerScan  = config.Subject("ota", "timer.scan")
 
 	// OTAScheduleStream carries the scheduled + delivered timer messages AND the
 	// inbound device status advisories (AllowMsgSchedules, file storage — created
@@ -25,6 +24,11 @@ var (
 	// SubjectOTAStatusAdvisory re-exports the cross-service inbound advisory
 	// subject (published by the HTTP gateway / mapexMQTTBroker; consumed here).
 	SubjectOTAStatusAdvisory = otaEvents.SubjectOTAStatusAdvisory
+
+	// OTALeaderBucket is the NATS KV bucket holding the assets leader-election
+	// leases. Env-scoped so environments never share a lease; one key per
+	// singleton loop (see OTAScanLeaderKey).
+	OTALeaderBucket = config.StreamName("ASSETS", "LEADER")
 )
 
 // Downlink subjects are cross-service (consumed by mapexMQTTBroker / mapexLNS)
@@ -35,9 +39,9 @@ var (
 	SubjectOTATimerAbandon = config.Subject("ota", "timer.abandon")
 )
 
-// ScanMsgId is the FIXED message id for the single global pacing scan (only one
-// scan is pending network-wide, like the healthmonitor scan).
-const ScanMsgId = "ota-scan"
+// OTAScanLeaderKey is the lease key that elects the single pod running the OTA
+// pacing scan (one key inside OTALeaderBucket).
+const OTAScanLeaderKey = "ota-scan"
 
 // AbandonMsgId dedups a firmware's abandon-check timer (firmwareId in the
 // MsgId + payload, never the subject).

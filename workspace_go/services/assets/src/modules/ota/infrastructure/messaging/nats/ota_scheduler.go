@@ -41,15 +41,5 @@ func (s *otaScheduler) ScheduleClose(planID string, at time.Time) error {
 	})
 }
 
-func (s *otaScheduler) ScheduleScan(at time.Time) error {
-	return s.sm.PublishScheduled(natsModel.ScheduledPublishConfig{
-		Subject:       otaMsg.SubjectOTASchedule,
-		TargetSubject: otaMsg.SubjectOTATimerScan,
-		ScheduleAt:    at,
-		Data:          map[string]string{"trigger": "scheduled"},
-		MsgId:         otaMsg.ScanMsgId,
-	})
-}
-
 // Compile-time check that otaScheduler implements the port.
 var _ ports.OTASchedulerPort = (*otaScheduler)(nil)

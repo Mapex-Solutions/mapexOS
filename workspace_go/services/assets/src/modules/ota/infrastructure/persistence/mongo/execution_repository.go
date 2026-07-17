@@ -2,6 +2,7 @@ package collection
 
 import (
 	"context"
+	"errors"
 
 	"assets/src/modules/ota/domain/entities"
 	"assets/src/modules/ota/domain/repositories"
@@ -62,6 +63,25 @@ func (r *executionRepository) FindByIdAndUpdate(ctx context.Context, id *string,
 	options := model.CommonOpts{ReturnDocument: &returnDoc}
 
 	retData, _ := r.model.FindOneAndUpdate(ctx, &query, &update, &options)
+	return retData, nil
+}
+
+// FindOneAndUpdateWhere applies a conditional $set to the single document matching
+// filter (id + a state/percentage precondition), returning the updated doc — or
+// nil when the precondition did not match (no-op).
+func (r *executionRepository) FindOneAndUpdateWhere(ctx context.Context, filter model.Map, payload map[string]any) (*entities.OTAExecution, error) {
+	update := model.Map{"$set": payload}
+
+	returnDoc := model.ReturnDoc(1)
+	options := model.CommonOpts{ReturnDocument: &returnDoc}
+
+	retData, err := r.model.FindOneAndUpdate(ctx, &filter, &update, &options)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
 	return retData, nil
 }
 

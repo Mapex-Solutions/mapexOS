@@ -11,7 +11,4 @@ type OTASchedulerPort interface {
 	ScheduleStart(planID string, at time.Time) error
 	// ScheduleClose schedules a plan's close (maxTime) timer.
 	ScheduleClose(planID string, at time.Time) error
-	// ScheduleScan schedules the single global pacing scan (it re-schedules
-	// itself; no plan id is involved).
-	ScheduleScan(at time.Time) error
 }

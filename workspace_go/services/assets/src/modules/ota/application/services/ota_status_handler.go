@@ -2,12 +2,15 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
 	"assets/src/modules/ota/domain/entities"
 
 	otaEvents "github.com/Mapex-Solutions/MapexOS/contracts/services/ota/events"
+	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
+	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 )
 
 // NewStatusHandler returns a status handler over the given dependencies.
@@ -38,6 +41,20 @@ func (h *StatusHandler) HandleStatus(c context.Context, adv otaEvents.OTAStatusA
 		return nil
 	}
 
+	// Forward-only, atomic transition. The precondition lives in the update filter
+	// so concurrent/out-of-order advisories (the status consumer runs one goroutine
+	// per message) can never regress the state: a progress advisory applies only
+	// when the stored state is still non-terminal AND its percentage is below the
+	// incoming one; a failed advisory applies from any non-terminal state (failure
+	// is orthogonal to the progress ladder). A duplicate/stale advisory matches
+	// nothing and is a no-op (also making at-least-once redelivery idempotent).
+	filter := model.Map{
+		"_id":   exec.ID,
+		"state": model.Map{"$nin": entities.TerminalStateStrings()},
+	}
+	if newState != entities.ExecFailed {
+		filter["percentage"] = model.Map{"$lt": adv.Progress}
+	}
 	fields := map[string]any{
 		"state":      string(newState),
 		"percentage": adv.Progress,
@@ -46,15 +63,21 @@ func (h *StatusHandler) HandleStatus(c context.Context, adv otaEvents.OTAStatusA
 	if adv.Error != "" {
 		fields["error"] = adv.Error
 	}
-	updated, err := h.deps.ExecutionRepo.FindByIdAndUpdate(c, &adv.OTAExecutionID, fields)
+	updated, err := h.deps.ExecutionRepo.FindOneAndUpdateWhere(c, filter, fields)
 	if err != nil {
 		return err
 	}
-
-	h.bumpCounters(c, exec.PlanID.Hex(), newState)
-	if updated != nil {
-		_ = h.deps.LiveState.SetExecutionLive(c, updated)
+	if updated == nil {
+		// Stale / out-of-order / duplicate advisory — nothing applied, so no
+		// counter bump, template switch, or live-state write.
+		logger.Debug(fmt.Sprintf("[SERVICE:OTAStatus] advisory skipped (no forward transition): execId=%s status=%s progress=%d",
+			adv.OTAExecutionID, adv.Status, adv.Progress))
+		return nil
 	}
+
+	// Side-effects are gated on the transition having applied.
+	h.bumpCounters(c, exec.PlanID.Hex(), newState)
+	_ = h.deps.LiveState.SetExecutionLive(c, updated)
 	_ = h.deps.History.Publish(c, adv)
 
 	if newState == entities.ExecUpdated {

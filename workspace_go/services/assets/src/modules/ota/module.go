@@ -1,6 +1,7 @@
 package ota
 
 import (
+	"context"
 	"log"
 	"time"
 
@@ -17,6 +18,7 @@ import (
 	redisAdapter "assets/src/modules/ota/infrastructure/persistence/redis"
 	storage "assets/src/modules/ota/infrastructure/storage"
 	httpRoutes "assets/src/modules/ota/interfaces/http/routes"
+	otaMessage "assets/src/modules/ota/interfaces/message"
 	statusConsumer "assets/src/modules/ota/interfaces/message/consumers/status"
 	timersConsumer "assets/src/modules/ota/interfaces/message/consumers/timers"
 
@@ -169,8 +171,26 @@ func InitServices() {
 			Store:         deps.Store,
 			Scheduler:     deps.Scheduler,
 			Reconciler:    rec,
-			ScanInterval:  durationCfg("ota_scan_interval", time.Minute),
 		})
+	})
+
+	// Pacing-scan leader: exactly one pod runs RunScan on the ota_scan_interval
+	// ticker; the KV lease elects it and fails over automatically (no self-
+	// rescheduling message, so no dedup window can silently kill the loop).
+	c.Provide(func(params struct {
+		container.In
+		Store  natsModel.KeyValueStore `name:"ota-leader"`
+		Timers *service.ReconcilerTimers
+	}) *natsModel.LeaderElection {
+		le, err := natsModel.NewLeaderElection(params.Store, natsModel.LeaderElectionConfig{
+			Key:      otaMessage.OTAScanLeaderKey,
+			Interval: durationCfg("ota_scan_interval", time.Minute),
+			OnTick:   func(ctx context.Context) { params.Timers.RunScan(ctx) },
+		})
+		if err != nil {
+			logger.Panic("[MODULE:OTA] pacing-scan leader build failed: " + err.Error())
+		}
+		return le
 	})
 
 	// Status handler.
@@ -231,12 +251,12 @@ func InitInterfaces() {
 		Timers      *service.ReconcilerTimers
 		Status      *service.StatusHandler
 		FirmwareSvc ports.OTAFirmwareServicePort
-		Scheduler   ports.OTASchedulerPort
+		Leader      *natsModel.LeaderElection
 	}) {
 		timersConsumer.NewConsumer(params.Bus, params.Timers, params.FirmwareSvc)
 		statusConsumer.NewConsumer(params.Bus, params.Status)
-		// Kick the single global pacing scan (self-reschedules thereafter).
-		_ = params.Scheduler.ScheduleScan(time.Now().Add(durationCfg("ota_scan_interval", time.Minute)))
+		// Start the pacing-scan leader; only the elected pod ticks RunScan.
+		params.Leader.Start(context.Background())
 	}); err != nil {
 		log.Fatalf("failed to invoke OTA consumers: %v", err)
 	}

@@ -31,7 +31,11 @@ func NewConsumer(bus *natsModel.Bus, handler *services.StatusHandler) *natsModel
 		Durable:      consumerName,
 		QueueGroup:   queueGroup,
 		FetchTimeout: 5 * time.Second,
-		RetryPolicy:  natsModel.DefaultRetryPolicy(),
+		// Match the timers consumer's window: this consumer shares OTAScheduleStream,
+		// and an unset DuplicateWindow makes the kit force the stream's Duplicates to
+		// the 15m default, which would break the per-plan start/close dedup.
+		DuplicateWindow: 10 * time.Second,
+		RetryPolicy:     natsModel.DefaultRetryPolicy(),
 		DLQPolicy: &natsModel.DLQPolicy{
 			ServiceName: serviceName,
 			ServiceType: "assets",
@@ -40,10 +44,15 @@ func NewConsumer(bus *natsModel.Bus, handler *services.StatusHandler) *natsModel
 		MessageHandlerV2: func(msg *natsModel.Message) {
 			var adv otaEvents.OTAStatusAdvisory
 			if err := json.Unmarshal(msg.Data, &adv); err != nil {
+				logger.Warn(fmt.Sprintf("[CONSUMER:OTAStatus] malformed advisory dropped: %v", err))
 				msg.Ack() // malformed advisory — drop, don't retry
 				return
 			}
-			_ = handler.HandleStatus(context.Background(), adv)
+			logger.Debug(fmt.Sprintf("[CONSUMER:OTAStatus] advisory received: execId=%s status=%s progress=%d",
+				adv.OTAExecutionID, adv.Status, adv.Progress))
+			if err := handler.HandleStatus(context.Background(), adv); err != nil {
+				logger.Error(err, fmt.Sprintf("[CONSUMER:OTAStatus] handle failed: execId=%s status=%s", adv.OTAExecutionID, adv.Status))
+			}
 			msg.Ack()
 		},
 	})

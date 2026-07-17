@@ -56,8 +56,6 @@ func NewConsumer(bus *natsModel.Bus, timers *services.ReconcilerTimers, firmware
 				_ = timers.OnStart(ctx, p.PlanId)
 			case otaMsg.SubjectOTATimerClose:
 				_ = timers.OnClose(ctx, p.PlanId)
-			case otaMsg.SubjectOTATimerScan:
-				_ = timers.OnScanTick(ctx)
 			case otaMsg.SubjectOTATimerAbandon:
 				_ = firmware.HandleFirmwareAbandon(ctx, p.FirmwareId)
 			}
