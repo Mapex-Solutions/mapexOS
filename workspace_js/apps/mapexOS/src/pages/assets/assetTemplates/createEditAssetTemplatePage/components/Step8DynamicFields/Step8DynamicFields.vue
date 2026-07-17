@@ -746,7 +746,7 @@ function commitCustomFieldName(): void {
 	height: 20px;
 	border-radius: var(--mapex-radius-full);
 	background: var(--mapex-primary);
-	color: var(--mapex-wf-text-on-accent);
+	color: var(--mapex-text-on-primary, #fff);
 	font-size: var(--mapex-font-2xs);
 	font-weight: var(--mapex-font-weight-bold);
 	line-height: 1;
