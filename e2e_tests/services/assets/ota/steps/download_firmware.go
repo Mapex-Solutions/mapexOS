@@ -3,7 +3,7 @@ package steps
 import (
 	"context"
 	"crypto/sha256"
-	"encoding/hex"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"net/http"
@@ -35,14 +35,15 @@ func downloadAndVerifyFirmware(ctx context.Context, cmd downlink.OTAUpdateComman
 	if int64(len(body)) != cmd.Size {
 		return fmt.Errorf("firmware size mismatch: got %d want %d", len(body), cmd.Size)
 	}
-	if got := sha256Hex(body); got != cmd.Checksum {
+	if got := sha256Base64(body); got != cmd.Checksum {
 		return fmt.Errorf("firmware checksum mismatch: got %s want %s", got, cmd.Checksum)
 	}
 	return nil
 }
 
-// sha256Hex returns the lowercase-hex sha256 of b.
-func sha256Hex(b []byte) string {
+// sha256Base64 returns the base64-encoded sha256 of b — the S3
+// x-amz-checksum-sha256 encoding the command carries as cmd.Checksum.
+func sha256Base64(b []byte) string {
 	sum := sha256.Sum256(b)
-	return hex.EncodeToString(sum[:])
+	return base64.StdEncoding.EncodeToString(sum[:])
 }

@@ -68,7 +68,10 @@ func (osSpawner) start(svc string, spec localSpec) (runningProc, error) {
 	}
 	cmd := exec.Command(spec.cmd, spec.args...)
 	cmd.Dir = spec.dir()
-	cmd.Env = os.Environ()
+	// spec.env is layered AFTER os.Environ() so per-service overrides win (exec
+	// keeps the last value for a duplicated key). Nil env leaves the inherited
+	// environment untouched.
+	cmd.Env = append(os.Environ(), spec.env...)
 	cmd.Stdout, cmd.Stderr = lf, lf
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	if err := cmd.Start(); err != nil {

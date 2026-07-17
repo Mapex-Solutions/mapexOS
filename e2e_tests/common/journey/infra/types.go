@@ -19,6 +19,11 @@ type localSpec struct {
 	cmd  string
 	args []string
 	dir  func() string
+	// env is extra KEY=VALUE entries layered onto the inherited process env at
+	// spawn (later entries win). Empty by default; a per-run override supplied via
+	// EnsureAll's WithServiceEnv option is applied to a COPY of the spec so the
+	// shared serviceMap stays immutable.
+	env []string
 }
 
 // composeRunner brings a compose service up or stops it in a given compose file. It

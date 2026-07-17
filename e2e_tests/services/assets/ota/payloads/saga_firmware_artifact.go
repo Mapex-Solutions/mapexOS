@@ -5,7 +5,7 @@ package payloads
 
 import (
 	"crypto/sha256"
-	"encoding/hex"
+	"encoding/base64"
 	"fmt"
 )
 
@@ -34,15 +34,16 @@ func NewFirmwareArtifact(runID string) *FirmwareArtifact {
 	return &FirmwareArtifact{
 		runID:  runID,
 		bytes:  buf,
-		sha256: hex.EncodeToString(sum[:]),
+		sha256: base64.StdEncoding.EncodeToString(sum[:]),
 	}
 }
 
 // Bytes returns the firmware payload uploaded to (and downloaded from) storage.
 func (f *FirmwareArtifact) Bytes() []byte { return f.bytes }
 
-// SHA256 returns the lowercase-hex sha256 of Bytes(), declared on init and
-// verified by the device sim after download.
+// SHA256 returns the base64-encoded sha256 of Bytes() — the S3
+// x-amz-checksum-sha256 encoding the assets service signs into the presigned PUT.
+// Declared on init and verified by the device sim after download.
 func (f *FirmwareArtifact) SHA256() string { return f.sha256 }
 
 // Size returns the byte length of Bytes().

@@ -21,16 +21,21 @@ import (
 //
 // Compensate: no-op — the object is cleaned up when the firmware/plan lifecycle
 // tears down; there is nothing local to undo.
-func UploadFirmwareBinary(fw *otaPayloads.FirmwareArtifact) saga.Step {
+func UploadFirmwareBinary() saga.Step {
 	return saga.Step{
 		Name: "assets/ota.UploadFirmwareBinary",
 		Do: func(c *saga.Context) error {
+			// Same deterministic artifact InitFirmware declared (built from RunID).
+			fw := otaPayloads.NewFirmwareArtifact(c.RunID)
 			url := c.MustGetString(BagKeyFirmwareUploadURL)
 			req, err := http.NewRequestWithContext(c.Stdctx, http.MethodPut, url, bytes.NewReader(fw.Bytes()))
 			if err != nil {
 				return fmt.Errorf("build firmware upload request: %w", err)
 			}
 			req.ContentLength = fw.Size()
+			// The presigned PUT is signed against x-amz-checksum-sha256; MinIO returns
+			// 403 SignatureDoesNotMatch if this header is missing or does not match.
+			req.Header.Set("x-amz-checksum-sha256", fw.SHA256())
 			resp, err := http.DefaultClient.Do(req)
 			if err != nil {
 				return fmt.Errorf("upload firmware binary: %w", err)

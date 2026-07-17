@@ -66,6 +66,10 @@ import (
 	otaaConnectivity "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/lorawan_journey_otaa/phase1_gateway_connectivity"
 	otaaUplink "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/lorawan_journey_otaa/phase2_sensor_uplink"
 	otaaPresence "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/lorawan_journey_otaa/phase3_sensor_presence"
+
+	// iot — ota firmware update (http poll + mqtt push)
+	otaHTTP "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/ota_http"
+	otaMQTT "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/ota_mqtt"
 )
 
 // TestMain is the ONLY entry point: it owns bringing the stack up once and tearing
@@ -75,7 +79,11 @@ func TestMain(m *testing.M) {
 	// carry that journey's RunID (a Compensate gap). Off unless wired here.
 	saga.AfterRun = leakcheck.Hook
 
-	teardown := infra.EnsureAll()
+	// Start assets with a short OTA reconciler scan so the OTA journeys' dispatch
+	// and early-close land within the device-wait and assert budgets; the default
+	// (60s) is too slow — the MQTT device only waits 45s for the pushed command.
+	// Suite-wide by design (one shared stack); only the OTA journeys read it.
+	teardown := infra.EnsureAll(infra.WithServiceEnv("assets", "OTA_SCAN_INTERVAL=15"))
 	// Defer teardown inside a func so it still runs if a journey panics out of m.Run
 	// (a plain teardown() after m.Run would be skipped on panic). SIGKILL still leaks.
 	code := func() int { defer teardown(); return m.Run() }()
@@ -130,6 +138,9 @@ var registry = []journey{
 	{"iot/lorawan_journey_otaa/phase1_gateway_connectivity", otaaConnectivity.Run},
 	{"iot/lorawan_journey_otaa/phase2_sensor_uplink", otaaUplink.Run},
 	{"iot/lorawan_journey_otaa/phase3_sensor_presence", otaaPresence.Run},
+
+	{"iot/ota_http", otaHTTP.Run},
+	{"iot/ota_mqtt", otaMQTT.Run},
 }
 
 // TestSuite runs every registered journey as a parallel subtest.

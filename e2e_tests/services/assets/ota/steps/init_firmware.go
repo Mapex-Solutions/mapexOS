@@ -20,10 +20,11 @@ type firmwareInitResponse struct {
 }
 
 // InitFirmware creates the firmware artifact record and captures the short-TTL
-// presigned PUT URL for the direct-to-store upload. The declared size+sha256
-// come from the deterministic FirmwareArtifact so CompleteFirmware's confirm and
-// the device sim's post-download verify all agree. targetTemplateIDKey names the
-// bag key holding the target template id (the migration destination).
+// presigned PUT URL for the direct-to-store upload. The deterministic
+// FirmwareArtifact is built from the run's RunID inside Do, and its declared
+// size+sha256 (base64, the S3 checksum encoding) let CompleteFirmware's confirm
+// and the device sim's post-download verify all agree. targetTemplateIDKey names
+// the bag key holding the target template id (the migration destination).
 //
 // Reads (bag):
 //   - targetTemplateIDKey  string  the target template id (set by CreateTemplateWithLabel)
@@ -35,10 +36,13 @@ type firmwareInitResponse struct {
 // Compensate: no-op — there is no firmware-delete endpoint; the artifact is
 // retained by design (re-downloadable from the closed plan), and the plan
 // Compensate cancels the plan that owns it.
-func InitFirmware(fw *otaPayloads.FirmwareArtifact, targetTemplateIDKey string) saga.Step {
+func InitFirmware(targetTemplateIDKey string) saga.Step {
 	return saga.Step{
 		Name: "assets/ota.InitFirmware",
 		Do: func(c *saga.Context) error {
+			// Built from the run's RunID here (not threaded through Items, §7);
+			// deterministic, so UploadFirmwareBinary derives identical bytes/sha256.
+			fw := otaPayloads.NewFirmwareArtifact(c.RunID)
 			req := otaDtos.FirmwareInitRequest{
 				TargetTemplateID: c.MustGetString(targetTemplateIDKey),
 				Version:          fw.Version(),

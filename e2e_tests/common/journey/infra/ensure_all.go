@@ -25,6 +25,25 @@ type stack struct {
 	services    []string
 }
 
+// Option configures a single EnsureAll run — the suite-wide knobs the runner's
+// TestMain declares once (e.g. per-service env). Options never mutate global state.
+type Option func(*ensureConfig)
+
+// ensureConfig accumulates the options applied to one EnsureAll run.
+type ensureConfig struct {
+	// env holds per-service extra KEY=VALUE entries (keyed by logical service
+	// name), applied to a COPY of that service's localSpec at spawn.
+	env map[string][]string
+}
+
+// WithServiceEnv declares extra KEY=VALUE environment for a locally-spawned
+// service, e.g. WithServiceEnv("assets", "OTA_SCAN_INTERVAL=5"). Suite-wide by
+// design (one shared stack serves every journey) and LOCAL mode only — docker
+// services read their env from the compose file.
+func WithServiceEnv(service string, kv ...string) Option {
+	return func(c *ensureConfig) { c.env[service] = append(c.env[service], kv...) }
+}
+
 // EnsureAll brings up (or reuses) BOTH stacks once for the runner's TestMain:
 //
 //	infra  — nats / broker / minio        (docker by default)
@@ -36,14 +55,18 @@ type stack struct {
 // file (docker mode) or reported as a clear "start it" error (local mode). It uses
 // log.* because TestMain has no *testing.T. Returns a teardown that stops ONLY the
 // services this run started (docker mode), in reverse.
-func EnsureAll() func() {
+func EnsureAll(opts ...Option) func() {
+	cfg := &ensureConfig{env: map[string][]string{}}
+	for _, opt := range opts {
+		opt(cfg)
+	}
 	stacks := []stack{
 		{"infra", envMode("MAPEX_E2E_INFRA_MODE", modeDocker), infraComposeFile, infraServices},
 		{"mapex", envMode("MAPEX_E2E_MAPEX_MODE", modeLocal), servicesComposeFile, mapexServices},
 	}
 	var teardowns []func()
 	for _, st := range stacks {
-		teardowns = append(teardowns, ensureStack(st))
+		teardowns = append(teardowns, ensureStack(st, cfg.env))
 	}
 	return func() {
 		for i := len(teardowns) - 1; i >= 0; i-- {
@@ -59,7 +82,7 @@ func EnsureAll() func() {
 // warm up concurrently instead of one-bring-up-per-wait), logs one
 // reused/brought-up/failed summary, and returns a teardown that stops only what it
 // started — spawned processes then docker-owned services, all in reverse.
-func ensureStack(st stack) func() {
+func ensureStack(st stack, envOverrides map[string][]string) func() {
 	var owned, reused, up, failed, errs, pending []string
 	var spawned []runningProc
 	for _, svc := range st.services {
@@ -70,12 +93,18 @@ func ensureStack(st stack) func() {
 		case ready:
 			reused = append(reused, svc) // already answering — always skip
 		case st.mode == modeLocal:
-			spec := serviceMap[svc].local
-			if spec == nil {
+			base := serviceMap[svc].local
+			if base == nil {
 				failed, errs = append(failed, svc), append(errs, fmt.Sprintf("%q not responding — %s stack is LOCAL and has no local run spec; start it yourself", svc, st.name))
 				continue
 			}
-			p, e := spawner.start(svc, *spec)
+			// Copy the spec and layer any per-run env override so the shared
+			// serviceMap is never mutated (append into a fresh slice, not base.env).
+			spec := *base
+			if extra := envOverrides[svc]; len(extra) > 0 {
+				spec.env = append(append([]string{}, base.env...), extra...)
+			}
+			p, e := spawner.start(svc, spec)
 			if e != nil {
 				failed, errs = append(failed, svc), append(errs, fmt.Sprintf("spawn %q: %v", svc, e))
 				continue

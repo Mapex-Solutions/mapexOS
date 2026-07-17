@@ -1,9 +1,5 @@
 # Journey: atualização de firmware OTA — HTTP (poll)
 
-> **Status: SPEC — não implementado.** Descreve o fluxo pretendido da journey de OTA.
-> Ainda não existe `journey.go` nem entrada no registry do `journey/suite` (rastreado
-> no ticket de OTA e2e). Por enquanto é doc de design, não uma journey executável.
-
 Cobertura ponta a ponta do rollout de firmware OTA para um device **HTTP** contra
 o stack vivo: o device **consulta** o gateway pelo seu job, baixa + verifica +
 aplica o firmware, reporta o progresso via `POST /api/v1/ota/status`, e o plano
@@ -74,8 +70,8 @@ O device HTTP nunca é empurrado, então não há corrida de subscribe/presença
 só pola depois que o plano existe:
 
 ```
-CreateTemplate(source) → CreateTemplate(target) → CreateDataSource
-→ CreateConnectivityAsset(http, no source, ligado ao data source)
+CreateTemplate(source) → CreateTemplate(target) → CreateRouteGroup
+→ CreateConnectivityAsset(http, no source) → CreateDataSource
 → InitFirmware → UploadFirmwareBinary → CompleteFirmware → CreatePlan
 → RunHttpOtaDevice → AssertPlanStatus(COMPLETED) → AssertExecutionState(UPDATED,100)
 → AssertAssetTemplateSwitched
@@ -92,10 +88,11 @@ Blocos de Camada 1 compartilhados em `services/assets/ota/{steps,payloads,assert
 
 ```bash
 cd e2e_tests
-go test -tags=saga -count=1 ./journey/iot/ota_http/
+go test -tags=saga -run 'TestSuite/iot/ota_http'
 ```
 
-A build tag `saga` gateia o teste; `go test ./...` (sem tag) o pula.
+A journey roda pelo runner único (`journey/suite`); a build tag `saga` a gateia, e
+`go test ./...` (sem tag) a pula.
 
 ## Requisitos
 

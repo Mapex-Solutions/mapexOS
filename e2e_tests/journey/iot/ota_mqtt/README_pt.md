@@ -1,9 +1,5 @@
 # Journey: atualização de firmware OTA — MQTT (push)
 
-> **Status: SPEC — não implementado.** Descreve o fluxo pretendido da journey de OTA.
-> Ainda não existe `journey.go` nem entrada no registry do `journey/suite` (rastreado
-> no ticket de OTA e2e). Por enquanto é doc de design, não uma journey executável.
-
 Cobertura ponta a ponta do rollout de firmware OTA para um device **MQTT** contra
 o stack vivo: o broker **empurra** o comando `ota_update` para um device
 conectado e com presence-gate, o device baixa + verifica + aplica o firmware,
@@ -74,7 +70,8 @@ para `INITIATED` após o dispatch. Então o sim PRECISA conectar, inscrever em
 `CreatePlan`:
 
 ```
-CreateTemplate(source) → CreateTemplate(target) → CreateAsset(mqtt, no source)
+CreateTemplate(source) → CreateTemplate(target) → CreateRouteGroup
+→ CreateConnectivityAsset(mqtt, no source)
 → ConnectMqttPassword → SubscribeOtaCommand → AssertHealthStatusEventually("online")
 → InitFirmware → UploadFirmwareBinary → CompleteFirmware → CreatePlan
 → RunMqttOtaDevice → AssertPlanStatus(COMPLETED) → AssertExecutionState(UPDATED,100)
@@ -92,10 +89,11 @@ Blocos de Camada 1 compartilhados em `services/assets/ota/{steps,payloads,assert
 
 ```bash
 cd e2e_tests
-go test -tags=saga -count=1 ./journey/iot/ota_mqtt/
+go test -tags=saga -run 'TestSuite/iot/ota_mqtt'
 ```
 
-A build tag `saga` gateia o teste; `go test ./...` (sem tag) o pula.
+A journey roda pelo runner único (`journey/suite`); a build tag `saga` a gateia, e
+`go test ./...` (sem tag) a pula.
 
 ## Requisitos
 

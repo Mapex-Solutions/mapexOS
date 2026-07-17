@@ -1,9 +1,5 @@
 # Journey: OTA firmware update — HTTP (poll)
 
-> **Status: SPEC — not implemented.** This describes the intended OTA journey flow.
-> There is no `journey.go` or `journey/suite` registry entry yet (tracked under the
-> OTA e2e ticket). Until then this is a design doc, not a runnable journey.
-
 End-to-end coverage of the OTA firmware rollout for an **HTTP** device against the
 live stack: the device **polls** the gateway for its job, downloads + verifies +
 applies the firmware, reports its progress via `POST /api/v1/ota/status`, and the
@@ -75,8 +71,8 @@ The HTTP device is never pushed, so there is no subscribe/presence race; it simp
 polls after the plan exists:
 
 ```
-CreateTemplate(source) → CreateTemplate(target) → CreateDataSource
-→ CreateConnectivityAsset(http, on source, bound to the data source)
+CreateTemplate(source) → CreateTemplate(target) → CreateRouteGroup
+→ CreateConnectivityAsset(http, on source) → CreateDataSource
 → InitFirmware → UploadFirmwareBinary → CompleteFirmware → CreatePlan
 → RunHttpOtaDevice → AssertPlanStatus(COMPLETED) → AssertExecutionState(UPDATED,100)
 → AssertAssetTemplateSwitched
@@ -93,10 +89,11 @@ Shared Layer-1 blocks under `services/assets/ota/{steps,payloads,asserts}`
 
 ```bash
 cd e2e_tests
-go test -tags=saga -count=1 ./journey/iot/ota_http/
+go test -tags=saga -run 'TestSuite/iot/ota_http'
 ```
 
-The `saga` build tag gates the test; `go test ./...` (no tag) skips it.
+The journey runs through the single suite runner (`journey/suite`); the `saga`
+build tag gates it, and `go test ./...` (no tag) skips it.
 
 ## Requirements
 

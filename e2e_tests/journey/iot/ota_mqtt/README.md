@@ -1,9 +1,5 @@
 # Journey: OTA firmware update — MQTT (push)
 
-> **Status: SPEC — not implemented.** This describes the intended OTA journey flow.
-> There is no `journey.go` or `journey/suite` registry entry yet (tracked under the
-> OTA e2e ticket). Until then this is a design doc, not a runnable journey.
-
 End-to-end coverage of the OTA firmware rollout for an **MQTT** device against the
 live stack: the broker **pushes** the `ota_update` command to a connected,
 presence-gated device, the device downloads + verifies + applies the firmware,
@@ -75,7 +71,8 @@ execution to `INITIATED` after dispatch. So the sim MUST connect, subscribe to
 `CreatePlan`:
 
 ```
-CreateTemplate(source) → CreateTemplate(target) → CreateAsset(mqtt, on source)
+CreateTemplate(source) → CreateTemplate(target) → CreateRouteGroup
+→ CreateConnectivityAsset(mqtt, on source)
 → ConnectMqttPassword → SubscribeOtaCommand → AssertHealthStatusEventually("online")
 → InitFirmware → UploadFirmwareBinary → CompleteFirmware → CreatePlan
 → RunMqttOtaDevice → AssertPlanStatus(COMPLETED) → AssertExecutionState(UPDATED,100)
@@ -93,10 +90,11 @@ sequences them (`Items()` + `Run()`).
 
 ```bash
 cd e2e_tests
-go test -tags=saga -count=1 ./journey/iot/ota_mqtt/
+go test -tags=saga -run 'TestSuite/iot/ota_mqtt'
 ```
 
-The `saga` build tag gates the test; `go test ./...` (no tag) skips it.
+The journey runs through the single suite runner (`journey/suite`); the `saga`
+build tag gates it, and `go test ./...` (no tag) skips it.
 
 ## Requirements
 
