@@ -67,6 +67,9 @@ import (
 	otaaUplink "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/lorawan_journey_otaa/phase2_sensor_uplink"
 	otaaPresence "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/lorawan_journey_otaa/phase3_sensor_presence"
 
+	// iot — lorawan device codec (uplink bytes → decoded semantic fields)
+	lorawanCodec "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/lorawan_journey_codec"
+
 	// iot — ota firmware update (http poll + mqtt push)
 	otaHTTP "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/ota_http"
 	otaMQTT "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/ota_mqtt"
@@ -138,6 +141,8 @@ var registry = []journey{
 	{"iot/lorawan_journey_otaa/phase1_gateway_connectivity", otaaConnectivity.Run},
 	{"iot/lorawan_journey_otaa/phase2_sensor_uplink", otaaUplink.Run},
 	{"iot/lorawan_journey_otaa/phase3_sensor_presence", otaaPresence.Run},
+
+	{"iot/lorawan_journey_codec", lorawanCodec.Run},
 
 	{"iot/ota_http", otaHTTP.Run},
 	{"iot/ota_mqtt", otaMQTT.Run},
