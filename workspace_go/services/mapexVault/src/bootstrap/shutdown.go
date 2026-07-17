@@ -18,12 +18,20 @@ import (
 func InitShutdown(c *dig.Container, sm *shutdown.ShutdownManager, app *web.App) {
 	c.Invoke(func(params struct {
 		container.In
-		Mongo *mongoManager.MongoManager
-		Redis *redisModel.RedisClient `name:"shared"`
-		NATS  *natsModel.Client       `name:"core"`
+		Mongo  *mongoManager.MongoManager
+		Redis  *redisModel.RedisClient `name:"shared"`
+		NATS   *natsModel.Client       `name:"core"`
+		Leader *natsModel.LeaderElection
 	}) {
 		sm.RegisterFunc("fiber", 0, func(ctx context.Context) error {
 			return app.ShutdownWithContext(ctx)
+		})
+
+		// P3: reconcile leader — resign (delete the lease key for a fast handoff)
+		// BEFORE the NATS connection closes at P5, so the Delete lands.
+		sm.RegisterFunc("vault-leader-election", 3, func(_ context.Context) error {
+			params.Leader.Stop()
+			return nil
 		})
 
 		sm.RegisterFunc("mongodb", 5, func(ctx context.Context) error {

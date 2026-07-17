@@ -2,13 +2,10 @@ package services
 
 import (
 	"fmt"
-	"time"
 
 	"mapexVault/src/modules/credentials/application/constants"
 	"mapexVault/src/modules/credentials/domain/entities"
 
-	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
-	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 )
 
@@ -46,38 +43,4 @@ func (s *CredentialService) reseedMissingSchedules(credentials []entities.Creden
 		}
 	}
 	return checked, reseeded
-}
-
-// scheduleNextReconcile publishes the next reconcile timer if none is
-// pending. Layer 1: HasPendingMessages avoids double-publishing across
-// pods. Layer 2: stream Duplicates=10s + fixed MsgId catches the race.
-func (s *CredentialService) scheduleNextReconcile() {
-	pending, err := s.deps.ScheduleManager.HasPendingMessages(
-		constants.VaultReconcilerStreamName,
-		constants.VaultReconcileScheduleSubject,
-	)
-	if err != nil {
-		logger.Error(err, "[SERVICE:Credential] Failed to check pending reconcile messages")
-		return
-	}
-	if pending {
-		logger.Debug("[SERVICE:Credential] Reconcile already scheduled, skipping")
-		return
-	}
-	interval, _ := config.GetIntValue("vault_reconcile_interval")
-	if interval <= 0 {
-		interval = constants.VaultReconcileDefaultIntervalSeconds
-	}
-	scheduleAt := time.Now().Add(time.Duration(interval) * time.Second)
-	if err := s.deps.ScheduleManager.PublishScheduled(natsModel.ScheduledPublishConfig{
-		Subject:       constants.VaultReconcileScheduleSubject,
-		TargetSubject: constants.VaultReconcileFiredSubject,
-		ScheduleAt:    scheduleAt,
-		Data:          map[string]string{"trigger": "scheduled"},
-		MsgId:         constants.VaultReconcileMsgId,
-	}); err != nil {
-		logger.Error(err, "[SERVICE:Credential] Failed to schedule next reconcile")
-		return
-	}
-	logger.Info(fmt.Sprintf("[SERVICE:Credential] Next reconcile scheduled at %s", scheduleAt.Format(time.RFC3339)))
 }

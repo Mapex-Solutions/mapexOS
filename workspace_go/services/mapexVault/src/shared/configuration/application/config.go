@@ -32,6 +32,7 @@ var DefaultConfiguration = []config.ConfigDefinition{
 	{Key: "nats_username", Env: "NATS_USERNAME", Type: "string", Default: "service"},
 	{Key: "nats_password", Env: "NATS_PASSWORD", Type: "string", Default: "service_secret", Sensitive: true},
 	{Key: "nats_client_name", Env: "NATS_CLIENT_NAME", Type: "string", Default: "mapexVault-service"},
+	{Key: "nats_kv_replicas", Env: "NATS_KV_REPLICAS", Type: "int", Default: 1}, // 1 = single-node safe; a NATS cluster can raise it for KV/lease HA
 
 	/* Authentication (JWT for external API) */
 	{Key: "auth_strategy", Env: "AUTH_STRATEGY", Type: "string", Default: "jwt"},

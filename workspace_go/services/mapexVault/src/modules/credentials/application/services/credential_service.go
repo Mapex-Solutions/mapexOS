@@ -11,27 +11,16 @@ import (
 
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
-	common "github.com/Mapex-Solutions/mapexGoKit/microservices/common"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	logger "github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
 )
 
 // Compile-time checks
 var _ ports.CredentialServicePort = (*CredentialService)(nil)
-var _ common.Mountable = (*CredentialService)(nil)
 
 // New creates a new CredentialService with all dependencies injected.
 func New(deps di.CredentialServiceDependenciesInjection) ports.CredentialServicePort {
 	return &CredentialService{deps: deps}
-}
-
-// OnMount is the lifecycle hook called by common.RunLifecycleHooks after
-// DI is fully wired. Seeds initial refresh schedules for existing
-// credentials and arms the first reconcile timer on VAULT-RECONCILER.
-func (s *CredentialService) OnMount() {
-	logger.Info("[SERVICE:Credential] OnMount: seeding refresh schedules and arming reconciler")
-	s.bootstrapSeed()
-	s.scheduleNextReconcile()
 }
 
 // CreateCredential orchestrates credential creation: envelope-encrypt the
@@ -237,17 +226,15 @@ func (s *CredentialService) UpsertConnection(ctx context.Context, requestContext
 	return toConnectionResponse(result), nil
 }
 
-// RunReconcile is invoked by the reconcile consumer on
-// vault.reconcile.fired. Iterates active credentials, reseeds any missing
-// refresh schedules, and re-arms the next reconcile timer.
+// RunReconcile is the reseed sweep run by the elected leader (on election and on
+// each tick): it reseeds any active credential whose per-credential refresh timer
+// is missing. It schedules nothing — the leader owns the cadence.
 func (s *CredentialService) RunReconcile(ctx context.Context) {
 	credentials, err := s.deps.CredentialRepo.FindActiveWithTokenExpiry(ctx)
 	if err != nil {
 		logger.Error(err, "[SERVICE:Credential] Reconciler failed to query credentials")
-		s.scheduleNextReconcile()
 		return
 	}
 	checked, reseeded := s.reseedMissingSchedules(credentials)
 	logger.Info(fmt.Sprintf("[SERVICE:Credential] Reconciler completed: checked=%d reseeded=%d", checked, reseeded))
-	s.scheduleNextReconcile()
 }

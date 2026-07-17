@@ -18,7 +18,8 @@ import (
  */
 
 // publishRefreshSchedule publishes a NATS scheduled message to refresh a credential
-// at tokenExpiresAt - 15 minutes. Called after every successful token acquisition.
+// at tokenExpiresAt - 15 minutes. Called after every successful token acquisition and
+// by the reconcile reseed.
 func (s *CredentialService) publishRefreshSchedule(credentialId string, credentialType entities.CredentialType, tokenExpiresAt *time.Time) {
 	if tokenExpiresAt == nil {
 		return
@@ -27,7 +28,10 @@ func (s *CredentialService) publishRefreshSchedule(credentialId string, credenti
 	refreshBuffer := time.Duration(constants.RefreshBufferMinutes) * time.Minute
 	scheduleAt := tokenExpiresAt.Add(-refreshBuffer)
 	if scheduleAt.Before(time.Now()) {
-		return
+		// The refresh time is already past (e.g. the access token expired while the
+		// service was down). Refresh near-immediately instead of dropping it — the
+		// refresh token is still valid, so this recovers without any user re-login.
+		scheduleAt = time.Now().Add(30 * time.Second)
 	}
 
 	subject := fmt.Sprintf("%s.%s", constants.VaultScheduleSubjectPrefix, credentialId)
@@ -64,63 +68,4 @@ func (s *CredentialService) markCredentialError(cred *entities.Credential, refre
 		"updated":      time.Now(),
 	})
 	s.publishVaultEvent(id, "error")
-}
-
-/**
- * Bootstrap Seed
- */
-
-// bootstrapSeed queries existing credentials and publishes initial schedules on startup.
-// For credentials with tokenExpiresAt in the future: schedule at tokenExpiresAt - 15min.
-// For credentials already expired: schedule at now + 30s (near-immediate refresh).
-//
-// Called by OnMount lifecycle hook after the service is fully wired.
-func (s *CredentialService) bootstrapSeed() {
-	credentials, err := s.deps.CredentialRepo.FindActiveWithTokenExpiry(context.Background())
-	if err != nil {
-		logger.Warn(fmt.Sprintf("[SERVICE:Credential] Bootstrap seed failed to query credentials: %v", err))
-		return
-	}
-
-	if len(credentials) == 0 {
-		logger.Info("[SERVICE:Credential] Bootstrap seed: no credentials with token expiry found")
-		return
-	}
-
-	refreshBuffer := time.Duration(constants.RefreshBufferMinutes) * time.Minute
-	now := time.Now()
-	count := 0
-
-	for _, cred := range credentials {
-		if cred.TokenExpiresAt == nil {
-			continue
-		}
-
-		scheduleAt := cred.TokenExpiresAt.Add(-refreshBuffer)
-		if scheduleAt.Before(now) {
-			scheduleAt = now.Add(30 * time.Second)
-		}
-
-		subject := fmt.Sprintf("%s.%s", constants.VaultScheduleSubjectPrefix, cred.ID.Hex())
-
-		if err := s.deps.ScheduleManager.PurgeStreamSubject(constants.VaultScheduleStreamName, subject); err != nil {
-			logger.Warn(fmt.Sprintf("[SERVICE:Credential] Bootstrap seed: failed to purge schedule for %s: %v", cred.ID.Hex(), err))
-		}
-
-		if err := s.deps.ScheduleManager.PublishScheduled(natsModel.ScheduledPublishConfig{
-			Subject:       subject,
-			TargetSubject: constants.VaultScheduleFiredSubject,
-			ScheduleAt:    scheduleAt,
-			Data: map[string]interface{}{
-				"credentialId":   cred.ID.Hex(),
-				"credentialType": string(cred.Type),
-			},
-		}); err != nil {
-			logger.Warn(fmt.Sprintf("[SERVICE:Credential] Bootstrap seed: failed to publish schedule for %s: %v", cred.ID.Hex(), err))
-			continue
-		}
-		count++
-	}
-
-	logger.Info(fmt.Sprintf("[SERVICE:Credential] Bootstrap seed: published %d schedules for existing credentials", count))
 }

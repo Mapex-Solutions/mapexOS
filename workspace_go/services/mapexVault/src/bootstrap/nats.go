@@ -54,12 +54,31 @@ func InitNATS(c *dig.Container) {
 		return params.Bus
 	}, container.Name("core"))
 
-	// ScheduleManager interface + VAULT-SCHEDULE and VAULT-RECONCILER streams.
-	// File storage: schedules survive NATS restarts.
-	//
-	// VAULT-SCHEDULE holds the per-credential refresh timers (one subject per
-	// credential). VAULT-RECONCILER holds the single self-republishing reconciler
-	// timer that acts as a safety net if any per-credential timer is lost.
+	// Reconcile leader-election KV store — the dedicated lease bucket that elects
+	// the single pod running the credential reseed sweep. Short TTL is only a
+	// backstop; the helper fails over on a stale revision. Replicas default to 1
+	// (single-node safe); a NATS cluster can raise it via NATS_KV_REPLICAS.
+	c.Provide(func(params struct {
+		container.In
+		Client *natsModel.Client `name:"core"`
+	}) natsModel.KeyValueStore {
+		replicas, _ := config.GetIntValue("nats_kv_replicas")
+		store, err := params.Client.CreateKeyValue(natsModel.KVConfig{
+			Bucket:   constants.VaultLeaderBucket,
+			Replicas: replicas,
+			TTL:      20 * time.Second,
+		})
+		if err != nil {
+			logger.Panic("[INFRA:NATS] Failed to create reconcile leader KV bucket: " + err.Error())
+		}
+		logger.Info("[INFRA:NATS] Reconcile leader KV bucket ready (TTL=20s)")
+		return store
+	}, container.Name("vault-leader"))
+
+	// ScheduleManager interface + the VAULT-SCHEDULE stream (file storage so the
+	// per-credential refresh timers survive NATS restarts; one subject per
+	// credential). The reseed safety-net now runs on the reconcile leader ticker,
+	// not on a self-republishing stream.
 	c.Provide(func(params struct {
 		container.In
 		Bus *natsModel.Bus `name:"core"`
@@ -76,19 +95,6 @@ func InitNATS(c *dig.Container) {
 			logger.Panic("Failed to create vault schedule stream: " + err.Error())
 		}
 		logger.Info("[APP:BOOTSTRAP] Vault schedule stream ready (file storage, AllowMsgSchedules)")
-
-		if err := params.Bus.EnsureStream(jetstream.StreamConfig{
-			Name:              constants.VaultReconcilerStreamName,
-			Description:       "Vault reconciler loop (credential refresh safety-net)",
-			Subjects:          []string{message.VaultReconcilerSubjectPattern},
-			Storage:           jetstream.FileStorage,
-			AllowMsgSchedules: true,
-			Retention:         jetstream.WorkQueuePolicy,
-			Duplicates:        10 * time.Second,
-		}); err != nil {
-			logger.Panic("Failed to create vault reconciler stream: " + err.Error())
-		}
-		logger.Info("[APP:BOOTSTRAP] Vault reconciler stream ready (file storage, AllowMsgSchedules, Duplicates=10s)")
 
 		return params.Bus
 	}, container.Name("core"))

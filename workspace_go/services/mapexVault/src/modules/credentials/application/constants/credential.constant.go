@@ -59,42 +59,17 @@ var VaultScheduleFiredSubject = config.Subject("vault", "schedule.fired")
 // Business rule, not NATS wiring.
 const RefreshBufferMinutes = 15
 
-/**
- * NATS Reconciler Configuration
- *
- * The reconciler is a safety-net loop that periodically reseeds refresh schedules
- * for active credentials whose per-credential timer is missing from the schedule
- * stream (e.g., after NATS stream corruption, accidental purge, or long-running drift).
- *
- * Pattern mirrors the asset health monitor scanner: a single self-republishing
- * timer on a dedicated stream with a fixed MsgId for dedup across pods.
- *
- * All subjects/streams/msgIds here are published BY the application service
- * (scheduleNextReconcile re-arms the timer after each reconcile run).
- */
-
-// VaultReconcilerStreamName is the JetStream stream for reconciler schedules.
-// File storage ensures the loop survives NATS restarts.
-// Published by: application (HasPendingMessages, PublishScheduled). Resolved
-// at package init — e.g. "DEV-MAPEXOS-MAPEXVAULT-RECONCILER".
-var VaultReconcilerStreamName = config.StreamName("MAPEXVAULT", "RECONCILER")
-
-// VaultReconcileScheduleSubject is where the pending reconcile timer is stored.
-// Published by: application (scheduleNextReconcile).
-var VaultReconcileScheduleSubject = config.Subject("vault", "reconcile.schedule")
-
-// VaultReconcileFiredSubject is the target subject NATS delivers to at fire time.
-// MUST stay inside the reconciler stream (covered by the reconcile wildcard).
-// Published by: application (as TargetSubject in ScheduledPublishConfig).
-var VaultReconcileFiredSubject = config.Subject("vault", "reconcile.fired")
-
-// VaultReconcileMsgId is the fixed Nats-Msg-Id used for the reconciler timer.
-// Combined with the stream's Duplicates window, it prevents multiple pods
-// from publishing overlapping timers during the bootstrap race window.
-const VaultReconcileMsgId = "vault-reconcile"
-
 // VaultReconcileDefaultIntervalSeconds is the default interval between reconcile
 // cycles. Overridable via config key "vault_reconcile_interval".
 // 1h keeps the worst-case recovery window short enough to react before most
 // OAuth tokens expire (typical provider TTL = 1h).
 const VaultReconcileDefaultIntervalSeconds = 3600
+
+// VaultLeaderBucket is the NATS KV bucket holding the reconcile leader-election
+// lease. Env-scoped so environments never share a lease; one key (the reconcile
+// leader). Resolved at package init — e.g. "DEV-MAPEXOS-MAPEXVAULT-LEADER".
+var VaultLeaderBucket = config.StreamName("MAPEXVAULT", "LEADER")
+
+// VaultReconcileLeaderKey is the lease key that elects the single pod running the
+// credential reseed sweep.
+const VaultReconcileLeaderKey = "reconcile"

@@ -1,19 +1,20 @@
 package credentials
 
 import (
+	"context"
 	"log"
+	"time"
 
+	"mapexVault/src/modules/credentials/application/constants"
 	"mapexVault/src/modules/credentials/application/ports"
 	service "mapexVault/src/modules/credentials/application/services"
 	collection "mapexVault/src/modules/credentials/infrastructure/persistence/mongo"
 	"mapexVault/src/modules/credentials/interfaces/http/routes"
-	reconcileConsumer "mapexVault/src/modules/credentials/interfaces/message/consumers/reconcile"
 	refreshConsumer "mapexVault/src/modules/credentials/interfaces/message/consumers/refresh"
 
 	web "github.com/Mapex-Solutions/mapexGoKit/microservices/http/web"
 
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
-	common "github.com/Mapex-Solutions/mapexGoKit/microservices/common"
 	config "github.com/Mapex-Solutions/mapexGoKit/microservices/config"
 	container "github.com/Mapex-Solutions/mapexGoKit/microservices/container"
 	apikeymw "github.com/Mapex-Solutions/mapexGoKit/microservices/http/middlewares/apiKey"
@@ -34,6 +35,32 @@ func InitRepositories() {
 func InitServices() {
 	c := container.GetContainer()
 	c.Provide(service.New)
+
+	// Reconcile leader: exactly one pod runs the reseed sweep on the
+	// vault_reconcile_interval ticker plus an immediate reseed on election; the KV
+	// lease elects it and fails over automatically (no self-rescheduling message,
+	// so no dedup window can silently kill the loop).
+	c.Provide(func(params struct {
+		container.In
+		Store   natsModel.KeyValueStore `name:"vault-leader"`
+		Service ports.CredentialServicePort
+	}) *natsModel.LeaderElection {
+		interval, _ := config.GetIntValue("vault_reconcile_interval")
+		if interval <= 0 {
+			interval = constants.VaultReconcileDefaultIntervalSeconds
+		}
+		le, err := natsModel.NewLeaderElection(params.Store, natsModel.LeaderElectionConfig{
+			Key:       constants.VaultReconcileLeaderKey,
+			Interval:  time.Duration(interval) * time.Second,
+			OnTick:    func(ctx context.Context) { params.Service.RunReconcile(ctx) },
+			OnElected: func() { params.Service.RunReconcile(context.Background()) },
+		})
+		if err != nil {
+			logger.Panic("[MODULE:Credentials] reconcile leader build failed: " + err.Error())
+		}
+		return le
+	})
+
 	logger.Info("[MODULE:Credentials] Services registered")
 }
 
@@ -74,6 +101,7 @@ func InitInterfaces() {
 		container.In
 		Bus     *natsModel.Bus `name:"core"`
 		Service ports.CredentialServicePort
+		Leader  *natsModel.LeaderElection
 	}) {
 		// Refresh consumer — pulls from vault.schedule.fired (VAULT-SCHEDULE stream).
 		// Per-credential timers fire here; HandleRefreshMessage refreshes the token
@@ -82,15 +110,13 @@ func InitInterfaces() {
 			log.Fatalf("failed to start refresh consumer")
 		}
 
-		// Reconciler consumer — pulls from vault.reconcile.fired (VAULT-RECONCILER stream).
-		// Safety-net loop that reseeds per-credential timers missing from VAULT-SCHEDULE.
-		reconcileConsumer.NewConsumer(params.Bus, params.Service)
-
-		// Run lifecycle hooks (OnMount): bootstrap seed + first reconcile timer.
-		common.RunLifecycleHooks(params.Service, "Credentials")
+		// Reseed watchdog — the elected leader runs RunReconcile on a ticker; the
+		// per-credential timers that were missing get reseeded. Replaces the old
+		// self-rescheduling reconcile message.
+		params.Leader.Start(context.Background())
 	}); err != nil {
 		log.Fatalf("failed to invoke credentials consumer: %v", err)
 	}
 
-	logger.Info("[MODULE:Credentials] Interfaces registered (HTTP routes + refresh + reconcile consumers)")
+	logger.Info("[MODULE:Credentials] Interfaces registered (HTTP routes + refresh consumer + reconcile leader)")
 }

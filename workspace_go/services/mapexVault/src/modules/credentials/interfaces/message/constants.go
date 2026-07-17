@@ -26,10 +26,3 @@ import (
 // ${env}.mapexos.vault.schedule.fired). Resolved at package init —
 // e.g. "dev.mapexos.vault.schedule.>".
 var VaultScheduleSubjectPattern = config.Subject("vault", "schedule") + ".>"
-
-// VaultReconcilerSubjectPattern covers the single self-republishing
-// reconcile timer on the vault reconciler stream
-// (${env}.mapexos.vault.reconcile.schedule and
-// ${env}.mapexos.vault.reconcile.fired). Resolved at package init —
-// e.g. "dev.mapexos.vault.reconcile.>".
-var VaultReconcilerSubjectPattern = config.Subject("vault", "reconcile") + ".>"
