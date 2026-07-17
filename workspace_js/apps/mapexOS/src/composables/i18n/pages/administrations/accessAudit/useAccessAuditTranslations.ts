@@ -62,8 +62,6 @@ export function useAccessAuditTranslations() {
             text: ts('pages.administrations.accessAudit.info.items.scope.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/administration/access-audit',
-        docsLabel: ts('pages.administrations.accessAudit.info.docsLabel'),
       })),
     },
 

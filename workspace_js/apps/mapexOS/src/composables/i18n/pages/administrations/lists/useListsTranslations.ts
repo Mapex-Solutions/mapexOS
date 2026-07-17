@@ -60,8 +60,6 @@ export function useListsTranslations() {
 						text: ts('pages.administrations.lists.pageHeader.info.items.templates.text'),
 					},
 				],
-				docsUrl: 'https://docs.mapexos.com/lists',
-				docsLabel: ts('pages.administrations.lists.pageHeader.info.docsLabel'),
 			})),
 		},
 

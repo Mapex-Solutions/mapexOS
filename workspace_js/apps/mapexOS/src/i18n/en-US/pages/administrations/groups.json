@@ -7,7 +7,7 @@
   "itemLabelPlural": "groups",
   "info": {
     "title": "What is a Group?",
-    "description": "A Group is a routing configuration that organizes and manages data flows in MapexOS. Groups allow you to route telemetry data from assets to multiple destinations with flexible control and configuration options.",
+    "description": "A Group routes an asset's telemetry to one or more destinations using conditional rules. It makes routing data, not code — associate assets and change where their data flows without touching a deployment.",
     "items": {
       "routing": {
         "title": "Data Routing Organization",
@@ -29,8 +29,7 @@
         "title": "Flexible Configuration",
         "text": "Customize routing rules, transformations, and destination parameters per group"
       }
-    },
-    "docsLabel": "View Complete Documentation"
+    }
   },
   "filters": {
     "label": "filters",

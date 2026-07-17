@@ -7,7 +7,7 @@
   "itemLabelPlural": "clientes",
   "info": {
     "title": "O que é um Cliente?",
-    "description": "Um Cliente é uma organização de segundo nível que pertence a um fornecedor. Os clientes podem ter vários locais, edifícios, andares e zonas, criando uma estrutura hierárquica para gerenciamento de ativos e usuários.",
+    "description": "Um Cliente é uma organização de segundo nível sob um fornecedor. Os clientes contêm uma hierarquia de locais, edifícios, andares e zonas, e cada organização carrega um pathKey que mantém seus dados e usuários isolados de outros inquilinos.",
     "items": {
       "multiSite": {
         "title": "Gerenciamento Multi-Site",
@@ -27,10 +27,9 @@
       },
       "userAccess": {
         "title": "Controle de Acesso de Usuários",
-        "text": "Permissões baseadas em função com escopo para organizações de clientes e seus filhos"
+        "text": "Permissões baseadas em função têm escopo para um cliente e suas organizações filhas"
       }
-    },
-    "docsLabel": "Ver Documentação Completa"
+    }
   },
   "filters": {
     "label": "filtros",

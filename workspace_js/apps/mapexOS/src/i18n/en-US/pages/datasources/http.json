@@ -5,7 +5,7 @@
 		"button": "Add Data Source",
 		"info": {
 			"title": "What is an HTTP Data Source?",
-			"description": "An HTTP Data Source enables bidirectional communication between your IoT devices and MapexOS using HTTP/HTTPS protocols. It provides a flexible way to receive telemetry data from devices or send commands to them.",
+			"description": "An HTTP Data Source is a source that talks to MapexOS over HTTP/HTTPS. It carries its own authentication policy — the HTTP Gateway authenticates each request against it, tags it with a correlation id, and admits a minimal payload to the pipeline. Devices can push telemetry, or MapexOS can pull it.",
 			"items": {
 				"pull": {
 					"title": "Pull Mode",
@@ -23,8 +23,7 @@
 					"title": "Asset Binding",
 					"text": "Link data to specific assets using Fixed Asset ID or Dynamic UUID field mapping"
 				}
-			},
-			"docsLabel": "View Complete Documentation"
+			}
 		}
 	},
 	"filters": {

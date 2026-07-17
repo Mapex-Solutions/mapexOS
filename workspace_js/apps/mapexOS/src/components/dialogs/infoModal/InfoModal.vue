@@ -53,22 +53,6 @@
           </div>
         </div>
 
-        <!-- Documentation link -->
-        <div v-if="docsUrl" class="q-mt-lg">
-          <q-btn
-            flat
-            dense
-            no-caps
-            icon="description"
-            color="primary"
-            :label="docsLabel || 'View Documentation'"
-            :href="docsUrl"
-            target="_blank"
-            class="q-px-sm"
-          >
-            <q-icon name="open_in_new" size="xs" class="q-ml-xs" />
-          </q-btn>
-        </div>
       </q-card-section>
 
       <!-- Footer Actions (optional) -->

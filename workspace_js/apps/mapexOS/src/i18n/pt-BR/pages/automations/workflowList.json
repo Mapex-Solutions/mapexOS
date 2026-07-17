@@ -14,14 +14,13 @@
     "addButton": "novo workflow",
     "info": {
       "title": "O que é um Workflow?",
-      "description": "Um Workflow é uma automação visual que define uma série de etapas (nós) conectados por arestas em um canvas DAG. Workflows podem ser acionados por eventos, timers ou outros workflows.",
+      "description": "Um Workflow é uma automação visual — um DAG de nós conectados por arestas. O engine o executa de forma durável: faz checkpoint de cada etapa e delega ações externas, então uma execução sobrevive a reinícios e retoma no meio do grafo. Workflows são acionados por eventos, timers ou outros workflows.",
       "items": {
         "visual": { "title": "Canvas Visual", "text": "Desenhe automações visualmente com canvas DAG drag-and-drop" },
         "plugins": { "title": "Sistema de Plugins", "text": "Tipos de nós extensíveis incluindo código, condições, loops e sub-workflows" },
         "triggers": { "title": "Multi-Trigger", "text": "Acione workflows via HTTP, NATS, MQTT, email, Slack, Teams e mais" },
         "variables": { "title": "Variáveis", "text": "Persista dados entre etapas de execução com variáveis de workflow" }
-      },
-      "docsLabel": "ver documentação completa"
+      }
     }
   },
   "filters": {

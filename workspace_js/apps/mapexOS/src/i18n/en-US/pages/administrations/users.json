@@ -7,30 +7,29 @@
   "itemLabelPlural": "users",
   "info": {
     "title": "What is a User?",
-    "description": "A User represents an individual who can access and interact with MapexOS. Users are authenticated, assigned roles, and granted permissions to perform specific actions within the system based on their organizational scope.",
+    "description": "A User is an individual who signs in to MapexOS with an email and password. Users are granted roles through memberships, and every request they make is authorized and scoped to the organizations they are allowed to see.",
     "items": {
       "authentication": {
-        "title": "Authentication & Authorization",
-        "text": "Secure login with support for internal credentials and external identity providers"
+        "title": "Authentication",
+        "text": "Secure login with email and password (bcrypt), issuing short-lived access and refresh tokens (JWT)"
       },
       "rolePermissions": {
         "title": "Role-Based Permissions",
-        "text": "Users inherit permissions from assigned roles, controlling what they can view and modify"
+        "text": "Users inherit permissions from the roles granted by their direct and group memberships"
       },
       "multiOrg": {
-        "title": "Multi-Organization Access",
-        "text": "Users can access multiple customer organizations with different permission levels"
+        "title": "Organization Coverage",
+        "text": "A user sees and acts on the subtree of organizations their memberships reach — one deployment, many tenants, zero shared visibility"
       },
       "profile": {
         "title": "Profile Management",
         "text": "Manage user information including name, email, job title, and contact details"
       },
       "activity": {
-        "title": "Activity Tracking",
-        "text": "Track user actions, login history, and audit trails for compliance and security"
+        "title": "Session Tracking",
+        "text": "Track user sessions and access for compliance and security"
       }
-    },
-    "docsLabel": "View Complete Documentation"
+    }
   },
   "filters": {
     "label": "filters",

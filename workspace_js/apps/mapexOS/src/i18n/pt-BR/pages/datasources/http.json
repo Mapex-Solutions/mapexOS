@@ -5,7 +5,7 @@
 		"button": "Adicionar Fonte de Dados",
 		"info": {
 			"title": "O que é uma Fonte de Dados HTTP?",
-			"description": "Uma Fonte de Dados HTTP permite comunicação bidirecional entre seus dispositivos IoT e o MapexOS usando protocolos HTTP/HTTPS. Ela oferece uma maneira flexível de receber dados de telemetria dos dispositivos ou enviar comandos para eles.",
+			"description": "Uma Fonte de Dados HTTP é uma origem que fala com o MapexOS por HTTP/HTTPS. Ela carrega sua própria política de autenticação — o HTTP Gateway autentica cada requisição contra ela, marca-a com um id de correlação e admite um payload mínimo no pipeline. Dispositivos podem enviar (push) telemetria, ou o MapexOS pode buscá-la (pull).",
 			"items": {
 				"pull": {
 					"title": "Modo Pull",
@@ -23,8 +23,7 @@
 					"title": "Vinculação de Ativo",
 					"text": "Vincule dados a ativos específicos usando ID de Ativo Fixo ou mapeamento dinâmico de campo UUID"
 				}
-			},
-			"docsLabel": "Ver Documentação Completa"
+			}
 		}
 	},
 	"filters": {

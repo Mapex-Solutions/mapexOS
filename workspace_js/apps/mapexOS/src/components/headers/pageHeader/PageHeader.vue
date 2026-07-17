@@ -147,8 +147,6 @@ function handleStartTour(): void {
     :title="props.info.title"
     :description="props.info.description"
     :items="props.info.items"
-    :docs-url="props.info.docsUrl"
-    :docs-label="props.info.docsLabel"
   />
 </template>
 

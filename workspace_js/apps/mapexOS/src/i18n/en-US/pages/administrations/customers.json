@@ -7,7 +7,7 @@
   "itemLabelPlural": "customers",
   "info": {
     "title": "What is a Customer?",
-    "description": "A Customer is a second-level organization that belongs to a vendor. Customers can have multiple sites, buildings, floors, and zones, creating a hierarchical structure for asset and user management.",
+    "description": "A Customer is a second-level organization under a vendor. Customers hold a hierarchy of sites, buildings, floors, and zones, and every organization carries a pathKey that keeps its data and users isolated from other tenants.",
     "items": {
       "multiSite": {
         "title": "Multi-Site Management",
@@ -27,10 +27,9 @@
       },
       "userAccess": {
         "title": "User Access Control",
-        "text": "Role-based permissions scoped to customer organizations and their children"
+        "text": "Role-based permissions are scoped to a customer and its child organizations"
       }
-    },
-    "docsLabel": "View Complete Documentation"
+    }
   },
   "filters": {
     "label": "filters",

@@ -4,11 +4,11 @@
   "addButton": "adicionar ativo",
   "info": {
     "title": "O que é um Ativo?",
-    "description": "Um Ativo é qualquer origem que o MapexOS governa — um dispositivo, gateway, API ou sistema de negócio, físico ou virtual — que envia ou recebe dados pela plataforma.",
+    "description": "Um Ativo é qualquer origem que o MapexOS governa — um dispositivo, gateway, API ou sistema de negócio, físico ou virtual — que envia ou recebe dados pela plataforma. Cada ativo é vinculado a um template, identificado por um assetUUID estável, e sua presença é acompanhada a partir de sua atividade.",
     "items": {
       "templates": {
         "title": "Baseado em Templates",
-        "text": "Ativos são criados a partir de templates que definem sua estrutura, processamento de dados e regras de validação"
+        "text": "Cada ativo é criado a partir de um template que define sua estrutura, scripts de transformação e regras de validação"
       },
       "protocols": {
         "title": "Multi-Protocolo",
@@ -19,15 +19,14 @@
         "text": "Ativos pertencem a organizações com suporte a estrutura hierárquica para configurações empresariais complexas"
       },
       "realtime": {
-        "title": "Dados em Tempo Real",
-        "text": "Ativos transmitem dados em tempo real e podem receber comandos instantaneamente"
+        "title": "Presença em Tempo Real",
+        "text": "Ativos transmitem dados em tempo real e podem receber comandos de volta; a presença de cada um — online ou offline — é acompanhada a partir de sua última atividade"
       },
       "location": {
         "title": "Geo-Localização",
         "text": "Ativos podem ter coordenadas geográficas para monitoramento e análise baseados em localização"
       }
-    },
-    "docsLabel": "Ver Documentação Completa"
+    }
   },
   "listTitle": "lista de ativos",
   "itemLabel": "ativo",

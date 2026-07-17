@@ -11,30 +11,29 @@
   "itemLabelPlural": "roles",
   "info": {
     "title": "What is a Role?",
-    "description": "A Role defines a set of permissions that control what users can do in MapexOS. Roles implement role-based access control (RBAC) to secure your system and manage user capabilities across different resources and organizations.",
+    "description": "A Role is a named set of permission strings (like organizations.create) that control what a user can do in MapexOS. Roles are custom — not a fixed list — and are granted through memberships to a user or a group, implementing role-based access control (RBAC).",
     "items": {
       "permissions": {
         "title": "Permission Management",
         "text": "Define granular permissions for resources like assets, users, data sources, and routing"
       },
       "systemCustom": {
-        "title": "System vs Custom Roles",
-        "text": "Use built-in system roles or create custom roles tailored to your organization's needs"
+        "title": "System, Template & Local Roles",
+        "text": "Use global system roles, share vendor or customer templates down the org tree, or create roles local to a single organization"
       },
       "accessControl": {
         "title": "Multi-Resource Access Control",
-        "text": "Control access across multiple resource types with a single role assignment"
+        "text": "Control access across multiple resource types with a single role"
       },
       "userAssignment": {
-        "title": "User Assignment",
-        "text": "Assign roles to users to grant them specific permissions and capabilities"
+        "title": "Granted via Memberships",
+        "text": "A role is granted to a user or a group through a membership; a user's permissions union their direct and group memberships"
       },
       "granular": {
         "title": "Granular Permissions",
         "text": "Fine-grained control with create, read, update, delete, and execute permissions"
       }
-    },
-    "docsLabel": "View Complete Documentation"
+    }
   },
   "filters": {
     "label": "filters",

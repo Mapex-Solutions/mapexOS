@@ -51,8 +51,6 @@ export function useRouteGroupsTranslations() {
             text: ts('pages.routing.routeGroups.pageHeader.info.items.andOrLogic.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/route-groups',
-        docsLabel: ts('pages.routing.routeGroups.pageHeader.info.docsLabel'),
       })),
     },
 

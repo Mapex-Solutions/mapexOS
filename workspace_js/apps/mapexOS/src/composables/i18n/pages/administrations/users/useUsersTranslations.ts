@@ -72,8 +72,6 @@ export function useUsersTranslations() {
             text: ts('pages.administrations.users.info.items.activity.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/administration/users',
-        docsLabel: ts('pages.administrations.users.info.docsLabel'),
       })),
     },
 

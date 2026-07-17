@@ -7,30 +7,29 @@
   "itemLabelPlural": "usuários",
   "info": {
     "title": "O que é um Usuário?",
-    "description": "Um Usuário representa um indivíduo que pode acessar e interagir com o MapexOS. Os usuários são autenticados, recebem funções e permissões para realizar ações específicas dentro do sistema com base em seu escopo organizacional.",
+    "description": "Um Usuário é um indivíduo que faz login no MapexOS com e-mail e senha. Os usuários recebem funções através de memberships, e cada requisição que fazem é autorizada e limitada às organizações que têm permissão de ver.",
     "items": {
       "authentication": {
-        "title": "Autenticação e Autorização",
-        "text": "Login seguro com suporte para credenciais internas e provedores de identidade externos"
+        "title": "Autenticação",
+        "text": "Login seguro com e-mail e senha (bcrypt), emitindo tokens de acesso e refresh de curta duração (JWT)"
       },
       "rolePermissions": {
         "title": "Permissões Baseadas em Função",
-        "text": "Os usuários herdam permissões de funções atribuídas, controlando o que podem visualizar e modificar"
+        "text": "Os usuários herdam permissões das funções concedidas por suas memberships diretas e de grupo"
       },
       "multiOrg": {
-        "title": "Acesso Multi-Organização",
-        "text": "Os usuários podem acessar múltiplas organizações de clientes com níveis de permissão diferentes"
+        "title": "Cobertura de Organizações",
+        "text": "Um usuário vê e atua na subárvore de organizações que suas memberships alcançam — um deployment, muitos inquilinos, zero visibilidade compartilhada"
       },
       "profile": {
         "title": "Gerenciamento de Perfil",
         "text": "Gerencie informações do usuário incluindo nome, e-mail, cargo e detalhes de contato"
       },
       "activity": {
-        "title": "Rastreamento de Atividades",
-        "text": "Rastreie ações do usuário, histórico de login e trilhas de auditoria para conformidade e segurança"
+        "title": "Rastreamento de Sessões",
+        "text": "Rastreie sessões e acessos do usuário para conformidade e segurança"
       }
-    },
-    "docsLabel": "Ver Documentação Completa"
+    }
   },
   "filters": {
     "label": "filtros",

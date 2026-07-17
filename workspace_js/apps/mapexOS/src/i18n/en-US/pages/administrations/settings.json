@@ -22,11 +22,10 @@
         "text": "Balance data retention with system performance and storage capacity"
       },
       "backup": {
-        "title": "Backup Settings",
+        "title": "Governance & Compliance",
         "text": "Ensure compliance with data governance policies and regulatory requirements"
       }
-    },
-    "docsLabel": "View Complete Documentation"
+    }
   },
   "tabs": {
     "general": "General",

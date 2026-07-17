@@ -43,8 +43,6 @@ export function useHttpDataSourcesTranslations() {
 						text: ts('pages.datasources.http.pageHeader.info.items.assetBinding.text'),
 					},
 				],
-				docsUrl: 'https://docs.mapexos.com/datasources/http',
-				docsLabel: ts('pages.datasources.http.pageHeader.info.docsLabel'),
 			})),
 		},
 

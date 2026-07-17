@@ -68,8 +68,6 @@ export function useRolesTranslations() {
             text: ts('pages.administrations.roles.info.items.granular.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/administration/roles',
-        docsLabel: ts('pages.administrations.roles.info.docsLabel'),
       })),
     },
 

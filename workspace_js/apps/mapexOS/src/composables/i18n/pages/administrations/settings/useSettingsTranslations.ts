@@ -78,8 +78,6 @@ export function useSettingsTranslations() {
             text: ts('pages.administrations.settings.info.items.backup.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/administration/settings',
-        docsLabel: ts('pages.administrations.settings.info.docsLabel'),
       })),
     },
 

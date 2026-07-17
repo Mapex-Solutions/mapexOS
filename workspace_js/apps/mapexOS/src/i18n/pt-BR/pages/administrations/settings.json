@@ -22,11 +22,10 @@
         "text": "Equilibre a retenção de dados com o desempenho do sistema e capacidade de armazenamento"
       },
       "backup": {
-        "title": "Configurações de Backup",
+        "title": "Governança e Conformidade",
         "text": "Garanta a conformidade com políticas de governança de dados e requisitos regulatórios"
       }
-    },
-    "docsLabel": "Ver Documentação Completa"
+    }
   },
   "tabs": {
     "general": "Geral",

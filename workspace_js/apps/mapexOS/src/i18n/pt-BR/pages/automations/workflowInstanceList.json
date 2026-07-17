@@ -10,14 +10,13 @@
     "addButton": "nova instância",
     "info": {
       "title": "O que é uma Instância de Workflow?",
-      "description": "Uma Instância de Workflow vincula um template de workflow a valores de input específicos. Quando acionada, o workflow executa com esses inputs pré-configurados.",
+      "description": "Uma Instância de Workflow é uma instanciação configurada de um workflow — a definição vinculada a valores de input específicos. Cada vez que é acionada, produz uma execução: uma run durável e recuperável de falhas que retoma a partir do último nó concluído.",
       "items": {
         "binding": { "title": "Binding de Template", "text": "Vincule um template de workflow com inputs externos preenchidos" },
         "inputs": { "title": "Inputs Dinâmicos", "text": "Preencha inputs definidos pelo designer do workflow — strings, números, assets, etc." },
         "trigger": { "title": "Pronto para Trigger", "text": "Uma vez criada, instâncias ficam prontas para serem acionadas por eventos, timers ou HTTP" },
         "reuse": { "title": "Reutilizável", "text": "Crie múltiplas instâncias do mesmo workflow com valores de input diferentes" }
-      },
-      "docsLabel": "ver documentação completa"
+      }
     }
   },
   "buttons": {

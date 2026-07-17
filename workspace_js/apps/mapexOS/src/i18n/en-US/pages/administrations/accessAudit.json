@@ -5,27 +5,26 @@
   "itemLabel": "membership",
   "itemLabelPlural": "memberships",
   "info": {
-    "title": "access audit overview",
-    "description": "the Access Audit page provides a comprehensive view of all memberships in your organization. Use this page to review and audit user and group access permissions.",
+    "title": "Access Audit Overview",
+    "description": "The Access Audit page gives a complete view of every membership in your organization — who (a user or group) holds which role, in which organization. Use it to review and audit access.",
     "items": {
       "memberships": {
-        "title": "memberships",
-        "text": "view all access grants linking users or groups to organizations with specific roles"
+        "title": "Memberships",
+        "text": "View every access grant linking a user or group to an organization with a specific role"
       },
       "users": {
-        "title": "user access",
-        "text": "filter by user to see all organizations and roles assigned to a specific user"
+        "title": "User Access",
+        "text": "Filter by user to see all organizations and roles assigned to that user"
       },
       "groups": {
-        "title": "group access",
-        "text": "filter by group to see all organizations and roles assigned to a specific group"
+        "title": "Group Access",
+        "text": "Filter by group to see all organizations and roles assigned to that group"
       },
       "scope": {
-        "title": "access scope",
-        "text": "understand scope: 'local' applies to the org only, 'recursive' includes all child organizations"
+        "title": "Access Scope",
+        "text": "See each grant's scope: 'local' applies to the organization only; 'recursive' cascades to its child organizations"
       }
-    },
-    "docsLabel": "view documentation"
+    }
   },
   "filters": {
     "assigneeType": "assignee type",

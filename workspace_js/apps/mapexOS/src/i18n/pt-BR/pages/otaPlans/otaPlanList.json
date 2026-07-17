@@ -21,8 +21,7 @@
         "title": "Janela Delimitada",
         "text": "Todo plano executa entre um horário de início e um prazo final; dispositivos pendentes expiram quando a janela fecha"
       }
-    },
-    "docsLabel": "Ver Documentação Completa"
+    }
   },
   "filters": {
     "label": "filtros",

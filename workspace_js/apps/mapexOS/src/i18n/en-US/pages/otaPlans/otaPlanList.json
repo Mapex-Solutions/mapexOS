@@ -21,8 +21,7 @@
         "title": "Bounded Window",
         "text": "Every plan runs between a start time and a deadline; pending devices time out when the window closes"
       }
-    },
-    "docsLabel": "View Complete Documentation"
+    }
   },
   "filters": {
     "label": "filters",

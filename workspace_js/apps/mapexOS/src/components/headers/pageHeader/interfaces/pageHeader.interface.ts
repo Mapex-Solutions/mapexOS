@@ -32,8 +32,6 @@ export interface PageHeaderInfo {
 	title: string;              // Modal title
 	description: string;        // Modal description
 	items?: PageHeaderInfoItem[]; // List of features/items
-	docsUrl?: string;           // Documentation URL
-	docsLabel?: string;         // Documentation button label
 }
 
 /**

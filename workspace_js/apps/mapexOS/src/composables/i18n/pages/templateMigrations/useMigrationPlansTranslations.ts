@@ -45,8 +45,6 @@ export function useMigrationPlansTranslations() {
             text: ts(`${base}.pageHeader.info.items.tracking.text`),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/asset-templates',
-        docsLabel: ts(`${base}.pageHeader.info.docsLabel`),
       })),
     },
 

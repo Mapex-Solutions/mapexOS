@@ -59,8 +59,6 @@ export function useCustomersTranslations() {
             text: ts('pages.administrations.customers.info.items.userAccess.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/organizations/customers',
-        docsLabel: ts('pages.administrations.customers.info.docsLabel'),
       })),
     },
 

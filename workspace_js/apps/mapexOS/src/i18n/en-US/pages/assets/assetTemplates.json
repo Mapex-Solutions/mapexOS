@@ -5,30 +5,29 @@
     "button": "add asset template",
     "info": {
       "title": "What is an Asset Template?",
-      "description": "An Asset Template defines the blueprint for creating assets, including data structure, processing rules, validation logic, and conversion scripts. Templates ensure consistency and enable automated data handling across similar device types.",
+      "description": "An Asset Template is a reusable blueprint that onboards a device type by configuration instead of code. It defines the device classification, where to find the device id in each payload (assetIdPath), the transform scripts that turn raw payloads into normalized events, and the EVA schema of dynamic fields the device reports. One template serves thousands of assets of the same type.",
       "items": {
         "reusability": {
           "title": "Reusable Blueprint",
-          "text": "Create one template and use it for multiple assets of the same type, ensuring consistency"
+          "text": "One template serves thousands of assets of the same type — a new vendor or model is a configuration, never a new code branch"
         },
         "processing": {
-          "title": "Data Processing",
-          "text": "Define processor, validator, and conversion scripts to handle incoming data automatically"
+          "title": "Transform Scripts",
+          "text": "A validator and a conversion script are required; a preprocessor and a test script are optional — together they turn raw device payloads into normalized events"
         },
         "manufacturer": {
-          "title": "Device Specification",
-          "text": "Associate templates with manufacturer, model, and version for precise device identification"
+          "title": "Device Classification",
+          "text": "Category, manufacturer, model, and version identify the device, and the assetIdPath locates its id inside each incoming payload"
         },
         "systemTemplates": {
           "title": "System Templates",
-          "text": "Pre-built templates provided by MapexOS for common device types and protocols"
+          "text": "Ready-made templates MapexOS ships for common device types and protocols"
         },
         "customization": {
           "title": "Custom Templates",
-          "text": "Create custom templates tailored to your specific device requirements and data formats"
+          "text": "Build your own template — its dynamic EVA fields and transform scripts — tailored to your device's data format"
         }
-      },
-      "docsLabel": "View Complete Documentation"
+      }
     }
   },
   "filters": {

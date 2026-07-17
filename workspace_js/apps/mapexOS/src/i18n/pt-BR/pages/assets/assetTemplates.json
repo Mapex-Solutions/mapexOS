@@ -5,30 +5,29 @@
     "button": "adicionar modelo de ativo",
     "info": {
       "title": "O que é um Modelo de Ativo?",
-      "description": "Um Modelo de Ativo define o blueprint para criar ativos, incluindo estrutura de dados, regras de processamento, lógica de validação e scripts de conversão. Modelos garantem consistência e permitem manipulação automatizada de dados entre tipos de dispositivos similares.",
+      "description": "Um Modelo de Ativo é um blueprint reutilizável que integra um tipo de dispositivo por configuração, não por código. Ele define a classificação do dispositivo, onde encontrar o id do dispositivo em cada payload (assetIdPath), os scripts de transformação que convertem payloads brutos em eventos normalizados, e o schema de campos dinâmicos EVA que o dispositivo reporta. Um modelo serve milhares de ativos do mesmo tipo.",
       "items": {
         "reusability": {
           "title": "Blueprint Reutilizável",
-          "text": "Crie um modelo e use-o para múltiplos ativos do mesmo tipo, garantindo consistência"
+          "text": "Um modelo serve milhares de ativos do mesmo tipo — um novo fabricante ou modelo é uma configuração, nunca um novo ramo de código"
         },
         "processing": {
-          "title": "Processamento de Dados",
-          "text": "Defina scripts de processamento, validação e conversão para lidar com dados recebidos automaticamente"
+          "title": "Scripts de Transformação",
+          "text": "Um validador e um script de conversão são obrigatórios; um pré-processador e um script de teste são opcionais — juntos, convertem payloads brutos do dispositivo em eventos normalizados"
         },
         "manufacturer": {
-          "title": "Especificação do Dispositivo",
-          "text": "Associe modelos com fabricante, modelo e versão para identificação precisa do dispositivo"
+          "title": "Classificação do Dispositivo",
+          "text": "Categoria, fabricante, modelo e versão identificam o dispositivo, e o assetIdPath localiza o id dele dentro de cada payload recebido"
         },
         "systemTemplates": {
           "title": "Modelos do Sistema",
-          "text": "Modelos pré-construídos fornecidos pelo MapexOS para tipos de dispositivos e protocolos comuns"
+          "text": "Modelos prontos que o MapexOS fornece para tipos de dispositivos e protocolos comuns"
         },
         "customization": {
           "title": "Modelos Personalizados",
-          "text": "Crie modelos personalizados adaptados aos seus requisitos específicos de dispositivo e formatos de dados"
+          "text": "Crie seu próprio modelo — seus campos dinâmicos EVA e scripts de transformação — adaptado ao formato de dados do seu dispositivo"
         }
-      },
-      "docsLabel": "Ver Documentação Completa"
+      }
     }
   },
   "filters": {

@@ -40,7 +40,6 @@ export function useWorkflowInstanceListPageTranslations() {
           { title: ts(`${bp}.page.info.items.trigger.title`), text: ts(`${bp}.page.info.items.trigger.text`) },
           { title: ts(`${bp}.page.info.items.reuse.title`), text: ts(`${bp}.page.info.items.reuse.text`) },
         ],
-        docsLabel: ts(`${bp}.page.info.docsLabel`),
       })),
     },
     buttons: {

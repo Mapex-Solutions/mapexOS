@@ -11,8 +11,6 @@ export interface InfoModalProps {
 	title: string;
 	description: string;
 	items?: InfoItem[] | undefined;
-	docsUrl?: string | undefined;
-	docsLabel?: string | undefined;
 	closeLabel?: string | undefined;
 	showActions?: boolean | undefined;
 }

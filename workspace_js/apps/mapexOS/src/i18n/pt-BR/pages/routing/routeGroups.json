@@ -5,7 +5,7 @@
     "button": "adicionar grupo de roteamento",
     "info": {
       "title": "O que é um Grupo de Roteamento?",
-      "description": "Um Grupo de Roteamento define como os eventos recebidos são roteados para diferentes destinos de processamento com base em regras condicionais. Você pode rotear eventos para Regras de Negócio, LakeHouses, Notificações ou simplesmente salvá-los.",
+      "description": "Um Grupo de Roteamento decide para onde vai cada evento recebido. Ele contém um conjunto de roteadores — cada um um destino (Regra de Negócio, LakeHouse, Notificação ou salvar) guardado por regras de correspondência condicionais. Roteamento é data, não código: mude para onde os eventos vão editando regras, sem redeploy.",
       "items": {
         "conditionalRouting": {
           "title": "Roteamento Condicional",
@@ -27,8 +27,7 @@
           "title": "Lógica E/OU",
           "text": "Combine múltiplas regras usando políticas 'all' (E) ou 'any' (OU) para correspondência flexível"
         }
-      },
-      "docsLabel": "Ver Documentação Completa"
+      }
     }
   },
   "filters": {

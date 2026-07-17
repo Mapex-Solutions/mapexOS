@@ -86,8 +86,6 @@ export function useAssetsTranslations() {
             text: ts('pages.assets.assets.info.items.location.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/assets',
-        docsLabel: ts('pages.assets.assets.info.docsLabel'),
       })),
       listTitle: computed(() => tsTitle('pages.assets.assets.listTitle')),
       itemLabel: computed(() => ts('pages.assets.assets.itemLabel')),

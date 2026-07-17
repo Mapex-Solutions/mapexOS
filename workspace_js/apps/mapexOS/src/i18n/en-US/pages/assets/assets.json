@@ -4,11 +4,11 @@
   "addButton": "add asset",
   "info": {
     "title": "What is an Asset?",
-    "description": "An Asset is any source MapexOS governs — a device, gateway, API, or business system, physical or virtual — that sends or receives data through the platform.",
+    "description": "An Asset is any source MapexOS governs — a device, gateway, API, or business system, physical or virtual — that sends or receives data through the platform. Each asset is bound to a template, identified by a stable assetUUID, and its presence is tracked from its activity.",
     "items": {
       "templates": {
         "title": "Template-Based",
-        "text": "Assets are created from templates that define their structure, data processing, and validation rules"
+        "text": "Each asset is created from a template that defines its structure, transform scripts, and validation rules"
       },
       "protocols": {
         "title": "Multi-Protocol",
@@ -19,15 +19,14 @@
         "text": "Assets belong to organizations with hierarchical structure support for complex enterprise setups"
       },
       "realtime": {
-        "title": "Real-Time Data",
-        "text": "Assets stream data in real time and can receive commands instantly"
+        "title": "Real-Time Presence",
+        "text": "Assets stream data in real time and can receive commands back; each one's presence — online or offline — is tracked from its last activity"
       },
       "location": {
         "title": "Geo-Location",
         "text": "Assets can have geographical coordinates for location-based monitoring and analysis"
       }
-    },
-    "docsLabel": "View Complete Documentation"
+    }
   },
   "listTitle": "assets list",
   "itemLabel": "asset",

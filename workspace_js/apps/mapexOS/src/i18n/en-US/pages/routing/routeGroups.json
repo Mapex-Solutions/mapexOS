@@ -5,7 +5,7 @@
     "button": "add route group",
     "info": {
       "title": "What is a Route Group?",
-      "description": "A Route Group defines how incoming events are routed to different processing destinations based on conditional rules. You can route events to Business Rules, LakeHouses, Notifications, or simply save them.",
+      "description": "A Route Group decides where each incoming event goes. It holds a set of routers — each a destination (Business Rule, LakeHouse, Notification, or save) guarded by conditional match rules. Routing is data, not code: change where events go by editing rules, with no redeploy.",
       "items": {
         "conditionalRouting": {
           "title": "Conditional Routing",
@@ -27,8 +27,7 @@
           "title": "AND/OR Logic",
           "text": "Combine multiple rules using 'all' (AND) or 'any' (OR) policies for flexible matching"
         }
-      },
-      "docsLabel": "View Complete Documentation"
+      }
     }
   },
   "filters": {

@@ -10,14 +10,13 @@
     "addButton": "new instance",
     "info": {
       "title": "What is a Workflow Instance?",
-      "description": "A Workflow Instance binds a workflow template to specific input values. When triggered, the workflow executes with those pre-configured inputs.",
+      "description": "A Workflow Instance is a configured instantiation of a workflow — the definition bound to specific input values. Each time it is triggered it produces an execution: a durable, crash-recoverable run that resumes from its last completed node.",
       "items": {
         "binding": { "title": "Template Binding", "text": "Link a workflow template with filled external inputs" },
         "inputs": { "title": "Dynamic Inputs", "text": "Fill inputs defined by the workflow designer — strings, numbers, assets, etc." },
         "trigger": { "title": "Trigger Ready", "text": "Once created, instances are ready to be triggered by events, timers, or HTTP calls" },
         "reuse": { "title": "Reusable", "text": "Create multiple instances from the same workflow with different input values" }
-      },
-      "docsLabel": "view complete documentation"
+      }
     }
   },
   "buttons": {

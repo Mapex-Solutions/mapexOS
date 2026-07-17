@@ -11,30 +11,29 @@
   "itemLabelPlural": "funções",
   "info": {
     "title": "O que é uma Função?",
-    "description": "Uma Função define um conjunto de permissões que controlam o que os usuários podem fazer no MapexOS. As funções implementam controle de acesso baseado em funções (RBAC) para proteger seu sistema e gerenciar capacidades de usuários em diferentes recursos e organizações.",
+    "description": "Uma Função é um conjunto nomeado de strings de permissão (como organizations.create) que controlam o que um usuário pode fazer no MapexOS. Funções são personalizadas — não uma lista fixa — e são concedidas através de memberships a um usuário ou grupo, implementando controle de acesso baseado em funções (RBAC).",
     "items": {
       "permissions": {
         "title": "Gerenciamento de Permissões",
         "text": "Defina permissões granulares para recursos como ativos, usuários, fontes de dados e roteamento"
       },
       "systemCustom": {
-        "title": "Funções de Sistema vs Personalizadas",
-        "text": "Use funções de sistema integradas ou crie funções personalizadas adaptadas às necessidades da sua organização"
+        "title": "Funções de Sistema, Template e Local",
+        "text": "Use funções de sistema globais, compartilhe templates de fornecedor ou cliente pela árvore de organizações, ou crie funções locais a uma única organização"
       },
       "accessControl": {
         "title": "Controle de Acesso Multi-Recurso",
-        "text": "Controle o acesso a vários tipos de recursos com uma única atribuição de função"
+        "text": "Controle o acesso a vários tipos de recursos com uma única função"
       },
       "userAssignment": {
-        "title": "Atribuição de Usuários",
-        "text": "Atribua funções aos usuários para conceder-lhes permissões e capacidades específicas"
+        "title": "Concedida via Memberships",
+        "text": "Uma função é concedida a um usuário ou grupo através de uma membership; as permissões de um usuário unem suas memberships diretas e de grupo"
       },
       "granular": {
         "title": "Permissões Granulares",
         "text": "Controle refinado com permissões de criar, ler, atualizar, excluir e executar"
       }
-    },
-    "docsLabel": "Ver Documentação Completa"
+    }
   },
   "filters": {
     "label": "filtros",

@@ -51,8 +51,6 @@ export function useAssetTemplatesTranslations() {
             text: ts('pages.assets.assetTemplates.pageHeader.info.items.customization.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/asset-templates',
-        docsLabel: ts('pages.assets.assetTemplates.pageHeader.info.docsLabel'),
       })),
     },
 

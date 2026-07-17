@@ -12,7 +12,7 @@ vi.mock('@components/tooltips', () => ({
 }));
 
 vi.mock('@components/dialogs/infoModal', () => ({
-  InfoModal: { template: '<div />', props: ['modelValue', 'icon', 'title', 'description', 'items', 'docsUrl', 'docsLabel'] },
+  InfoModal: { template: '<div />', props: ['modelValue', 'icon', 'title', 'description', 'items'] },
 }));
 
 const baseProps: PageHeaderProps = {
@@ -124,7 +124,6 @@ describe('PageHeader', () => {
       title: 'Info Title',
       description: 'Info description',
       items: [{ text: 'Feature 1' }],
-      docsUrl: 'https://docs.example.com',
     };
 
     it('should render info button when info prop is provided and tour is not', () => {

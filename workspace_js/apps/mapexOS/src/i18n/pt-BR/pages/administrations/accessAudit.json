@@ -5,27 +5,26 @@
   "itemLabel": "membership",
   "itemLabelPlural": "memberships",
   "info": {
-    "title": "visão geral da auditoria de acesso",
-    "description": "a página de Auditoria de Acesso fornece uma visão completa de todas as memberships na sua organização. Use esta página para revisar e auditar permissões de acesso de usuários e grupos.",
+    "title": "Visão Geral da Auditoria de Acesso",
+    "description": "A página de Auditoria de Acesso dá uma visão completa de cada membership na sua organização — quem (um usuário ou grupo) tem qual função, em qual organização. Use-a para revisar e auditar acessos.",
     "items": {
       "memberships": {
-        "title": "memberships",
-        "text": "visualize todas as concessões de acesso vinculando usuários ou grupos a organizações com funções específicas"
+        "title": "Memberships",
+        "text": "Visualize cada concessão de acesso vinculando um usuário ou grupo a uma organização com uma função específica"
       },
       "users": {
-        "title": "acesso de usuários",
-        "text": "filtre por usuário para ver todas as organizações e funções atribuídas a um usuário específico"
+        "title": "Acesso de Usuários",
+        "text": "Filtre por usuário para ver todas as organizações e funções atribuídas a esse usuário"
       },
       "groups": {
-        "title": "acesso de grupos",
-        "text": "filtre por grupo para ver todas as organizações e funções atribuídas a um grupo específico"
+        "title": "Acesso de Grupos",
+        "text": "Filtre por grupo para ver todas as organizações e funções atribuídas a esse grupo"
       },
       "scope": {
-        "title": "escopo de acesso",
-        "text": "entenda o escopo: 'local' aplica-se apenas à org, 'recursivo' inclui todas as organizações filhas"
+        "title": "Escopo de Acesso",
+        "text": "Veja o escopo de cada concessão: 'local' aplica-se apenas à organização; 'recursivo' propaga às organizações filhas"
       }
-    },
-    "docsLabel": "ver documentação"
+    }
   },
   "filters": {
     "assigneeType": "tipo de atribuído",

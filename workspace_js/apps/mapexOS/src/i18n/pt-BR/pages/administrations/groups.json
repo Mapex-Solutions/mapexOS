@@ -7,7 +7,7 @@
   "itemLabelPlural": "grupos",
   "info": {
     "title": "O que é um Grupo?",
-    "description": "Um Grupo é uma configuração de roteamento que organiza e gerencia fluxos de dados no MapexOS. Os grupos permitem rotear dados de telemetria de ativos para múltiplos destinos com controle flexível e opções de configuração.",
+    "description": "Um Grupo roteia a telemetria de um ativo para um ou mais destinos usando regras condicionais. Ele torna o roteamento data, não código — associe ativos e mude para onde seus dados fluem sem tocar em um deployment.",
     "items": {
       "routing": {
         "title": "Organização de Roteamento de Dados",
@@ -29,8 +29,7 @@
         "title": "Configuração Flexível",
         "text": "Personalize regras de roteamento, transformações e parâmetros de destino por grupo"
       }
-    },
-    "docsLabel": "Ver Documentação Completa"
+    }
   },
   "filters": {
     "label": "filtros",

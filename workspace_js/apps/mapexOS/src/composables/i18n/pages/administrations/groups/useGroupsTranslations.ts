@@ -66,8 +66,6 @@ export function useGroupsTranslations() {
             text: ts('pages.administrations.groups.info.items.configuration.text'),
           },
         ],
-        docsUrl: 'https://docs.mapexos.com/routing/groups',
-        docsLabel: ts('pages.administrations.groups.info.docsLabel'),
       })),
     },
 
