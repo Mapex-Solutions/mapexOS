@@ -7,6 +7,7 @@ defineOptions({
 import type { ListHeaderMenuColumn } from '@components/headers';
 import type { DataRowActionConfig } from '@components/cards';
 import type { FilterField } from '@components/drawers';
+import type { AssetTemplateResponse } from '@mapexos/schemas';
 import type {
   AssetTemplateListPageFilters,
   AssetTemplateListPageColumnVisibility,
@@ -21,7 +22,8 @@ import { useRouter } from 'vue-router';
 /** COMPONENTS */
 import { PageHeader, ListHeaderMenu } from '@components/headers';
 import { ListCardEmpty, DataRow } from '@components/cards';
-import { AssetTemplateDetailsDrawer, AdvancedFiltersDrawer } from '@components/drawers';
+import { AdvancedFiltersDrawer } from '@components/drawers';
+import { AssetTemplateDetailsModal } from '@components/assetTemplates';
 import { ListPagination } from '@components/navigation';
 import { AppTooltip } from '@components/tooltips';
 
@@ -67,9 +69,10 @@ const assetTemplatesList = ref<EnrichedAssetTemplate[]>([]);
 const loading = ref(false);
 const lastUpdatedAt = ref<number | undefined>(undefined);
 const error = ref<string | undefined>(undefined);
-const showDetailsDrawer = ref(false);
+const showDetailsModal = ref(false);
 const showFiltersDrawer = ref(false);
 const selectedTemplateId = ref<string | null>(null);
+const detailTemplate = ref<AssetTemplateResponse | null>(null);
 const itemsPerPage = ref(DEFAULT_ITEMS_PER_PAGE);
 const currentPage = ref(1);
 const totalPages = ref(1);
@@ -837,14 +840,21 @@ function canModifyTemplate(template: EnrichedAssetTemplate): boolean {
  * @param {EnrichedAssetTemplate} template - Template to view
  * @returns {void}
  */
-function viewDetails(template: EnrichedAssetTemplate): void {
+async function viewDetails(template: EnrichedAssetTemplate): Promise<void> {
   if (!canReadTemplate.value) return;
   if (!template.id) {
     notifyFail({ message: t.errors.idMissing.value });
     return;
   }
+  // The modal is a pure presentation component — fetch the full template here
+  // (list rows carry only a summary) and hand it the data.
   selectedTemplateId.value = template.id;
-  showDetailsDrawer.value = true;
+  try {
+    detailTemplate.value = await apis.assets.assetTemplate.getById({ assetTemplateId: template.id });
+    showDetailsModal.value = true;
+  } catch {
+    notifyFail({ message: t.drawer.error.value });
+  }
 }
 
 /**
@@ -875,7 +885,7 @@ function editTemplate(template: EnrichedAssetTemplate): void {
 function handleDrawerEdit(templateId: string): void {
   if (!canUpdateTemplate.value) return;
   // Close drawer before navigating
-  showDetailsDrawer.value = false;
+  showDetailsModal.value = false;
 
   // Navigate to edit page
   void router.push(`/assets_template/edit/${templateId}`);
@@ -1197,13 +1207,31 @@ useOrgChangeRefresh(async () => {
       @change="handlePageChange"
     />
 
-    <!-- Asset Template Details Drawer -->
-    <AssetTemplateDetailsDrawer
-      v-model="showDetailsDrawer"
-      :template-id="selectedTemplateId"
-      @edit="handleDrawerEdit"
-      @duplicate="handleDrawerDuplicate"
-    />
+    <!-- Asset Template Details Modal -->
+    <AssetTemplateDetailsModal v-model="showDetailsModal" :template="detailTemplate">
+      <template #actions="{ template: detail }">
+        <q-btn
+          flat
+          no-caps
+          icon="content_copy"
+          color="primary"
+          :label="t.drawer.duplicate.value"
+          :disable="!detail?.id"
+          @click="detail?.id && handleDrawerDuplicate(detail.id)"
+        />
+        <q-btn
+          unelevated
+          no-caps
+          icon="edit"
+          color="primary"
+          :label="t.drawer.edit.value"
+          :disable="!detail?.id || detail.isSystem"
+          @click="detail?.id && handleDrawerEdit(detail.id)"
+        >
+          <AppTooltip v-if="detail?.isSystem" :content="t.drawer.systemTemplateTooltip.value" />
+        </q-btn>
+      </template>
+    </AssetTemplateDetailsModal>
 
     <!-- Advanced Filters Drawer -->
     <AdvancedFiltersDrawer

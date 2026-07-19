@@ -98,9 +98,11 @@ var DefaultConfiguration = []config.ConfigDefinition{
 
 	/** Marketplace Configuration */
 	// The asset_templates marketplace catalog is open and unauthenticated (no API
-	// key). The install client fetches a bundle by (vendor, slug) from here. Set
-	// the real host per environment.
-	{Key: "asset_marketplace_url", Env: "ASSET_MARKETPLACE_URL", Type: "string", Default: "http://localhost:5020"},
+	// key). The install client fetches a bundle by (vendor, slug) from here. Defaults
+	// to the deployed marketplace so it matches the UI, which points at the same host;
+	// override per environment to target a local catalog. Base host only — the client
+	// appends /api/v1/asset_templates/{vendor}/{slug}.
+	{Key: "asset_marketplace_url", Env: "ASSET_MARKETPLACE_URL", Type: "string", Default: "https://marketplace.mapexos.io"},
 
 	/** mapexIam Configuration */
 	// The install resolves org-scoped classification through mapexIam's internal

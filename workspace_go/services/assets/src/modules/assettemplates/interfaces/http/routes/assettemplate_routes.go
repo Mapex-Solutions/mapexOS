@@ -180,6 +180,19 @@ func RegisterRoutes(group web.Router, service ports.AssetTemplateServicePort) {
 		Description("Removes the caller organization's installation of a marketplace template. The shared content and other organizations' installs are untouched. Returns 404 when the organization has not installed it.").
 		Returns(map[string]bool{})
 
+	// Batch installed-check: which of the given marketplaceGuids the caller org
+	// has installed. Registered before the /:assetTemplateId wildcard so the
+	// static two-segment path is never captured as a template id.
+	installedCheckDto := validation.NewValidation(&dtos.MarketplaceInstalledCheckRequest{}, nil, nil)
+	r.Post("/marketplace/installed", installedCheckDto, swagger.Expose,
+		permissionMw.RequirePermission(perms.AssetTemplateList),
+		coverageMw.InjectRequestContext(),
+		handlers.CheckInstalled(service),
+	).
+		Summary("Check installed marketplace templates").
+		Description("Returns which of the given marketplaceGuids the caller organization has installed, resolved in a single query. Drives the marketplace listing's Install vs Uninstall toggle.").
+		Returns(&dtos.MarketplaceInstalledCheckResponse{})
+
 	// Get asset template by ID.
 	getAssetTemplateById := validation.NewValidation(nil, nil, &dtos.AssetTemplateIdDto{})
 	r.Get("/:assetTemplateId", getAssetTemplateById, swagger.Expose,

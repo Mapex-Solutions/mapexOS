@@ -40,15 +40,9 @@ export function useAssetTemplateMarketplaceTranslations() {
     },
 
     card: {
-      /**
-       * Field-count label for a catalog card, e.g. "12 fields".
-       * @param {number} count - Number of dynamic fields in the template.
-       * @returns {string} Localized field-count label.
-       */
-      fields: (count: number): string =>
-        ts('pages.assets.assetTemplateMarketplace.card.fields', { count }),
-      hasScripts: computed(() => ts('pages.assets.assetTemplateMarketplace.card.hasScripts')),
       view: computed(() => ts('pages.assets.assetTemplateMarketplace.card.view')),
+      model: computed(() => ts('pages.assets.assetTemplateMarketplace.card.model')),
+      version: computed(() => ts('pages.assets.assetTemplateMarketplace.card.version')),
     },
 
     modal: {
@@ -56,10 +50,14 @@ export function useAssetTemplateMarketplaceTranslations() {
       loading: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.loading')),
       loadError: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.loadError')),
       sections: {
-        overview: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.sections.overview')),
-        dynamicFields: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.sections.dynamicFields')),
-        scripts: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.sections.scripts')),
-        availableFields: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.sections.availableFields')),
+        setup: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.sections.setup')),
+        uplink: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.sections.uplink')),
+        retrieval: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.sections.retrieval')),
+      },
+      subtitles: {
+        setup: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.subtitles.setup')),
+        uplink: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.subtitles.uplink')),
+        retrieval: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.subtitles.retrieval')),
       },
       overview: {
         manufacturer: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.overview.manufacturer')),
@@ -68,6 +66,7 @@ export function useAssetTemplateMarketplaceTranslations() {
         category: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.overview.category')),
         assetIdPath: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.overview.assetIdPath')),
         description: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.overview.description')),
+        specifications: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.overview.specifications')),
       },
       scripts: {
         test: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.scripts.test')),
@@ -77,6 +76,12 @@ export function useAssetTemplateMarketplaceTranslations() {
         configured: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.scripts.configured')),
         notConfigured: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.scripts.notConfigured')),
         view: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.scripts.view')),
+        descriptions: {
+          test: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.scripts.descriptions.test')),
+          processor: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.scripts.descriptions.processor')),
+          validator: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.scripts.descriptions.validator')),
+          conversion: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.scripts.descriptions.conversion')),
+        },
       },
       actions: {
         cancel: computed(() => ts('pages.assets.assetTemplateMarketplace.modal.actions.cancel')),
@@ -93,6 +98,14 @@ export function useAssetTemplateMarketplaceTranslations() {
       genericError: computed(() => ts('pages.assets.assetTemplateMarketplace.install.genericError')),
       shareWithChildren: computed(() => ts('pages.assets.assetTemplateMarketplace.install.shareWithChildren')),
       shareWithChildrenHint: computed(() => ts('pages.assets.assetTemplateMarketplace.install.shareWithChildrenHint')),
+    },
+
+    uninstall: {
+      button: computed(() => ts('pages.assets.assetTemplateMarketplace.uninstall.button')),
+      uninstalling: computed(() => ts('pages.assets.assetTemplateMarketplace.uninstall.uninstalling')),
+      success: computed(() => ts('pages.assets.assetTemplateMarketplace.uninstall.success')),
+      inUse: computed(() => ts('pages.assets.assetTemplateMarketplace.uninstall.inUse')),
+      genericError: computed(() => ts('pages.assets.assetTemplateMarketplace.uninstall.genericError')),
     },
   };
 }

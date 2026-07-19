@@ -15,6 +15,11 @@ type AssetTemplateRepository interface {
 	// marketplace-installed template, or (nil, nil) when that org has not
 	// installed it. The (marketplaceGuid, orgId) pair is the per-org install key.
 	FindByMarketplaceGuidAndOrg(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*entities.Assettemplate, error)
+
+	// FindInstalledGuids returns the subset of the given marketplace guids the
+	// caller org has installed, resolved in a single query (marketplaceGuid $in +
+	// orgId). Empty input yields an empty result without querying.
+	FindInstalledGuids(ctx context.Context, guids []string, orgId model.ObjectId) ([]string, error)
 	FindByIdAndUpdate(ctx context.Context, dataSourceId *string, payload map[string]any) (*entities.Assettemplate, error)
 	DeleteById(ctx context.Context, dataSourceId *string) error
 	FindWithFilters(ctx context.Context, filters model.Map, pagination *model.PaginationOpts, projection model.Map) (*model.PaginatedResult[entities.Assettemplate], error)

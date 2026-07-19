@@ -110,6 +110,11 @@ type AssetServicePort interface {
 	//   - error: If query fails
 	CountAssets(ctx ctx.Context, requestContext *reqCtx.RequestContext) (int64, error)
 
+	// CountAssetsByTemplate returns how many assets in the caller org reference
+	// the given asset template id. Backs the marketplace uninstall guard, which
+	// refuses to remove a template still in use. Org-scoped via requestContext.
+	CountAssetsByTemplate(ctx ctx.Context, requestContext *reqCtx.RequestContext, templateId string) (int64, error)
+
 	// GetAssetReadModelByUUID retrieves the asset read model by UUID.
 	// This method is used by internal endpoints for cache fallback.
 	//

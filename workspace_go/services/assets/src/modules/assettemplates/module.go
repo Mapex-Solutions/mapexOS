@@ -59,6 +59,11 @@ func InitServices() {
 		return adapters.NewTemplateSwitcherAdapter(svc)
 	})
 
+	// Asset usage — counts assets referencing a template (marketplace uninstall guard) via the assets service.
+	c.Provide(func(svc assetsPorts.AssetServicePort) ports.AssetUsagePort {
+		return adapters.NewAssetUsageAdapter(svc)
+	})
+
 	// Marketplace catalog client (fetch bundle) + mapexIam lists client (resolve
 	// org-scoped classification) for the install flow.
 	c.Provide(marketplaceclient.NewMarketplaceClient)

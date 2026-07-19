@@ -333,6 +333,14 @@ export function useAssetTemplatesTranslations() {
       error: computed(() => ts('pages.assets.assetTemplates.drawer.error')),
       systemTemplateWarning: computed(() => ts('pages.assets.assetTemplates.drawer.systemTemplateWarning')),
       systemTemplateTooltip: computed(() => ts('pages.assets.assetTemplates.drawer.systemTemplateTooltip')),
+      selectTemplate: computed(() => ts('pages.assets.assetTemplates.drawer.selectTemplate')),
+
+      tabs: {
+        overview: computed(() => ts('pages.assets.assetTemplates.drawer.tabs.overview')),
+        dynamicFields: computed(() => ts('pages.assets.assetTemplates.drawer.tabs.dynamicFields')),
+        scripts: computed(() => ts('pages.assets.assetTemplates.drawer.tabs.scripts')),
+        availableFields: computed(() => ts('pages.assets.assetTemplates.drawer.tabs.availableFields')),
+      },
 
       sections: {
         basicInfo: computed(() => ts('pages.assets.assetTemplates.drawer.sections.basicInfo')),

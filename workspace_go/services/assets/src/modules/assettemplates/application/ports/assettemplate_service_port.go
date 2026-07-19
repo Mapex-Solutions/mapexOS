@@ -300,4 +300,9 @@ type AssetTemplateServicePort interface {
 	// template; the shared content and other orgs' links are untouched. Returns a
 	// 404-mapped error when the org has not installed it.
 	UninstallFromMarketplace(ctx ctx.Context, requestContext *reqCtx.RequestContext, vendor, slug string) error
+
+	// InstalledGuids returns which of the given marketplace guids the caller org
+	// has installed, resolved in a single query. Backs the listing's Install vs
+	// Uninstall toggle.
+	InstalledGuids(ctx ctx.Context, requestContext *reqCtx.RequestContext, guids []string) ([]string, error)
 }

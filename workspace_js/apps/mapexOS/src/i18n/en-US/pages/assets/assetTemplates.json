@@ -142,6 +142,13 @@
     "error": "failed to load template details",
     "systemTemplateWarning": "this is a system template and cannot be modified or deleted",
     "systemTemplateTooltip": "system templates cannot be edited",
+    "selectTemplate": "select this template",
+    "tabs": {
+      "overview": "overview",
+      "dynamicFields": "dynamic fields",
+      "scripts": "scripts",
+      "availableFields": "available fields"
+    },
     "sections": {
       "basicInfo": "basic information",
       "configuration": "configuration",

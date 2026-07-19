@@ -7,6 +7,8 @@ import type {
 	FieldVocabularyQuery,
 	FieldVocabularyResponse,
 	InstallBody,
+	MarketplaceInstalledCheckRequest,
+	MarketplaceInstalledCheckResponse,
 	PaginatedResponse,
 } from '@mapexos/schemas';
 import type { GetToken } from '@src/common';
@@ -19,6 +21,7 @@ import {
 	ZodAssetTemplateQuerySchema,
 	ZodFieldVocabularyQuerySchema,
 	ZodInstallBodySchema,
+	ZodMarketplaceInstalledCheckRequestSchema,
 } from '@mapexos/schemas';
 
 /**
@@ -131,6 +134,15 @@ export function userApi(http: AxiosInstance, getToken: GetToken | undefined) {
 				path: '/:vendor/:slug/install',
 				pathParams: {} as { vendor: string; slug: string },
 				responseType: {} as { success: boolean },
+			},
+
+			// CHECK INSTALLED (batch) - POST /marketplace/installed
+			installedGuids: {
+				method: 'POST',
+				path: '/marketplace/installed',
+				bodyParams: {} as MarketplaceInstalledCheckRequest,
+				bodySchema: ZodMarketplaceInstalledCheckRequestSchema,
+				responseType: {} as MarketplaceInstalledCheckResponse,
 			},
 		},
 	});

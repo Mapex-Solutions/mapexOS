@@ -41,6 +41,7 @@ type fakeRepo struct {
 	countDocumentsFn    func(ctx context.Context, filters model.Map) (int64, error)
 
 	findByMarketplaceGuidAndOrgFn func(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*entities.Assettemplate, error)
+	findInstalledGuidsFn          func(ctx context.Context, guids []string, orgId model.ObjectId) ([]string, error)
 
 	findByIdCalls int
 }
@@ -65,6 +66,26 @@ func (r *fakeRepo) FindByMarketplaceGuidAndOrg(ctx context.Context, marketplaceG
 		return r.findByMarketplaceGuidAndOrgFn(ctx, marketplaceGuid, orgId)
 	}
 	return nil, nil
+}
+
+func (r *fakeRepo) FindInstalledGuids(ctx context.Context, guids []string, orgId model.ObjectId) ([]string, error) {
+	if r.findInstalledGuidsFn != nil {
+		return r.findInstalledGuidsFn(ctx, guids, orgId)
+	}
+	return []string{}, nil
+}
+
+// fakeAssetUsage mocks ports.AssetUsagePort. countFn is settable by a test (via
+// svc.deps.AssetUsage type-assertion); the default reports no assets in use.
+type fakeAssetUsage struct {
+	countFn func(ctx context.Context, requestContext *reqCtx.RequestContext, templateID string) (int64, error)
+}
+
+func (f *fakeAssetUsage) CountAssetsUsingTemplate(ctx context.Context, requestContext *reqCtx.RequestContext, templateID string) (int64, error) {
+	if f.countFn != nil {
+		return f.countFn(ctx, requestContext, templateID)
+	}
+	return 0, nil
 }
 
 func (r *fakeRepo) FindByIdAndUpdate(ctx context.Context, id *string, payload map[string]any) (*entities.Assettemplate, error) {

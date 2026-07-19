@@ -21,4 +21,11 @@ type (
 	InstallBody             = v1.InstallBody
 	MarketplaceBundle       = v1.MarketplaceBundle
 	MarketplaceDynamicField = v1.MarketplaceDynamicField
+
+	MarketplaceInstalledCheckRequest  = v1.MarketplaceInstalledCheckRequest
+	MarketplaceInstalledCheckResponse = v1.MarketplaceInstalledCheckResponse
 )
+
+// ErrCodeTemplateInUse is surfaced (with HTTP 403) when an uninstall is refused
+// because assets still reference the template.
+const ErrCodeTemplateInUse = v1.ErrCodeTemplateInUse

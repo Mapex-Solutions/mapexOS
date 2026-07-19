@@ -13,13 +13,17 @@ import { ref, computed, watch } from 'vue';
 
 /** COMPONENTS */
 import { GenericDrawer } from '@components/drawers/common/genericDrawer';
+import { AssetTemplateDetailsModal } from '@components/assetTemplates';
 import { AppTooltip } from '@components/tooltips';
 import { InfoBanner } from '@components/banners';
 
 /** COMPOSABLES */
 import { useAssetTemplates } from '@composables/assets/assetTemplates';
-import { useCommonPlaceholders } from '@composables/i18n';
+import { useCommonPlaceholders, useAssetTemplatesTranslations } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
+
+/** SERVICES */
+import { apis } from '@services/mapex';
 
 /** PROPS & EMITS */
 const props = withDefaults(defineProps<AssetTemplateSelectorDrawerProps>(), {
@@ -51,9 +55,12 @@ const {
 
 const logger = useLogger('AssetTemplateSelectorDrawer');
 const { placeholders } = useCommonPlaceholders();
+const t = useAssetTemplatesTranslations();
 
 /** STATE */
 const selectedTemplates = ref<AssetTemplateResponse[]>([]);
+const detailTemplate = ref<AssetTemplateResponse | null>(null);
+const showDetailsModal = ref(false);
 
 /** COMPUTED */
 
@@ -141,6 +148,37 @@ function toggleTemplate(template: AssetTemplateResponse): void {
   } else {
     selectedTemplates.value.push(template);
   }
+}
+
+/**
+ * Open the shared details modal for a template. Rows carry only a summary, so
+ * fetch the full template (scripts, dynamic/available fields) first; fall back
+ * to the summary on failure.
+ *
+ * @param {AssetTemplateResponse} template - Template to inspect
+ * @returns {Promise<void>}
+ */
+async function openDetails(template: AssetTemplateResponse): Promise<void> {
+  try {
+    detailTemplate.value = template.id
+      ? await apis.assets.assetTemplate.getById({ assetTemplateId: template.id })
+      : template;
+  } catch (err) {
+    logger.error('Failed to load template details:', err);
+    detailTemplate.value = template;
+  }
+  showDetailsModal.value = true;
+}
+
+/**
+ * Select the template shown in the details modal, then close the modal.
+ *
+ * @param {AssetTemplateResponse} template - Template to select
+ * @returns {void}
+ */
+function selectFromModal(template: AssetTemplateResponse): void {
+  showDetailsModal.value = false;
+  if (!isSelected(template)) toggleTemplate(template);
 }
 
 /**
@@ -377,15 +415,17 @@ function handleCancel(): void {
         </q-item-section>
 
         <q-item-section side>
-          <q-icon
-            v-if="template.description"
-            name="info"
-            color="primary"
+          <q-btn
+            flat
+            round
+            dense
             size="sm"
-            class="cursor-pointer"
+            icon="info"
+            color="primary"
+            @click.stop="openDetails(template)"
           >
-            <AppTooltip :content="template.description" />
-          </q-icon>
+            <AppTooltip :content="t.drawer.title.value" />
+          </q-btn>
         </q-item-section>
       </q-item>
 
@@ -416,6 +456,21 @@ function handleCancel(): void {
       />
     </template>
   </GenericDrawer>
+
+  <!-- Shared details viewer, opened from a row's info button -->
+  <AssetTemplateDetailsModal v-model="showDetailsModal" :template="detailTemplate">
+    <template #actions="{ template: detail }">
+      <q-btn
+        unelevated
+        no-caps
+        icon="check"
+        color="primary"
+        :label="t.drawer.selectTemplate.value"
+        :disable="!detail"
+        @click="detail && selectFromModal(detail)"
+      />
+    </template>
+  </AssetTemplateDetailsModal>
 </template>
 
 <style lang="scss" scoped>

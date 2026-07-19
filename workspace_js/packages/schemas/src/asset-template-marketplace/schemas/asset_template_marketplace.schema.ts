@@ -154,3 +154,16 @@ export const ZodAssetTemplateBundleResponseSchema = z.object({
   errors: z.array(z.any()).optional().nullable(),
   data: ZodAssetTemplateBundleSchema,
 });
+
+/**
+ * MarketplaceInstalledCheck — POST /api/v1/asset_templates/marketplace/installed.
+ * Given a set of marketplace GUIDs, the response lists the subset the caller org
+ * has installed, so the listing can show Install vs Uninstall per card in one call.
+ */
+export const ZodMarketplaceInstalledCheckRequestSchema = z.object({
+  marketplaceGuids: z.array(IsString),
+});
+
+export const ZodMarketplaceInstalledCheckResponseSchema = z.object({
+  installed: z.array(IsString),
+});

@@ -25,6 +25,9 @@ import { AssetTemplateMarketplaceDetailModal } from './components/AssetTemplateM
 import { useAssetTemplateMarketplaceTranslations } from '@composables/i18n';
 import { useLogger } from '@composables/useLogger';
 
+/** UTILS */
+import { notifySuccess, notifyFail } from '@utils/alert/notify';
+
 /** SERVICES */
 import { apis } from '@services/mapex';
 
@@ -59,6 +62,14 @@ const facets = ref<AssetTemplateFacets>({
 
 const selected = ref<MarketplaceSelection | null>(null);
 const modalOpen = ref(false);
+const installingId = ref<string | null>(null);
+
+/**
+ * Marketplace GUIDs the current organization has already installed. Drives the
+ * Install/Uninstall toggle on each card. Reassigned as a fresh Set on every
+ * mutation so the cards react without a full catalog refetch.
+ */
+const installedGuids = ref(new Set<string>());
 
 /** FUNCTIONS */
 
@@ -101,6 +112,7 @@ async function onLoad(_index: number, done: (stop?: boolean) => void): Promise<v
     total.value = res.data.total;
     page.value = next;
     error.value = false;
+    void resolveInstalledGuids(res.data.items);
     done(res.data.items.length === 0 || items.value.length >= total.value);
   } catch (err) {
     logger.error('Failed to load the asset template marketplace catalog', err);
@@ -121,7 +133,31 @@ function applyFilters(): void {
   page.value = 0;
   loaded.value = false;
   error.value = false;
+  installedGuids.value = new Set();
   filterKey.value += 1;
+}
+
+/**
+ * Resolve which of the just-loaded catalog items the organization has installed
+ * and merge them into the reactive Set. Runs once per loaded page and unions the
+ * result so infinite-scroll appends accumulate; the Set is reset up front on a
+ * filter reload. Reassigns a fresh Set so the cards re-render.
+ * @param {AssetTemplateCatalogItem[]} pageItems - The items loaded this page.
+ */
+async function resolveInstalledGuids(pageItems: AssetTemplateCatalogItem[]): Promise<void> {
+  if (!apis.assetTemplatesMarketplace) return;
+
+  const marketplaceGuids = pageItems.map((item) => item.marketplaceGuid).filter(Boolean);
+  if (marketplaceGuids.length === 0) return;
+
+  try {
+    const res = await apis.assets.assetTemplate.installedGuids({ marketplaceGuids });
+    const next = new Set(installedGuids.value);
+    for (const guid of res.installed) next.add(guid);
+    installedGuids.value = next;
+  } catch (err) {
+    logger.error('Failed to resolve installed marketplace templates', err);
+  }
 }
 
 /**
@@ -186,12 +222,82 @@ function reload(): void {
 }
 
 /**
+ * Resolve a category slug to its friendly facet label (e.g. "IoT Platforms").
+ * Falls back to the slug when the facets are not yet loaded.
+ * @param {string} value - The category slug carried by a catalog item.
+ * @returns {string} The localized category label, or the slug as a fallback.
+ */
+function categoryLabelFor(value: string): string {
+  return facets.value.categories.find((c) => c.value === value)?.label || value;
+}
+
+/**
  * Open the detail modal for the selected catalog item.
  * @param {AssetTemplateCatalogItem} item - The catalog item to preview.
  */
 function handleView(item: AssetTemplateCatalogItem): void {
   selected.value = { vendor: item.vendor, slug: item.slug };
   modalOpen.value = true;
+}
+
+/**
+ * Install a template straight from its card, without opening the preview. The
+ * backend hard-verifies the artifact sha256, so a checksum mismatch is surfaced
+ * distinctly from a generic failure.
+ * @param {AssetTemplateCatalogItem} item - The catalog item to install.
+ */
+async function handleInstallItem(item: AssetTemplateCatalogItem): Promise<void> {
+  if (!apis.assetTemplatesMarketplace || installingId.value) return;
+
+  installingId.value = item.id;
+  try {
+    await apis.assets.assetTemplate.install(
+      { vendor: item.vendor, slug: item.slug },
+      { shareWithChildren: false },
+    );
+    notifySuccess({ message: t.install.success.value });
+    const next = new Set(installedGuids.value);
+    next.add(item.marketplaceGuid);
+    installedGuids.value = next;
+  } catch (err) {
+    const raw = JSON.stringify(
+      (err as { response?: { data?: { errors?: unknown } } })?.response?.data?.errors ?? '',
+    );
+    const message = /checksum/i.test(raw) ? t.install.checksumError.value : t.install.genericError.value;
+    notifyFail({ message });
+    logger.error('Failed to install asset template from marketplace', err);
+  } finally {
+    installingId.value = null;
+  }
+}
+
+/**
+ * Uninstall an installed template straight from its card. The backend refuses
+ * with a TEMPLATE_IN_USE error when assets still reference the template, which is
+ * surfaced with its human-readable message so the user knows to delete the assets
+ * first.
+ * @param {AssetTemplateCatalogItem} item - The catalog item to uninstall.
+ */
+async function handleUninstallItem(item: AssetTemplateCatalogItem): Promise<void> {
+  if (!apis.assetTemplatesMarketplace || installingId.value) return;
+
+  installingId.value = item.id;
+  try {
+    await apis.assets.assetTemplate.uninstall({ vendor: item.vendor, slug: item.slug });
+    notifySuccess({ message: t.uninstall.success.value });
+    const next = new Set(installedGuids.value);
+    next.delete(item.marketplaceGuid);
+    installedGuids.value = next;
+  } catch (err) {
+    const errors = (err as { response?: { data?: { errors?: unknown } } })?.response?.data?.errors;
+    const list = Array.isArray(errors) ? errors.map(String) : [];
+    const inUse = list.includes('TEMPLATE_IN_USE');
+    const message = inUse ? (list[1] ?? t.uninstall.inUse.value) : t.uninstall.genericError.value;
+    notifyFail({ message });
+    logger.error('Failed to uninstall asset template from marketplace', err);
+  } finally {
+    installingId.value = null;
+  }
 }
 
 /** LIFECYCLE HOOKS */
@@ -321,7 +427,15 @@ onMounted(() => {
           :key="item.id"
           class="col-12 col-sm-6 col-md-4 col-lg-3"
         >
-          <MarketplaceCard :item="item" @view="handleView" />
+          <MarketplaceCard
+            :item="item"
+            :category-label="categoryLabelFor(item.category)"
+            :installing="installingId === item.id"
+            :installed="installedGuids.has(item.marketplaceGuid)"
+            @view="handleView"
+            @install="handleInstallItem"
+            @uninstall="handleUninstallItem"
+          />
         </div>
       </div>
 

@@ -57,6 +57,32 @@ func (r *repository) FindByMarketplaceGuidAndOrg(ctx context.Context, marketplac
 	return retData, nil
 }
 
+// FindInstalledGuids returns the subset of the given marketplace guids the org
+// has installed, in one query. It reads only the marketplaceGuid field and caps
+// the page at the input size (each guid links at most once per org).
+func (r *repository) FindInstalledGuids(ctx context.Context, guids []string, orgId model.ObjectId) ([]string, error) {
+	if len(guids) == 0 {
+		return []string{}, nil
+	}
+
+	filters := model.Map{"marketplaceGuid": model.Map{"$in": guids}, "orgId": orgId}
+	pagination := &model.PaginationOpts{Page: 1, PerPage: int64(len(guids))}
+	opts := &model.CommonOpts{Projection: model.Map{"marketplaceGuid": 1}}
+
+	result, err := r.model.FindByOffset(ctx, filters, pagination, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	installed := make([]string, 0, len(result.Items))
+	for i := range result.Items {
+		if g := result.Items[i].MarketplaceGuid; g != nil {
+			installed = append(installed, *g)
+		}
+	}
+	return installed, nil
+}
+
 // FindByIdAndUpdate updates a Assettemplate entity in the repository by its ID.
 // It accepts a context for cancellation and timeouts, a pointer to the event ID,
 // and a map containing the fields to be updated.

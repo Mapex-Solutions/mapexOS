@@ -17,6 +17,24 @@ import (
 	"github.com/Mapex-Solutions/mapexGoKit/utils/mapper"
 )
 
+// assertTemplateNotInUse refuses an uninstall while any asset in the caller org
+// still references the template. It counts usage through the assets module and,
+// when non-zero, returns a 403 carrying the TEMPLATE_IN_USE code plus a message
+// so the client can tell the user to delete those assets first.
+func (s *AssetTemplateService) assertTemplateNotInUse(c ctx.Context, requestContext *reqCtx.RequestContext, link *entities.Assettemplate) error {
+	count, err := s.deps.AssetUsage.CountAssetsUsingTemplate(c, requestContext, link.ID.Hex())
+	if err != nil {
+		return err
+	}
+	if count > 0 {
+		return &customErrors.ServerCustomError{
+			Code:   httpStatus.FORBIDDEN,
+			Errors: []string{dtos.ErrCodeTemplateInUse, "Assets are using this template; delete those assets first."},
+		}
+	}
+	return nil
+}
+
 // resolveInstallOrg validates that the request carries an org context and returns
 // the caller's org id (ObjectId + string form) and pathKey. Install is always
 // org-scoped, so a missing org context is a 400.

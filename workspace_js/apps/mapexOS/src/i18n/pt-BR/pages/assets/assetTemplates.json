@@ -142,6 +142,13 @@
     "error": "falha ao carregar detalhes do modelo",
     "systemTemplateWarning": "este é um modelo do sistema e não pode ser modificado ou excluído",
     "systemTemplateTooltip": "modelos do sistema não podem ser editados",
+    "selectTemplate": "selecionar este modelo",
+    "tabs": {
+      "overview": "visão geral",
+      "dynamicFields": "campos dinâmicos",
+      "scripts": "scripts",
+      "availableFields": "campos disponíveis"
+    },
     "sections": {
       "basicInfo": "informações básicas",
       "configuration": "configuração",

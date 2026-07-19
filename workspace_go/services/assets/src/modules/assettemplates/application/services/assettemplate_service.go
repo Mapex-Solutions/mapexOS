@@ -118,8 +118,22 @@ func (s *AssetTemplateService) UninstallFromMarketplace(c ctx.Context, requestCo
 	if link == nil {
 		return &customErrors.ServerCustomError{Code: httpStatus.NOT_FOUND, Errors: []string{"template not installed for this organization"}}
 	}
+	if err := s.assertTemplateNotInUse(c, requestContext, link); err != nil {
+		return err
+	}
 	id := link.ID.Hex()
 	return s.deps.AssetTemplateRepo.DeleteById(c, &id)
+}
+
+// InstalledGuids returns which of the given marketplace guids the caller org has
+// installed: it resolves the org from the request context, then asks the repo in
+// a single query. Backs the marketplace listing's Install vs Uninstall toggle.
+func (s *AssetTemplateService) InstalledGuids(c ctx.Context, requestContext *reqCtx.RequestContext, guids []string) ([]string, error) {
+	orgID, _, _, err := s.resolveInstallOrg(requestContext)
+	if err != nil {
+		return nil, err
+	}
+	return s.deps.AssetTemplateRepo.FindInstalledGuids(c, guids, orgID)
 }
 
 // GetAssetTemplateById fetches a template by id and returns its DTO.

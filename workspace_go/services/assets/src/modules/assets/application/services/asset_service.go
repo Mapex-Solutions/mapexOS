@@ -15,6 +15,7 @@ import (
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 	customErrors "github.com/Mapex-Solutions/mapexGoKit/microservices/http/customErrors"
 	httpStatus "github.com/Mapex-Solutions/mapexGoKit/microservices/http/status"
+	"github.com/Mapex-Solutions/mapexGoKit/utils/orgfilter"
 )
 
 // Compile-time check to ensure AssetService implements AssetServicePort interface.
@@ -389,4 +390,20 @@ func (s *AssetService) CountAssets(c ctx.Context, requestContext *reqCtx.Request
 	s.cacheCount(c, cacheKey, count)
 	s.recordAssetOp("count", "success", start)
 	return count, nil
+}
+
+// CountAssetsByTemplate returns how many assets in the caller org reference the
+// given asset template id. Backs the marketplace uninstall guard; a plain
+// org-scoped filtered count with no counter cache (the value must be live).
+func (s *AssetService) CountAssetsByTemplate(c ctx.Context, requestContext *reqCtx.RequestContext, templateId string) (int64, error) {
+	orgFilter, err := orgfilter.BuildOrgFilter(orgfilter.BuildFilterParams{ReqContext: requestContext})
+	if err != nil {
+		return 0, err
+	}
+	objectID, err := model.ToObjectID(templateId)
+	if err != nil {
+		return 0, err
+	}
+	orgFilter["assetTemplateId"] = objectID
+	return s.deps.AssetRepo.CountDocuments(c, orgFilter)
 }

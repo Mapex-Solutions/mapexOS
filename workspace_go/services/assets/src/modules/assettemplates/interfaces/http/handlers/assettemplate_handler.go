@@ -426,3 +426,21 @@ func UninstallFromMarketplace(service ports.AssetTemplateServicePort) web.Handle
 		return response.Success(c, map[string]bool{"success": true})
 	}
 }
+
+// CheckInstalled returns a handler reporting which of the given marketplace GUIDs
+// the caller org has installed, in one call — driving the listing's Install vs
+// Uninstall toggle.
+func CheckInstalled(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found in request context", nil)
+		}
+		body, _ := requestValidation.GetDTO[*dtos.MarketplaceInstalledCheckRequest](c, "bodyDTO")
+		installed, err := service.InstalledGuids(c.UserContext(), requestContext, body.MarketplaceGuids)
+		if err != nil {
+			return err
+		}
+		return response.Success(c, dtos.MarketplaceInstalledCheckResponse{Installed: installed})
+	}
+}

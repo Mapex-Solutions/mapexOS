@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"testing"
 	"time"
 
@@ -17,6 +18,8 @@ import (
 	commonPorts "github.com/Mapex-Solutions/mapexGoKit/infrastructure/common/ports"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
+	customErrors "github.com/Mapex-Solutions/mapexGoKit/microservices/http/customErrors"
+	httpStatus "github.com/Mapex-Solutions/mapexGoKit/microservices/http/status"
 )
 
 // --- inline fakes for the install flow ---
@@ -72,6 +75,7 @@ func newTestServiceWithInstall(repo *fakeRepo, mc *fakeMarketplaceClient, lc *fa
 		Metrics:             createTestMetrics(),
 		MarketplaceClient:   mc,
 		ListsClient:         lc,
+		AssetUsage:          &fakeAssetUsage{},
 	}
 	return &AssetTemplateService{deps: deps}
 }
@@ -287,5 +291,130 @@ func TestInstallFromMarketplace_ClassificationOrgScoped(t *testing.T) {
 	model := lc.requests[2]
 	if model.Type != "asset_model" || model.ParentId == nil || *model.ParentId != manufacturerID {
 		t.Fatalf("model must be parented on the resolved manufacturer id %s, got %+v", manufacturerID, model)
+	}
+}
+
+// equalStrings reports whether two string slices have the same elements in order.
+func equalStrings(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// TestInstalledGuids_ReturnsOrgSubset verifies the batch check resolves the caller
+// org and passes the input guids straight to the repo, returning its subset.
+func TestInstalledGuids_ReturnsOrgSubset(t *testing.T) {
+	tests := []struct {
+		name  string
+		guids []string
+		ret   []string
+	}{
+		{name: "subset installed", guids: []string{"a", "b", "c"}, ret: []string{"a", "c"}},
+		{name: "none installed", guids: []string{"x"}, ret: []string{}},
+		{name: "empty input", guids: []string{}, ret: []string{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := &fakeRepo{}
+			var gotGuids []string
+			var gotOrg model.ObjectId
+			repo.findInstalledGuidsFn = func(_ context.Context, guids []string, orgId model.ObjectId) ([]string, error) {
+				gotGuids, gotOrg = guids, orgId
+				return tt.ret, nil
+			}
+			svc := newTestServiceWithInstall(repo, &fakeMarketplaceClient{}, &fakeListsClient{}, &fakeTieredCache{})
+
+			got, err := svc.InstalledGuids(context.Background(), orgRequestContext("507f1f77bcf86cd799439011"), tt.guids)
+			if err != nil {
+				t.Fatalf("InstalledGuids: %v", err)
+			}
+			if !equalStrings(got, tt.ret) {
+				t.Fatalf("expected %v, got %v", tt.ret, got)
+			}
+			if gotOrg.Hex() != "507f1f77bcf86cd799439011" {
+				t.Fatalf("expected org-scoped query, got org %s", gotOrg.Hex())
+			}
+			if !equalStrings(gotGuids, tt.guids) {
+				t.Fatalf("expected guids %v passed to repo, got %v", tt.guids, gotGuids)
+			}
+		})
+	}
+}
+
+// TestUninstallFromMarketplace_InUse verifies the guard refuses to delete a link
+// whose template is still referenced by assets, surfacing a 403 + TEMPLATE_IN_USE.
+func TestUninstallFromMarketplace_InUse(t *testing.T) {
+	repo := &fakeRepo{}
+	linkID := objectIDHex(t, "507f1f77bcf86cd799439021")
+	deleteCount := 0
+	repo.findByMarketplaceGuidAndOrgFn = func(_ context.Context, _ string, _ model.ObjectId) (*entities.Assettemplate, error) {
+		return &entities.Assettemplate{ID: linkID}, nil
+	}
+	repo.deleteByIdFn = func(_ context.Context, _ *string) error {
+		deleteCount++
+		return nil
+	}
+	mc := &fakeMarketplaceClient{fetchBundleFn: func(_ context.Context, _, _ string) (*ports.MarketplaceBundleFetch, error) {
+		return verifiedFetch("guid-1"), nil
+	}}
+	svc := newTestServiceWithInstall(repo, mc, &fakeListsClient{}, &fakeTieredCache{})
+	svc.deps.AssetUsage.(*fakeAssetUsage).countFn = func(_ context.Context, _ *reqCtx.RequestContext, _ string) (int64, error) {
+		return 2, nil
+	}
+
+	err := svc.UninstallFromMarketplace(context.Background(), orgRequestContext("507f1f77bcf86cd799439011"), "v", "s")
+	if err == nil {
+		t.Fatal("expected a 403 in-use error, got nil")
+	}
+	var sce *customErrors.ServerCustomError
+	if !errors.As(err, &sce) || sce.Code != httpStatus.FORBIDDEN {
+		t.Fatalf("expected a 403 ServerCustomError, got %#v", err)
+	}
+	found := false
+	for _, e := range sce.Errors {
+		if e == dtos.ErrCodeTemplateInUse {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("expected the TEMPLATE_IN_USE code in errors, got %v", sce.Errors)
+	}
+	if deleteCount != 0 {
+		t.Fatalf("expected no delete while the template is in use, got %d", deleteCount)
+	}
+}
+
+// TestUninstallFromMarketplace_NotInUse verifies the guard allows the delete when
+// no asset references the template.
+func TestUninstallFromMarketplace_NotInUse(t *testing.T) {
+	repo := &fakeRepo{}
+	linkID := objectIDHex(t, "507f1f77bcf86cd799439021")
+	deleteCount := 0
+	repo.findByMarketplaceGuidAndOrgFn = func(_ context.Context, _ string, _ model.ObjectId) (*entities.Assettemplate, error) {
+		return &entities.Assettemplate{ID: linkID}, nil
+	}
+	repo.deleteByIdFn = func(_ context.Context, _ *string) error {
+		deleteCount++
+		return nil
+	}
+	mc := &fakeMarketplaceClient{fetchBundleFn: func(_ context.Context, _, _ string) (*ports.MarketplaceBundleFetch, error) {
+		return verifiedFetch("guid-1"), nil
+	}}
+	svc := newTestServiceWithInstall(repo, mc, &fakeListsClient{}, &fakeTieredCache{})
+	svc.deps.AssetUsage.(*fakeAssetUsage).countFn = func(_ context.Context, _ *reqCtx.RequestContext, _ string) (int64, error) {
+		return 0, nil
+	}
+
+	if err := svc.UninstallFromMarketplace(context.Background(), orgRequestContext("507f1f77bcf86cd799439011"), "v", "s"); err != nil {
+		t.Fatalf("uninstall: %v", err)
+	}
+	if deleteCount != 1 {
+		t.Fatalf("expected the link deleted once when not in use, got %d", deleteCount)
 	}
 }

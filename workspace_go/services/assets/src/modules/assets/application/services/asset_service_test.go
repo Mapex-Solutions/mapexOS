@@ -167,6 +167,14 @@ func (r *fakeAssetTemplateRepo) CountDocuments(ctx context.Context, filters mode
 	return 0, nil
 }
 
+func (r *fakeAssetTemplateRepo) FindByMarketplaceGuidAndOrg(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*templatePorts.Assettemplate, error) {
+	return nil, nil
+}
+
+func (r *fakeAssetTemplateRepo) FindInstalledGuids(ctx context.Context, guids []string, orgId model.ObjectId) ([]string, error) {
+	return []string{}, nil
+}
+
 type fakeAssetStoragePort struct {
 	writeAssetFn      func(ctx context.Context, a *entities.Asset, templateOrgId string) error
 	deleteAssetFn     func(ctx context.Context, orgId string, assetUUID string) error

@@ -48,3 +48,19 @@ type MarketplaceDynamicField struct {
 	Type    string `json:"type"`
 	Status  uint8  `json:"status"`
 }
+
+// MarketplaceInstalledCheckRequest is the batch installed-check body: the
+// marketplace GUIDs to test against the caller org's installs in one call.
+type MarketplaceInstalledCheckRequest struct {
+	MarketplaceGuids []string `json:"marketplaceGuids" validate:"required"`
+}
+
+// MarketplaceInstalledCheckResponse returns the subset of the requested GUIDs
+// the caller org has installed.
+type MarketplaceInstalledCheckResponse struct {
+	Installed []string `json:"installed"`
+}
+
+// ErrCodeTemplateInUse is the machine-readable error code returned with HTTP 403
+// when an uninstall is refused because assets still reference the template.
+const ErrCodeTemplateInUse = "TEMPLATE_IN_USE"

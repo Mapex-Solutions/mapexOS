@@ -11,6 +11,8 @@ import {
   ZodAssetTemplateBundleDynamicFieldSchema,
   ZodAssetTemplateBundleSchema,
   ZodAssetTemplateBundleResponseSchema,
+  ZodMarketplaceInstalledCheckRequestSchema,
+  ZodMarketplaceInstalledCheckResponseSchema,
 } from '../schemas/asset_template_marketplace.schema';
 
 export type AssetTemplateCatalogItem = z.infer<typeof ZodAssetTemplateCatalogItemSchema>;
@@ -24,3 +26,5 @@ export type AssetTemplateFacetsResponse = z.infer<typeof ZodAssetTemplateFacetsR
 export type AssetTemplateBundleDynamicField = z.infer<typeof ZodAssetTemplateBundleDynamicFieldSchema>;
 export type AssetTemplateBundle = z.infer<typeof ZodAssetTemplateBundleSchema>;
 export type AssetTemplateBundleResponse = z.infer<typeof ZodAssetTemplateBundleResponseSchema>;
+export type MarketplaceInstalledCheckRequest = z.infer<typeof ZodMarketplaceInstalledCheckRequestSchema>;
+export type MarketplaceInstalledCheckResponse = z.infer<typeof ZodMarketplaceInstalledCheckResponseSchema>;

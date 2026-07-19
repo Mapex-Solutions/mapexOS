@@ -24,19 +24,23 @@
     "all": "todos"
   },
   "card": {
-    "fields": "{count} campos",
-    "hasScripts": "inclui scripts",
-    "view": "ver detalhes"
+    "view": "ver detalhes",
+    "model": "modelo",
+    "version": "versão"
   },
   "modal": {
     "title": "detalhes do template",
     "loading": "carregando template...",
     "loadError": "falha ao carregar o template",
     "sections": {
-      "overview": "visão geral",
-      "dynamicFields": "campos dinâmicos",
-      "scripts": "scripts",
-      "availableFields": "campos disponíveis"
+      "setup": "Configuração",
+      "uplink": "Uplink",
+      "retrieval": "Busca"
+    },
+    "subtitles": {
+      "setup": "o que é este template e como ele identifica seus ativos",
+      "uplink": "os scripts que processam cada payload recebido",
+      "retrieval": "os campos que você pode usar para buscar seus dados e eventos"
     },
     "overview": {
       "manufacturer": "fabricante",
@@ -44,7 +48,8 @@
       "version": "versão",
       "category": "categoria",
       "assetIdPath": "caminho do id do ativo",
-      "description": "descrição"
+      "description": "descrição",
+      "specifications": "especificações"
     },
     "scripts": {
       "test": "teste",
@@ -53,7 +58,13 @@
       "conversion": "conversão",
       "configured": "configurado",
       "notConfigured": "não configurado",
-      "view": "ver script"
+      "view": "ver script",
+      "descriptions": {
+        "test": "um payload de exemplo para testar o pipeline",
+        "processor": "prepara o payload bruto antes da conversão",
+        "validator": "verifica se o payload está no formato esperado",
+        "conversion": "transforma o payload nos campos que você pode buscar"
+      }
     },
     "actions": {
       "cancel": "cancelar",
@@ -69,5 +80,12 @@
     "genericError": "falha ao instalar o template",
     "shareWithChildren": "compartilhar com organizações filhas",
     "shareWithChildrenHint": "quando ativado, as organizações filhas também podem usar este template instalado"
+  },
+  "uninstall": {
+    "button": "desinstalar",
+    "uninstalling": "desinstalando...",
+    "success": "template desinstalado",
+    "inUse": "Este template está em uso por ativos. Exclua esses ativos antes de desinstalar.",
+    "genericError": "falha ao desinstalar o template"
   }
 }

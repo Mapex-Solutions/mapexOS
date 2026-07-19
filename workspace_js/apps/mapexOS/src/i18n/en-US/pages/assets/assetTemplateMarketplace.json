@@ -24,19 +24,23 @@
     "all": "all"
   },
   "card": {
-    "fields": "{count} fields",
-    "hasScripts": "includes scripts",
-    "view": "view details"
+    "view": "view details",
+    "model": "model",
+    "version": "version"
   },
   "modal": {
     "title": "template details",
     "loading": "loading template...",
     "loadError": "failed to load the template",
     "sections": {
-      "overview": "overview",
-      "dynamicFields": "dynamic fields",
-      "scripts": "scripts",
-      "availableFields": "available fields"
+      "setup": "Setup",
+      "uplink": "Uplink",
+      "retrieval": "Retrieval"
+    },
+    "subtitles": {
+      "setup": "what this template is and how it identifies your assets",
+      "uplink": "the scripts that process each incoming payload",
+      "retrieval": "the fields you can query on your data and events"
     },
     "overview": {
       "manufacturer": "manufacturer",
@@ -44,7 +48,8 @@
       "version": "version",
       "category": "category",
       "assetIdPath": "asset id path",
-      "description": "description"
+      "description": "description",
+      "specifications": "specifications"
     },
     "scripts": {
       "test": "test",
@@ -53,7 +58,13 @@
       "conversion": "conversion",
       "configured": "configured",
       "notConfigured": "not configured",
-      "view": "view script"
+      "view": "view script",
+      "descriptions": {
+        "test": "a sample payload to test the pipeline",
+        "processor": "prepares the raw payload before conversion",
+        "validator": "checks the payload matches the expected shape",
+        "conversion": "turns the payload into the fields you can search"
+      }
     },
     "actions": {
       "cancel": "cancel",
@@ -69,5 +80,12 @@
     "genericError": "failed to install the template",
     "shareWithChildren": "share with child organizations",
     "shareWithChildrenHint": "when enabled, child organizations can also use this installed template"
+  },
+  "uninstall": {
+    "button": "uninstall",
+    "uninstalling": "uninstalling...",
+    "success": "template uninstalled",
+    "inUse": "This template is in use by assets. Delete those assets before uninstalling.",
+    "genericError": "failed to uninstall the template"
   }
 }
