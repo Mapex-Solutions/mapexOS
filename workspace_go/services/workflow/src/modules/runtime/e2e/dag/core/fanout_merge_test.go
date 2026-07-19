@@ -3,7 +3,9 @@ package core
 import (
 	"testing"
 
+	"workflow/src/modules/runtime/domain/entities"
 	. "workflow/src/modules/runtime/e2e/testutil"
+	sharedTypes "workflow/src/shared/types"
 )
 
 func TestFanout_TwoBranches_Sync(t *testing.T) {
@@ -139,4 +141,90 @@ func TestFanout_NegativeBranches_Error(t *testing.T) {
 	exec := h.RunSync(map[string]interface{}{})
 
 	AssertFailed(t, exec, "EXECUTION_ERROR")
+}
+
+// FIX A (#2): every fanout-suspended node must have its executionToken persisted to KV,
+// so validateResumeToken can fence stale/duplicate callbacks. Before the fix, the fanout
+// checkpoint ran BEFORE suspendFanoutExecution assigned the token, so the token never
+// reached the store and the fencing was silently disabled for fanout nodes.
+func TestFanout_AsyncBranches_TokenPersisted(t *testing.T) {
+	def := NewDefinition("FanoutTokenPersisted").
+		AddNode(StartNode("__start__")).
+		AddNode(FanoutNode("fan1", 2, "")).
+		AddNode(CodeNode("code1", "return {r:1}", 5000)).
+		AddNode(CodeNode("code2", "return {r:2}", 5000)).
+		AddNode(MergeNode("merge1", 2)).
+		AddNode(EndNode("end")).
+		AddEdge("__start__", "out", "fan1").
+		AddEdge("fan1", "out_1", "code1").
+		AddEdge("fan1", "out_2", "code2").
+		AddEdge("code1", "success", "merge1").
+		AddEdge("code2", "success", "merge1").
+		AddEdge("merge1", "out", "end").
+		Build()
+
+	h := NewHarness(t, def)
+	exec := h.RunSync(map[string]interface{}{})
+
+	if exec.Status != entities.ExecStatusWaiting {
+		t.Fatalf("expected waiting after fanout async suspend, got %s", exec.Status)
+	}
+	for _, node := range []string{"code1", "code2"} {
+		ns := exec.NodeStates[node]
+		if ns == nil {
+			t.Fatalf("expected NodeState for waiting fanout node %s", node)
+		}
+		token, ok := ns["executionToken"].(string)
+		if !ok || token == "" {
+			t.Fatalf("FIX A: expected a non-empty executionToken persisted for fanout node %s, got %q", node, token)
+		}
+	}
+}
+
+// FIX A (#2): a fanout-suspended node must REJECT a stale/wrong-token callback and ACCEPT
+// the matching one — proving the persisted token actually fences callbacks end-to-end.
+func TestFanout_AsyncBranches_StaleTokenFenced(t *testing.T) {
+	def := NewDefinition("FanoutStaleToken").
+		AddNode(StartNode("__start__")).
+		AddNode(FanoutNode("fan1", 2, "")).
+		AddNode(CodeNode("code1", "return {r:1}", 5000)).
+		AddNode(CodeNode("code2", "return {r:2}", 5000)).
+		AddNode(MergeNode("merge1", 2)).
+		AddNode(EndNode("end")).
+		AddEdge("__start__", "out", "fan1").
+		AddEdge("fan1", "out_1", "code1").
+		AddEdge("fan1", "out_2", "code2").
+		AddEdge("code1", "success", "merge1").
+		AddEdge("code2", "success", "merge1").
+		AddEdge("merge1", "out", "end").
+		Build()
+
+	h := NewHarness(t, def)
+	exec := h.RunSync(map[string]interface{}{})
+
+	realToken, _ := exec.NodeStates["code1"]["executionToken"].(string)
+	if realToken == "" {
+		t.Fatal("precondition: code1 must have a persisted executionToken")
+	}
+
+	// Stale/wrong token → rejected → code1 stays waiting.
+	h.SendResumeWithToken(exec, "code1", "stale-wrong-token", sharedTypes.ResumeMessage{
+		Status: "success",
+		Output: map[string]interface{}{"r": 1},
+	})
+	afterStale := h.StateRepo.GetLatest()
+	if ns := afterStale.NodeStates["code1"]; ns == nil || ns["waitType"] == nil {
+		t.Fatal("FIX A: stale-token callback should be rejected — code1 must still be waiting")
+	}
+
+	// Matching token → accepted → code1 resumes (removed from NodeStates; execution
+	// re-suspends on code2).
+	h.SendResumeWithToken(afterStale, "code1", realToken, sharedTypes.ResumeMessage{
+		Status: "success",
+		Output: map[string]interface{}{"r": 1},
+	})
+	afterReal := h.StateRepo.GetLatest()
+	if _, stillThere := afterReal.NodeStates["code1"]; stillThere {
+		t.Fatal("FIX A: matching-token callback should have resumed code1 (removed from NodeStates)")
+	}
 }

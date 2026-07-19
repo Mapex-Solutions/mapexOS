@@ -9,6 +9,7 @@ import (
 
 	"time"
 
+	archiverConstants "workflow/src/modules/archiver/application/constants"
 	"workflow/src/modules/archiver/application/di"
 	"workflow/src/modules/archiver/application/ports"
 	"workflow/src/modules/archiver/domain/repositories"
@@ -398,6 +399,51 @@ func TestProcessStateBatch_TerminalEvents(t *testing.T) {
 	}
 	if len(kv.deleted) != 1 || kv.deleted[0] != "exec.exec-done" {
 		t.Fatalf("expected KV key 'exec.exec-done' deleted, got %v", kv.deleted)
+	}
+}
+
+// FIX C (#3): the terminal ClickHouse publish must carry a deterministic Nats-Msg-Id
+// (the execution's stable ObjectID) so an at-least-once redelivery is dropped by the
+// EVENTS-WORKFLOW stream dedup window instead of writing a duplicate row.
+func TestProcessStateBatch_TerminalEvent_DeterministicMsgId(t *testing.T) {
+	execution := runtimePorts.WorkflowExecution{
+		WorkflowUUID: "exec-done",
+		Status:       runtimePorts.ExecStatusCompleted,
+		WorkflowName: "WF-Done",
+	}
+	executionData, _ := json.Marshal(execution)
+
+	kv := &archiverMockKV{data: map[string]*natsModel.KVEntry{
+		"exec.exec-done": {Value: executionData},
+	}}
+	repo := &mockArchiveRepo{}
+	pub := &archiverMockPublisher{}
+	svc := &ArchiverService{deps: newArchiverTestDeps(repo, kv, pub)}
+
+	// Two deliveries of the same terminal event (at-least-once) → identical Msg-Id.
+	messages := []*natsModel.Message{
+		makeTestMessage(stateSubject("completed"), sharedTypes.StateEvent{InstanceID: "exec-done", Status: "completed"}),
+		makeTestMessage(stateSubject("completed"), sharedTypes.StateEvent{InstanceID: "exec-done", Status: "completed"}),
+	}
+	svc.ProcessStateBatch(messages)
+
+	var msgIds []string
+	for _, cfg := range pub.published {
+		if cfg.Subject == archiverConstants.EventsWorkflowSubject {
+			msgIds = append(msgIds, cfg.Headers["Nats-Msg-Id"])
+		}
+	}
+	if len(msgIds) == 0 {
+		t.Fatal("expected at least one EVENTS-WORKFLOW publish")
+	}
+	want := execution.WorkflowUUID
+	for _, got := range msgIds {
+		if got != want {
+			t.Fatalf("FIX C: expected Nats-Msg-Id %q (exec.WorkflowUUID), got %q", want, got)
+		}
+	}
+	if len(msgIds) >= 2 && msgIds[0] != msgIds[1] {
+		t.Fatalf("FIX C: Msg-Id must be identical across redeliveries, got %q and %q", msgIds[0], msgIds[1])
 	}
 }
 

@@ -243,9 +243,14 @@ func (s *ArchiverService) publishWorkflowEvent(exec *runtimePorts.WorkflowExecut
 		"externalInputs":    string(externalInputsJSON),
 	}
 
+	// Deterministic Nats-Msg-Id (the execution's stable workflowUUID — the primary
+	// identity used across the system: KV key, state-event InstanceID) so an
+	// at-least-once redelivery of the terminal state event is dropped by the
+	// EVENTS-WORKFLOW stream dedup window instead of writing a duplicate ClickHouse row.
 	if err := s.deps.Publisher.Publish(natsModel.PublishConfig{
 		Subject: archiverConstants.EventsWorkflowSubject,
 		Data:    payload,
+		Headers: map[string]string{"Nats-Msg-Id": exec.WorkflowUUID},
 	}); err != nil {
 		logger.Warn(fmt.Sprintf("[SERVICE:Archiver] Failed to publish workflow event for %s: %s", exec.WorkflowUUID, err))
 	}

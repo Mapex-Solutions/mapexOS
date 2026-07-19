@@ -426,10 +426,15 @@ func (s *RuntimeService) executeFanout(
 		if fanoutMode == constants.FanoutModeFirstCompleted {
 			execution.NodeStates[appConstants.NodeStateKeyFanoutMeta] = map[string]interface{}{appConstants.NodeStateKeyMode: constants.FanoutModeFirstCompleted}
 		}
+		// Assign per-node executionToken + dispatch FIRST, THEN checkpoint — so the
+		// token each waiting node needs for stale-callback fencing is durably persisted
+		// to KV (mirrors the single-node suspendExecution ordering). Checkpointing before
+		// suspendFanoutExecution would persist the waiting state WITHOUT the token,
+		// disabling validateResumeToken for fanout-suspended nodes.
+		s.suspendFanoutExecution(execution)
 		if err := s.checkpoint(execution); err != nil {
 			return "", err
 		}
-		s.suspendFanoutExecution(execution)
 		return "", nil
 	}
 

@@ -140,6 +140,20 @@ const (
 )
 
 /*
+ * Subworkflow Deterministic UUID
+ */
+const (
+	// SubworkflowUUIDNamespace is the fixed UUIDv5 namespace for deterministic
+	// subworkflow child execution UUIDs. The child UUID is
+	// UUIDv5(namespace, "{parentUUID}:{nodeID}:{attempt}"), so a redelivered
+	// subworkflow dispatch resolves to the same child key and KV.Create dedups it —
+	// for ANY parent id shape, including non-canonical / user-provided workflow UUIDs.
+	// NEVER change this value: changing it re-randomizes every child UUID and breaks
+	// crash-recovery dedup retroactively.
+	SubworkflowUUIDNamespace = "f4ed755a-7188-4880-99b1-549f49573cfc"
+)
+
+/*
  * NodeState Map Keys
  * Application-layer keys used inside the per-node state map carried in
  * WorkflowExecution.NodeStates. Stable wire format consumed by the runtime

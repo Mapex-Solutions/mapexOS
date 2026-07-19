@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	appConstants "workflow/src/modules/runtime/application/constants"
+
+	"github.com/google/uuid"
 )
 
 /**
@@ -194,9 +196,30 @@ func TestGenerateSubworkflowUUID_ValidFormat(t *testing.T) {
 	}
 }
 
-func TestGenerateSubworkflowUUID_InvalidParentFallback(t *testing.T) {
-	result := generateSubworkflowUUID("not-a-uuid", "subwf_1", 0)
-	if len(result) != 36 {
-		t.Fatalf("expected fallback to random UUID (36 chars), got %d: %s", len(result), result)
+// A non-canonical parent id (not a parseable UUID) must still be deterministic —
+// the fixed-namespace UUIDv5 removes the old random fallback. Same inputs → same
+// child UUID across calls, and the result is a valid UUIDv5.
+func TestGenerateSubworkflowUUID_DeterministicNonCanonicalParent(t *testing.T) {
+	uuid1 := generateSubworkflowUUID("order-42", "subwf_1", 0)
+	uuid2 := generateSubworkflowUUID("order-42", "subwf_1", 0)
+	if uuid1 != uuid2 {
+		t.Fatalf("expected deterministic UUID for a non-canonical parent, got %s and %s", uuid1, uuid2)
+	}
+	parsed, err := uuid.Parse(uuid1)
+	if err != nil {
+		t.Fatalf("expected a valid UUID for a non-canonical parent, got %q: %v", uuid1, err)
+	}
+	if parsed.Version() != 5 {
+		t.Fatalf("expected UUIDv5, got v%d for %s", parsed.Version(), uuid1)
+	}
+}
+
+// Different non-canonical parents must still yield different child UUIDs — the
+// parent id is folded into the UUIDv5 name, so it discriminates without being parseable.
+func TestGenerateSubworkflowUUID_NonCanonicalDifferentParents(t *testing.T) {
+	uuid1 := generateSubworkflowUUID("order-42", "subwf_1", 0)
+	uuid2 := generateSubworkflowUUID("order-43", "subwf_1", 0)
+	if uuid1 == uuid2 {
+		t.Fatal("expected different UUIDs for different non-canonical parents")
 	}
 }

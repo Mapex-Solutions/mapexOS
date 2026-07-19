@@ -131,14 +131,12 @@ func buildMsgId(workflowUUID, nodeID string, attempt int, state map[string]inter
 }
 
 // generateSubworkflowUUID creates a deterministic UUIDv5 for a child subworkflow execution.
-// Same parent + same node + same attempt always produces the same UUID.
-// Uses UUIDv5 (SHA1-based, RFC 4122) with the parent UUID as namespace.
+// Same parent + same node + same attempt always produces the same UUID — for ANY parent id
+// shape, including non-canonical / user-provided workflow UUIDs. Uses UUIDv5 (SHA1-based,
+// RFC 4122) with a fixed service namespace; the parent UUID is folded into the name so the
+// derivation never depends on the parent being a parseable UUID.
 func generateSubworkflowUUID(parentUUID, nodeID string, attempt int) string {
-	ns, err := uuid.Parse(parentUUID)
-	if err != nil {
-		logger.Warn(fmt.Sprintf("[SERVICE:Runtime] Failed to parse parent UUID %q for subworkflow UUIDv5, falling back to random UUID", parentUUID))
-		return uuid.New().String()
-	}
-	name := nodeID + ":" + strconv.Itoa(attempt)
+	ns := uuid.MustParse(appConstants.SubworkflowUUIDNamespace)
+	name := parentUUID + ":" + nodeID + ":" + strconv.Itoa(attempt)
 	return uuid.NewSHA1(ns, []byte(name)).String()
 }
