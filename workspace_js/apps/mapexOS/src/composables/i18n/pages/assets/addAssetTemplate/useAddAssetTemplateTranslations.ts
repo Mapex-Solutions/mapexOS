@@ -544,6 +544,7 @@ export function useAddAssetTemplateTranslations() {
       updated: computed(() => tsRaw('pages.assets.addAssetTemplate.notifications.updated')),
       loading: computed(() => tsRaw('pages.assets.addAssetTemplate.notifications.loading')),
       loadFailed: computed(() => tsRaw('pages.assets.addAssetTemplate.notifications.loadFailed')),
+      marketplaceReadonly: computed(() => tsRaw('pages.assets.addAssetTemplate.notifications.marketplaceReadonly')),
       updateFailed: computed(() => tsRaw('pages.assets.addAssetTemplate.notifications.updateFailed')),
       validationError: computed(() => tsRaw('pages.assets.addAssetTemplate.notifications.validationError')),
       testSuccess: computed(() => tsRaw('pages.assets.addAssetTemplate.notifications.testSuccess')),

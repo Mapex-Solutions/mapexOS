@@ -43,13 +43,12 @@ func (s *AssetTemplateService) deleteScripts(context ctx.Context, template *enti
 //   - IsSystem=true → returns "mapexos_public"
 //   - IsSystem=false → returns the template's OrgID
 func (s *AssetTemplateService) getTemplateOrgId(template *entities.Assettemplate) string {
-	if template.IsSystem {
+	// System templates and marketplace shared content are platform-owned (no
+	// orgId) and share the public namespace across every tenant.
+	if template.IsSystem || template.OrgID == nil {
 		return "mapexos_public"
 	}
-	if template.OrgID != nil {
-		return template.OrgID.Hex()
-	}
-	return "mapexos_public"
+	return template.OrgID.Hex()
 }
 
 // publishTemplateInvalidate publishes a FANOUT message to invalidate template cache.

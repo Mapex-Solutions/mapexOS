@@ -307,7 +307,7 @@ defineOptions({
 
 import { ref, computed } from 'vue';
 import type { DataRowProps, DataRowEmits, DataRowColumn } from './interfaces';
-import { AvatarColumn, TextColumn, CodeColumn, ChipColumn, ChipsColumn, BadgeColumn } from './columns';
+import { AvatarColumn, TextColumn, CodeColumn, ChipColumn, ChipsColumn, BadgeColumn, IconColumn } from './columns';
 
 /** CONSTANTS */
 const CLICK_DELAY_MS = 250;
@@ -510,6 +510,8 @@ function getColumnComponent(column: any) {
       return ChipsColumn;
     case 'badge':
       return BadgeColumn;
+    case 'icon':
+      return IconColumn;
     default:
       return TextColumn;
   }

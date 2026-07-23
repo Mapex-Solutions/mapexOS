@@ -86,7 +86,8 @@
     "customScripts": "custom scripts",
     "templateType": "template type",
     "templateSource": "template source",
-    "origin": "origin"
+    "origin": "origin",
+    "shared": "shared"
   },
   "origin": {
     "marketplace": "installed from marketplace",
@@ -118,7 +119,10 @@
     "systemTemplateEdit": "system templates cannot be edited",
     "systemTemplateDelete": "system templates cannot be deleted",
     "sharedTemplateEdit": "shared templates from other organizations cannot be edited",
-    "sharedTemplateDelete": "shared templates from other organizations cannot be deleted"
+    "sharedTemplateDelete": "shared templates from other organizations cannot be deleted",
+    "marketplaceTemplateEdit": "This template comes from the marketplace and cannot be edited. Clone it to a local copy first.",
+    "cloned": "template cloned",
+    "cloneError": "failed to clone the template"
   },
   "errors": {
     "apiNotInitialized": "Assets API is not available",
@@ -127,7 +131,10 @@
   "actions": {
     "edit": "edit",
     "view": "view",
-    "delete": "delete"
+    "delete": "delete",
+    "clone": "Clone",
+    "cloneHint": "Create an editable local copy",
+    "clonePrefix": "Clone"
   },
   "status": {
     "active": "active",
@@ -142,19 +149,17 @@
     "error": "failed to load template details",
     "systemTemplateWarning": "this is a system template and cannot be modified or deleted",
     "systemTemplateTooltip": "system templates cannot be edited",
-    "selectTemplate": "select this template",
-    "tabs": {
-      "overview": "overview",
-      "dynamicFields": "dynamic fields",
-      "scripts": "scripts",
-      "availableFields": "available fields"
+    "marketplaceTemplateTooltip": "This template comes from the marketplace and is read-only. Clone it to create a local, editable copy.",
+    "clone": {
+      "button": "clone to local",
+      "success": "template cloned to a local copy",
+      "error": "failed to clone the template"
     },
-    "sections": {
-      "basicInfo": "basic information",
-      "configuration": "configuration",
-      "scripts": "scripts",
-      "fields": "fields",
-      "timestamps": "timestamps"
+    "contexts": {
+      "setup": "Setup",
+      "uplink": "Uplink",
+      "retrieval": "Retrieval",
+      "finalization": "Finalization"
     },
     "fields": {
       "name": "name",
@@ -377,5 +382,9 @@
       "title": "review configuration",
       "description": "review all configuration before saving your asset template."
     }
+  },
+  "shared": {
+    "yes": "shared with child organizations",
+    "no": "not shared with child organizations"
   }
 }

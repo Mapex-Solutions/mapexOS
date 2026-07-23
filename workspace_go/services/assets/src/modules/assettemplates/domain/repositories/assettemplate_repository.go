@@ -20,6 +20,16 @@ type AssetTemplateRepository interface {
 	// caller org has installed, resolved in a single query (marketplaceGuid $in +
 	// orgId). Empty input yields an empty result without querying.
 	FindInstalledGuids(ctx context.Context, guids []string, orgId model.ObjectId) ([]string, error)
+
+	// FindMarketplaceContentByGuid returns the shared content document for a
+	// marketplace template — the org-less record (orgId absent) that holds the
+	// heavy body once per guid — or nil when it has not been downloaded yet.
+	FindMarketplaceContentByGuid(ctx context.Context, marketplaceGuid string) (*entities.Assettemplate, error)
+
+	// UpsertMarketplaceContent creates or updates in place the single shared
+	// content document for a marketplaceGuid (on a version bump the body is
+	// replaced) and returns it with its assigned _id.
+	UpsertMarketplaceContent(ctx context.Context, content *entities.Assettemplate) (*entities.Assettemplate, error)
 	FindByIdAndUpdate(ctx context.Context, dataSourceId *string, payload map[string]any) (*entities.Assettemplate, error)
 	DeleteById(ctx context.Context, dataSourceId *string) error
 	FindWithFilters(ctx context.Context, filters model.Map, pagination *model.PaginationOpts, projection model.Map) (*model.PaginatedResult[entities.Assettemplate], error)

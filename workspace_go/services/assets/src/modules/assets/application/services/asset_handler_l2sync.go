@@ -23,8 +23,8 @@ import (
 // against current Mongo state once MinIO recovers. fanout is not
 // emitted here — the caller in asset_handler_sideeffects.go emits
 // it after this returns.
-func (s *AssetService) syncAssetL2(ctx ctx.Context, asset *entities.Asset) string {
-	templateOrgId := s.getTemplateOrgId(ctx, asset)
+func (s *AssetService) syncAssetL2(ctx ctx.Context, asset *entities.Asset) (string, string) {
+	templateOrgId, templateId := s.resolveTemplateCacheIdentity(ctx, asset)
 
 	fullErr := s.deps.AssetStoragePort.WriteAsset(ctx, asset, templateOrgId)
 	if fullErr != nil {
@@ -45,7 +45,7 @@ func (s *AssetService) syncAssetL2(ctx ctx.Context, asset *entities.Asset) strin
 		s.publishL2Retry(ctx, asset)
 	}
 
-	return templateOrgId
+	return templateOrgId, templateId
 }
 
 // deleteAssetL2 removes both projections from MinIO. Best-effort: a

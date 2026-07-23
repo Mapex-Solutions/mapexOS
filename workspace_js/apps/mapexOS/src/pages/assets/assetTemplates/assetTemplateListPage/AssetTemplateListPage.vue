@@ -5,9 +5,8 @@ defineOptions({
 
 /** TYPE IMPORTS */
 import type { ListHeaderMenuColumn } from '@components/headers';
-import type { DataRowActionConfig } from '@components/cards';
+import type { DataRowActionConfig, DataRowCustomAction } from '@components/cards';
 import type { FilterField } from '@components/drawers';
-import type { AssetTemplateResponse } from '@mapexos/schemas';
 import type {
   AssetTemplateListPageFilters,
   AssetTemplateListPageColumnVisibility,
@@ -22,8 +21,7 @@ import { useRouter } from 'vue-router';
 /** COMPONENTS */
 import { PageHeader, ListHeaderMenu } from '@components/headers';
 import { ListCardEmpty, DataRow } from '@components/cards';
-import { AdvancedFiltersDrawer } from '@components/drawers';
-import { AssetTemplateDetailsModal } from '@components/assetTemplates';
+import { AssetTemplateDetailsDrawer, AdvancedFiltersDrawer } from '@components/drawers';
 import { ListPagination } from '@components/navigation';
 import { AppTooltip } from '@components/tooltips';
 
@@ -69,10 +67,9 @@ const assetTemplatesList = ref<EnrichedAssetTemplate[]>([]);
 const loading = ref(false);
 const lastUpdatedAt = ref<number | undefined>(undefined);
 const error = ref<string | undefined>(undefined);
-const showDetailsModal = ref(false);
+const showDetailsDrawer = ref(false);
 const showFiltersDrawer = ref(false);
 const selectedTemplateId = ref<string | null>(null);
-const detailTemplate = ref<AssetTemplateResponse | null>(null);
 const itemsPerPage = ref(DEFAULT_ITEMS_PER_PAGE);
 const currentPage = ref(1);
 const totalPages = ref(1);
@@ -335,18 +332,8 @@ const menuColumns = computed(() => {
   const cols: ListHeaderMenuColumn[] = [
     { key: 'manufacturerModel', label: t.menuColumns.manufacturerModel.value, visible: columnVisibilityState.value.manufacturerModel },
     { key: 'version', label: t.menuColumns.version.value, visible: columnVisibilityState.value.version },
-    { key: 'isSystem', label: t.menuColumns.templateType.value, visible: columnVisibilityState.value.isSystem },
-    { key: 'isTemplate', label: t.menuColumns.templateSource.value, visible: columnVisibilityState.value.isTemplate },
+    { key: 'isTemplate', label: t.menuColumns.shared.value, visible: columnVisibilityState.value.isTemplate },
   ];
-
-  // Only show organization toggle when includeChildren is active
-  if (advancedFilterValues.value.includeChildren === true) {
-    cols.unshift({
-      key: 'organization',
-      label: t.menuColumns.organization.value,
-      visible: columnVisibilityState.value.organization
-    });
-  }
 
   return cols;
 });
@@ -361,15 +348,9 @@ const visibleColumns = computed(() => {
       return true;
     }
 
-    // Organization column only visible when includeChildren filter is active
-    if (col.key === 'organizationName') {
-      return advancedFilterValues.value.includeChildren === true && columnVisibilityState.value.organization;
-    }
-
     // Filter based on columnVisibility
     if (col.key === 'manufacturer') return columnVisibilityState.value.manufacturerModel;
     if (col.key === 'version') return columnVisibilityState.value.version;
-    if (col.key === 'isSystem') return columnVisibilityState.value.isSystem;
     if (col.key === 'isTemplate') return columnVisibilityState.value.isTemplate;
 
     return true;
@@ -801,7 +782,6 @@ async function fetchModels(manufacturerId: string): Promise<void> {
  */
 function handleColumnsUpdate(columns: ListHeaderMenuColumn[]): void {
   columns.forEach(col => {
-    if (col.key === 'organization') columnVisibilityState.value.organization = col.visible;
     if (col.key === 'manufacturerModel') columnVisibilityState.value.manufacturerModel = col.visible;
     if (col.key === 'version') columnVisibilityState.value.version = col.visible;
     if (col.key === 'isSystem') columnVisibilityState.value.isSystem = col.visible;
@@ -824,6 +804,11 @@ function canModifyTemplate(template: EnrichedAssetTemplate): boolean {
     return false;
   }
 
+  // Marketplace templates are read-only; the user clones them to a local copy to edit.
+  if (template.isMarketplace) {
+    return false;
+  }
+
   // Shared templates can only be modified by the owner organization
   if (template.isTemplate) {
     return template.orgId === orgStore.selectedOrganizationId;
@@ -840,21 +825,14 @@ function canModifyTemplate(template: EnrichedAssetTemplate): boolean {
  * @param {EnrichedAssetTemplate} template - Template to view
  * @returns {void}
  */
-async function viewDetails(template: EnrichedAssetTemplate): Promise<void> {
+function viewDetails(template: EnrichedAssetTemplate): void {
   if (!canReadTemplate.value) return;
   if (!template.id) {
     notifyFail({ message: t.errors.idMissing.value });
     return;
   }
-  // The modal is a pure presentation component — fetch the full template here
-  // (list rows carry only a summary) and hand it the data.
   selectedTemplateId.value = template.id;
-  try {
-    detailTemplate.value = await apis.assets.assetTemplate.getById({ assetTemplateId: template.id });
-    showDetailsModal.value = true;
-  } catch {
-    notifyFail({ message: t.drawer.error.value });
-  }
+  showDetailsDrawer.value = true;
 }
 
 /**
@@ -867,6 +845,8 @@ function editTemplate(template: EnrichedAssetTemplate): void {
   if (!canModifyTemplate(template)) {
     if (template.isSystem) {
       notifyWarning({ message: t.notifications.systemTemplateEdit.value });
+    } else if (template.isMarketplace) {
+      notifyWarning({ message: t.notifications.marketplaceTemplateEdit.value });
     } else if (template.isTemplate) {
       notifyWarning({ message: t.notifications.sharedTemplateEdit.value });
     }
@@ -885,21 +865,21 @@ function editTemplate(template: EnrichedAssetTemplate): void {
 function handleDrawerEdit(templateId: string): void {
   if (!canUpdateTemplate.value) return;
   // Close drawer before navigating
-  showDetailsModal.value = false;
+  showDetailsDrawer.value = false;
 
   // Navigate to edit page
   void router.push(`/assets_template/edit/${templateId}`);
 }
 
 /**
- * Handle duplicate from drawer
- * @param {string} templateId - ID of template to duplicate
+ * Handle a marketplace template being cloned into a new local template: close the
+ * drawer and refresh the list so the new local copy appears. The clone is not
+ * opened for editing.
  * @returns {void}
  */
-function handleDrawerDuplicate(templateId: string): void {
-  logger.debug('Duplicate template from drawer:', templateId);
-  // TODO: Implement duplicate functionality
-  // router.push(`/assets_template/duplicate/${templateId}`);
+function handleDrawerCloned(): void {
+  showDetailsDrawer.value = false;
+  void fetchAssetTemplates();
 }
 
 /**
@@ -975,11 +955,63 @@ async function deleteTemplate(template: EnrichedAssetTemplate): Promise<void> {
  * @returns {DataRowActionConfig} Action configuration object
  */
 function getTemplateActions(template: EnrichedAssetTemplate): DataRowActionConfig {
+  // Clone is available for every template (marketplace or local) since it always
+  // produces a new local, editable copy; it only needs the create permission.
+  const customActions: DataRowCustomAction[] = [];
+  if (canCreateTemplate.value) {
+    customActions.push({
+      key: 'clone',
+      label: t.actions.clone.value,
+      icon: 'content_copy',
+      description: t.actions.cloneHint.value,
+    });
+  }
+
   return {
     showEdit: canUpdateTemplate.value && canModifyTemplate(template),
     showView: canReadTemplate.value,
     showDelete: canDeleteTemplate.value && canModifyTemplate(template),
+    customActions,
   };
+}
+
+/**
+ * Handle a custom row-menu action. Currently only the Clone action.
+ * @param {string} key - The custom action key.
+ * @param {EnrichedAssetTemplate} template - The row's template.
+ * @returns {void}
+ */
+function handleTemplateAction(key: string, template: EnrichedAssetTemplate): void {
+  if (key === 'clone') {
+    void cloneTemplate(template);
+  }
+}
+
+/**
+ * Clone a template into a new local, editable copy and open it for editing.
+ * Works for any template — a marketplace one is materialized from its shared
+ * content, a local one is duplicated.
+ * @param {EnrichedAssetTemplate} template - Template to clone.
+ * @returns {Promise<void>}
+ */
+async function cloneTemplate(template: EnrichedAssetTemplate): Promise<void> {
+  if (!template.id) {
+    notifyFail({ message: t.errors.idMissing.value });
+    return;
+  }
+  try {
+    // Prefix the copy's name with the localized "Clone -" so it is easy to spot,
+    // set in the single clone request (no follow-up rename call).
+    await apis.assets.assetTemplate.clone(
+      { assetTemplateId: template.id },
+      { name: `${t.actions.clonePrefix.value} - ${template.name}` },
+    );
+    notifySuccess({ message: t.notifications.cloned.value });
+    await fetchAssetTemplates();
+  } catch (err) {
+    logger.error('Failed to clone asset template', err);
+    notifyFail({ message: t.notifications.cloneError.value });
+  }
 }
 
 /** WATCHERS */
@@ -1187,6 +1219,7 @@ useOrgChangeRefresh(async () => {
             @edit="editTemplate"
             @view="viewDetails"
             @delete="confirmDelete"
+            @action="handleTemplateAction"
         />
       </div>
 
@@ -1207,31 +1240,13 @@ useOrgChangeRefresh(async () => {
       @change="handlePageChange"
     />
 
-    <!-- Asset Template Details Modal -->
-    <AssetTemplateDetailsModal v-model="showDetailsModal" :template="detailTemplate">
-      <template #actions="{ template: detail }">
-        <q-btn
-          flat
-          no-caps
-          icon="content_copy"
-          color="primary"
-          :label="t.drawer.duplicate.value"
-          :disable="!detail?.id"
-          @click="detail?.id && handleDrawerDuplicate(detail.id)"
-        />
-        <q-btn
-          unelevated
-          no-caps
-          icon="edit"
-          color="primary"
-          :label="t.drawer.edit.value"
-          :disable="!detail?.id || detail.isSystem"
-          @click="detail?.id && handleDrawerEdit(detail.id)"
-        >
-          <AppTooltip v-if="detail?.isSystem" :content="t.drawer.systemTemplateTooltip.value" />
-        </q-btn>
-      </template>
-    </AssetTemplateDetailsModal>
+    <!-- Asset Template Details Drawer -->
+    <AssetTemplateDetailsDrawer
+      v-model="showDetailsDrawer"
+      :template-id="selectedTemplateId"
+      @edit="handleDrawerEdit"
+      @cloned="handleDrawerCloned"
+    />
 
     <!-- Advanced Filters Drawer -->
     <AdvancedFiltersDrawer

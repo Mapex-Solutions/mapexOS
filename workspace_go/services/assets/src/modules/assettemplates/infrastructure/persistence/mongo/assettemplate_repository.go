@@ -2,6 +2,7 @@ package collection
 
 import (
 	"context"
+	"fmt"
 
 	"assets/src/modules/assettemplates/domain/entities"
 	"assets/src/modules/assettemplates/domain/repositories"
@@ -9,6 +10,7 @@ import (
 
 	manager "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/manager"
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 // New creates and returns a generic repository for the XXX entity.
@@ -55,6 +57,55 @@ func (r *repository) FindByMarketplaceGuidAndOrg(ctx context.Context, marketplac
 	query := model.Map{"marketplaceGuid": marketplaceGuid, "orgId": orgId}
 	retData, _ := r.model.FindOne(ctx, &query, nil)
 	return retData, nil
+}
+
+// FindMarketplaceContentByGuid returns the shared content document for a
+// marketplace template — the org-less record that holds the heavy body once per
+// guid — or nil when it has not been downloaded yet.
+func (r *repository) FindMarketplaceContentByGuid(ctx context.Context, marketplaceGuid string) (*entities.Assettemplate, error) {
+	query := model.Map{"marketplaceGuid": marketplaceGuid, "orgId": model.Map{"$exists": false}, "isMarketplace": true}
+	retData, _ := r.model.FindOne(ctx, &query, nil)
+	return retData, nil
+}
+
+// UpsertMarketplaceContent creates or updates in place the single shared content
+// document for a marketplaceGuid and returns it with its assigned _id. The
+// org-less + isMarketplace filter targets the shared document only, never a
+// per-org link, so a version bump replaces the shared body for every tenant.
+func (r *repository) UpsertMarketplaceContent(ctx context.Context, content *entities.Assettemplate) (*entities.Assettemplate, error) {
+	if content == nil || content.MarketplaceGuid == nil {
+		return nil, fmt.Errorf("marketplace content requires a marketplaceGuid")
+	}
+
+	set, err := marketplaceContentSet(content)
+	if err != nil {
+		return nil, err
+	}
+
+	query := model.Map{"marketplaceGuid": *content.MarketplaceGuid, "orgId": model.Map{"$exists": false}, "isMarketplace": true}
+	update := model.Map{"$set": set}
+
+	upsert := true
+	returnDoc := model.ReturnDoc(1)
+	opts := &model.CommonOpts{Upsert: &upsert, ReturnDocument: &returnDoc}
+
+	return r.model.FindOneAndUpdate(ctx, &query, &update, opts)
+}
+
+// marketplaceContentSet turns the shared content entity into a $set document,
+// dropping _id so the upsert never tries to overwrite the immutable key. orgId /
+// pathKey are omitempty on the entity and stay absent for the org-less doc.
+func marketplaceContentSet(content *entities.Assettemplate) (model.Map, error) {
+	data, err := bson.Marshal(content)
+	if err != nil {
+		return nil, err
+	}
+	var set model.Map
+	if err := bson.Unmarshal(data, &set); err != nil {
+		return nil, err
+	}
+	delete(set, "_id")
+	return set, nil
 }
 
 // FindInstalledGuids returns the subset of the given marketplace guids the org

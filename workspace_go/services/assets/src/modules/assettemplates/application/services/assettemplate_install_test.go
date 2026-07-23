@@ -154,20 +154,28 @@ func TestInstallFromMarketplace_SharedAcrossOrgs(t *testing.T) {
 	repo := &fakeRepo{}
 	createCount := 0
 	var createdOrgs []string
+	var createdLinks []*entities.Assettemplate
+	sharedID := objectIDHex(t, "507f1f77bcf86cd799439055")
+	upsertCount := 0
 	repo.findByMarketplaceGuidAndOrgFn = func(_ context.Context, _ string, _ model.ObjectId) (*entities.Assettemplate, error) {
 		return nil, nil // each org is a fresh install
+	}
+	repo.upsertMarketplaceContentFn = func(_ context.Context, content *entities.Assettemplate) (*entities.Assettemplate, error) {
+		upsertCount++
+		content.ID = sharedID
+		return content, nil
 	}
 	repo.createFn = func(_ context.Context, e *entities.Assettemplate) (*entities.Assettemplate, error) {
 		createCount++
 		createdOrgs = append(createdOrgs, e.OrgID.Hex())
+		createdLinks = append(createdLinks, e)
 		e.ID = objectIDHex(t, "507f1f77bcf86cd799439021")
 		return e, nil
 	}
 	mc := &fakeMarketplaceClient{fetchBundleFn: func(_ context.Context, _, _ string) (*ports.MarketplaceBundleFetch, error) {
 		return verifiedFetch("guid-shared"), nil
 	}}
-	tc := &fakeTieredCache{}
-	svc := newTestServiceWithInstall(repo, mc, &fakeListsClient{}, tc)
+	svc := newTestServiceWithInstall(repo, mc, &fakeListsClient{}, &fakeTieredCache{})
 
 	if _, err := svc.InstallFromMarketplace(context.Background(), orgRequestContext("507f1f77bcf86cd799439011"), "v", "s", false); err != nil {
 		t.Fatalf("install org A: %v", err)
@@ -181,9 +189,75 @@ func TestInstallFromMarketplace_SharedAcrossOrgs(t *testing.T) {
 	if len(createdOrgs) != 2 || createdOrgs[0] == createdOrgs[1] {
 		t.Fatalf("expected two distinct org links, got %v", createdOrgs)
 	}
-	// One shared content cached per guid (idempotent Set), not one per org content doc.
-	if tc.setCalls == 0 {
-		t.Fatal("expected the shared content to be cached")
+	// Both org links point at the SAME shared content id (dedup), and carry the
+	// marketplace flag; the shared content is upserted per install (idempotent by
+	// guid at the repo layer), never duplicated into a per-org body.
+	for i, link := range createdLinks {
+		if !link.IsMarketplace {
+			t.Fatalf("link %d: expected IsMarketplace=true", i)
+		}
+		if link.MarketplaceContentID == nil || *link.MarketplaceContentID != sharedID {
+			t.Fatalf("link %d: expected MarketplaceContentID=%s, got %v", i, sharedID.Hex(), link.MarketplaceContentID)
+		}
+		if link.ScriptConversion != "" || len(link.DynamicFields) != 0 {
+			t.Fatalf("link %d: expected a LIGHT link with no body, got scripts/fields", i)
+		}
+	}
+	if upsertCount == 0 {
+		t.Fatal("expected the shared content to be upserted durably")
+	}
+}
+
+// TestInstallFromMarketplace_PersistsSharedContent verifies the downloaded body
+// is upserted as an org-less, marketplace shared content document carrying the
+// full body, while the per-org link stays light and points at it.
+func TestInstallFromMarketplace_PersistsSharedContent(t *testing.T) {
+	repo := &fakeRepo{}
+	sharedID := objectIDHex(t, "507f1f77bcf86cd799439055")
+	var upserted *entities.Assettemplate
+	var link *entities.Assettemplate
+	repo.findByMarketplaceGuidAndOrgFn = func(_ context.Context, _ string, _ model.ObjectId) (*entities.Assettemplate, error) {
+		return nil, nil
+	}
+	repo.upsertMarketplaceContentFn = func(_ context.Context, content *entities.Assettemplate) (*entities.Assettemplate, error) {
+		content.ID = sharedID
+		upserted = content
+		return content, nil
+	}
+	repo.createFn = func(_ context.Context, e *entities.Assettemplate) (*entities.Assettemplate, error) {
+		link = e
+		e.ID = objectIDHex(t, "507f1f77bcf86cd799439021")
+		return e, nil
+	}
+	proc := "// preprocess"
+	mc := &fakeMarketplaceClient{fetchBundleFn: func(_ context.Context, _, _ string) (*ports.MarketplaceBundleFetch, error) {
+		f := verifiedFetch("guid-body")
+		f.Bundle.ScriptProcessor = &proc
+		f.Bundle.ScriptConversion = "const result = {};"
+		f.Bundle.AvailableFields = []string{"co2", "temp"}
+		f.Bundle.DynamicFields = []dtos.MarketplaceDynamicField{{FieldId: 1, Field: "co2", Value: "data.co2", Type: "number", Status: 1}}
+		f.Bundle.NextFieldId = 2
+		return f, nil
+	}}
+	svc := newTestServiceWithInstall(repo, mc, &fakeListsClient{}, &fakeTieredCache{})
+
+	if _, err := svc.InstallFromMarketplace(context.Background(), orgRequestContext("507f1f77bcf86cd799439011"), "v", "s", false); err != nil {
+		t.Fatalf("install: %v", err)
+	}
+	if upserted == nil {
+		t.Fatal("expected the shared content to be upserted")
+	}
+	if upserted.OrgID != nil {
+		t.Fatalf("shared content must be org-less, got orgId=%v", upserted.OrgID)
+	}
+	if !upserted.IsMarketplace {
+		t.Fatal("shared content must carry IsMarketplace=true")
+	}
+	if upserted.ScriptConversion == "" || upserted.ScriptProcessor == nil || len(upserted.AvailableFields) != 2 || len(upserted.DynamicFields) != 1 {
+		t.Fatalf("shared content must carry the full body, got %+v", upserted)
+	}
+	if link == nil || link.MarketplaceContentID == nil || *link.MarketplaceContentID != sharedID {
+		t.Fatalf("link must point at the shared content id %s, got %v", sharedID.Hex(), link)
 	}
 }
 
@@ -215,10 +289,14 @@ func TestUninstallFromMarketplace_OnlyRemovesLink(t *testing.T) {
 
 func TestInstallFromMarketplace_ChecksumMismatch(t *testing.T) {
 	repo := &fakeRepo{}
-	createCount := 0
+	createCount, upsertCount := 0, 0
 	repo.createFn = func(_ context.Context, e *entities.Assettemplate) (*entities.Assettemplate, error) {
 		createCount++
 		return e, nil
+	}
+	repo.upsertMarketplaceContentFn = func(_ context.Context, content *entities.Assettemplate) (*entities.Assettemplate, error) {
+		upsertCount++
+		return content, nil
 	}
 	mc := &fakeMarketplaceClient{fetchBundleFn: func(_ context.Context, _, _ string) (*ports.MarketplaceBundleFetch, error) {
 		return &ports.MarketplaceBundleFetch{
@@ -228,22 +306,21 @@ func TestInstallFromMarketplace_ChecksumMismatch(t *testing.T) {
 		}, nil
 	}}
 	lc := &fakeListsClient{}
-	tc := &fakeTieredCache{}
-	svc := newTestServiceWithInstall(repo, mc, lc, tc)
+	svc := newTestServiceWithInstall(repo, mc, lc, &fakeTieredCache{})
 
 	_, err := svc.InstallFromMarketplace(context.Background(), orgRequestContext("507f1f77bcf86cd799439011"), "v", "s", false)
 	if err == nil {
 		t.Fatal("expected a checksum-mismatch error, got nil")
 	}
-	// Verify runs BEFORE resolve/cache/create: nothing is created or resolved.
+	// Verify runs BEFORE resolve/persist/create: nothing is created, resolved, or persisted.
 	if createCount != 0 {
 		t.Fatalf("expected no link created on checksum mismatch, got %d", createCount)
 	}
 	if len(lc.requests) != 0 {
 		t.Fatalf("expected no classification resolve on checksum mismatch, got %d", len(lc.requests))
 	}
-	if tc.setCalls != 0 {
-		t.Fatalf("expected no content cached on checksum mismatch, got %d", tc.setCalls)
+	if upsertCount != 0 {
+		t.Fatalf("expected no shared content persisted on checksum mismatch, got %d", upsertCount)
 	}
 }
 

@@ -18,14 +18,21 @@
 package suite
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"testing"
 
+	"github.com/Mapex-Solutions/mapexGoKit/infrastructure/mock_servers/marketplace"
+
+	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/constants"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/infra"
 	leakcheck "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/leakcheck"
 	"github.com/Mapex-Solutions/MapexOS/e2eTests/core/saga"
 
 	iam "github.com/Mapex-Solutions/MapexOS/e2eTests/common/journey/iam_bootstrap"
+
+	tmplPayloads "github.com/Mapex-Solutions/MapexOS/e2eTests/services/assets/assettemplates/payloads"
 
 	// automations — each trigger's connectivity (phase1) + event pipeline (phase2)
 	emailConn "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/automations/trigger_email/phase1_connectivity"
@@ -73,6 +80,13 @@ import (
 	// iot — ota firmware update (http poll + mqtt push)
 	otaHTTP "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/ota_http"
 	otaMQTT "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/iot/ota_mqtt"
+
+	// assets — asset-template marketplace install/uninstall toggle + usage guard
+	mktInstallCheck "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/assets/marketplace_install_uninstall/phase1_install_check"
+	mktUninstallGuard "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/assets/marketplace_install_uninstall/phase2_uninstall_guard"
+
+	// assets — full telemetry pipeline on a marketplace-installed template
+	mktAssetPipeline "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/assets/marketplace_asset_pipeline"
 )
 
 // TestMain is the ONLY entry point: it owns bringing the stack up once and tearing
@@ -82,14 +96,56 @@ func TestMain(m *testing.M) {
 	// carry that journey's RunID (a Compensate gap). Off unless wired here.
 	saga.AfterRun = leakcheck.Hook
 
+	// Bring up the in-process marketplace mock and point the assets service at it, so
+	// the marketplace-install journeys resolve a deterministic DT CO2 bundle whose
+	// sha256 the assets service hard-verifies. In local mode (the default) assets runs
+	// on the host and reaches the mock on constants.SinkHost; the mock binds all
+	// interfaces so a docker-mode run reaches it over the bridge just the same.
+	// One (vendor, slug, guid) per marketplace journey so their installs, asset usage
+	// and installed-checks never collide — a marketplace install is keyed by
+	// (guid, org) and the suite is single-tenant, so runID cannot isolate it.
+	mktPort, stopMarketplace, err := marketplace.Start(
+		marketplace.Template{
+			Vendor: tmplPayloads.DTCo2Vendor,
+			Slug:   tmplPayloads.DTCo2Slug,
+			Guid:   tmplPayloads.DTCo2MarketplaceGuid,
+			Bundle: tmplPayloads.DTCo2Bundle(),
+		},
+		marketplace.Template{
+			Vendor: tmplPayloads.DTCo2Vendor,
+			Slug:   tmplPayloads.GuardSlug,
+			Guid:   tmplPayloads.GuardMarketplaceGuid,
+			Bundle: tmplPayloads.GuardBundle(),
+		},
+		marketplace.Template{
+			Vendor: tmplPayloads.DTCo2Vendor,
+			Slug:   tmplPayloads.PipelineSlug,
+			Guid:   tmplPayloads.PipelineMarketplaceGuid,
+			Bundle: tmplPayloads.PipelineBundle(),
+		},
+	)
+	if err != nil {
+		log.Fatalf("suite: start marketplace mock: %v", err)
+	}
+	marketplaceURL := fmt.Sprintf("http://%s:%d", constants.SinkHost, mktPort)
+
 	// Start assets with a short OTA reconciler scan so the OTA journeys' dispatch
 	// and early-close land within the device-wait and assert budgets; the default
 	// (60s) is too slow — the MQTT device only waits 45s for the pushed command.
-	// Suite-wide by design (one shared stack); only the OTA journeys read it.
-	teardown := infra.EnsureAll(infra.WithServiceEnv("assets", "OTA_SCAN_INTERVAL=15"))
+	// Suite-wide by design (one shared stack); only the OTA journeys read it. The
+	// ASSET_MARKETPLACE_URL override points assets at the mock above.
+	teardown := infra.EnsureAll(infra.WithServiceEnv("assets",
+		"OTA_SCAN_INTERVAL=15",
+		"ASSET_MARKETPLACE_URL="+marketplaceURL,
+	))
 	// Defer teardown inside a func so it still runs if a journey panics out of m.Run
 	// (a plain teardown() after m.Run would be skipped on panic). SIGKILL still leaks.
-	code := func() int { defer teardown(); return m.Run() }()
+	// Tear the stack down first, then stop the mock it depended on.
+	code := func() int {
+		defer stopMarketplace()
+		defer teardown()
+		return m.Run()
+	}()
 	os.Exit(code)
 }
 
@@ -146,6 +202,10 @@ var registry = []journey{
 
 	{"iot/ota_http", otaHTTP.Run},
 	{"iot/ota_mqtt", otaMQTT.Run},
+
+	{"assets/marketplace_install_uninstall/phase1_install_check", mktInstallCheck.Run},
+	{"assets/marketplace_install_uninstall/phase2_uninstall_guard", mktUninstallGuard.Run},
+	{"assets/marketplace_asset_pipeline", mktAssetPipeline.Run},
 }
 
 // TestSuite runs every registered journey as a parallel subtest.

@@ -64,3 +64,16 @@ type MarketplaceInstalledCheckResponse struct {
 // ErrCodeTemplateInUse is the machine-readable error code returned with HTTP 403
 // when an uninstall is refused because assets still reference the template.
 const ErrCodeTemplateInUse = "TEMPLATE_IN_USE"
+
+// ErrCodeTemplateReadonly is the machine-readable error code returned with HTTP
+// 403 when an edit is refused because the template came from the marketplace.
+// The client clones the template to a local copy to make it editable.
+const ErrCodeTemplateReadonly = "TEMPLATE_READONLY"
+
+// CloneBody is the clone request body: an optional name for the new local copy.
+// When empty, the clone keeps the source template's name; the client sends the
+// localized "Clone - <name>" so the copy is named in the single clone request,
+// with no follow-up rename call.
+type CloneBody struct {
+	Name string `json:"name"`
+}

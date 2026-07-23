@@ -43,7 +43,7 @@ export const ASSET_TEMPLATE_FILTER_DEFAULTS = {
 /**
  * API projection fields for asset templates query
  */
-export const ASSET_TEMPLATE_PROJECTION = 'name,description,categoryName,manufacturerName,modelName,version,enabled,isSystem,isTemplate,orgId' as const;
+export const ASSET_TEMPLATE_PROJECTION = 'name,description,categoryName,manufacturerName,modelName,version,enabled,isSystem,isTemplate,isMarketplace,orgId' as const;
 
 /**
  * List types for dynamic filters

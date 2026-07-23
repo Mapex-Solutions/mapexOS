@@ -86,7 +86,8 @@
     "customScripts": "scripts personalizados",
     "templateType": "tipo de template",
     "templateSource": "origem do template",
-    "origin": "origem"
+    "origin": "origem",
+    "shared": "compartilhado"
   },
   "origin": {
     "marketplace": "instalado do marketplace",
@@ -118,7 +119,10 @@
     "systemTemplateEdit": "modelos do sistema não podem ser editados",
     "systemTemplateDelete": "modelos do sistema não podem ser excluídos",
     "sharedTemplateEdit": "modelos compartilhados de outras organizações não podem ser editados",
-    "sharedTemplateDelete": "modelos compartilhados de outras organizações não podem ser excluídos"
+    "sharedTemplateDelete": "modelos compartilhados de outras organizações não podem ser excluídos",
+    "marketplaceTemplateEdit": "Este template vem do marketplace e não pode ser editado. Clone-o para uma cópia local primeiro.",
+    "cloned": "template clonado",
+    "cloneError": "falha ao clonar o template"
   },
   "errors": {
     "apiNotInitialized": "API de ativos não está disponível",
@@ -127,7 +131,10 @@
   "actions": {
     "edit": "editar",
     "view": "visualizar",
-    "delete": "excluir"
+    "delete": "excluir",
+    "clone": "Clonar",
+    "cloneHint": "Criar uma cópia local editável",
+    "clonePrefix": "Clone"
   },
   "status": {
     "active": "ativo",
@@ -142,19 +149,17 @@
     "error": "falha ao carregar detalhes do modelo",
     "systemTemplateWarning": "este é um modelo do sistema e não pode ser modificado ou excluído",
     "systemTemplateTooltip": "modelos do sistema não podem ser editados",
-    "selectTemplate": "selecionar este modelo",
-    "tabs": {
-      "overview": "visão geral",
-      "dynamicFields": "campos dinâmicos",
-      "scripts": "scripts",
-      "availableFields": "campos disponíveis"
+    "marketplaceTemplateTooltip": "Este template vem do marketplace e é somente leitura. Clone-o para criar uma cópia local editável.",
+    "clone": {
+      "button": "clonar para local",
+      "success": "template clonado para uma cópia local",
+      "error": "falha ao clonar o template"
     },
-    "sections": {
-      "basicInfo": "informações básicas",
-      "configuration": "configuração",
-      "scripts": "scripts",
-      "fields": "campos",
-      "timestamps": "timestamps"
+    "contexts": {
+      "setup": "Configuração",
+      "uplink": "Uplink",
+      "retrieval": "Busca",
+      "finalization": "Finalização"
     },
     "fields": {
       "name": "nome",
@@ -377,5 +382,9 @@
       "title": "revisar configuração",
       "description": "revise toda a configuração antes de salvar seu modelo de ativo."
     }
+  },
+  "shared": {
+    "yes": "compartilhado com organizações filhas",
+    "no": "não compartilhado com organizações filhas"
   }
 }

@@ -213,6 +213,17 @@ func RegisterRoutes(group web.Router, service ports.AssetTemplateServicePort) {
 		Description("Partially updates an existing asset template. All body fields are optional; only provided fields are changed.").
 		Returns(&dtos.AssetTemplateResponse{})
 
+	// Clone a marketplace template into a new local, editable copy owned by the org.
+	cloneAssetTemplate := validation.NewValidation(&dtos.CloneBody{}, nil, &dtos.AssetTemplateIdDto{})
+	r.Post("/:assetTemplateId/clone", cloneAssetTemplate, swagger.Expose,
+		permissionMw.RequirePermission(perms.AssetTemplateCreate),
+		coverageMw.InjectRequestContext(),
+		handlers.CloneAssetTemplate(service),
+	).
+		Summary("Clone an asset template into a local copy").
+		Description("Materializes a template (following a marketplace link to its shared content) into a new, independent local template owned by the caller organization, with all marketplace linkage stripped so the copy is freely editable.").
+		Returns(&dtos.AssetTemplateResponse{})
+
 	// Delete asset template by ID.
 	deleteAssetTemplateById := validation.NewValidation(nil, nil, &dtos.AssetTemplateIdDto{})
 	r.Delete("/:assetTemplateId", deleteAssetTemplateById, swagger.Expose,

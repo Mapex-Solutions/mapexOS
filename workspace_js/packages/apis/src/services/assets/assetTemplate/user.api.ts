@@ -4,6 +4,7 @@ import type {
 	AssetTemplateUpdate,
 	AssetTemplateQuery,
 	AssetTemplateResponse,
+	CloneBody,
 	FieldVocabularyQuery,
 	FieldVocabularyResponse,
 	InstallBody,
@@ -21,6 +22,7 @@ import {
 	ZodAssetTemplateQuerySchema,
 	ZodFieldVocabularyQuerySchema,
 	ZodInstallBodySchema,
+	ZodCloneBodySchema,
 	ZodMarketplaceInstalledCheckRequestSchema,
 } from '@mapexos/schemas';
 
@@ -125,6 +127,17 @@ export function userApi(http: AxiosInstance, getToken: GetToken | undefined) {
 				pathParams: {} as { vendor: string; slug: string },
 				bodyParams: {} as InstallBody,
 				bodySchema: ZodInstallBodySchema,
+				responseType: {} as AssetTemplateResponse,
+			},
+
+			// CLONE TO LOCAL - POST /:assetTemplateId/clone
+			clone: {
+				method: 'POST',
+				path: '/:assetTemplateId/clone',
+				pathParams: {} as AssetTemplateId,
+				bodyParams: {} as CloneBody,
+				paramSchema: ZodAssetTemplateIdSchema,
+				bodySchema: ZodCloneBodySchema,
 				responseType: {} as AssetTemplateResponse,
 			},
 

@@ -29,6 +29,15 @@ export const ZodInstallBodySchema = z.object({
 });
 
 /**
+ * Clone request body schema - an optional name for the new local copy. When
+ * empty the clone keeps the source name; the client sends the localized
+ * "Clone - <name>" so the copy is named in the single clone request.
+ */
+export const ZodCloneBodySchema = z.object({
+	name: StringAndBeEmptyOrOptional,
+});
+
+/**
  * Asset Template Create schema - Used for creating new asset templates
  */
 export const ZodAssetTemplateCreateSchema = z.object({
@@ -167,6 +176,10 @@ export const ZodAssetTemplateResponseSchema = z.object({
 	// Origin of the record: "marketplace" when installed from the catalog
 	// (has a marketplaceGuid link), "local" when hand-created in the org.
 	source: z.enum(['local', 'marketplace']).optional(),
+
+	// Marketplace-origin flag; the UI renders these templates read-only
+	// (View + Clone, no Edit).
+	isMarketplace: IsBoolean.optional(),
 
 	created: StringAndBeEmptyOrOptional,
 	updated: StringAndBeEmptyOrOptional,

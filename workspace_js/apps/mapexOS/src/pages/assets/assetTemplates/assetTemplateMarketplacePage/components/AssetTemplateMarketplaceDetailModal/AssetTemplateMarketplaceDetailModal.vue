@@ -22,6 +22,7 @@ import { InfoBanner } from '@components/banners';
 import { DynamicFieldsTable } from '@components/assetTemplates/dynamicFieldsTable';
 import { ScriptViewerDialog } from '@components/dialogs/scriptViewer';
 import { AppTooltip } from '@components/tooltips';
+import { BaseButton } from '@components/buttons';
 
 /** COMPOSABLES */
 import { useAssetTemplateMarketplaceTranslations } from '@composables/i18n';
@@ -47,6 +48,7 @@ const bundle = ref<AssetTemplateBundle | null>(null);
 const loading = ref(false);
 const loadError = ref(false);
 const installing = ref(false);
+const uninstalling = ref(false);
 const installError = ref<string | undefined>(undefined);
 const shareWithChildren = ref(false);
 const showScript = ref(false);
@@ -271,6 +273,45 @@ async function handleInstall(): Promise<void> {
 }
 
 /**
+ * Extract a user-facing uninstall error message. A backend guard rejects the
+ * uninstall with TEMPLATE_IN_USE when assets still reference the template; that
+ * human message is surfaced, everything else falls back to a generic message.
+ * @param {unknown} err - The rejected uninstall error.
+ * @returns {string} The message to show.
+ */
+function resolveUninstallError(err: unknown): string {
+  const errors = (err as { response?: { data?: { errors?: unknown } } })?.response?.data?.errors;
+  const list = Array.isArray(errors) ? errors.map(String) : [];
+  if (list.includes('TEMPLATE_IN_USE')) return list[1] ?? t.uninstall.inUse.value;
+  return t.uninstall.genericError.value;
+}
+
+/**
+ * Uninstall the previewed template from the current organization. On the in-use
+ * guard the reason is surfaced in the modal and a toast.
+ */
+async function handleUninstall(): Promise<void> {
+  if (!props.vendor || !props.slug || uninstalling.value) return;
+
+  uninstalling.value = true;
+  installError.value = undefined;
+
+  try {
+    await apis.assets.assetTemplate.uninstall({ vendor: props.vendor, slug: props.slug });
+    notifySuccess({ message: t.uninstall.success.value });
+    emit('uninstalled', { vendor: props.vendor, slug: props.slug });
+    isOpen.value = false;
+  } catch (err) {
+    const message = resolveUninstallError(err);
+    installError.value = message;
+    notifyFail({ message });
+    logger.error('Failed to uninstall asset template from marketplace', err);
+  } finally {
+    uninstalling.value = false;
+  }
+}
+
+/**
  * Close the modal without installing.
  */
 function close(): void {
@@ -431,6 +472,7 @@ function close(): void {
       <!-- Footer -->
       <q-card-actions align="right" class="marketplace-detail__footer">
         <q-toggle
+          v-if="!installed"
           v-model="shareWithChildren"
           :label="t.install.shareWithChildren.value"
           :disable="installing"
@@ -443,10 +485,23 @@ function close(): void {
           flat
           color="grey-7"
           :label="t.modal.actions.cancel.value"
-          :disable="installing"
+          :disable="installing || uninstalling"
           @click="close"
         />
-        <q-btn
+
+        <!-- Uninstall when the template is already installed, else Install -->
+        <BaseButton
+          v-if="installed"
+          outline
+          color="negative"
+          icon="delete"
+          :label="uninstalling ? t.uninstall.uninstalling.value : t.uninstall.button.value"
+          :loading="uninstalling"
+          :disable="!bundle || loading"
+          @click="handleUninstall"
+        />
+        <BaseButton
+          v-else
           unelevated
           color="primary"
           icon="download"

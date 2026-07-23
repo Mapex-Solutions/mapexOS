@@ -12,7 +12,7 @@ import type {
 import type { MarketplacePageFilters, MarketplaceSelection } from './interfaces';
 
 /** VUE IMPORTS */
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 /** COMPONENTS */
@@ -63,6 +63,16 @@ const facets = ref<AssetTemplateFacets>({
 const selected = ref<MarketplaceSelection | null>(null);
 const modalOpen = ref(false);
 const installingId = ref<string | null>(null);
+
+/**
+ * Whether the template currently previewed in the detail modal is installed in
+ * this organization. Kept as an explicit computed (rather than an inline
+ * expression) so the modal's Install/Uninstall toggle reacts to both the
+ * selection and the installed-guids set without ambiguity.
+ */
+const selectedInstalled = computed<boolean>(() =>
+  selected.value ? installedGuids.value.has(selected.value.marketplaceGuid) : false
+);
 
 /**
  * Marketplace GUIDs the current organization has already installed. Drives the
@@ -236,8 +246,29 @@ function categoryLabelFor(value: string): string {
  * @param {AssetTemplateCatalogItem} item - The catalog item to preview.
  */
 function handleView(item: AssetTemplateCatalogItem): void {
-  selected.value = { vendor: item.vendor, slug: item.slug };
+  selected.value = { vendor: item.vendor, slug: item.slug, marketplaceGuid: item.marketplaceGuid };
   modalOpen.value = true;
+}
+
+/**
+ * Reflect a modal install in the shared installed-guids set so both the modal
+ * toggle and the card behind it update without a refetch.
+ */
+function handleModalInstalled(): void {
+  if (!selected.value) return;
+  const next = new Set(installedGuids.value);
+  next.add(selected.value.marketplaceGuid);
+  installedGuids.value = next;
+}
+
+/**
+ * Reflect a modal uninstall in the shared installed-guids set.
+ */
+function handleModalUninstalled(): void {
+  if (!selected.value) return;
+  const next = new Set(installedGuids.value);
+  next.delete(selected.value.marketplaceGuid);
+  installedGuids.value = next;
 }
 
 /**
@@ -451,6 +482,9 @@ onMounted(() => {
       v-model="modalOpen"
       :vendor="selected?.vendor ?? null"
       :slug="selected?.slug ?? null"
+      :installed="selectedInstalled"
+      @installed="handleModalInstalled"
+      @uninstalled="handleModalUninstalled"
     />
   </q-page>
 </template>

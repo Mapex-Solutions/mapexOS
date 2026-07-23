@@ -157,6 +157,10 @@ type AssetTemplateResponse struct {
 	// record: "marketplace" for an installed template, "local" for a hand-created
 	// one. It lets the UI show an origin icon without inspecting other fields.
 	Source *string `json:"source,omitempty"`
+
+	// IsMarketplace flags a marketplace-origin template. The UI reads it directly
+	// to render the template read-only (View + Clone, no Edit).
+	IsMarketplace *bool `json:"isMarketplace,omitempty"`
 }
 
 func (d *AssetTemplateResponse) SetCreated(t *common.NullTime) { d.Created = t }

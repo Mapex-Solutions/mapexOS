@@ -33,7 +33,10 @@ var Indexes = []model.IndexDefinition{
 	// Per-org install key: a given org installs a given marketplace template at
 	// most once. Partial so the unique constraint applies only to installed
 	// records — hand-created templates (no marketplaceGuid) are never indexed and
-	// so never collide on a shared null.
+	// so never collide on a shared null. The same index also guarantees a single
+	// SHARED CONTENT document per guid: the shared doc has no orgId, so its index
+	// key is {orgId: null, marketplaceGuid: guid} — one unique slot per guid,
+	// distinct from each per-org link's {orgId: <org>, marketplaceGuid: guid}.
 	{
 		Name:                    "idx_org_marketplace_guid_unique",
 		Keys:                    map[string]int{"orgId": 1, "marketplaceGuid": 1},

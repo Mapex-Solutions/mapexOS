@@ -31,43 +31,43 @@ import (
 //   - asset: The asset entity to publish
 //
 // Returns:
-//   - templateOrgId: The resolved template organization ID
-func (s *AssetService) writeAssetMetadata(ctx ctx.Context, asset *entities.Asset) string {
+//   - templateOrgId, templateId: the resolved cache identity for the read-model
+func (s *AssetService) writeAssetMetadata(ctx ctx.Context, asset *entities.Asset) (string, string) {
 	return s.syncAssetL2(ctx, asset)
 }
 
-// getTemplateOrgId determines the organization ID for the asset's template.
+// resolveTemplateCacheIdentity returns the (orgId, templateId) pair every consumer
+// (events, js-executor, router) uses to key the template cache. It is what makes
+// the same template dedupe to one shared cache entry across tenants:
+//   - System template → ("mapexos_public", template id): shared platform template.
+//   - Marketplace link → ("mapexos_public", shared content id): all tenants point
+//     at the same shared content document, never the per-org link id (which would
+//     duplicate the cache per org).
+//   - Local template → (asset org, template id): tenant-scoped.
 //
-// Logic:
-//   - If template.IsSystem == true → "mapexos_public" (accessible to all orgs)
-//   - Otherwise → asset's orgId (template belongs to same org as asset)
-//
-// Parameters:
-//   - ctx: Context for cancellation and timeouts
-//   - asset: The asset entity
-//
-// Returns:
-//   - Template organization ID string
-func (s *AssetService) getTemplateOrgId(ctx ctx.Context, asset *entities.Asset) string {
+// The per-org link id stays on the asset entity for lifecycle; only the identity
+// EXPOSED to the read-model is normalized here.
+func (s *AssetService) resolveTemplateCacheIdentity(ctx ctx.Context, asset *entities.Asset) (string, string) {
 	const publicOrgId = "mapexos_public"
 
+	templateId := asset.AssetTemplateID.Hex()
 	if asset.AssetTemplateID.IsZero() {
-		return publicOrgId
+		return publicOrgId, templateId
 	}
 
-	// Fetch template to check IsSystem flag
-	templateId := asset.AssetTemplateID.Hex()
 	template, err := s.deps.AssetTemplateRepo.FindById(ctx, &templateId)
 	if err != nil || template == nil {
-		// Fallback to asset's org if template not found
-		return asset.OrgID.Hex()
+		// Fallback to the asset's org when the template is unknown.
+		return asset.OrgID.Hex(), templateId
 	}
 
 	if template.IsSystem {
-		return publicOrgId
+		return publicOrgId, templateId
 	}
-
-	return asset.OrgID.Hex()
+	if template.IsMarketplace && template.MarketplaceContentID != nil {
+		return publicOrgId, template.MarketplaceContentID.Hex()
+	}
+	return asset.OrgID.Hex(), templateId
 }
 
 // deleteAssetMetadata removes the asset read model from object storage (L2 cache).

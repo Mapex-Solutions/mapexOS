@@ -175,6 +175,14 @@ func (r *fakeAssetTemplateRepo) FindInstalledGuids(ctx context.Context, guids []
 	return []string{}, nil
 }
 
+func (r *fakeAssetTemplateRepo) FindMarketplaceContentByGuid(ctx context.Context, marketplaceGuid string) (*templatePorts.Assettemplate, error) {
+	return nil, nil
+}
+
+func (r *fakeAssetTemplateRepo) UpsertMarketplaceContent(ctx context.Context, content *templatePorts.Assettemplate) (*templatePorts.Assettemplate, error) {
+	return content, nil
+}
+
 type fakeAssetStoragePort struct {
 	writeAssetFn      func(ctx context.Context, a *entities.Asset, templateOrgId string) error
 	deleteAssetFn     func(ctx context.Context, orgId string, assetUUID string) error
@@ -354,6 +362,48 @@ func newAssetTestService() *testServiceHandles {
 		fanout:          fan,
 		healthRepo:      hRepo,
 		healthLifecycle: hLifecycle,
+	}
+}
+
+// TestResolveTemplateCacheIdentity verifies the read-model cache identity: system
+// and marketplace templates resolve to the shared public namespace (a marketplace
+// link to its shared content id, never the per-org link id) so consumers dedupe to
+// one cache entry, while local templates stay org-scoped.
+func TestResolveTemplateCacheIdentity(t *testing.T) {
+	oid := func(hex string) model.ObjectId {
+		id, err := model.ToObjectID(hex)
+		if err != nil {
+			t.Fatalf("bad oid %q: %v", hex, err)
+		}
+		return id
+	}
+	assetOrg := oid("507f1f77bcf86cd799439011")
+	linkID := oid("507f1f77bcf86cd799439021")
+	sharedID := oid("507f1f77bcf86cd799439055")
+
+	tests := []struct {
+		name       string
+		template   *templatePorts.Assettemplate
+		wantOrg    string
+		wantTmplID string
+	}{
+		{name: "system resolves to public + template id", template: &templatePorts.Assettemplate{IsSystem: true}, wantOrg: "mapexos_public", wantTmplID: linkID.Hex()},
+		{name: "marketplace link resolves to public + shared content id", template: &templatePorts.Assettemplate{IsMarketplace: true, MarketplaceContentID: &sharedID}, wantOrg: "mapexos_public", wantTmplID: sharedID.Hex()},
+		{name: "local resolves to asset org + template id", template: &templatePorts.Assettemplate{}, wantOrg: assetOrg.Hex(), wantTmplID: linkID.Hex()},
+		{name: "unknown template falls back to asset org + template id", template: nil, wantOrg: assetOrg.Hex(), wantTmplID: linkID.Hex()},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			h := newAssetTestService()
+			h.templateRepo.findByIdFn = func(_ context.Context, _ *string) (*templatePorts.Assettemplate, error) {
+				return tt.template, nil
+			}
+			asset := &entities.Asset{AssetTemplateID: linkID, OrgID: assetOrg}
+			gotOrg, gotID := h.service.resolveTemplateCacheIdentity(context.Background(), asset)
+			if gotOrg != tt.wantOrg || gotID != tt.wantTmplID {
+				t.Fatalf("expected (%s, %s), got (%s, %s)", tt.wantOrg, tt.wantTmplID, gotOrg, gotID)
+			}
+		})
 	}
 }
 

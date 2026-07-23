@@ -126,14 +126,10 @@ func (a *TemplateStorageAdapter) buildPayload(template *entities.Assettemplate) 
 //
 // This enables proper tenant isolation while supporting global system templates.
 func (a *TemplateStorageAdapter) getOrgId(template *entities.Assettemplate) string {
-	if template.IsSystem {
+	// System templates and marketplace shared content are platform-owned (no
+	// orgId) and live under the public namespace, shared across every tenant.
+	if template.IsSystem || template.OrgID == nil {
 		return PublicOrgID
 	}
-
-	if template.OrgID != nil {
-		return template.OrgID.Hex()
-	}
-
-	// Fallback to public if no OrgID (shouldn't happen for non-system templates)
-	return PublicOrgID
+	return template.OrgID.Hex()
 }

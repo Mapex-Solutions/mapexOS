@@ -2,64 +2,65 @@ package services
 
 import (
 	ctx "context"
+	"fmt"
 
 	"assets/src/modules/assettemplates/application/dtos"
 	"assets/src/modules/assettemplates/domain/entities"
+
+	"github.com/Mapex-Solutions/mapexGoKit/microservices/logger"
+	"github.com/Mapex-Solutions/mapexGoKit/utils/mapper"
 )
 
-// applyMarketplaceSource stamps the response's origin, derived from whether the
-// record is a marketplace-installed link (has a marketplaceGuid) or hand-created.
+// applyMarketplaceSource stamps the response's origin: the derived source string
+// ("marketplace" when a marketplaceGuid is present, else "local") and the
+// isMarketplace flag the UI reads to render the template read-only.
 func applyMarketplaceSource(dto *dtos.AssetTemplateResponse, entity *entities.Assettemplate) {
 	source := "local"
 	if entity.MarketplaceGuid != nil {
 		source = "marketplace"
 	}
 	dto.Source = &source
+
+	isMarketplace := entity.IsMarketplace
+	dto.IsMarketplace = &isMarketplace
 }
 
-// hydrateSharedContent fills a marketplace record's heavy body (scripts, dynamic
-// and available fields) from the shared content cache — those live once per
-// marketplaceGuid, not on the per-org link record. A cache miss leaves them
-// empty; a no-op for hand-created records.
+// hydrateSharedContent fills a per-org marketplace LINK's heavy body (scripts,
+// dynamic and available fields) from the durable shared content document, which
+// holds the body once per marketplaceGuid. It is a no-op for hand-created
+// templates and for the shared content document itself (org-less; already carries
+// the body). A missing shared document is logged and leaves the body empty.
 func (s *AssetTemplateService) hydrateSharedContent(c ctx.Context, dto *dtos.AssetTemplateResponse, entity *entities.Assettemplate) {
-	if entity.MarketplaceGuid == nil {
+	if !entity.IsMarketplace || entity.OrgID == nil || entity.MarketplaceGuid == nil {
 		return
 	}
-	bundle, err := s.getCachedContent(c, *entity.MarketplaceGuid)
-	if err != nil || bundle == nil {
+
+	shared, err := s.deps.AssetTemplateRepo.FindMarketplaceContentByGuid(c, *entity.MarketplaceGuid)
+	if err != nil || shared == nil {
+		logger.Warn(fmt.Sprintf("[SERVICE:AssetTemplate] Missing shared content for marketplace link %s (guid=%s)", entity.ID.Hex(), *entity.MarketplaceGuid))
 		return
 	}
-	dto.ScriptTest = bundle.ScriptTest
-	dto.ScriptProcessor = bundle.ScriptProcessor
-	dto.ScriptValidator = stringPtrOrNil(bundle.ScriptValidator)
-	dto.ScriptConversion = stringPtrOrNil(bundle.ScriptConversion)
-	dto.AvailableFields = bundle.AvailableFields
-	dto.DynamicFields = mapMarketplaceDynamicFields(bundle.DynamicFields)
+
+	body, _ := mapper.EntityToDto[entities.Assettemplate, dtos.AssetTemplateResponse](shared)
+	dto.ScriptTest = body.ScriptTest
+	dto.ScriptProcessor = body.ScriptProcessor
+	dto.ScriptValidator = body.ScriptValidator
+	dto.ScriptConversion = body.ScriptConversion
+	dto.AvailableFields = body.AvailableFields
+	dto.DynamicFields = body.DynamicFields
 }
 
-// mapMarketplaceDynamicFields converts the wire dynamic fields into the response
-// dynamic-field shape.
-func mapMarketplaceDynamicFields(in []dtos.MarketplaceDynamicField) []dtos.DynamicField {
-	if len(in) == 0 {
-		return nil
+// resolveContentTemplate returns the durable shared content document when the
+// given record is a per-org marketplace link (which carries no body), so the L2
+// write and the internal fallback response never serialize empty scripts. Any
+// other record (local, system, or the shared content doc itself) passes through.
+func (s *AssetTemplateService) resolveContentTemplate(c ctx.Context, template *entities.Assettemplate) *entities.Assettemplate {
+	if !template.IsMarketplace || template.OrgID == nil || template.MarketplaceGuid == nil {
+		return template
 	}
-	out := make([]dtos.DynamicField, len(in))
-	for i, f := range in {
-		out[i] = dtos.DynamicField{
-			FieldId: f.FieldId,
-			Field:   f.Field,
-			Value:   f.Value,
-			Type:    f.Type,
-			Status:  f.Status,
-		}
+	shared, err := s.deps.AssetTemplateRepo.FindMarketplaceContentByGuid(c, *template.MarketplaceGuid)
+	if err != nil || shared == nil {
+		return template
 	}
-	return out
-}
-
-// stringPtrOrNil returns a pointer to s, or nil when s is empty.
-func stringPtrOrNil(s string) *string {
-	if s == "" {
-		return nil
-	}
-	return &s
+	return shared
 }

@@ -271,8 +271,8 @@ func (s *AssetService) GetAssetReadModelByUUID(c ctx.Context, assetUUID string) 
 			Errors: []string{"Asset not found for UUID: " + assetUUID},
 		}
 	}
-	templateOrgId := s.writeAssetMetadata(c, asset)
-	return s.buildReadModel(asset, templateOrgId), nil
+	templateOrgId, templateId := s.writeAssetMetadata(c, asset)
+	return s.buildReadModel(asset, templateOrgId, templateId), nil
 }
 
 // GetAuthProjectionByUUID returns the slim auth projection consumed

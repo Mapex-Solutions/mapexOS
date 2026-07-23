@@ -55,6 +55,32 @@ func CreateAssetTemplate(service ports.AssetTemplateServicePort) web.Handler {
 	}
 }
 
+// CloneAssetTemplate returns a Fiber handler that clones a marketplace template
+// into a new, independent local template owned by the caller organization, so it
+// becomes editable.
+func CloneAssetTemplate(service ports.AssetTemplateServicePort) web.Handler {
+	return func(c *web.Ctx) error {
+		ctx := c.UserContext()
+
+		requestContext, ok := c.Locals("requestContext").(*reqCtx.RequestContext)
+		if !ok {
+			return response.InternalServerError(c, "requestContext not found in request context", nil)
+		}
+
+		assettemplate, _ := requestValidation.GetDTO[*dtos.AssetTemplateIdDto](c, "paramsDTO")
+		body, _ := requestValidation.GetDTO[*dtos.CloneBody](c, "bodyDTO")
+		name := ""
+		if body != nil {
+			name = body.Name
+		}
+		retData, err := service.CloneMarketplaceTemplate(ctx, requestContext, &assettemplate.AssetTemplateId, name)
+		if err != nil {
+			return err
+		}
+		return response.Created(c, retData)
+	}
+}
+
 // GetAssetTemplateById returns a Fiber handler that retrieves an asset template by its ID.
 //
 // Following Hexagonal Architecture, this handler accepts the service port interface

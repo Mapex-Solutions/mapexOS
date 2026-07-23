@@ -60,7 +60,7 @@ const (
 
 	// BagKeyAssetCertSerial holds the freshly-issued cert's serial
 	// (uppercase hex). Used by asserts that need to correlate the
-	// cert with mqttRevokedCertificates rows after a revoke flow.
+	// cert with mqtt_revoked_certificates rows after a revoke flow.
 	BagKeyAssetCertSerial = "assets.assetCertSerial"
 
 	// BagKeyHeartbeatSentAt records the wall-clock timestamp of the

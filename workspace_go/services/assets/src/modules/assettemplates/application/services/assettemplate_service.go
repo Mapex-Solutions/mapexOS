@@ -88,10 +88,11 @@ func (s *AssetTemplateService) InstallFromMarketplace(c ctx.Context, requestCont
 	if err != nil {
 		return nil, err
 	}
-	if err := s.cacheSharedContent(c, fetch.MarketplaceGuid, fetch.RawBytes); err != nil {
+	shared, err := s.persistSharedContent(c, fetch)
+	if err != nil {
 		return nil, err
 	}
-	link := s.buildInstalledLink(fetch, orgID, pathKey, shareWithChildren, categoryId, manufacturerId, modelId)
+	link := s.buildInstalledLink(fetch, orgID, pathKey, shareWithChildren, categoryId, manufacturerId, modelId, shared.ID)
 	record, err := s.upsertInstalledLink(c, orgID, fetch.MarketplaceGuid, link)
 	if err != nil {
 		return nil, err
@@ -136,6 +137,39 @@ func (s *AssetTemplateService) InstalledGuids(c ctx.Context, requestContext *req
 	return s.deps.AssetTemplateRepo.FindInstalledGuids(c, guids, orgID)
 }
 
+// CloneMarketplaceTemplate copies a marketplace template into a new local
+// template owned by the caller: it resolves the caller org, loads the source
+// (following a link to the durable shared content for the body), materializes an
+// independent local copy, persists it through the normal create side effects, and
+// returns the created template with a "local" origin.
+func (s *AssetTemplateService) CloneMarketplaceTemplate(c ctx.Context, requestContext *reqCtx.RequestContext, assetTemplateId *string, name string) (*dtos.AssetTemplateResponse, error) {
+	start := time.Now()
+
+	orgID, _, pathKey, err := s.resolveInstallOrg(requestContext)
+	if err != nil {
+		s.recordTemplateOp("clone", "error", start)
+		return nil, err
+	}
+	src, err := s.fetchTemplateById(c, assetTemplateId)
+	if err != nil {
+		s.recordTemplateOp("clone", "error", start)
+		return nil, err
+	}
+
+	clone := s.buildLocalClone(src, s.resolveContentTemplate(c, src), orgID, pathKey, name)
+	created, err := s.deps.AssetTemplateRepo.Create(c, clone)
+	if err != nil {
+		s.recordTemplateOp("clone", "error", start)
+		return nil, err
+	}
+	s.fanoutTemplateCreate(c, requestContext, created)
+
+	s.recordTemplateOp("clone", "success", start)
+	resp, _ := mapper.EntityToDto[entities.Assettemplate, dtos.AssetTemplateResponse](created)
+	applyMarketplaceSource(resp, created)
+	return resp, nil
+}
+
 // GetAssetTemplateById fetches a template by id and returns its DTO.
 // Returns 404 when the id is unknown.
 func (s *AssetTemplateService) GetAssetTemplateById(c ctx.Context, templateId *string) (*dtos.AssetTemplateResponse, error) {
@@ -164,6 +198,10 @@ func (s *AssetTemplateService) UpdateAssetTemplateById(c ctx.Context, templateId
 	if err != nil {
 		s.recordTemplateOp("update", "error", start)
 		return nil, err
+	}
+	if existing.IsMarketplace {
+		s.recordTemplateOp("update", "error", start)
+		return nil, &customErrors.ServerCustomError{Code: httpStatus.FORBIDDEN, Errors: []string{dtos.ErrCodeTemplateReadonly, "Only custom templates can be edited."}}
 	}
 	patch := s.buildTemplateUpdate(existing, dto)
 	updated, _ := s.deps.AssetTemplateRepo.FindByIdAndUpdate(c, templateId, patch)
@@ -340,6 +378,7 @@ func (s *AssetTemplateService) GetTemplateByIdForCacheFallback(c ctx.Context, te
 	if err != nil {
 		return nil, err
 	}
+	template = s.resolveContentTemplate(c, template)
 	s.writeScripts(c, template)
 	resp, _ := mapper.EntityToDto[entities.Assettemplate, dtos.AssetTemplateResponse](template)
 	return resp, nil

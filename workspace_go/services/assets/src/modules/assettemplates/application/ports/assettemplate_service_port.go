@@ -305,4 +305,10 @@ type AssetTemplateServicePort interface {
 	// has installed, resolved in a single query. Backs the listing's Install vs
 	// Uninstall toggle.
 	InstalledGuids(ctx ctx.Context, requestContext *reqCtx.RequestContext, guids []string) ([]string, error)
+
+	// CloneMarketplaceTemplate materializes a marketplace template into a new,
+	// independent local template owned by the caller org (full body copied inline,
+	// no marketplace linkage) so it becomes freely editable. An optional name
+	// renames the copy in the same call; empty keeps the source name.
+	CloneMarketplaceTemplate(ctx ctx.Context, requestContext *reqCtx.RequestContext, assetTemplateId *string, name string) (*dtos.AssetTemplateResponse, error)
 }

@@ -176,12 +176,15 @@ func (s *AssetService) mapListEntitiesToDtos(items []entities.AssetWithTemplate)
 // buildReadModel produces the denormalized read-model for the
 // internal cache-fallback endpoint. Does the manual ID/Description/
 // Protocol/HealthMonitor conversions copier can't handle reliably.
-func (s *AssetService) buildReadModel(asset *entities.Asset, templateOrgId string) *assetsContract.AssetReadModel {
+func (s *AssetService) buildReadModel(asset *entities.Asset, templateOrgId string, templateId string) *assetsContract.AssetReadModel {
 	rm, _ := mapper.EntityToDto[entities.Asset, assetsContract.AssetReadModel](asset)
 	rm.ID = asset.ID.Hex()
 	rm.UUID = asset.AssetUUID
 	rm.OrgId = asset.OrgID.Hex()
-	rm.AssetTemplateID = asset.AssetTemplateID.Hex()
+	// The resolved cache identity, not the raw per-org link id, so a marketplace
+	// template dedupes to one shared cache entry (mapexos_public/{sharedContentId})
+	// across every tenant.
+	rm.AssetTemplateID = templateId
 	rm.AssetTemplateOrgID = templateOrgId
 	if asset.Description != nil {
 		rm.Description = *asset.Description

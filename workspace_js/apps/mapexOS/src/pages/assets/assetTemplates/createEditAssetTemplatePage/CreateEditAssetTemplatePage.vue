@@ -13,7 +13,7 @@ import { useAddAssetTemplateTranslations } from '@src/composables/i18n/pages/ass
 import { usePageTour } from '@composables/tour';
 import { useLogger } from '@composables/useLogger';
 import { apis } from '@services/mapex';
-import { notifySuccess } from '@utils/alert/notify';
+import { notifySuccess, notifyWarning } from '@utils/alert/notify';
 import { handleApiError } from '@utils/error';
 import { useRouter, useRoute } from 'vue-router';
 import { useOrganizationStore } from '@stores/organization';
@@ -279,6 +279,14 @@ async function loadAssetTemplateData(): Promise<void> {
     const data = await apis.assets.assetTemplate.getById({
       assetTemplateId: assetTemplateId.value
     });
+
+    // Marketplace templates are read-only; block the edit form and send the user
+    // back to the list. They must clone it to a local copy to make changes.
+    if (data.isMarketplace) {
+      notifyWarning({ message: t.notifications.marketplaceReadonly.value });
+      await router.push('/assets_template');
+      return;
+    }
 
     // Populate form data from API response
     assetTemplateData.value.name = data.name || '';

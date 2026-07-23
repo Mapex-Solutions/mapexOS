@@ -16,6 +16,8 @@ import (
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 	natsModel "github.com/Mapex-Solutions/mapexGoKit/infrastructure/nats"
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
+	customErrors "github.com/Mapex-Solutions/mapexGoKit/microservices/http/customErrors"
+	httpStatus "github.com/Mapex-Solutions/mapexGoKit/microservices/http/status"
 	"github.com/Mapex-Solutions/mapexGoKit/microservices/metrics"
 	"github.com/Mapex-Solutions/mapexGoKit/utils/typeconv"
 	"github.com/prometheus/client_golang/prometheus"
@@ -40,8 +42,10 @@ type fakeRepo struct {
 	updateManyFn        func(ctx context.Context, filter model.Map, update model.Map) (int64, error)
 	countDocumentsFn    func(ctx context.Context, filters model.Map) (int64, error)
 
-	findByMarketplaceGuidAndOrgFn func(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*entities.Assettemplate, error)
-	findInstalledGuidsFn          func(ctx context.Context, guids []string, orgId model.ObjectId) ([]string, error)
+	findByMarketplaceGuidAndOrgFn    func(ctx context.Context, marketplaceGuid string, orgId model.ObjectId) (*entities.Assettemplate, error)
+	findInstalledGuidsFn             func(ctx context.Context, guids []string, orgId model.ObjectId) ([]string, error)
+	findMarketplaceContentByGuidFn   func(ctx context.Context, marketplaceGuid string) (*entities.Assettemplate, error)
+	upsertMarketplaceContentFn       func(ctx context.Context, content *entities.Assettemplate) (*entities.Assettemplate, error)
 
 	findByIdCalls int
 }
@@ -73,6 +77,20 @@ func (r *fakeRepo) FindInstalledGuids(ctx context.Context, guids []string, orgId
 		return r.findInstalledGuidsFn(ctx, guids, orgId)
 	}
 	return []string{}, nil
+}
+
+func (r *fakeRepo) FindMarketplaceContentByGuid(ctx context.Context, marketplaceGuid string) (*entities.Assettemplate, error) {
+	if r.findMarketplaceContentByGuidFn != nil {
+		return r.findMarketplaceContentByGuidFn(ctx, marketplaceGuid)
+	}
+	return nil, nil
+}
+
+func (r *fakeRepo) UpsertMarketplaceContent(ctx context.Context, content *entities.Assettemplate) (*entities.Assettemplate, error) {
+	if r.upsertMarketplaceContentFn != nil {
+		return r.upsertMarketplaceContentFn(ctx, content)
+	}
+	return content, nil
 }
 
 // fakeAssetUsage mocks ports.AssetUsagePort. countFn is settable by a test (via
@@ -242,6 +260,173 @@ func createTestMetrics() *bootstrap.AssetsMetrics {
 func newTestService() (*AssetTemplateService, *fakeRepo, *fakeStorage, *fakeFanout) {
 	service, repo, storage, fanout, _ := newTestServiceWithVocab()
 	return service, repo, storage, fanout
+}
+
+// TestGetAssetTemplateById_HydratesMarketplaceLinkFromDurableSharedDoc verifies a
+// per-org marketplace LINK returns the full body read from the durable shared
+// content document (no volatile cache), and that the origin flag is stamped.
+func TestGetAssetTemplateById_HydratesMarketplaceLinkFromDurableSharedDoc(t *testing.T) {
+	svc, repo, _, _ := newTestService()
+	guid := "guid-durable"
+	org := objectIDHex(t, "507f1f77bcf86cd799439011")
+	linkID := objectIDHex(t, "507f1f77bcf86cd799439021")
+
+	repo.findByIdFn = func(_ context.Context, _ *string) (*entities.Assettemplate, error) {
+		return &entities.Assettemplate{ID: linkID, Name: "Sensor", IsMarketplace: true, OrgID: &org, MarketplaceGuid: &guid}, nil
+	}
+	proc := "// preprocess"
+	findContentCalls := 0
+	repo.findMarketplaceContentByGuidFn = func(_ context.Context, g string) (*entities.Assettemplate, error) {
+		findContentCalls++
+		if g != guid {
+			t.Fatalf("expected lookup by guid %s, got %s", guid, g)
+		}
+		return &entities.Assettemplate{
+			IsMarketplace:   true,
+			MarketplaceGuid: &guid,
+			ScriptProcessor: &proc,
+			ScriptConversion: "const result = {};",
+			AvailableFields: []string{"co2", "temp"},
+			DynamicFields:   []entities.DynamicField{{FieldId: 1, Field: "co2", Type: "number", Status: 1}},
+		}, nil
+	}
+
+	id := linkID.Hex()
+	dto, err := svc.GetAssetTemplateById(context.Background(), &id)
+	if err != nil {
+		t.Fatalf("getById: %v", err)
+	}
+	if findContentCalls != 1 {
+		t.Fatalf("expected the durable shared doc read once, got %d", findContentCalls)
+	}
+	if dto.ScriptConversion == nil || *dto.ScriptConversion == "" {
+		t.Fatalf("expected hydrated scriptConversion, got %v", dto.ScriptConversion)
+	}
+	if dto.ScriptProcessor == nil {
+		t.Fatal("expected hydrated scriptProcessor")
+	}
+	if len(dto.AvailableFields) != 2 || len(dto.DynamicFields) != 1 {
+		t.Fatalf("expected hydrated fields, got available=%d dynamic=%d", len(dto.AvailableFields), len(dto.DynamicFields))
+	}
+	if dto.Source == nil || *dto.Source != "marketplace" {
+		t.Fatalf("expected source=marketplace, got %v", dto.Source)
+	}
+	if dto.IsMarketplace == nil || !*dto.IsMarketplace {
+		t.Fatalf("expected isMarketplace=true, got %v", dto.IsMarketplace)
+	}
+}
+
+// TestUpdateAssetTemplateById_MarketplaceReadonly verifies a marketplace template
+// cannot be edited: the update returns 403 with the TEMPLATE_READONLY code and
+// never touches the repo update. A local template still updates.
+func TestUpdateAssetTemplateById_MarketplaceReadonly(t *testing.T) {
+	tests := []struct {
+		name          string
+		isMarketplace bool
+		wantErr       bool
+	}{
+		{name: "marketplace is read-only", isMarketplace: true, wantErr: true},
+		{name: "local is editable", isMarketplace: false, wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			svc, repo, _, _ := newTestService()
+			id := objectIDHex(t, "507f1f77bcf86cd799439021")
+			updateCalls := 0
+			repo.findByIdFn = func(_ context.Context, _ *string) (*entities.Assettemplate, error) {
+				return &entities.Assettemplate{ID: id, IsMarketplace: tt.isMarketplace}, nil
+			}
+			repo.findByIdAndUpdateFn = func(_ context.Context, _ *string, _ map[string]any) (*entities.Assettemplate, error) {
+				updateCalls++
+				return &entities.Assettemplate{ID: id}, nil
+			}
+			hex := id.Hex()
+			_, err := svc.UpdateAssetTemplateById(context.Background(), &hex, &dtos.AssetTemplateUpdateDTO{})
+
+			if !tt.wantErr {
+				if err != nil {
+					t.Fatalf("expected local update to succeed, got %v", err)
+				}
+				if updateCalls != 1 {
+					t.Fatalf("expected the local template to be updated, got %d update calls", updateCalls)
+				}
+				return
+			}
+			var sce *customErrors.ServerCustomError
+			if !errors.As(err, &sce) || sce.Code != httpStatus.FORBIDDEN {
+				t.Fatalf("expected a 403 ServerCustomError, got %#v", err)
+			}
+			if len(sce.Errors) == 0 || sce.Errors[0] != dtos.ErrCodeTemplateReadonly {
+				t.Fatalf("expected TEMPLATE_READONLY as the first error code, got %v", sce.Errors)
+			}
+			if updateCalls != 0 {
+				t.Fatalf("expected no repo update for a read-only template, got %d", updateCalls)
+			}
+		})
+	}
+}
+
+// TestCloneMarketplaceTemplate_ProducesIndependentLocalTemplate verifies cloning
+// a marketplace link creates a local, editable template owned by the caller with
+// the full body copied inline and no marketplace linkage.
+func TestCloneMarketplaceTemplate_ProducesIndependentLocalTemplate(t *testing.T) {
+	svc, repo, _, _ := newTestService()
+	guid := "guid-clone"
+	srcOrg := objectIDHex(t, "507f1f77bcf86cd799439011")
+	linkID := objectIDHex(t, "507f1f77bcf86cd799439021")
+	catID := objectIDHex(t, "507f1f77bcf86cd799439031")
+
+	repo.findByIdFn = func(_ context.Context, _ *string) (*entities.Assettemplate, error) {
+		return &entities.Assettemplate{ID: linkID, Name: "Sensor", IsMarketplace: true, OrgID: &srcOrg, MarketplaceGuid: &guid, CategoryId: &catID}, nil
+	}
+	proc := "// preprocess"
+	repo.findMarketplaceContentByGuidFn = func(_ context.Context, _ string) (*entities.Assettemplate, error) {
+		return &entities.Assettemplate{
+			IsMarketplace:   true,
+			MarketplaceGuid: &guid,
+			ScriptProcessor: &proc,
+			ScriptConversion: "const result = {};",
+			AvailableFields: []string{"co2"},
+			DynamicFields:   []entities.DynamicField{{FieldId: 1, Field: "co2"}},
+		}, nil
+	}
+	var created *entities.Assettemplate
+	repo.createFn = func(_ context.Context, e *entities.Assettemplate) (*entities.Assettemplate, error) {
+		created = e
+		e.ID = objectIDHex(t, "507f1f77bcf86cd799439099")
+		return e, nil
+	}
+
+	id := linkID.Hex()
+	callerOrg := "507f1f77bcf86cd799439012"
+	resp, err := svc.CloneMarketplaceTemplate(context.Background(), orgRequestContext(callerOrg), &id, "Clone - Sensor")
+	if err != nil {
+		t.Fatalf("clone: %v", err)
+	}
+	if created == nil {
+		t.Fatal("expected a local clone to be created")
+	}
+	if created.Name != "Clone - Sensor" {
+		t.Fatalf("clone must be renamed in the same request, got name=%q", created.Name)
+	}
+	if created.IsMarketplace || created.MarketplaceGuid != nil || created.MarketplaceContentID != nil {
+		t.Fatalf("clone must have no marketplace linkage, got isMarketplace=%v guid=%v contentId=%v", created.IsMarketplace, created.MarketplaceGuid, created.MarketplaceContentID)
+	}
+	if created.OrgID == nil || created.OrgID.Hex() != callerOrg {
+		t.Fatalf("clone must be owned by the caller org, got %v", created.OrgID)
+	}
+	if created.ScriptConversion == "" || created.ScriptProcessor == nil || len(created.DynamicFields) != 1 {
+		t.Fatalf("clone must carry the full body copied inline, got %+v", created)
+	}
+	if created.CategoryId == nil || *created.CategoryId != catID {
+		t.Fatalf("clone must inherit the source classification, got %v", created.CategoryId)
+	}
+	if resp.Source == nil || *resp.Source != "local" {
+		t.Fatalf("expected source=local, got %v", resp.Source)
+	}
+	if resp.IsMarketplace == nil || *resp.IsMarketplace {
+		t.Fatalf("expected isMarketplace=false, got %v", resp.IsMarketplace)
+	}
 }
 
 // newTestServiceWithVocab is the full wiring helper; it additionally exposes

@@ -451,6 +451,7 @@
     "updated": "Asset template updated successfully!",
     "loading": "Loading asset template...",
     "loadFailed": "Failed to load asset template. Redirecting to list...",
+    "marketplaceReadonly": "This template comes from the marketplace and is read-only. Clone it to a local copy to edit.",
     "updateFailed": "Failed to update Asset Template",
     "validationError": "Please fill in all required fields.",
     "testSuccess": "Test executed successfully!",

@@ -128,24 +128,105 @@ func (s *AssetTemplateService) resolveClassificationOne(c ctx.Context, listType,
 // marketplace identity + org scope. The heavy body (scripts, dynamic/available
 // fields) is NOT stored here — it lives once in the shared content cache and is
 // hydrated on read, so N orgs never duplicate it.
-func (s *AssetTemplateService) buildInstalledLink(fetch *ports.MarketplaceBundleFetch, orgID model.ObjectId, pathKey *string, shareWithChildren bool, categoryId, manufacturerId, modelId *model.ObjectId) *entities.Assettemplate {
+// persistSharedContent stores the bundle's heavy body once per guid as an
+// org-less shared document (the durable source of truth every tenant links to)
+// and primes the L2 object + FANOUT so consuming services read real content
+// instead of a cold cache. Returns the shared document with its assigned _id.
+func (s *AssetTemplateService) persistSharedContent(c ctx.Context, fetch *ports.MarketplaceBundleFetch) (*entities.Assettemplate, error) {
+	shared, err := s.deps.AssetTemplateRepo.UpsertMarketplaceContent(c, s.buildSharedContent(fetch))
+	if err != nil {
+		return nil, err
+	}
+	s.writeScripts(c, shared)
+	s.publishTemplateInvalidate(c, shared)
+	return shared, nil
+}
+
+// buildSharedContent maps the verified bundle into the org-less shared content
+// document: the full body plus display metadata, no orgId/pathKey and no
+// org-scoped classification ids (those live on the per-org link).
+func (s *AssetTemplateService) buildSharedContent(fetch *ports.MarketplaceBundleFetch) *entities.Assettemplate {
+	b := fetch.Bundle
+	guid := fetch.MarketplaceGuid
+	sha := fetch.DeclaredSha256
+
+	content := &entities.Assettemplate{
+		Name:             localizedValue(b.Name),
+		Enabled:          true,
+		IsSystem:         false,
+		IsMarketplace:    true,
+		MarketplaceGuid:  &guid,
+		Sha256:           &sha,
+		AssetIDPath:      b.AssetIDPath,
+		ScriptTest:       b.ScriptTest,
+		ScriptProcessor:  b.ScriptProcessor,
+		ScriptValidator:  b.ScriptValidator,
+		ScriptConversion: b.ScriptConversion,
+		AvailableFields:  b.AvailableFields,
+		DynamicFields:    bundleDynamicFieldsToEntity(b.DynamicFields),
+		NextFieldId:      b.NextFieldId,
+	}
+	if desc := localizedValue(b.Description); desc != "" {
+		content.Description = &desc
+	}
+	if b.CategoryName != "" {
+		cn := b.CategoryName
+		content.CategoryName = &cn
+	}
+	if b.ManufacturerName != "" {
+		mn := b.ManufacturerName
+		content.ManufacturerName = &mn
+	}
+	if b.ModelName != "" {
+		mdn := b.ModelName
+		content.ModelName = &mdn
+	}
+	if b.Version != "" {
+		v := b.Version
+		content.Version = &v
+	}
+	return content
+}
+
+// bundleDynamicFieldsToEntity converts the wire dynamic fields into the entity
+// dynamic-field shape stored on the shared content document.
+func bundleDynamicFieldsToEntity(in []dtos.MarketplaceDynamicField) []entities.DynamicField {
+	if len(in) == 0 {
+		return nil
+	}
+	out := make([]entities.DynamicField, len(in))
+	for i, f := range in {
+		out[i] = entities.DynamicField{
+			FieldId: f.FieldId,
+			Field:   f.Field,
+			Value:   f.Value,
+			Type:    f.Type,
+			Status:  f.Status,
+		}
+	}
+	return out
+}
+
+func (s *AssetTemplateService) buildInstalledLink(fetch *ports.MarketplaceBundleFetch, orgID model.ObjectId, pathKey *string, shareWithChildren bool, categoryId, manufacturerId, modelId *model.ObjectId, contentID model.ObjectId) *entities.Assettemplate {
 	b := fetch.Bundle
 	guid := fetch.MarketplaceGuid
 	sha := fetch.DeclaredSha256
 
 	entity := &entities.Assettemplate{
-		Name:            localizedValue(b.Name),
-		Enabled:         true,
-		IsSystem:        false,
-		IsTemplate:      shareWithChildren,
-		OrgID:           &orgID,
-		PathKey:         pathKey,
-		MarketplaceGuid: &guid,
-		Sha256:          &sha,
-		CategoryId:      categoryId,
-		ManufacturerId:  manufacturerId,
-		ModelId:         modelId,
-		AssetIDPath:     b.AssetIDPath,
+		Name:                 localizedValue(b.Name),
+		Enabled:              true,
+		IsSystem:             false,
+		IsTemplate:           shareWithChildren,
+		IsMarketplace:        true,
+		OrgID:                &orgID,
+		PathKey:              pathKey,
+		MarketplaceGuid:      &guid,
+		Sha256:               &sha,
+		MarketplaceContentID: &contentID,
+		CategoryId:           categoryId,
+		ManufacturerId:       manufacturerId,
+		ModelId:              modelId,
+		AssetIDPath:          b.AssetIDPath,
 	}
 	if desc := localizedValue(b.Description); desc != "" {
 		entity.Description = &desc

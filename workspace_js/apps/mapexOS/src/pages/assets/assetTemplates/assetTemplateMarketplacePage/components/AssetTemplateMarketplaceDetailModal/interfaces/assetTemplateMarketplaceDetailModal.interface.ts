@@ -10,6 +10,8 @@ export interface AssetTemplateMarketplaceDetailModalProps {
   vendor: string | null;
   /** Slug of the template to preview, or null when none is selected. */
   slug: string | null;
+  /** Whether the previewed template is already installed in the current org. */
+  installed?: boolean;
 }
 
 /**
@@ -32,4 +34,6 @@ export interface AssetTemplateMarketplaceDetailModalEmits {
   (e: 'install', payload: AssetTemplateMarketplaceInstallPayload): void;
   /** Fired after a successful install of the previewed template. */
   (e: 'installed', payload: AssetTemplateMarketplaceInstallPayload): void;
+  /** Fired after a successful uninstall of the previewed template. */
+  (e: 'uninstalled', payload: AssetTemplateMarketplaceInstallPayload): void;
 }

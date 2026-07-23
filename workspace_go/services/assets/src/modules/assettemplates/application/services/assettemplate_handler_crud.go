@@ -19,6 +19,44 @@ import (
 // scope and applies the corresponding multi-tenant fields to the create DTO.
 // Returns a 4xx custom error when the caller cannot create the requested
 // scope (e.g. non-vendor trying to publish a template).
+// buildLocalClone materializes a marketplace template into a new, independent
+// local template owned by the caller: the caller's already-resolved classification
+// from the source link plus the heavy body from the shared content, with all
+// marketplace linkage stripped so the copy is freely editable. A fresh (zero) id
+// lets the repository assign a new one on create. A non-empty name renames the
+// copy (the client's localized "Clone - ..." prefix); empty keeps the source name.
+func (s *AssetTemplateService) buildLocalClone(src, content *entities.Assettemplate, orgID model.ObjectId, pathKey *string, name string) *entities.Assettemplate {
+	cloneName := src.Name
+	if name != "" {
+		cloneName = name
+	}
+	return &entities.Assettemplate{
+		Name:             cloneName,
+		Enabled:          true,
+		Description:      src.Description,
+		CategoryId:       src.CategoryId,
+		CategoryName:     src.CategoryName,
+		ManufacturerId:   src.ManufacturerId,
+		ManufacturerName: src.ManufacturerName,
+		ModelId:          src.ModelId,
+		ModelName:        src.ModelName,
+		Version:          src.Version,
+		AssetIDPath:      content.AssetIDPath,
+		ScriptTest:       content.ScriptTest,
+		ScriptProcessor:  content.ScriptProcessor,
+		ScriptValidator:  content.ScriptValidator,
+		ScriptConversion: content.ScriptConversion,
+		AvailableFields:  content.AvailableFields,
+		DynamicFields:    content.DynamicFields,
+		NextFieldId:      content.NextFieldId,
+		OrgID:            &orgID,
+		PathKey:          pathKey,
+		IsSystem:         false,
+		IsTemplate:       false,
+		IsMarketplace:    false,
+	}
+}
+
 func (s *AssetTemplateService) applyTemplateScope(rc *reqCtx.RequestContext, dto *dtos.AssetTemplateCreateDTO) error {
 	if dto.IsSystem {
 		dto.OrgID = nil

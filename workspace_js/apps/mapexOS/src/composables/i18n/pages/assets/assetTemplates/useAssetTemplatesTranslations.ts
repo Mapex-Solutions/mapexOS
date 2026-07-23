@@ -192,7 +192,7 @@ export function useAssetTemplatesTranslations() {
       manufacturerModel: computed(() => ts('pages.assets.assetTemplates.columns.manufacturer')),
       version: computed(() => ts('pages.assets.assetTemplates.columns.version')),
       templateType: computed(() => ts('pages.assets.assetTemplates.columns.templateType')),
-      templateSource: computed(() => ts('pages.assets.assetTemplates.columns.templateSource')),
+      shared: computed(() => ts('pages.assets.assetTemplates.columns.shared')),
     },
 
     columns: computed((): DataRowColumn[] => [
@@ -219,29 +219,6 @@ export function useAssetTemplatesTranslations() {
         secondaryKey: 'description',
       },
       {
-        key: 'source',
-        label: ts('pages.assets.assetTemplates.columns.origin'),
-        type: 'icon',
-        visible: 'laptop',
-        width: 56,
-        align: 'center',
-        icon: (value: any) => value === 'marketplace' ? 'storefront' : 'folder',
-        color: (value: any) => value === 'marketplace' ? 'teal-6' : 'grey-6',
-        tooltip: (value: any) => value === 'marketplace'
-          ? ts('pages.assets.assetTemplates.origin.marketplace')
-          : ts('pages.assets.assetTemplates.origin.local'),
-      },
-      {
-        key: 'organizationName',
-        label: ts('pages.assets.assetTemplates.columns.organization'),
-        type: 'chip',
-        visible: 'laptop',
-        width: 180,
-        ellipsis: true,
-        color: 'indigo-6',
-        icon: 'domain',
-      },
-      {
         key: 'manufacturer',
         label: ts('pages.assets.assetTemplates.columns.manufacturer'),
         type: 'text',
@@ -260,30 +237,36 @@ export function useAssetTemplatesTranslations() {
         align: 'center',
       },
       {
-        key: 'isSystem',
+        // Origin/type shown as an icon: the standard marketplace icon (storefront)
+        // for an installed template, or a house for a hand-created local one. The
+        // tooltip (via AppTooltip) spells out which.
+        key: 'isMarketplace',
         label: ts('pages.assets.assetTemplates.columns.templateType'),
-        type: 'chip',
+        type: 'icon',
         visible: 'laptop',
-        width: 80,
-        format: (value: any) => value
-          ? ts('pages.assets.assetTemplates.filters.isSystemOptions.system').toUpperCase()
-          : ts('pages.assets.assetTemplates.filters.isSystemOptions.custom').toUpperCase(),
-        color: (value: any) => value ? 'purple-6' : 'blue-6',
-        icon: (value: any) => value ? 'lock' : 'edit',
+        width: 90,
         align: 'center',
+        icon: (_value: any, row: any) => row?.isMarketplace ? 'storefront' : 'home',
+        color: (_value: any, row: any) => row?.isMarketplace ? 'teal-6' : 'blue-6',
+        tooltip: (_value: any, row: any) => row?.isMarketplace
+          ? ts('pages.assets.assetTemplates.origin.marketplace')
+          : ts('pages.assets.assetTemplates.origin.local'),
       },
       {
+        // Whether the template is shared down to child organizations, shown as an
+        // icon (share vs lock) with the meaning in the tooltip — mirrors the
+        // Template type column so the two read consistently.
         key: 'isTemplate',
-        label: ts('pages.assets.assetTemplates.columns.templateSource'),
-        type: 'chip',
+        label: ts('pages.assets.assetTemplates.columns.shared'),
+        type: 'icon',
         visible: 'laptop',
-        width: 80,
-        format: (value: any) => value
-          ? ts('pages.assets.assetTemplates.filters.isTemplateOptions.templates').toUpperCase()
-          : ts('pages.assets.assetTemplates.filters.isTemplateOptions.local').toUpperCase(),
-        color: (value: any) => value ? 'orange-6' : 'green-6',
-        icon: (value: any) => value ? 'content_copy' : 'folder',
+        width: 90,
         align: 'center',
+        icon: (_value: any, row: any) => row?.isTemplate ? 'share' : 'lock',
+        color: (_value: any, row: any) => row?.isTemplate ? 'green-6' : 'grey-6',
+        tooltip: (_value: any, row: any) => row?.isTemplate
+          ? ts('pages.assets.assetTemplates.shared.yes')
+          : ts('pages.assets.assetTemplates.shared.no'),
       },
     ]),
 
@@ -306,6 +289,9 @@ export function useAssetTemplatesTranslations() {
       systemTemplateDelete: computed(() => ts('pages.assets.assetTemplates.notifications.systemTemplateDelete')),
       sharedTemplateEdit: computed(() => ts('pages.assets.assetTemplates.notifications.sharedTemplateEdit')),
       sharedTemplateDelete: computed(() => ts('pages.assets.assetTemplates.notifications.sharedTemplateDelete')),
+      marketplaceTemplateEdit: computed(() => ts('pages.assets.assetTemplates.notifications.marketplaceTemplateEdit')),
+      cloned: computed(() => ts('pages.assets.assetTemplates.notifications.cloned')),
+      cloneError: computed(() => ts('pages.assets.assetTemplates.notifications.cloneError')),
     },
 
     errors: {
@@ -317,6 +303,9 @@ export function useAssetTemplatesTranslations() {
       edit: computed(() => ts('pages.assets.assetTemplates.actions.edit')),
       view: computed(() => ts('pages.assets.assetTemplates.actions.view')),
       delete: computed(() => ts('pages.assets.assetTemplates.actions.delete')),
+      clone: computed(() => ts('pages.assets.assetTemplates.actions.clone')),
+      cloneHint: computed(() => ts('pages.assets.assetTemplates.actions.cloneHint')),
+      clonePrefix: computed(() => ts('pages.assets.assetTemplates.actions.clonePrefix')),
     },
 
     status: {
@@ -333,21 +322,19 @@ export function useAssetTemplatesTranslations() {
       error: computed(() => ts('pages.assets.assetTemplates.drawer.error')),
       systemTemplateWarning: computed(() => ts('pages.assets.assetTemplates.drawer.systemTemplateWarning')),
       systemTemplateTooltip: computed(() => ts('pages.assets.assetTemplates.drawer.systemTemplateTooltip')),
-      selectTemplate: computed(() => ts('pages.assets.assetTemplates.drawer.selectTemplate')),
+      marketplaceTemplateTooltip: computed(() => ts('pages.assets.assetTemplates.drawer.marketplaceTemplateTooltip')),
 
-      tabs: {
-        overview: computed(() => ts('pages.assets.assetTemplates.drawer.tabs.overview')),
-        dynamicFields: computed(() => ts('pages.assets.assetTemplates.drawer.tabs.dynamicFields')),
-        scripts: computed(() => ts('pages.assets.assetTemplates.drawer.tabs.scripts')),
-        availableFields: computed(() => ts('pages.assets.assetTemplates.drawer.tabs.availableFields')),
+      clone: {
+        button: computed(() => ts('pages.assets.assetTemplates.drawer.clone.button')),
+        success: computed(() => ts('pages.assets.assetTemplates.drawer.clone.success')),
+        error: computed(() => ts('pages.assets.assetTemplates.drawer.clone.error')),
       },
 
-      sections: {
-        basicInfo: computed(() => ts('pages.assets.assetTemplates.drawer.sections.basicInfo')),
-        configuration: computed(() => ts('pages.assets.assetTemplates.drawer.sections.configuration')),
-        scripts: computed(() => ts('pages.assets.assetTemplates.drawer.sections.scripts')),
-        fields: computed(() => ts('pages.assets.assetTemplates.drawer.sections.fields')),
-        timestamps: computed(() => ts('pages.assets.assetTemplates.drawer.sections.timestamps')),
+      contexts: {
+        setup: computed(() => ts('pages.assets.assetTemplates.drawer.contexts.setup')),
+        uplink: computed(() => ts('pages.assets.assetTemplates.drawer.contexts.uplink')),
+        retrieval: computed(() => ts('pages.assets.assetTemplates.drawer.contexts.retrieval')),
+        finalization: computed(() => ts('pages.assets.assetTemplates.drawer.contexts.finalization')),
       },
 
       fields: {

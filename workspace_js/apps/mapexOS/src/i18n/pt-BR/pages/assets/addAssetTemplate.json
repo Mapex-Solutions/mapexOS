@@ -451,6 +451,7 @@
     "updated": "Template de ativo atualizado com sucesso!",
     "loading": "Carregando template de ativo...",
     "loadFailed": "Falha ao carregar template de ativo. Redirecionando para lista...",
+    "marketplaceReadonly": "Este template vem do marketplace e é somente leitura. Clone-o para uma cópia local para editar.",
     "updateFailed": "Falha ao atualizar Template de Ativo",
     "validationError": "Por favor, preencha todos os campos obrigatórios.",
     "testSuccess": "Teste executado com sucesso!",

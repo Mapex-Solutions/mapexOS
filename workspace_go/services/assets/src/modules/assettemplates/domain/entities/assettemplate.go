@@ -47,12 +47,18 @@ type Assettemplate struct {
 	ModelName        *string         `bson:"modelName,omitempty"`
 	Version          *string         `bson:"version,omitempty"`
 
-	// Marketplace identity + integrity — set only when this record is the per-org
-	// link to a marketplace-installed template (nil for hand-created ones). The
-	// heavy shared content lives in the tiered cache keyed by MarketplaceGuid;
-	// this record carries just ids + scope. Immutable post-install.
+	// Marketplace identity + integrity — set on marketplace records. A per-org
+	// LINK (orgId set) points at the shared content document via
+	// MarketplaceContentID; the shared CONTENT document (orgId nil) holds the heavy
+	// body once per MarketplaceGuid. Nil for hand-created templates. Immutable
+	// post-install.
 	MarketplaceGuid *string `bson:"marketplaceGuid,omitempty"`
 	Sha256          *string `bson:"sha256,omitempty"`
+
+	// MarketplaceContentID points a per-org link record at the shared content
+	// document (orgId nil) that holds the heavy body. Nil on the shared content
+	// document itself and on hand-created templates.
+	MarketplaceContentID *model.ObjectId `bson:"marketplaceContentId,omitempty"`
 
 	AssetIDPath string `bson:"assetIdPath"`
 
@@ -72,8 +78,9 @@ type Assettemplate struct {
 	NextFieldId uint16 `bson:"nextFieldId,omitempty"`
 
 	// Template visibility flags
-	IsSystem   bool `bson:"isSystem"`   // true = visible to everyone (MAPEX global templates)
-	IsTemplate bool `bson:"isTemplate"` // true = shared template (vendor/customer only)
+	IsSystem      bool `bson:"isSystem"`      // true = visible to everyone (MAPEX global templates)
+	IsTemplate    bool `bson:"isTemplate"`    // true = shared template (vendor/customer only)
+	IsMarketplace bool `bson:"isMarketplace"` // true = came from the marketplace (link or shared content); read-only, clone to edit
 
 	// Multi-tenant fields
 	OrgID   *model.ObjectId `bson:"orgId,omitempty"`   // null for system, org for template/local

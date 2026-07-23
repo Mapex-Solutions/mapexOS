@@ -25,4 +25,6 @@ export interface MarketplaceSelection {
   vendor: string;
   /** Template slug. */
   slug: string;
+  /** Marketplace GUID, used to reflect the installed state in the modal. */
+  marketplaceGuid: string;
 }
