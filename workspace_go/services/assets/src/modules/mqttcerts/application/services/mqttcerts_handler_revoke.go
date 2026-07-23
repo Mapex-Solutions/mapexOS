@@ -10,7 +10,7 @@ import (
 	reqCtx "github.com/Mapex-Solutions/mapexGoKit/microservices/common/context"
 )
 
-// persistRevokedRow inserts a row in mqttRevokedCertificates. The
+// persistRevokedRow inserts a row in mqtt_revoked_certificates. The
 // caller resolves the serial -> assetUUID link via
 // AssetService.ClearCurrentCertBySerial before invoking this helper
 // so the audit row carries the asset link, which lets

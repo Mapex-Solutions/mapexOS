@@ -37,7 +37,7 @@ export function userApi(http: AxiosInstance, getToken: GetToken | undefined) {
 		},
 
 		/**
-		 * Revoke a cert by serial. Moves the row to mqttRevokedCertificates.
+		 * Revoke a cert by serial. Moves the row to mqtt_revoked_certificates.
 		 */
 		async revokeCert(serial: string): Promise<void> {
 			const headers = await authHeader();

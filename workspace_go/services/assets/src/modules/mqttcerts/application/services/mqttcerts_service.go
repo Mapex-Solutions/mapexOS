@@ -107,7 +107,7 @@ func (s *MqttCertsService) IssueGatewayCert(ctx context.Context, rc *reqCtx.Requ
 
 // RevokeCert clears the asset's `currentCert` (so the broker plugin
 // drops the L1 entry on the next FANOUT-triggered invalidation), then
-// persists an audit row in mqttRevokedCertificates. The audit row
+// persists an audit row in mqtt_revoked_certificates. The audit row
 // carries the resolved assetUUID so ListRevokedByAsset queries hit it.
 func (s *MqttCertsService) RevokeCert(ctx context.Context, rc *reqCtx.RequestContext, serial string, reason string) error {
 	r := domConsts.RevocationReason(reason)

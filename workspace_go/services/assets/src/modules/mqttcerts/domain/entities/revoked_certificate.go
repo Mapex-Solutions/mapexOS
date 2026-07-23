@@ -8,7 +8,7 @@ import (
 	model "github.com/Mapex-Solutions/mapexGoKit/infrastructure/mongodb/model"
 )
 
-// RevokedCertificate is one row in mqttRevokedCertificates. Status is
+// RevokedCertificate is one row in mqtt_revoked_certificates. Status is
 // implicit — every row in this collection is revoked. Mongo TTL on
 // revokedAt auto-deletes rows after 30 days.
 //

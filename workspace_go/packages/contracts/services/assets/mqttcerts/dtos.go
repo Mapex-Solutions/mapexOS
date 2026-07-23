@@ -6,7 +6,7 @@ import "time"
 
 // IssueCertRequest is POST /api/v1/mqtt_certs.
 // Force=true accepts replacing an asset's existing currentCert (prior
-// cert moves to mqttRevokedCertificates with reason=replaced).
+// cert moves to mqtt_revoked_certificates with reason=replaced).
 type IssueCertRequest struct {
 	AssetUUID string `json:"assetUUID" validate:"required"`
 	Force     bool   `json:"force"`
