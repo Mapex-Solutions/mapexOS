@@ -87,6 +87,10 @@ import (
 
 	// assets — full telemetry pipeline on a marketplace-installed template
 	mktAssetPipeline "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/assets/marketplace_asset_pipeline"
+
+	// assets — asset-template migration (create plan → run → assets switched)
+	migImmediate "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/assets/template_migration/phase1_immediate_complete"
+	migPartial "github.com/Mapex-Solutions/MapexOS/e2eTests/journey/assets/template_migration/phase2_partial_failure"
 )
 
 // TestMain is the ONLY entry point: it owns bringing the stack up once and tearing
@@ -206,6 +210,8 @@ var registry = []journey{
 	{"assets/marketplace_install_uninstall/phase1_install_check", mktInstallCheck.Run},
 	{"assets/marketplace_install_uninstall/phase2_uninstall_guard", mktUninstallGuard.Run},
 	{"assets/marketplace_asset_pipeline", mktAssetPipeline.Run},
+	{"assets/template_migration/phase1_immediate_complete", migImmediate.Run},
+	{"assets/template_migration/phase2_partial_failure", migPartial.Run},
 }
 
 // TestSuite runs every registered journey as a parallel subtest.

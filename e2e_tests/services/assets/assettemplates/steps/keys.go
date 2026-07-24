@@ -7,6 +7,11 @@ const (
 	// CreateTemplate. Asset creation reads it to bind the new asset
 	// to the saga template.
 	BagKeyTemplateID = "assets.assetTemplateID"
+
+	// BagKeyMigrationPlanID is the template-migration plan id returned by
+	// CreateMigrationPlan. The migration asserts read it to poll the plan and
+	// its per-asset executions.
+	BagKeyMigrationPlanID = "assets.migrationPlanID"
 )
 
 // TemplateIDKey is the label-scoped bag key for CreateTemplateWithLabel, so a

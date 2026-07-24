@@ -78,8 +78,8 @@ func (b *AssetCreateBuilder) WithMqttPassword(pwd string) *AssetCreateBuilder {
 //
 // Defaults:
 //   - Protocol:      MQTT (clientId/username seeded from runID; password
-//                    is the canonical SagaMqttDefaultPassword which the
-//                    platform bcrypt-hashes server-side)
+//     is the canonical SagaMqttDefaultPassword which the
+//     platform bcrypt-hashes server-side)
 //   - Enabled:       true
 //   - HealthMonitor: explicit mode, threshold 10 min, 1 missed = offline
 //
@@ -88,34 +88,50 @@ func (b *AssetCreateBuilder) WithMqttPassword(pwd string) *AssetCreateBuilder {
 // healthmonitor saga match on the assetUUID when verifying cache
 // population and offline transitions.
 func SagaMqttTemperatureSensor(runID, templateID, routeGroupID string) *AssetCreateBuilder {
-	uuid := fmt.Sprintf("saga-mqtt-temp-%s", runID)
-	return &AssetCreateBuilder{
-		spec: contracts.AssetCreate{
-			Name:            fmt.Sprintf("saga-mqtt-temperature-%s", runID),
-			Enabled:         true,
-			DebugEnabled:    true,
-			AssetUUID:       uuid,
-			AssetTemplateID: templateID,
-			RouteGroupIds:   []string{routeGroupID},
-			Protocol: contracts.ProtocolType{
-				Type: "mqtt",
-				Mqtt: &contracts.MqttConfig{
-					ClientId: uuid,
-					Username: uuid,
-					AuthType: "password",
-					Password: SagaMqttDefaultPassword,
+	return SagaMqttTemperatureSensorFor("")(runID, templateID, routeGroupID)
+}
+
+// SagaMqttTemperatureSensorFor is the per-instance variant of
+// SagaMqttTemperatureSensor: the label is baked into the name and the MQTT identity
+// (assetUUID / clientId / username) so a journey can provision SEVERAL MQTT sensors
+// in the same run without colliding on the unique-per-org identity fields. An empty
+// label reproduces the single-sensor identity, so SagaMqttTemperatureSensor stays
+// byte-compatible for existing one-asset journeys.
+func SagaMqttTemperatureSensorFor(label string) func(runID, templateID, routeGroupID string) *AssetCreateBuilder {
+	return func(runID, templateID, routeGroupID string) *AssetCreateBuilder {
+		suffix := runID
+		if label != "" {
+			suffix = label + "-" + runID
+		}
+		uuid := fmt.Sprintf("saga-mqtt-temp-%s", suffix)
+		return &AssetCreateBuilder{
+			spec: contracts.AssetCreate{
+				Name:            fmt.Sprintf("saga-mqtt-temperature-%s", suffix),
+				Enabled:         true,
+				DebugEnabled:    true,
+				AssetUUID:       uuid,
+				AssetTemplateID: templateID,
+				RouteGroupIds:   []string{routeGroupID},
+				Protocol: contracts.ProtocolType{
+					Type: "mqtt",
+					Mqtt: &contracts.MqttConfig{
+						ClientId: uuid,
+						Username: uuid,
+						AuthType: "password",
+						Password: SagaMqttDefaultPassword,
+					},
+				},
+				HealthMonitor: &contracts.HealthMonitorConfig{
+					Enabled: zerovalue.Ptr(true),
+					// ThresholdMinutes carries a min=10 anti-flap floor on the
+					// contract; the saga uses the floor so payloads pass DTO
+					// validation while keeping the offline window short.
+					ThresholdMinutes: zerovalue.Ptr(10),
+					RequiredMisses:   zerovalue.Ptr(1),
+					HeartbeatMode:    zerovalue.Ptr("implicit"),
 				},
 			},
-			HealthMonitor: &contracts.HealthMonitorConfig{
-				Enabled: zerovalue.Ptr(true),
-				// ThresholdMinutes carries a min=10 anti-flap floor on the
-				// contract; the saga uses the floor so payloads pass DTO
-				// validation while keeping the offline window short.
-				ThresholdMinutes: zerovalue.Ptr(10),
-				RequiredMisses:   zerovalue.Ptr(1),
-				HeartbeatMode:    zerovalue.Ptr("implicit"),
-			},
-		},
+		}
 	}
 }
 
